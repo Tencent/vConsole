@@ -29,11 +29,11 @@ module.exports = {
 		]
 	},
 	plugins: [
-		// new webpack.optimize.UglifyJsPlugin({
-		// 	compress: {
-		// 		warnings: false
-		// 	}
-		// })
+		new webpack.optimize.UglifyJsPlugin({
+			compress: {
+				warnings: false
+			}
+		})
 		// ,new ExtractTextPlugin("[name].min.css") // 将css独立打包
 	]
 
