@@ -1,0 +1,30 @@
+{
+  "name": "vconsole",
+  "version": "1.0.0",
+  "description": "A virtual console panel for mobile page",
+  "main": "./dist/vconsole.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "console",
+    "debug",
+    "mobile"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WechatFE/vconsole.git"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "html-loader": "^0.4.3",
+    "less": "^2.5.3",
+    "less-loader": "^2.2.3",
+    "style-loader": "^0.13.1",
+    "webpack": "~1.12.11"
+  },
+  "author": "WeChat FE Team",
+  "license": "MIT"
+}

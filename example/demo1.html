@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>vConsole/Demo1</title>
+	<link href="./lib/weui.min.css" rel="stylesheet"/>
+	<link href="./lib/demo.css" rel="stylesheet"/>
+</head>
+<body ontouchstart>
+	<div class="page">
+		<h1 class="page_title">Demo 1</h1>
+		<div class="weui_text_area">
+			<p class="weui_msg_desc">点击下面的按钮，即可打印 log。<br/>点击右下角按钮，即可查看 log。</p>
+		</div>
+		<a href="javascript:;" class="weui_btn weui_btn_primary js_btn_log" data-type="log">普通日志(log)</a>
+		<a href="javascript:;" class="weui_btn weui_btn_primary js_btn_log" data-type="info">信息日志(info)</a>
+		<a href="javascript:;" class="weui_btn weui_btn_primary js_btn_log" data-type="debug">调试日志(debug)</a>
+		<a href="javascript:;" class="weui_btn weui_btn_primary js_btn_log" data-type="warn">警告日志(warn)</a>
+		<a href="javascript:;" class="weui_btn weui_btn_primary js_btn_log" data-type="error">报错日志(error)</a>
+
+		<a href="javascript:;" class="weui_btn weui_btn_default js_btn_log_obj">打印Object</a>
+	</div>
+	<div class="weui_toptips weui_notice" id="js_tips">已打印log</div>
+</body>
+
+<script src="./lib/jquery-1.12.3.min.js"></script>
+<script src="./lib/fastclick.js"></script>
+
+<!-- 引入vConsole的JS库 -->
+<script src="../dist/vconsole.min.js"></script>
+
+<script>
+// vConsole完成初始化后将调用ready()的回调函数
+vConsole.ready(function() {
+	console.info('欢迎使用 vConsole。vConsole 是一个由微信公众平台前端团队研发的 Web 前端开发者面板，可用于展示 console 日志，方便开发、调试。');
+});
+
+$('.js_btn_log').on('click', function(e) {
+	var type = $(this).data('type');
+	console[type](type); // 例如，console.log(type)
+	showTips();
+});
+$('.js_btn_log_obj').on('click', function(e) {
+	console.log({
+		'foo': 'bar',
+		'tips': 'JS对象会转为JSON字符串输出'
+	});
+	showTips();
+});
+
+// 用于页面内展示顶部tips
+var tipsTimer;
+function showTips() {
+	tipsTimer && clearTimeout(tipsTimer);
+	$('#js_tips').show();
+	tipsTimer = setTimeout(function() {
+		$('#js_tips').hide();
+	}, 1500);
+}
+</script>
+</html>
