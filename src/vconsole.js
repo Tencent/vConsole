@@ -1,18 +1,20 @@
 /**
  * A Front-End Console Panel for Mobile Webpage
  *
- * @version 1.0.1
+ * @version 1.0.2
  * @author WechatFE
  */
 
-require('./vconsole.less');
+import './vconsole.less';
+import tpl from './tpl.html';
 
 /**
  * initial
  * @constructor
  */
 function vConsole() {
-	this.html = require('./tpl.html');
+	// this.html = require('./tpl.html');
+	this.html = tpl;
 	this.$dom = null;
 	this.activedTab = 'default';
 	this.console = {}; // store native console methods
@@ -270,8 +272,9 @@ vConsole.prototype.hide = function() {
 };
 
 /**
- * 
+ * when vConsole is ready, callback() will be called
  * @public
+ * @param	function	callback
  */
 vConsole.prototype.ready = function(callback) {
 	if (!this.isReady) {
