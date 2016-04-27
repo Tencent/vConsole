@@ -104,7 +104,7 @@ vConsole.prototype._mokeConsole = function() {
 };
 
 /**
- * auto run after initial
+ * auto run after initialization
  * @private
  */
 vConsole.prototype._autoRun = function() {
