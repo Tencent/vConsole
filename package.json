@@ -13,7 +13,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WechatFE/vconsole.git"
+    "url": "git+https://github.com/WechatFE/vConsole.git"
   },
   "dependencies": {},
   "devDependencies": {
@@ -25,6 +25,6 @@
     "style-loader": "^0.13.1",
     "webpack": "~1.12.11"
   },
-  "author": "WeChat FE Team",
+  "author": "WechatFE Team",
   "license": "MIT"
 }
