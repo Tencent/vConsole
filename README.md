@@ -11,9 +11,11 @@ vConsole 是一个网页前端调试面板，专为手机 web 页面量身设计
 
 ## 手机预览
 
-![](./example/demo.png)
+![](./example/snapshot/qrcode.png)
 
 [http://wechatfe.github.io/vconsole/demo.html](http://wechatfe.github.io/vconsole/demo.html)
+
+![](./example/snapshot/log_panel.png)
 
 ## 使用方法
 
@@ -32,7 +34,7 @@ checkout 文件 `dist/vconsole.min.js` 到本地。
 (2) 如果使用了 AMD/CMD 规范，可在 module 内使用 `require()` 引入模块：
 
 ```javascript
-vConsole = require('path/to/vconsole.min.js');
+var vConsole = require('path/to/vconsole.min.js');
 ```
 
 ### 3.打印 log 日志
@@ -67,13 +69,14 @@ console.log(obj); // 打印出 {foo: 'bar'}
 
 ```javascript
 var uid = 233;
-console.log('User ID:', uid); // 打印出 User ID: 233
+console.log('UserID:', uid); // 打印出 UserID: 233
 ```
 
 (5) 引入模块后，vConsole 会有一段很小的延迟来用于初始化工作。此时若需打印日志，请使用 `vConsole.ready()` 方法：
 
 ```javascript
-// vConsole 已自动挂载在全局 window 对象中，即 window.vConsole
+// 若未通过 AMD/CMD 方式加载模块，
+// vConsole 会自动挂载在全局 window 对象中，即 window.vConsole
 vConsole.ready(function() {
 	console.log('Hello World');
 });
@@ -82,8 +85,8 @@ vConsole.ready(function() {
 ## 注意事项
 
 引入 vConsole 模块后，页面前端将会在右下角出现 vConsole 的悬停按钮，可展开/收起面板。
-若不希望普通用户看到面板，请不要在生产环境中引入 vConsole 模块。动态引入模块的方法可参考 `example/demo2.php` 示例。
 
+若不希望普通用户看到面板，请不要在生产环境中引入 vConsole 模块。动态引入模块的方法可参考 `example/demo2.php` 示例。
 
 ## License
 
