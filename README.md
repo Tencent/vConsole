@@ -25,10 +25,12 @@ checkout 文件 `dist/vconsole.min.js` 到本地。
 
 ### 2.引入模块
 
-(1) 如果未使用 AMD/CMD 规范，可直接在 HTML 中引入 vConsole 模块：
+(1) 如果未使用 AMD/CMD 规范，可直接在 HTML 中引入 vConsole 模块。为了便于后续扩展，建议在 `<head>` 中引入：
 
 ```html
-<script src="path/to/vconsole.min.js"></script>
+<head>
+	<script src="path/to/vconsole.min.js"></script>
+</head>
 ```
 
 (2) 如果使用了 AMD/CMD 规范，可在 module 内使用 `require()` 引入模块：

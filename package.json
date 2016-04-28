@@ -1,6 +1,6 @@
 {
   "name": "vconsole",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A virtual console panel for mobile page",
   "main": "dist/vconsole.min.js",
   "scripts": {

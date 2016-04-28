@@ -1,7 +1,6 @@
 /**
  * A Front-End Console Panel for Mobile Webpage
  *
- * @version 1.0.3
  * @author WechatFE
  */
 
