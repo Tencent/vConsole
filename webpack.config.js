@@ -1,3 +1,4 @@
+var pkg = require('./package.json');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
@@ -34,6 +35,11 @@ module.exports = {
         warnings: false
       }
     })
+	,new webpack.BannerPlugin([
+        pkg.name + ' v' + pkg.version + ' (' + pkg.homepage + ')',
+        'Copyright ' + new Date().getFullYear() + ', ' + pkg.author,
+        pkg.license +' license'
+    ].join('\n'))
     // ,new ExtractTextPlugin('[name].min.css') // 将css独立打包
   ]
 
