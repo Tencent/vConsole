@@ -13,7 +13,8 @@ $dev_mode = isset($_GET['dev_mode']) ? $_GET['dev_mode'] : '0';
   <link href="./lib/weui.min.css" rel="stylesheet"/>
   <link href="./lib/demo.css" rel="stylesheet"/>
   
-  <script src="./lib/jquery-1.12.3.min.js"></script>
+  <script src="./lib/zepto.min.js"></script>
+  <script src="./lib/zepto.touch.min.js"></script>
 
   <?php if ($dev_mode == '1') { ?>
     <!-- 引入vConsole的JS库 -->
@@ -30,7 +31,7 @@ $dev_mode = isset($_GET['dev_mode']) ? $_GET['dev_mode'] : '0';
 </body>
 
 <script>
-$('.js_btn_log').on('click', function(e) {
+$('.js_btn_log').on('tap', function(e) {
   // 打印log时无须判断是否为dev_mode，
   // 未加载vConsole时，console.log()不会显示到前台
   console.log('Hello World');
