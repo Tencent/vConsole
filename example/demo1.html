@@ -42,7 +42,7 @@ $('.js_btn_log').on('tap', function(e) {
   console[type](type); // 例如，console.log(type)
   showTips();
 });
-$('.js_btn_log_obj').on('click', function(e) {
+$('.js_btn_log_obj').on('tap', function(e) {
   console.log({
     'foo': 'bar',
     'tips': 'JS对象会转为JSON字符串输出'
