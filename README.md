@@ -88,6 +88,10 @@ vConsole.ready(function() {
 
 若不希望普通用户看到面板，请不要在生产环境中引入 vConsole 模块。动态引入模块的方法可参考 `example/demo2.php` 示例。
 
+## 更新记录
+
+[CHANGELOG.md](./CHANGELOG.md)
+
 ## License
 
 The MIT License (http://opensource.org/licenses/MIT)
