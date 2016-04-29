@@ -19,12 +19,12 @@ function vConsole() {
   this.isReady = false;
   this.readyCallback = [];
 
-  var self = this;
+  var that = this;
   bind(window, 'load', function() {
-    self._render();
-    self._bindEvent();
-    self._mokeConsole();
-    self._autoRun();
+    that._render();
+    that._bindEvent();
+    that._mokeConsole();
+    that._autoRun();
   });
 }
 
@@ -47,16 +47,16 @@ vConsole.prototype._render = function() {
  * @private
  */
 vConsole.prototype._bindEvent = function() {
-  var self = this;
+  var that = this;
 
   // show console panel
   bind($('.vc-show'), 'click', function() {
-    self.show();
+    that.show();
   })
 
   // hide console panel
   bind($('.vc-hide'), 'click', function() {
-    self.hide();
+    that.hide();
   });
 
   // hide console panel when tap background mask
@@ -64,21 +64,21 @@ vConsole.prototype._bindEvent = function() {
     if (e.target != $('.vc-mask')) {
       return false;
     }
-    self.hide();
+    that.hide();
   });
 
   // clear a log box
   bind($('.vc-clear'), 'click', function() {
-    self.clearLog(self.activedTab);
+    that.clearLog(that.activedTab);
   });
 
   // show a log box
   bind($$('.vc-tab'), 'click', function(e) {
     var tabName = e.target.dataset.tab;
-    if (tabName == self.activedTab) {
+    if (tabName == that.activedTab) {
       return;
     }
-    self.showTab(tabName);
+    that.showTab(tabName);
   });
 };
 
@@ -90,17 +90,17 @@ vConsole.prototype._mokeConsole = function() {
   if (!window.console) {
     return;
   }
-  var self = this;
+  var that = this;
   this.console.log = window.console.log;
   this.console.info = window.console.info;
   this.console.warn = window.console.warn;
   this.console.debug = window.console.debug;
   this.console.error = window.console.error;
-  window.console.log = function() { self._printLog('default', 'log', arguments); };
-  window.console.info = function() { self._printLog('default', 'info', arguments); };
-  window.console.warn = function() { self._printLog('default', 'warn', arguments); };
-  window.console.debug = function() { self._printLog('default', 'debug', arguments); };
-  window.console.error = function() { self._printLog('default', 'error', arguments); };
+  window.console.log = function() { that._printLog('default', 'log', arguments); };
+  window.console.info = function() { that._printLog('default', 'info', arguments); };
+  window.console.warn = function() { that._printLog('default', 'warn', arguments); };
+  window.console.debug = function() { that._printLog('default', 'debug', arguments); };
+  window.console.error = function() { that._printLog('default', 'error', arguments); };
 };
 
 /**
