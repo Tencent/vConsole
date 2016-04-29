@@ -407,4 +407,4 @@ function getDate(time) {
 /**
  * export
  */
-export default (new vConsole());
+export default new vConsole();
