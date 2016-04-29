@@ -35,7 +35,7 @@ module.exports = {
         warnings: false
       }
     })
-	,new webpack.BannerPlugin([
+	  ,new webpack.BannerPlugin([
         pkg.name + ' v' + pkg.version + ' (' + pkg.homepage + ')',
         'Copyright ' + new Date().getFullYear() + ', ' + pkg.author,
         pkg.license +' license'
