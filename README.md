@@ -25,10 +25,12 @@ checkout 文件 `dist/vconsole.min.js` 到本地。
 
 ### 2.引入模块
 
-(1) 如果未使用 AMD/CMD 规范，可直接在 HTML 中引入 vConsole 模块：
+(1) 如果未使用 AMD/CMD 规范，可直接在 HTML 中引入 vConsole 模块。为了便于后续扩展，建议在 `<head>` 中引入：
 
 ```html
-<script src="path/to/vconsole.min.js"></script>
+<head>
+	<script src="path/to/vconsole.min.js"></script>
+</head>
 ```
 
 (2) 如果使用了 AMD/CMD 规范，可在 module 内使用 `require()` 引入模块：
@@ -87,6 +89,10 @@ vConsole.ready(function() {
 引入 vConsole 模块后，页面前端将会在右下角出现 vConsole 的悬停按钮，可展开/收起面板。
 
 若不希望普通用户看到面板，请不要在生产环境中引入 vConsole 模块。动态引入模块的方法可参考 `example/demo2.php` 示例。
+
+## 更新记录
+
+[CHANGELOG.md](./CHANGELOG.md)
 
 ## License
 

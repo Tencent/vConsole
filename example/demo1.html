@@ -6,6 +6,13 @@
   <title>vConsole/Demo1</title>
   <link href="./lib/weui.min.css" rel="stylesheet"/>
   <link href="./lib/demo.css" rel="stylesheet"/>
+
+  <script src="./lib/zepto.min.js"></script>
+  <script src="./lib/zepto.touch.min.js"></script>
+
+  <!-- 引入vConsole的JS库 -->
+  <script src="../dist/vconsole.min.js"></script>
+  
 </head>
 <body ontouchstart>
   <div class="page">
@@ -24,24 +31,18 @@
   <div class="weui_toptips weui_notice" id="js_tips">已打印log</div>
 </body>
 
-<script src="./lib/jquery-1.12.3.min.js"></script>
-<script src="./lib/fastclick.js"></script>
-
-<!-- 引入vConsole的JS库 -->
-<script src="../dist/vconsole.min.js"></script>
-
 <script>
 // vConsole完成初始化后将调用ready()的回调函数
 vConsole.ready(function() {
   console.info('欢迎使用 vConsole。vConsole 是一个由微信公众平台前端团队研发的 Web 前端开发者面板，可用于展示 console 日志，方便开发、调试。');
 });
 
-$('.js_btn_log').on('click', function(e) {
+$('.js_btn_log').on('tap', function(e) {
   var type = $(this).data('type');
   console[type](type); // 例如，console.log(type)
   showTips();
 });
-$('.js_btn_log_obj').on('click', function(e) {
+$('.js_btn_log_obj').on('tap', function(e) {
   console.log({
     'foo': 'bar',
     'tips': 'JS对象会转为JSON字符串输出'

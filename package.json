@@ -1,7 +1,8 @@
 {
   "name": "vconsole",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A virtual console panel for mobile page",
+  "homepage": "https://github.com/WechatFE/vConsole",
   "main": "dist/vconsole.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
