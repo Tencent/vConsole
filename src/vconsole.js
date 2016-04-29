@@ -210,7 +210,7 @@ vConsole.prototype._printLog = function(tabName, logType, logs) {
       } else if (typeof logs[i] == 'object') {
         line += ' ' + JSON.stringify(logs[i]);
       } else {
-        line += ' ' + logs[i];
+        line += ' ' + htmlEncode(logs[i]);
       }
     } catch (e) {
       line += ' [' + (typeof logs[i]) + ']';
@@ -403,6 +403,15 @@ function getDate(time) {
     millisecond: millisecond
   };
 }
+
+/**
+ * HTML encode a string
+ * @param string text
+ * @return string
+ */
+function htmlEncode(text) {
+  return document.createElement('a').appendChild( document.createTextNode(text) ).parentNode.innerHTML;
+};
 
 /**
  * export
