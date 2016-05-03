@@ -28,6 +28,7 @@
 
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_log_obj">打印Object</a>
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_trigger_error">触发JS Error</a>
+    <a href="javascript:;" class="weui_btn weui_btn_default js_btn_log_sys">打印到系统面板</a>
   </div>
   <div class="weui_toptips weui_notice" id="js_tips">已打印log</div>
 </body>
@@ -54,6 +55,10 @@ $('.js_btn_trigger_error').on('tap', function(e) {
   showTips();
   var err = undefined;
   err.a = 1;
+});
+$('.js_btn_log_sys').on('tap', function(e) {
+  console.log('[system] 当前时间戳:', (+new Date()));
+  showTips();
 });
 
 // 用于页面内展示顶部tips
