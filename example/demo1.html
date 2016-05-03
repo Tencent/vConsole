@@ -27,6 +27,7 @@
     <a href="javascript:;" class="weui_btn weui_btn_primary js_btn_log" data-type="error">报错日志(error)</a>
 
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_log_obj">打印Object</a>
+    <a href="javascript:;" class="weui_btn weui_btn_default js_btn_trigger_error">触发JS Error</a>
   </div>
   <div class="weui_toptips weui_notice" id="js_tips">已打印log</div>
 </body>
@@ -48,6 +49,11 @@ $('.js_btn_log_obj').on('tap', function(e) {
     'tips': 'JS对象会转为JSON字符串输出'
   });
   showTips();
+});
+$('.js_btn_trigger_error').on('tap', function(e) {
+  showTips();
+  var err = undefined;
+  err.a = 1;
 });
 
 // 用于页面内展示顶部tips

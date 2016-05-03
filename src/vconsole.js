@@ -83,7 +83,7 @@ vConsole.prototype._bindEvent = function() {
 };
 
 /**
- * replace window.console with vConsole method
+ * replace window.console & window.onerror with vConsole method
  * @private
  */
 vConsole.prototype._mokeConsole = function() {
@@ -101,6 +101,13 @@ vConsole.prototype._mokeConsole = function() {
   window.console.warn = function() { that._printLog('default', 'warn', arguments); };
   window.console.debug = function() { that._printLog('default', 'debug', arguments); };
   window.console.error = function() { that._printLog('default', 'error', arguments); };
+
+  window.onerror = function(message, source, lineno, colno, error) {
+    var stack = error.stack.split('at');
+    stack = stack[0] + ' ' + stack[1];
+    stack = stack.replace(location.origin, '');
+    console.error(stack);
+  };
 };
 
 /**
@@ -210,7 +217,7 @@ vConsole.prototype._printLog = function(tabName, logType, logs) {
       } else if (typeof logs[i] == 'object') {
         line += ' ' + JSON.stringify(logs[i]);
       } else {
-        line += ' ' + htmlEncode(logs[i]);
+        line += ' ' + htmlEncode(logs[i]).replace(/\n/g, '<br/>');
       }
     } catch (e) {
       line += ' [' + (typeof logs[i]) + ']';
