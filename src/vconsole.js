@@ -15,6 +15,7 @@ function vConsole() {
   this.html = tpl;
   this.$dom = null;
   this.activedTab = 'default';
+  this.tabList = ['default', 'system'];
   this.console = {}; // store native console methods
   this.isReady = false;
   this.readyCallback = [];
@@ -83,7 +84,7 @@ vConsole.prototype._bindEvent = function() {
 };
 
 /**
- * replace window.console with vConsole method
+ * replace window.console & window.onerror with vConsole method
  * @private
  */
 vConsole.prototype._mokeConsole = function() {
@@ -96,11 +97,18 @@ vConsole.prototype._mokeConsole = function() {
   this.console.warn = window.console.warn;
   this.console.debug = window.console.debug;
   this.console.error = window.console.error;
-  window.console.log = function() { that._printLog('default', 'log', arguments); };
-  window.console.info = function() { that._printLog('default', 'info', arguments); };
-  window.console.warn = function() { that._printLog('default', 'warn', arguments); };
-  window.console.debug = function() { that._printLog('default', 'debug', arguments); };
-  window.console.error = function() { that._printLog('default', 'error', arguments); };
+  window.console.log = function() { that._printLog('auto', 'log', arguments); };
+  window.console.info = function() { that._printLog('auto', 'info', arguments); };
+  window.console.warn = function() { that._printLog('auto', 'warn', arguments); };
+  window.console.debug = function() { that._printLog('auto', 'debug', arguments); };
+  window.console.error = function() { that._printLog('auto', 'error', arguments); };
+
+  window.onerror = function(message, source, lineno, colno, error) {
+    var stack = error.stack.split('at');
+    stack = stack[0] + ' ' + stack[1];
+    stack = stack.replace(location.origin, '');
+    console.error(stack);
+  };
 };
 
 /**
@@ -192,7 +200,7 @@ vConsole.prototype._autoRun = function() {
 /**
  * print a log to log box
  * @private
- * @param  string  tabName
+ * @param  string  tabName    auto|default|system
  * @param  string  logType    log|info|debug|error|warn
  * @param  array  logs
  */
@@ -210,11 +218,24 @@ vConsole.prototype._printLog = function(tabName, logType, logs) {
       } else if (typeof logs[i] == 'object') {
         line += ' ' + JSON.stringify(logs[i]);
       } else {
-        line += ' ' + htmlEncode(logs[i]);
+        line += ' ' + htmlEncode(logs[i]).replace(/\n/g, '<br/>');
       }
     } catch (e) {
       line += ' [' + (typeof logs[i]) + ']';
     }
+  }
+
+  // auto select tab
+  if (tabName == 'auto') {
+    var pattern = /^ \[(\w+)\]/i;
+    var match = line.match(pattern);
+    if (match !== null && match.length > 0 && this.tabList.indexOf(match[1]) > -1) {
+      tabName = match[1];
+      line = line.replace(pattern, '');
+    }
+  }
+  if (tabName == 'auto') {
+    tabName = 'default';
   }
 
   var $logbox = $('#__vc_log_' + tabName);

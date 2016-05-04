@@ -2,7 +2,7 @@ html, body {
   height: 100%;
 }
 .page {
-  padding: 25px 15px 0;
+  padding: 25px 15px 60px;
   height: 100%;
   background-color: #fbf9fe;
   -webkit-tap-highlight-color: transparent;
