@@ -57,7 +57,8 @@ $('.js_btn_trigger_error').on('tap', function(e) {
   err.a = 1;
 });
 $('.js_btn_log_sys').on('tap', function(e) {
-  console.log('[system] 当前时间戳:', (+new Date()));
+  // 输出到系统面板
+  console.log('[system]', '当前时间戳:', (+new Date()));
   showTips();
 });
 
