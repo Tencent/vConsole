@@ -6,6 +6,7 @@
 
 import './vconsole.less';
 import tpl from './tpl.html';
+import tplFold from './tpl_fold.html';
 
 /**
  * initial
@@ -81,6 +82,19 @@ vConsole.prototype._bindEvent = function() {
       return;
     }
     that.showTab(tabName);
+  });
+
+  // log-related actions
+  bind($$('.vc-log'), 'click', function(e) {
+    var target = e.target;
+    // expand a line
+    if (hasClass(target, 'vc-fold-outer')) {
+      if (hasClass(target.parentElement, 'vc-toggle')) {
+        removeClass(target.parentElement, 'vc-toggle');
+      } else {
+        addClass(target.parentElement, 'vc-toggle');
+      }
+    }
   });
 };
 
@@ -257,10 +271,10 @@ vConsole.prototype._printLog = function(tabName, logType, logs) {
   var line = '';
   for (var i=0; i<logs.length; i++) {
     try {
-      if (typeof logs[i] == 'function') {
+      if (isFunction(logs[i])) {
         line += ' ' + logs[i].toString();
-      } else if (typeof logs[i] == 'object') {
-        line += ' ' + JSON.stringify(logs[i]);
+      } else if (isObject(logs[i]) || isArray(logs[i])) {
+        line += ' ' + this._getFoldedLine(logs[i]);
       } else {
         line += ' ' + htmlEncode(logs[i]).replace(/\n/g, '<br/>');
       }
@@ -291,6 +305,70 @@ vConsole.prototype._printLog = function(tabName, logType, logs) {
 
   // print to traditional console
   this.console[logType].apply(window.console, logs);
+};
+
+/**
+ * generate the HTML of a folded line
+ * @private
+ */
+vConsole.prototype._getFoldedLine = function(obj, outerText) {
+  var json = JSON.stringify(obj);
+  var outer = '',
+      inner = '',
+      preview = '';
+  var lv = 0,
+      p = '  ';
+
+  preview = json.substr(0, 30);
+  if (json.length > 30) {
+    preview += '...';
+  }
+
+  outer = Object.prototype.toString.call(obj).replace('[object ', '').replace(']', '');
+  outer += ' ' + preview;
+  
+  function _iterateObj(val) {
+    if (isObject(val)) {
+      var keys = Object.keys(val);
+      inner += "{\n";
+      lv++;
+      for (var i=0; i<keys.length; i++) {
+        var k = keys[i];
+        if (!val.hasOwnProperty(k)) { continue; }
+        inner += Array(lv+1).join(p) + '<i class="vc-code-key">' + k + "</i>: ";
+        _iterateObj(val[k]);
+        if (i < keys.length - 1) {
+          inner += ",\n";
+        }
+      }
+      lv--;
+      inner += "\n" + Array(lv+1).join(p) + "}";
+    } else if (isArray(val)) {
+      inner += "[\n";
+      lv++;
+      for (var i=0; i<val.length; i++) {
+        inner += Array(lv+1).join(p) + '<i class="vc-code-key">' + i + "</i>: ";
+        _iterateObj(val[i]);
+        if (i < val.length - 1) {
+          inner += ",\n";
+        }
+      }
+      lv--;
+      inner += "\n" + Array(lv+1).join(p) + "]";
+    } else {
+      if (isString(val)) {
+        inner += '<i class="vc-code-string">"' + val + '"</i>';
+      } else if (isNumber(val)) {
+        inner += '<i class="vc-code-number">' + val + "</i>";
+      } else {
+        inner += JSON.stringify(val);
+      }
+    }
+  }
+  _iterateObj(obj);
+
+  var line = render(tplFold, {outer: outer, inner: inner});
+  return line;
 };
 
 /**
@@ -389,7 +467,7 @@ function addClass($el, className) {
   if (!$el) {
     return;
   }
-  if (Object.prototype.toString.call($el) != '[object Array]') {
+  if (!isArray($el)) {
     $el = [$el];
   }
   for (var i=0; i<$el.length; i++) {
@@ -405,7 +483,7 @@ function removeClass($el, className) {
   if (!$el) {
     return;
   }
-  if (Object.prototype.toString.call($el) != '[object Array]') {
+  if (!isArray($el)) {
     $el = [$el];
   }
   for (var i=0; i<$el.length; i++) {
@@ -417,6 +495,23 @@ function removeClass($el, className) {
     }
     $el[i].className = arr.join(' ');
   }
+}
+
+/**
+ * see whether an element contains a className
+ * @private
+ */
+function hasClass($el, className) {
+  if (!$el) {
+    return false;
+  }
+  var arr = $el.className.split(' ');
+  for (var i=0; i<arr.length; i++) {
+    if (arr[i] == className) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /**
@@ -434,7 +529,7 @@ function bind($el, eventType, fn, useCapture) {
   if (useCapture === undefined) {
     useCapture = false;
   }
-  if (Object.prototype.toString.call($el) != '[object Array]') {
+  if (!isArray($el)) {
     $el = [$el];
   }
   for (var i=0; i<$el.length; i++) {
@@ -477,6 +572,37 @@ function getDate(time) {
 function htmlEncode(text) {
   return document.createElement('a').appendChild( document.createTextNode(text) ).parentNode.innerHTML;
 };
+
+/**
+ * simply render a HTML template
+ * @param string tpl
+ * @param object key-value data
+ * @return string
+ */
+function render(tpl, data) {
+  var html = tpl;
+  for (var k in data) {
+    html = html.replace('{' + k + '}', data[k]);
+  }
+  return html;
+}
+
+
+function isNumber(value) {
+  return Object.prototype.toString.call(value) == '[object Number]';
+}
+function isString(value) {
+  return Object.prototype.toString.call(value) == '[object String]';
+}
+function isArray(value) {
+  return Object.prototype.toString.call(value) == '[object Array]';
+}
+function isObject(value) {
+  return Object.prototype.toString.call(value) == '[object Object]';
+}
+function isFunction(value) {
+  return Object.prototype.toString.call(value) == '[object Function]';
+}
 
 /**
  * export
