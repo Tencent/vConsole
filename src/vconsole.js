@@ -119,24 +119,24 @@ vConsole.prototype._mokeConsole = function() {
 vConsole.prototype._mokeAjax = function() {
   var _XMLHttpRequest = window.XMLHttpRequest;
 
-  if (!_XMLHttpRequest) return;
+  if (!_XMLHttpRequest) { return; }
 
   var _open = window.XMLHttpRequest.prototype.open;
   var _send = window.XMLHttpRequest.prototype.send;
 
-  window.XMLHttpRequest.prototype.open = function(){
+  window.XMLHttpRequest.prototype.open = function() {
     var that = this;
     var _arguments = arguments;
 
-    //lazy assign onreadystatechange
-    setTimeout(function(){
+    // lazy assign onreadystatechange
+    setTimeout(function() {
       var _onreadystatechange = that.onreadystatechange || function(){};
-      that.onreadystatechange = function(){
+      that.onreadystatechange = function() {
         if (that.readyState == 4) {
           that._endTime = +new Date();
-          var url = _arguments[1] || "unknow URL",
-              costTime = that._endTime - (that._startTime||that._endTime);
-          console.log("[network][" + that.status + "] [" + costTime + "ms] " + url);
+          var url = _arguments[1] || 'unknow URL',
+              costTime = that._endTime - (that._startTime || that._endTime);
+          console.log('[network]', '[' + that.status + '] [' + costTime + 'ms] ' + url);
         }
 
         return _onreadystatechange.apply(that, arguments);
@@ -145,10 +145,10 @@ vConsole.prototype._mokeAjax = function() {
 
     return _open.apply(that, _arguments);
   };
-  window.XMLHttpRequest.prototype.send = function(){
+  window.XMLHttpRequest.prototype.send = function() {
     var that = this;
     that._startTime = +new Date();
-    setTimeout(function(){
+    setTimeout(function() {
       _send.apply(that, arguments);
     }, 1);
   };

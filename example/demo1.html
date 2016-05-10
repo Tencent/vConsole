@@ -29,6 +29,7 @@
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_log_obj">打印Object</a>
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_trigger_error">触发JS Error</a>
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_log_sys">打印到系统面板</a>
+    <a href="javascript:;" class="weui_btn weui_btn_default js_btn_ajax">发起AJAX</a>
   </div>
   <div class="weui_toptips weui_notice" id="js_tips">已打印log</div>
 </body>
@@ -37,7 +38,6 @@
 // vConsole完成初始化后将调用ready()的回调函数
 vConsole.ready(function() {
   console.info('欢迎使用 vConsole。vConsole 是一个由微信公众平台前端团队研发的 Web 前端开发者面板，可用于展示 console 日志，方便开发、调试。');
-  ajax();
 });
 
 $('.js_btn_log').on('tap', function(e) {
@@ -62,6 +62,10 @@ $('.js_btn_log_sys').on('tap', function(e) {
   console.log('[system]', '当前时间戳:', (+new Date()));
   showTips();
 });
+$('.js_btn_ajax').on('tap', function(e) {
+  ajax();
+  showTips();
+});
 
 // 用于页面内展示顶部tips
 var tipsTimer;
@@ -73,9 +77,10 @@ function showTips() {
   }, 1500);
 }
 
-function ajax(){
+// 发起一个AJAX request
+function ajax() {
   var xhr   = new XMLHttpRequest();
-  xhr.open("GET", "ajax.php", true);
+  xhr.open('GET', 'ajax.php', true);
   xhr.onreadystatechange = function() {
     if (xhr.readyState == 4) {
       xhr.onreadystatechange = null;
@@ -85,7 +90,7 @@ function ajax(){
       }
     }
   };
-  xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+  xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
   xhr.send();
 }
 
