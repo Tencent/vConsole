@@ -120,7 +120,7 @@ console.log('[system] bar');
 
 ## 更新记录
 
-[CHANGELOG.md](./CHANGELOG_CN.md)
+[CHANGELOG_CN.md](./CHANGELOG_CN.md)
 
 
 ## License
