@@ -27,6 +27,7 @@
     background-color: rgba(0,0,0, 0);
     z-index: 10001;
     transition: background .3s;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .vc-panel {
@@ -57,6 +58,11 @@
       border-right: 1px solid #D9D9D9;
       text-decoration: none;
       color: #000;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+    }
+    .vc-tab:active {
+      background-color: rgba(0,0,0,0.15);
     }
     .vc-tab.vc-actived {
       background-color: #FFF;
@@ -82,6 +88,10 @@
 
     i {
       font-style: normal;
+    }
+
+    .vc-log {
+      -webkit-tap-highlight-color: transparent;
     }
 
     .vc-log:empty:before {
@@ -129,6 +139,9 @@
       .vc-fold-outer {
         display: block;
         font-style: italic;
+      }
+      .vc-fold-outer:active {
+        background-color: rgba(0,0,0,0.15);
       }
 
       .vc-fold-outer {
@@ -198,6 +211,7 @@
       float: left;
       text-align: center;
       position: relative;
+      -webkit-touch-callout: none;
     }
 
     .vc-tool:after {

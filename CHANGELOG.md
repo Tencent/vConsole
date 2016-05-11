@@ -1,21 +1,33 @@
+English | [简体中文](./CHANGELOG_CN.md)
+
+
+#### v1.2.0 (2016-05-11)
+
+- [ADD] Add network panel
+- [DELELE] Deprecate `vConsole.ready()` method
+- [IMPROVE] Display formatted Object & Array variable
+- [IMPROVE] Add English README and CHANGELOG
+- [IMPROVE] Improve UI
+
+
 #### v1.1.0 (2016-05-06)
 
-- 【特性】支持 window.onerror() 的异常信息捕获
-- 【特性】支持 [default|system|...] 日志格式，将 log 输出到指定面板
+- [ADD] Support `window.onerror()` to catch exceptions and errors
+- [ADD] Support `[default|system|...]` string to print logs to specific panel
 
 
 #### v1.0.5 (2016-04-29)
 
-- 【修复】修复 webpack 编译失败的问题
-- 【修复】修复打印 HTML 字符串可能导致的 XSS 问题
+- [FIX] Fix webpack compilation
+- [FIX] Fix XSS when printing HTML string
 
 
 #### v1.0.4 (2016-04-28)
 
-- 【修复】修复 package.json 的 main 路径
-- 【优化】优化 example 的 demo 页面
+- [FIX] Fix the `main` path in `package.json`
+- [IMPROVE] Update demo pages
 
 
 #### v1.0.2 (2016-04-27)
 
-初始发布
+- Initial release

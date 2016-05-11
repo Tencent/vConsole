@@ -96,6 +96,7 @@ vConsole.prototype._bindEvent = function() {
       } else {
         addClass(target.parentElement, 'vc-toggle');
       }
+      e.preventDefault();
     }
   });
 };
@@ -438,7 +439,7 @@ vConsole.prototype.hide = function() {
  * @param	function	callback
  */
 vConsole.prototype.ready = function(callback) {
-  console.warn('vConsole.ready() is deprecated, console.log() can be called at anytime without waiting for ready.');
+  console.warn('vConsole.ready() is deprecated, console.log() can be called at anytime without waiting for ready. This method will be removed at v2.0.0 and later');
   callback && callback.call(this);
 };
 
