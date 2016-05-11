@@ -152,7 +152,12 @@ vConsole.prototype._mokeAjax = function() {
           that._endTime = +new Date();
           var url = _arguments[1] || 'unknow URL',
               costTime = that._endTime - (that._startTime || that._endTime);
-          console.log('[network]', '[' + that.status + '] [' + costTime + 'ms] ' + url);
+          var log = '[network][' + that.status + '] [' + costTime + 'ms] ' + url;
+          if (that.status >= 200 && that.status < 400) {
+            console.log(log);
+          } else {
+            console.error(log);
+          } 
         }
 
         return _onreadystatechange.apply(that, arguments);

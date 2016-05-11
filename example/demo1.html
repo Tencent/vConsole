@@ -60,7 +60,10 @@ $('.js_btn_log_sys').on('tap', function(e) {
   showTips();
 });
 $('.js_btn_ajax').on('tap', function(e) {
-  ajax();
+  // 发起一个AJAX
+  $.get('ajax.php', function(resp) {
+    console.log(resp);
+  });
   showTips();
 });
 
@@ -72,23 +75,6 @@ function showTips() {
   tipsTimer = setTimeout(function() {
     $('#js_tips').hide();
   }, 1500);
-}
-
-// 发起一个AJAX request
-function ajax() {
-  var xhr   = new XMLHttpRequest();
-  xhr.open('GET', 'ajax.php', true);
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState == 4) {
-      xhr.onreadystatechange = null;
-      var status = xhr.status;
-      if (status >= 200 && status < 400) {
-        console.log(xhr.responseText);
-      }
-    }
-  };
-  xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-  xhr.send();
 }
 
 </script>
