@@ -6,26 +6,29 @@
 
 import './vconsole.less';
 import tpl from './tpl.html';
+import tplFold from './tpl_fold.html';
 
 /**
  * initial
  * @constructor
  */
 function vConsole() {
+  var that = this;
+
   this.html = tpl;
   this.$dom = null;
   this.activedTab = 'default';
   this.tabList = ['default', 'system', 'network'];
   this.console = {}; // store native console methods
+  this.logList = []; // store logs when vConsole is not ready
   this.isReady = false;
-  this.readyCallback = [];
 
-  var that = this;
+  that._mokeConsole();
+  that._mokeAjax();
+
   bind(window, 'load', function() {
     that._render();
     that._bindEvent();
-    that._mokeConsole();
-    that._mokeAjax();
     that._autoRun();
   });
 }
@@ -82,6 +85,19 @@ vConsole.prototype._bindEvent = function() {
     }
     that.showTab(tabName);
   });
+
+  // log-related actions
+  bind($$('.vc-log'), 'click', function(e) {
+    var target = e.target;
+    // expand a line
+    if (hasClass(target, 'vc-fold-outer')) {
+      if (hasClass(target.parentElement, 'vc-toggle')) {
+        removeClass(target.parentElement, 'vc-toggle');
+      } else {
+        addClass(target.parentElement, 'vc-toggle');
+      }
+    }
+  });
 };
 
 /**
@@ -119,24 +135,29 @@ vConsole.prototype._mokeConsole = function() {
 vConsole.prototype._mokeAjax = function() {
   var _XMLHttpRequest = window.XMLHttpRequest;
 
-  if (!_XMLHttpRequest) return;
+  if (!_XMLHttpRequest) { return; }
 
   var _open = window.XMLHttpRequest.prototype.open;
   var _send = window.XMLHttpRequest.prototype.send;
 
-  window.XMLHttpRequest.prototype.open = function(){
+  window.XMLHttpRequest.prototype.open = function() {
     var that = this;
     var _arguments = arguments;
 
-    //lazy assign onreadystatechange
-    setTimeout(function(){
+    // lazy assign onreadystatechange
+    setTimeout(function() {
       var _onreadystatechange = that.onreadystatechange || function(){};
-      that.onreadystatechange = function(){
+      that.onreadystatechange = function() {
         if (that.readyState == 4) {
           that._endTime = +new Date();
-          var url = _arguments[1] || "unknow URL",
-              costTime = that._endTime - (that._startTime||that._endTime);
-          console.log("[network][" + that.status + "] [" + costTime + "ms] " + url);
+          var url = _arguments[1] || 'unknow URL',
+              costTime = that._endTime - (that._startTime || that._endTime);
+          var log = '[network][' + that.status + '] [' + costTime + 'ms] ' + url;
+          if (that.status >= 200 && that.status < 400) {
+            console.log(log);
+          } else {
+            console.error(log);
+          } 
         }
 
         return _onreadystatechange.apply(that, arguments);
@@ -145,10 +166,10 @@ vConsole.prototype._mokeAjax = function() {
 
     return _open.apply(that, _arguments);
   };
-  window.XMLHttpRequest.prototype.send = function(){
+  window.XMLHttpRequest.prototype.send = function() {
     var that = this;
     that._startTime = +new Date();
-    setTimeout(function(){
+    setTimeout(function() {
       _send.apply(that, arguments);
     }, 1);
   };
@@ -160,6 +181,14 @@ vConsole.prototype._mokeAjax = function() {
  * @private
  */
 vConsole.prototype._autoRun = function() {
+  this.isReady = true;
+
+  // print logList
+  while (this.logList.length > 0) {
+    var log = this.logList.shift();
+    this._printLog(log.tabName, log.logType, log.logs);
+  }
+
   // print system info
   var ua = navigator.userAgent,
     logMsg = [];
@@ -233,12 +262,6 @@ vConsole.prototype._autoRun = function() {
       this._printLog('system', 'info', ['dom渲染耗时:', (t.domComplete - t.domLoading)+'ms']);
     }
   });
-
-  while (this.readyCallback.length > 0) {
-    var callback = this.readyCallback.shift();
-    callback && callback.call(this);
-  }
-  this.isReady = true;
 };
 
 /**
@@ -253,14 +276,24 @@ vConsole.prototype._printLog = function(tabName, logType, logs) {
     return;
   }
 
+  // if vConsole is not ready, save current log to logList
+  if (!this.isReady) {
+    this.logList.push({
+      tabName: tabName,
+      logType: logType,
+      logs: logs
+    });
+    return;
+  }
+
   // generate plain text for a line
   var line = '';
   for (var i=0; i<logs.length; i++) {
     try {
-      if (typeof logs[i] == 'function') {
+      if (isFunction(logs[i])) {
         line += ' ' + logs[i].toString();
-      } else if (typeof logs[i] == 'object') {
-        line += ' ' + JSON.stringify(logs[i]);
+      } else if (isObject(logs[i]) || isArray(logs[i])) {
+        line += ' ' + this._getFoldedLine(logs[i]);
       } else {
         line += ' ' + htmlEncode(logs[i]).replace(/\n/g, '<br/>');
       }
@@ -291,6 +324,70 @@ vConsole.prototype._printLog = function(tabName, logType, logs) {
 
   // print to traditional console
   this.console[logType].apply(window.console, logs);
+};
+
+/**
+ * generate the HTML of a folded line
+ * @private
+ */
+vConsole.prototype._getFoldedLine = function(obj, outerText) {
+  var json = JSON.stringify(obj);
+  var outer = '',
+      inner = '',
+      preview = '';
+  var lv = 0,
+      p = '  ';
+
+  preview = json.substr(0, 30);
+  if (json.length > 30) {
+    preview += '...';
+  }
+
+  outer = Object.prototype.toString.call(obj).replace('[object ', '').replace(']', '');
+  outer += ' ' + preview;
+  
+  function _iterateObj(val) {
+    if (isObject(val)) {
+      var keys = Object.keys(val);
+      inner += "{\n";
+      lv++;
+      for (var i=0; i<keys.length; i++) {
+        var k = keys[i];
+        if (!val.hasOwnProperty(k)) { continue; }
+        inner += Array(lv+1).join(p) + '<i class="vc-code-key">' + k + "</i>: ";
+        _iterateObj(val[k]);
+        if (i < keys.length - 1) {
+          inner += ",\n";
+        }
+      }
+      lv--;
+      inner += "\n" + Array(lv+1).join(p) + "}";
+    } else if (isArray(val)) {
+      inner += "[\n";
+      lv++;
+      for (var i=0; i<val.length; i++) {
+        inner += Array(lv+1).join(p) + '<i class="vc-code-key">' + i + "</i>: ";
+        _iterateObj(val[i]);
+        if (i < val.length - 1) {
+          inner += ",\n";
+        }
+      }
+      lv--;
+      inner += "\n" + Array(lv+1).join(p) + "]";
+    } else {
+      if (isString(val)) {
+        inner += '<i class="vc-code-string">"' + val + '"</i>';
+      } else if (isNumber(val)) {
+        inner += '<i class="vc-code-number">' + val + "</i>";
+      } else {
+        inner += JSON.stringify(val);
+      }
+    }
+  }
+  _iterateObj(obj);
+
+  var line = render(tplFold, {outer: outer, inner: inner});
+  return line;
 };
 
 /**
@@ -335,16 +432,14 @@ vConsole.prototype.hide = function() {
 };
 
 /**
- * when vConsole is ready, callback() will be called
+ * !!! this method is deprecated, callback will always be called !!!
+ * @deprecated
  * @public
  * @param	function	callback
  */
 vConsole.prototype.ready = function(callback) {
-  if (!this.isReady) {
-    this.readyCallback.push(callback);
-  } else {
-    callback.call(this);
-  }
+  console.warn('vConsole.ready() is deprecated, console.log() can be called at anytime without waiting for ready.');
+  callback && callback.call(this);
 };
 
 
@@ -389,7 +484,7 @@ function addClass($el, className) {
   if (!$el) {
     return;
   }
-  if (Object.prototype.toString.call($el) != '[object Array]') {
+  if (!isArray($el)) {
     $el = [$el];
   }
   for (var i=0; i<$el.length; i++) {
@@ -405,7 +500,7 @@ function removeClass($el, className) {
   if (!$el) {
     return;
   }
-  if (Object.prototype.toString.call($el) != '[object Array]') {
+  if (!isArray($el)) {
     $el = [$el];
   }
   for (var i=0; i<$el.length; i++) {
@@ -417,6 +512,23 @@ function removeClass($el, className) {
     }
     $el[i].className = arr.join(' ');
   }
+}
+
+/**
+ * see whether an element contains a className
+ * @private
+ */
+function hasClass($el, className) {
+  if (!$el) {
+    return false;
+  }
+  var arr = $el.className.split(' ');
+  for (var i=0; i<arr.length; i++) {
+    if (arr[i] == className) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /**
@@ -434,7 +546,7 @@ function bind($el, eventType, fn, useCapture) {
   if (useCapture === undefined) {
     useCapture = false;
   }
-  if (Object.prototype.toString.call($el) != '[object Array]') {
+  if (!isArray($el)) {
     $el = [$el];
   }
   for (var i=0; i<$el.length; i++) {
@@ -477,6 +589,37 @@ function getDate(time) {
 function htmlEncode(text) {
   return document.createElement('a').appendChild( document.createTextNode(text) ).parentNode.innerHTML;
 };
+
+/**
+ * simply render a HTML template
+ * @param string tpl
+ * @param object key-value data
+ * @return string
+ */
+function render(tpl, data) {
+  var html = tpl;
+  for (var k in data) {
+    html = html.replace('{' + k + '}', data[k]);
+  }
+  return html;
+}
+
+
+function isNumber(value) {
+  return Object.prototype.toString.call(value) == '[object Number]';
+}
+function isString(value) {
+  return Object.prototype.toString.call(value) == '[object String]';
+}
+function isArray(value) {
+  return Object.prototype.toString.call(value) == '[object Array]';
+}
+function isObject(value) {
+  return Object.prototype.toString.call(value) == '[object Object]';
+}
+function isFunction(value) {
+  return Object.prototype.toString.call(value) == '[object Function]';
+}
 
 /**
  * export

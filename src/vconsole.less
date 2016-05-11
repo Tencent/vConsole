@@ -80,6 +80,10 @@
     position: relative;
     height: 100%;
 
+    i {
+      font-style: normal;
+    }
+
     .vc-log:empty:before {
       content: "No log";
       color: #999;
@@ -99,26 +103,79 @@
       border-bottom: 1px solid #EEE;
       word-break: break-word;
     }
-
     .vc-item-info {
       color: #6A5ACD;
     }
-
     .vc-item-debug {
       color: #DAA520;
     }
-
     .vc-item-warn {
       color: #FFA500;
       border-color: #FFB930;
       background-color: #FFFACD;
     }
-
     .vc-item-error {
       color: #DC143C;
       border-color: #F4A0AB;
       background-color: #FFE4E1;
     }
+
+    .vc-item .vc-fold {
+      display: block;
+      max-height: 300px;
+      overflow: scroll;
+      -webkit-overflow-scrolling: touch;
+
+      .vc-fold-outer {
+        display: block;
+        font-style: italic;
+      }
+
+      .vc-fold-outer {
+        padding-left: 10px;
+        position: relative;
+      }
+
+      .vc-fold-outer:before {
+        content: "";
+        position: absolute;
+        top: 4px;
+        left: 2px;
+        width: 0;
+        height: 0;
+        border: transparent solid 4px;
+        border-left-color: #000;
+      }
+
+      .vc-fold-inner {
+        display: none;
+      }
+    }
+
+    .vc-item .vc-fold.vc-toggle {
+
+      .vc-fold-outer:before {
+        top: 6px;
+        left: 0;
+        border-top-color: #000;
+        border-left-color: transparent;
+      }
+
+      .vc-fold-inner {
+        display: block;
+      }
+    }
+
+    .vc-code-key {
+      color: #905;
+    }
+    .vc-code-number {
+      color: #0086B3;
+    }
+    .vc-code-string {
+      color: #183691;
+    }
+
   }
 
   .vc-logbox.vc-actived {
