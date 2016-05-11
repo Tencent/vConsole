@@ -50,7 +50,7 @@ var vConsole = require('path/to/vconsole.min.js');
 ```
 
 
-### 3. Usage
+## Usage
 
 (1) Use the methods of `console` to print logs, just like what you do at desktop browsers:
 
