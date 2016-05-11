@@ -13,20 +13,22 @@ import tplFold from './tpl_fold.html';
  * @constructor
  */
 function vConsole() {
+  var that = this;
+
   this.html = tpl;
   this.$dom = null;
   this.activedTab = 'default';
   this.tabList = ['default', 'system', 'network'];
   this.console = {}; // store native console methods
+  this.logList = []; // store logs when vConsole is not ready
   this.isReady = false;
-  this.readyCallback = [];
 
-  var that = this;
+  that._mokeConsole();
+  that._mokeAjax();
+
   bind(window, 'load', function() {
     that._render();
     that._bindEvent();
-    that._mokeConsole();
-    that._mokeAjax();
     that._autoRun();
   });
 }
@@ -174,6 +176,14 @@ vConsole.prototype._mokeAjax = function() {
  * @private
  */
 vConsole.prototype._autoRun = function() {
+  this.isReady = true;
+
+  // print logList
+  while (this.logList.length > 0) {
+    var log = this.logList.shift();
+    this._printLog(log.tabName, log.logType, log.logs);
+  }
+
   // print system info
   var ua = navigator.userAgent,
     logMsg = [];
@@ -247,12 +257,6 @@ vConsole.prototype._autoRun = function() {
       this._printLog('system', 'info', ['dom渲染耗时:', (t.domComplete - t.domLoading)+'ms']);
     }
   });
-
-  while (this.readyCallback.length > 0) {
-    var callback = this.readyCallback.shift();
-    callback && callback.call(this);
-  }
-  this.isReady = true;
 };
 
 /**
@@ -264,6 +268,16 @@ vConsole.prototype._autoRun = function() {
  */
 vConsole.prototype._printLog = function(tabName, logType, logs) {
   if (!logs.length) {
+    return;
+  }
+
+  // if vConsole is not ready, save current log to logList
+  if (!this.isReady) {
+    this.logList.push({
+      tabName: tabName,
+      logType: logType,
+      logs: logs
+    });
     return;
   }
 
@@ -413,16 +427,14 @@ vConsole.prototype.hide = function() {
 };
 
 /**
- * when vConsole is ready, callback() will be called
+ * !!! this method is deprecated, callback will always be called !!!
+ * @deprecated
  * @public
  * @param	function	callback
  */
 vConsole.prototype.ready = function(callback) {
-  if (!this.isReady) {
-    this.readyCallback.push(callback);
-  } else {
-    callback.call(this);
-  }
+  console.warn('vConsole.ready() is deprecated, console.log() can be called at anytime without waiting for ready.');
+  callback && callback.call(this);
 };
 
 
