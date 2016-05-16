@@ -1,6 +1,11 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
 
+#### v1.2.1 (2016-05-16)
+
+- [FIX] Fix data lost when sending a POST request
+
+
 #### v1.2.0 (2016-05-11)
 
 - [ADD] Add network panel
