@@ -61,7 +61,7 @@ $('.js_btn_log_sys').on('tap', function(e) {
 });
 $('.js_btn_ajax').on('tap', function(e) {
   // 发起一个AJAX
-  $.get('ajax.php', function(resp) {
+  $.post('ajax.php',  { id: Math.random() }, function(resp) {
     console.log(resp);
   });
   showTips();

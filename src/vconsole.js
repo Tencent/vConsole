@@ -169,9 +169,10 @@ vConsole.prototype._mokeAjax = function() {
   };
   window.XMLHttpRequest.prototype.send = function() {
     var that = this;
+    var _arguments = arguments;
     that._startTime = +new Date();
     setTimeout(function() {
-      _send.apply(that, arguments);
+      _send.apply(that, _arguments);
     }, 1);
   };
 
