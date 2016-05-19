@@ -50,7 +50,7 @@ var vConsole = require('path/to/vconsole.min.js');
 ```
 
 
-### 使用方法
+## 使用方法
 
 (1) 与 PC 端打印 log 一致，可直接使用 `console.log()` 等方法直接打印日志：
 

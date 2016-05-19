@@ -26,11 +26,16 @@ function vConsole() {
   that._mokeConsole();
   that._mokeAjax();
 
-  bind(window, 'load', function() {
+  var _onload = function() {
     that._render();
     that._bindEvent();
     that._autoRun();
-  });
+  };
+  if (document.readyState == 'complete') {
+    _onload();
+  } else {
+    bind(window, 'load', _onload);
+  }
 }
 
 /**
