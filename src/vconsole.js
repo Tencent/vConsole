@@ -22,6 +22,14 @@ function vConsole() {
   this.console = {}; // store native console methods
   this.logList = []; // store logs when vConsole is not ready
   this.isReady = false;
+  this.switchPos = {
+    x: 10, // right
+    y: 10, // bottom
+    startX: 0,
+    startY: 0,
+    endX: 0,
+    endY: 0
+  };
 
   that._mokeConsole();
   that._mokeAjax();
@@ -50,6 +58,16 @@ vConsole.prototype._render = function() {
     document.body.appendChild(e.children[0]);
   }
   this.$dom = $(id);
+
+  // reposition switch button
+  var switchX = getStorage('switch_x'),
+      switchY = getStorage('switch_y');
+  if (switchX && switchY) {
+    this.switchPos.x = switchX;
+    this.switchPos.y = switchY;
+    $('.vc-switch').style.right = switchX + 'px';
+    $('.vc-switch').style.bottom = switchY + 'px';
+  }
 };
 
 /**
@@ -59,8 +77,40 @@ vConsole.prototype._render = function() {
 vConsole.prototype._bindEvent = function() {
   var that = this;
 
+  // drag & drop switch button
+  var $switch = $('.vc-switch');
+  bind($switch, 'touchstart', function(e) {
+    that.switchPos.startX = e.touches[0].pageX;
+    that.switchPos.startY = e.touches[0].pageY;
+  });
+  bind($switch, 'touchend', function(e) {
+    if (that.switchPos.endX != 0 || that.switchPos.endY != 0) {
+      that.switchPos.x = that.switchPos.endX;
+      that.switchPos.y = that.switchPos.endY;
+      that.switchPos.startX = 0;
+      that.switchPos.startY = 0;
+      that.switchPos.endX = 0;
+      that.switchPos.endY = 0;
+      setStorage('switch_x', that.switchPos.x);
+      setStorage('switch_y', that.switchPos.y);
+    }
+  });
+  bind($switch, 'touchmove', function(e) {
+    if (e.touches.length > 0) {
+      var offsetX = e.touches[0].pageX - that.switchPos.startX,
+          offsetY = e.touches[0].pageY - that.switchPos.startY;
+      var x = that.switchPos.x - offsetX,
+          y = that.switchPos.y - offsetY;
+      $switch.style.right = x + 'px';
+      $switch.style.bottom = y + 'px';
+      that.switchPos.endX = x;
+      that.switchPos.endY = y;
+      e.preventDefault();
+    }
+  });
+
   // show console panel
-  bind($('.vc-show'), 'click', function() {
+  bind($('.vc-switch'), 'click', function() {
     that.show();
   })
 
@@ -611,7 +661,11 @@ function render(tpl, data) {
   return html;
 }
 
-
+/**
+ * determines whether the passed value is a specific type
+ * @param mixed value
+ * @return boolean
+ */
 function isNumber(value) {
   return Object.prototype.toString.call(value) == '[object Number]';
 }
@@ -626,6 +680,18 @@ function isObject(value) {
 }
 function isFunction(value) {
   return Object.prototype.toString.call(value) == '[object Function]';
+}
+
+/**
+ * localStorage methods
+ */
+function setStorage(key, value) {
+  key = 'vConsole_' + key;
+  localStorage.setItem(key, value);
+}
+function getStorage(key) {
+  key = 'vConsole_' + key;
+  return localStorage.getItem(key);
 }
 
 /**
