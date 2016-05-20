@@ -1,6 +1,12 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
 
+#### v1.3.0 (2016-05-20)
+
+- [ADD] Support Drag and Drop switch button
+- [FIX] Fix initialization failure when loaded asynchronously
+
+
 #### v1.2.1 (2016-05-16)
 
 - [FIX] Fix data lost when sending a POST request
