@@ -9,6 +9,7 @@ import $ from '../lib/query.js';
 import VConsolePlugin from '../lib/plugin.js';
 import tplItem from './item.html';
 import tplFold from './item_fold.html';
+import tplFoldCode from './item_fold_code.html';
 
 class VConsoleLogTab extends VConsolePlugin {
 
@@ -196,8 +197,8 @@ class VConsoleLogTab extends VConsolePlugin {
     var lv = 0,
         p = '  ';
 
-    preview = json.substr(0, 30);
-    if (json.length > 30) {
+    preview = json.substr(0, 26);
+    if (json.length > 26) {
       preview += '...';
     }
 
@@ -212,7 +213,7 @@ class VConsoleLogTab extends VConsolePlugin {
         for (var i=0; i<keys.length; i++) {
           var k = keys[i];
           if (!val.hasOwnProperty(k)) { continue; }
-          inner += Array(lv + 1).join(p) + '<i class="vc-code-key">' + k + "</i>: ";
+          inner += Array(lv + 1).join(p) + $.render(tplFoldCode, {type:'key', code:k}, true) + ': ';
           _iterateObj(val[k]);
           if (i < keys.length - 1) {
             inner += ",\n";
@@ -224,7 +225,7 @@ class VConsoleLogTab extends VConsolePlugin {
         inner += "[\n";
         lv++;
         for (var i=0; i<val.length; i++) {
-          inner += Array(lv + 1).join(p) + '<i class="vc-code-key">' + i + "</i>: ";
+          inner += Array(lv + 1).join(p) + $.render(tplFoldCode, {type:'key', code:i}, true) + ': ';
           _iterateObj(val[i]);
           if (i < val.length - 1) {
             inner += ",\n";
@@ -234,9 +235,9 @@ class VConsoleLogTab extends VConsolePlugin {
         inner += "\n" + Array(lv + 1).join(p) + "]";
       } else {
         if (tool.isString(val)) {
-          inner += '<i class="vc-code-string">"' + val + '"</i>';
+          inner += $.render(tplFoldCode, {type:'string', code:'"'+val+'"'}, true);
         } else if (tool.isNumber(val)) {
-          inner += '<i class="vc-code-number">' + val + "</i>";
+          inner += $.render(tplFoldCode, {type:'number', code:val}, true);
         } else {
           inner += JSON.stringify(val);
         }

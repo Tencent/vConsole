@@ -123,11 +123,11 @@ $.bind = function($el, eventType, fn, useCapture) {
  * @return object|string
  */
 $.render = function(tpl, data, toString) {
-  let html = tpl;
+  var html = tpl;
   for (let k in data) {
     html = html.replace(new RegExp('{' + k + '}', 'g'), data[k]);
   }
-  let dom = html;
+  var dom = html;
   if (!toString) {
     let e = document.createElement('div');
     e.innerHTML = html;
