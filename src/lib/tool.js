@@ -10,8 +10,8 @@
  * @return  object
  */
 export function getDate(time) {
-  var d = time>0 ? new Date(time) : new Date();
-  var day = d.getDay()<10 ? '0'+d.getDay() : d.getDay(),
+  let d = time>0 ? new Date(time) : new Date();
+  let day = d.getDay()<10 ? '0'+d.getDay() : d.getDay(),
     month = d.getMonth()<9 ? '0'+(d.getMonth()+1) : (d.getMonth()+1),
     year = d.getFullYear(),
     hour = d.getHours()<10 ? '0'+d.getHours() : d.getHours(),

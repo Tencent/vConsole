@@ -24,7 +24,7 @@ $.one = function(selector, contextElement) {
  * @private
  */
 $.all = function(selector, contextElement) {
-  var nodeList,
+  let nodeList,
     list = [];
   if (contextElement) {
     nodeList = contextElement.querySelectorAll(selector);
@@ -48,8 +48,8 @@ $.addClass = function($el, className) {
   if (!isArray($el)) {
     $el = [$el];
   }
-  for (var i=0; i<$el.length; i++) {
-    $el[i].className += ' ' + className;
+  for (let $e of $el) {
+    $e.className += ' ' + className;
   }
 }
 
@@ -64,14 +64,14 @@ $.removeClass = function($el, className) {
   if (!isArray($el)) {
     $el = [$el];
   }
-  for (var i=0; i<$el.length; i++) {
-    var arr = $el[i].className.split(' ');
-    for (var j=0; j<arr.length; j++) {
+  for (let $e of $el) {
+    let arr = $e.className.split(' ');
+    for (let j=0; j<arr.length; j++) {
       if (arr[j] == className) {
         arr[j] = '';
       }
     }
-    $el[i].className = arr.join(' ');
+    $e.className = arr.join(' ');
   }
 }
 
@@ -83,9 +83,9 @@ $.hasClass = function($el, className) {
   if (!$el) {
     return false;
   }
-  var arr = $el.className.split(' ');
-  for (var i=0; i<arr.length; i++) {
-    if (arr[i] == className) {
+  let arr = $el.className.split(' ');
+  for (let name of arr) {
+    if (name == className) {
       return true;
     }
   }
@@ -110,8 +110,8 @@ $.bind = function($el, eventType, fn, useCapture) {
   if (!isArray($el)) {
     $el = [$el];
   }
-  for (var i=0; i<$el.length; i++) {
-    $el[i].addEventListener(eventType, fn, useCapture);
+  for (let $e of $el) {
+    $e.addEventListener(eventType, fn, useCapture);
   }
 }
 
@@ -119,14 +119,21 @@ $.bind = function($el, eventType, fn, useCapture) {
  * simply render a HTML template
  * @param string tpl
  * @param object key-value data
- * @return string
+ * @param boolean whether to conver to HTML string
+ * @return object|string
  */
-$.render = function(tpl, data) {
-  var html = tpl;
-  for (var k in data) {
-    html = html.replace('{' + k + '}', data[k]);
+$.render = function(tpl, data, toString) {
+  let html = tpl;
+  for (let k in data) {
+    html = html.replace(new RegExp('{' + k + '}', 'g'), data[k]);
   }
-  return html;
+  let dom = html;
+  if (!toString) {
+    let e = document.createElement('div');
+    e.innerHTML = html;
+    dom = e.children[0];
+  }
+  return dom;
 }
 
 

@@ -8,8 +8,10 @@ import * as tool from '../lib/tool.js';
 import $ from '../lib/query.js';
 import './core.less';
 import tpl from './core.html';
+import tplTabbar from './tabbar.html';
+import tplTabbox from './tabbox.html';
 
-class vConsole {
+class VConsole {
 
   constructor() {
     var that = this;
@@ -18,6 +20,7 @@ class vConsole {
     this.$dom = null;
     this.activedTab = '';
     this.tabList = [];
+    this.pluginList = {};
     this.console = {}; // store native console methods
     this.logList = []; // store logs when vConsole is not ready
     this.isReady = false;
@@ -129,12 +132,14 @@ class vConsole {
     });
 
     // show a log box
-    $.bind($.all('.vc-tab'), 'click', function(e) {
-      var tabName = e.target.dataset.tab;
-      if (tabName == that.activedTab) {
-        return;
+    $.bind($.one('.vc-tabbar', that.$dom), 'click', function(e) {
+      if ($.hasClass(e.target, 'vc-tab')) {
+        var tabName = e.target.dataset.tab;
+        if (tabName == that.activedTab) {
+          return;
+        }
+        that.showTab(tabName);
       }
-      that.showTab(tabName);
     });
 
     // log-related actions
@@ -159,13 +164,58 @@ class vConsole {
   _autoRun() {
     this.isReady = true;
 
+    // init plugins
+    for (let id in this.pluginList) {
+      this._initPlugin(this.pluginList[id]);
+    }
+
+    // show first tab
+    this.showTab(this.tabList[0]);
   }
 
   /**
-   * register a new tab
+   * init a plugin
+   * @private
    */
-  addTab(opt) {
+  _initPlugin(plugin) {
+    var that = this;
+    plugin.trigger('init');
+    // render tab (if it is a tab plugin then it should has tab-related events)
+    plugin.trigger('renderTab', function(tabboxHTML) {
+      // add to tabList
+      that.tabList.push(plugin.id);
+      // render tabbar
+      let $tabbar = $.render(tplTabbar, {id: plugin.id, name: plugin.name});
+      $.one('.vc-tabbar', that.$dom).appendChild($tabbar);
+      // render tabbox
+      let $tabbox = $.render(tplTabbox, {id: plugin.id});
+      if (tool.isString(tabboxHTML)) {
+        $tabbox.innerHTML += tabboxHTML;
+      } else if (!!tabboxHTML) {
+        $tabbox.appendChild(tabboxHTML);
+      }
+      $.one('.vc-content', that.$dom).appendChild($tabbox);
+    });
+    plugin.trigger('finishInit');
+  } 
 
+  /**
+   * add a new plugin
+   * @public
+   * @param object VConsolePlugin object
+   */
+  addPlugin(plugin) {
+    // ignore this plugin if it has already been installed
+    if (this.pluginList[plugin.id] !== undefined) {
+      return false;
+    }
+    // trigger 'add' event
+    this.pluginList[plugin.id] = plugin;
+    plugin.trigger('add');
+    // init plugin only if vConsole is ready
+    if (this.isReady) {
+      this._initPlugin(plugin);
+    }
   }
 
   /**
@@ -184,6 +234,22 @@ class vConsole {
     $.removeClass(this.$dom, 'vc-toggle');
   }
 
+  /**
+   * show a tab
+   * @public
+   */
+  showTab(tabName) {
+    var $logbox = $.one('#__vc_log_' + tabName);
+    // set actived status
+    $.removeClass($.all('.vc-tab', this.$dom), 'vc-actived');
+    $.addClass($.one('#__vc_tab_' + tabName), 'vc-actived');
+    $.removeClass($.all('.vc-logbox', this.$dom), 'vc-actived');
+    $.addClass($logbox, 'vc-actived');
+    // scroll to bottom
+    $.one('.vc-content', this.$dom).scrollTop = $.one('.vc-content', this.$dom).scrollHeight;
+    this.activedTab = tabName;
+  }
+
 } // END class
 
-export default vConsole;
+export default VConsole;
