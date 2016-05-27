@@ -52,7 +52,14 @@ class VConsolePlugin {
    */
   trigger(eventName, data) {
     if (typeof this.eventList[eventName] === 'function') {
+      // registered by `.on()` method
       this.eventList[eventName].call(this, data);
+    } else {
+      // registered by `.onXxx()` method
+      let method = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1);
+      if (typeof this[method] === 'function') {
+        this[method].call(this, data);
+      }
     }
     return this;
   }

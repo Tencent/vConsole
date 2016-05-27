@@ -28,7 +28,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     
     // current time
     let d = tool.getDate();
-    console.info('[system]', 'Now:', d.year+'-'+d.month+'-'+d.day+' '+d.hour+':'+d.minute+':'+d.second+' '+d.millisecond);
+    console.info('[system]', 'Now:', d.year+'-'+d.month+'-'+d.day+' '+d.hour+':'+d.minute+':'+d.second+'.'+d.millisecond);
 
     // device & system
     logMsg = 'Unknown';
@@ -93,24 +93,13 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       // console.info('system', 'req&RespTime:', (t.responseEnd - t.requestStart)+'ms');
       console.info('[system]', 'DomRenderCost:', (t.domComplete - t.domLoading)+'ms');
     }
+
+    // User Agent
+    console.info('[system]', 'UA:', ua);
   }
 
 } // END class
 
 const tab = new VConsoleDefaultTab('system', 'System');
-
-// when plugin is added to vConsole, 
-// this event will be triggered immediately (but vConsole may be not ready yet)
-tab.on('add', tab.onAdd);
-
-// when vConsole is ready, 
-// this event will be triggered (after 'add' event)
-tab.on('init', tab.onInit);
-
-// add this event then this plugin will be registered as a tab
-tab.on('renderTab', tab.onRenderTab);
-
-// after init
-tab.on('finishInit', tab.onFinishInit);
 
 export default tab;

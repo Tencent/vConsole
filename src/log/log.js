@@ -25,10 +25,20 @@ class VConsoleLogTab extends VConsolePlugin {
     this.logList = [];
   }
 
+  /**
+   * when plugin is added to vConsole, 
+   * this event will be triggered immediately (but vConsole may be not ready yet)
+   * @public
+   */
   onAdd() {
     this.mokeConsole();
   }
 
+  /**
+   * when vConsole is ready, 
+   * this event will be triggered (after 'add' event)
+   * @public
+   */
   onInit() {
     this.isReady = true;
     this.$tabbox = $.render(this.tplTabbox, {});
@@ -38,10 +48,18 @@ class VConsoleLogTab extends VConsolePlugin {
     this.logList = [];
   }
 
+  /**
+   * this event will make this plugin be registered as a tab
+   * @public
+   */
   onRenderTab(callback) {
     callback(this.$tabbox);
   }
 
+  /**
+   * after init
+   * @public
+   */
   onFinishInit() {
 
     $.bind($.one('.vc-log', this.$tabbox), 'click', function(e) {
@@ -89,7 +107,7 @@ class VConsoleLogTab extends VConsolePlugin {
 
   /**
    * print log to origin console
-   * @private
+   * @protected
    */
   printOriginLog(item) {
     this.console[item.logType].apply(window.console, item.logs);
@@ -97,7 +115,7 @@ class VConsoleLogTab extends VConsolePlugin {
 
   /**
    * print a log to log box
-   * @private
+   * @protected
    * @param  string  tabName    auto|default|system
    * @param  string  logType    log|info|debug|error|warn
    * @param  array  logs
@@ -173,16 +191,24 @@ class VConsoleLogTab extends VConsolePlugin {
 
     // render
     let date = tool.getDate(item.date);
-    let $item = $.render(tplItem, {
-      logType: item.logType, 
-      content: line, 
-      date: date.hour + ':' + date.minute + ':' + date.second
+    this.renderLog({
+      logType: item.logType,
+      content: line,
+      meta: date.hour + ':' + date.minute + ':' + date.second
     });
-    $.one('.vc-log', this.$tabbox).appendChild($item);
-    $.one('.vc-content').scrollTop = $.one('.vc-content').scrollHeight;
 
     // print log to origin console
     this.printOriginLog(item);
+  }
+
+  /**
+   * render a log
+   * @protected
+   */
+  renderLog(item) {
+    let $item = $.render(tplItem, item);
+    $.one('.vc-log', this.$tabbox).appendChild($item);
+    $.one('.vc-content').scrollTop = $.one('.vc-content').scrollHeight;
   }
 
   /**
