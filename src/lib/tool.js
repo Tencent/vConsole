@@ -45,8 +45,25 @@ export function isString(value) {
 export function isArray(value) {
   return Object.prototype.toString.call(value) == '[object Array]';
 }
+export function isBoolean(value) {
+  return Object.prototype.toString.call(value) == '[object Boolean]';
+}
+export function isUndefined(value) {
+  return Object.prototype.toString.call(value) == '[object Undefined]';
+}
+export function isNull(value) {
+  return Object.prototype.toString.call(value) == '[object Null]';
+}
+export function isSymbol(value) {
+  return Object.prototype.toString.call(value) == '[object Symbol]';
+}
 export function isObject(value) {
-  return Object.prototype.toString.call(value) == '[object Object]';
+  let is = (
+    Object.prototype.toString.call(value) == '[object Object]'
+    ||
+    (value !== null && typeof value == 'object')
+  );
+  return is;
 }
 export function isFunction(value) {
   return Object.prototype.toString.call(value) == '[object Function]';
@@ -59,6 +76,85 @@ export function isFunction(value) {
  */
 export function htmlEncode(text) {
   return document.createElement('a').appendChild( document.createTextNode(text) ).parentNode.innerHTML;
+}
+
+/**
+ * JSON stringify, support circular structure
+ */
+export function JSONStringify(obj) {
+  let json = '',
+      lv = 0;
+
+  // use a map to track whether a value has been iterated in previous level
+  let objMap = [];
+  function _isIteratedInPreLevel(val, curLV) {
+    let is = false;
+    for (let item of objMap) {
+      if (item.obj == val && item.lv < curLV) {
+        is = true;
+        break;
+      }
+    }
+    return is;
+  }
+
+  function _iterateObj(val) {
+    if (isObject(val)) {
+      // object
+      if (_isIteratedInPreLevel(val, lv)) {
+        // this object is circular, skip it
+        json += "{Circular Object}";
+        return;
+      }
+      objMap.push({obj: val, lv: lv});
+
+      let keys = Object.keys(val);
+      json += "{";
+      lv++;
+      for (let i=0; i<keys.length; i++) {
+        let k = keys[i];
+        if (!val.hasOwnProperty(k)) { continue; }
+        json += k + ': ';
+        _iterateObj(val[k]);
+        if (i < keys.length - 1) {
+          json += ', ';
+        }
+      }
+      lv--;
+      json += '}';
+    } else if (isArray(val)) {
+      // array
+      json += '[';
+      lv++;
+      for (let i=0; i<val.length; i++) {
+        _iterateObj(val[i]);
+        if (i < val.length - 1) {
+          json += ', ';
+        }
+      }
+      lv--;
+      json += ']';
+    } else if (isString(val)) {
+      json += '"'+val+'"';
+    } else if (isNumber(val)) {
+      json += val;
+    } else if (isBoolean(val)) {
+      json += val;
+    } else if (isNull(val)) {
+      json += 'null';
+    } else if (isUndefined(val)) {
+      json += 'undefined';
+    } else if (isFunction(val)) {
+      json += 'function()';
+    } else if (isSymbol(val)) {
+      json += 'symbol';
+    } else {
+      json += 'unknown';
+    }
+  }
+  _iterateObj(obj);
+
+  return json;
 }
 
 /**

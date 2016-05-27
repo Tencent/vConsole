@@ -132,14 +132,17 @@ class VConsoleLogTab extends VConsolePlugin {
     // check `[default]` format
     let shouldBeHere = true;
     let pattern = /^\[(\w+)\] ?/i;
+    let targetTabName = '';
     if (tool.isString(logs[0])) {
       let match = logs[0].match(pattern);
       if (match !== null && match.length > 0) {
-        let tabName = match[1].toLowerCase();
-        shouldBeHere = (tabName == this.id);
-      } else if (this.allowUnformattedLog == false) {
-        shouldBeHere = false;
+        targetTabName = match[1].toLowerCase();
       }
+    }
+    if (targetTabName) {
+      shouldBeHere = (targetTabName == this.id);
+    } else if (this.allowUnformattedLog == false) {
+      shouldBeHere = false;
     }
 
     if (!shouldBeHere) {
@@ -171,7 +174,7 @@ class VConsoleLogTab extends VConsolePlugin {
     let line = '';
     for (let i=0; i<logs.length; i++) {
       try {
-        if (logs[i] == '') {
+        if (logs[i] === '') {
           // ignore empty string
           continue;
         } else if (tool.isFunction(logs[i])) {
@@ -213,14 +216,14 @@ class VConsoleLogTab extends VConsolePlugin {
 
   /**
    * generate the HTML of a folded line
-   * @private
+   * @protected
    */
-  getFoldedLine(obj, outerText) {
-    var json = JSON.stringify(obj);
-    var outer = '',
+  getFoldedLine(obj) {
+    let json = tool.JSONStringify(obj);
+    let outer = '',
         inner = '',
         preview = '';
-    var lv = 0,
+    let lv = 0,
         p = '  ';
 
     preview = json.substr(0, 26);
@@ -230,14 +233,35 @@ class VConsoleLogTab extends VConsolePlugin {
 
     outer = Object.prototype.toString.call(obj).replace('[object ', '').replace(']', '');
     outer += ' ' + preview;
+
+    // use a map to track whether a value has been iterated in previous level
+    let objMap = [];
+    function _isIteratedInPreLevel(val, curLV) {
+      let is = false;
+      for (let item of objMap) {
+        if (item.obj == val && item.lv < curLV) {
+          is = true;
+          break;
+        }
+      }
+      return is;
+    }
     
     function _iterateObj(val) {
       if (tool.isObject(val)) {
-        var keys = Object.keys(val);
+        // object
+        if (_isIteratedInPreLevel(val, lv)) {
+          // this object is circular, skip it
+          inner += "{Circular Object}";
+          return;
+        }
+        objMap.push({obj: val, lv: lv});
+
+        let keys = Object.keys(val);
         inner += "{\n";
         lv++;
-        for (var i=0; i<keys.length; i++) {
-          var k = keys[i];
+        for (let i=0; i<keys.length; i++) {
+          let k = keys[i];
           if (!val.hasOwnProperty(k)) { continue; }
           inner += Array(lv + 1).join(p) + $.render(tplFoldCode, {type:'key', code:k}, true) + ': ';
           _iterateObj(val[k]);
@@ -248,9 +272,10 @@ class VConsoleLogTab extends VConsolePlugin {
         lv--;
         inner += "\n" + Array(lv + 1).join(p) + "}";
       } else if (tool.isArray(val)) {
+        // array
         inner += "[\n";
         lv++;
-        for (var i=0; i<val.length; i++) {
+        for (let i=0; i<val.length; i++) {
           inner += Array(lv + 1).join(p) + $.render(tplFoldCode, {type:'key', code:i}, true) + ': ';
           _iterateObj(val[i]);
           if (i < val.length - 1) {
@@ -259,19 +284,25 @@ class VConsoleLogTab extends VConsolePlugin {
         }
         lv--;
         inner += "\n" + Array(lv + 1).join(p) + "]";
+      } else if (tool.isString(val)) {
+        inner += $.render(tplFoldCode, {type:'string', code:'"'+tool.htmlEncode(val)+'"'}, true);
+      } else if (tool.isNumber(val)) {
+        inner += $.render(tplFoldCode, {type:'number', code:val}, true);
+      } else if (tool.isBoolean(val)) {
+        inner += $.render(tplFoldCode, {type:'boolean', code:val}, true);
+      } else if (tool.isNull(val)) {
+        inner += $.render(tplFoldCode, {type:'null', code:'null'}, true);
+      } else if (tool.isUndefined(val)) {
+        inner += $.render(tplFoldCode, {type:'undefined', code:'undefined'}, true);
+      } else if (tool.isFunction(val)) {
+        inner += $.render(tplFoldCode, {type:'function', code:'function()'}, true);
       } else {
-        if (tool.isString(val)) {
-          inner += $.render(tplFoldCode, {type:'string', code:'"'+val+'"'}, true);
-        } else if (tool.isNumber(val)) {
-          inner += $.render(tplFoldCode, {type:'number', code:val}, true);
-        } else {
-          inner += JSON.stringify(val);
-        }
+        inner += JSON.stringify(val);
       }
     }
     _iterateObj(obj);
 
-    var line = $.render(tplFold, {outer: outer, inner: inner}, true);
+    let line = $.render(tplFold, {outer: outer, inner: inner}, true);
     return line;
   }
 

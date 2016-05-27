@@ -26,7 +26,9 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       let $input = $.one('.vc-cmd-input', e.target),
         cmd = $input.value;
       $input.value = '';
-      that.evalCommand(cmd);
+      if (cmd !== '') {
+        that.evalCommand(cmd);
+      }
     });
   }
 
@@ -44,9 +46,16 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     // eval
     let result = eval(cmd);
     // print result to console
+    let content = '';
+    if (tool.isArray(result) || tool.isObject(result)) {
+      content = this.getFoldedLine(result);
+    } else {
+      content = $.render(tplItemCode, {content: result, type: 'output'}, true);
+    }
     this.renderLog({
       meta: '',
-      content: $.render(tplItemCode, {content: result, type: 'output'}, true)
+      content: content,
+      style: 'vc-item-nometa'
     });
   }
 

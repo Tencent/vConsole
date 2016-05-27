@@ -147,6 +147,18 @@
 
     }
 
+    .vc-item.vc-item-nometa {
+
+      .vc-item-content {
+        margin-right: 0;
+      }
+
+      .vc-item-meta {
+        display: none;
+      }
+
+    }
+
     .vc-item .vc-item-code {
       display: block;
       white-space: pre-wrap;
@@ -172,7 +184,6 @@
 
     .vc-item .vc-fold {
       display: block;
-      max-height: 300px;
       overflow: scroll;
       -webkit-overflow-scrolling: touch;
 
@@ -203,6 +214,7 @@
       .vc-fold-inner {
         display: none;
         white-space: pre-wrap;
+        max-height: 250px;
       }
     }
 
@@ -223,11 +235,20 @@
     .vc-code-key {
       color: #905;
     }
-    .vc-code-number {
+    .vc-code-function {
+      color: #905;
+      font-style: italic;
+    }
+    .vc-code-number,
+    .vc-code-boolean {
       color: #0086B3;
     }
     .vc-code-string {
       color: #183691;
+    }
+    .vc-code-null,
+    .vc-code-undefined {
+      color: #666;
     }
 
     .vc-cmd {
