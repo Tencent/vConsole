@@ -82,15 +82,16 @@ class VConsoleLogTab extends VConsolePlugin {
    * @private
    */
   mokeConsole() {
-    if (!window.console) {
-      return;
-    }
     let that = this;
-    this.console.log = window.console.log;
-    this.console.info = window.console.info;
-    this.console.warn = window.console.warn;
-    this.console.debug = window.console.debug;
-    this.console.error = window.console.error;
+    if (!window.console) {
+      window.console = {};
+    } else {
+      this.console.log = window.console.log;
+      this.console.info = window.console.info;
+      this.console.warn = window.console.warn;
+      this.console.debug = window.console.debug;
+      this.console.error = window.console.error;
+    }
     window.console.log = function() { that.printLog({logType:'log', logs:arguments}); };
     window.console.info = function() { that.printLog({logType:'info', logs:arguments}); };
     window.console.warn = function() { that.printLog({logType:'warn', logs:arguments}); };
@@ -110,7 +111,9 @@ class VConsoleLogTab extends VConsolePlugin {
    * @protected
    */
   printOriginLog(item) {
-    this.console[item.logType].apply(window.console, item.logs);
+    if (typeof this.console[item.logType] === 'function') {
+      this.console[item.logType].apply(window.console, item.logs);
+    }
   }
 
   /**
