@@ -17,9 +17,9 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     this.tplTabbox = tplTabbox;
   }
 
-  onFinishInit() {
+  onReady() {
     let that = this;
-    super.onFinishInit();
+    super.onReady();
 
     $.bind($.one('.vc-cmd', this.$tabbox), 'submit', function(e) {
       e.preventDefault();

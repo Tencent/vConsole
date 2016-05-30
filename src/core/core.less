@@ -307,18 +307,26 @@
     left: 0;
     right: 0;
     bottom: 0;
-    overflow: hidden;
+    display: flex;
+    flex-direction: row;
 
     .vc-tool {
+      display: none;
       text-decoration: none;
       color: #000;
       width: 50%;
-      float: left;
+      flex: 1;
       text-align: center;
       position: relative;
       -webkit-touch-callout: none;
     }
+    .vc-tool.vc-actived {
+      display: block;
+    }
 
+    .vc-tool:active {
+      background-color: rgba(0,0,0,0.15);
+    }
     .vc-tool:after {
       content: " ";
       position: absolute;
@@ -328,6 +336,9 @@
       border-left: 1px solid #D9D9D9;
     }
 
+    .vc-tool-last {
+      display: block;
+    }
     .vc-tool-last:after {
       border: none;
     }

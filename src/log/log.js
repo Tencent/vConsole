@@ -23,14 +23,7 @@ class VConsoleLogTab extends VConsolePlugin {
     this.$tabbox = null;
     this.console = {};
     this.logList = [];
-  }
 
-  /**
-   * when plugin is added to vConsole, 
-   * this event will be triggered immediately (but vConsole may be not ready yet)
-   * @public
-   */
-  onAdd() {
     this.mokeConsole();
   }
 
@@ -56,11 +49,22 @@ class VConsoleLogTab extends VConsolePlugin {
     callback(this.$tabbox);
   }
 
+  onAddTool(callback) {
+    var that = this;
+    var toolList = [{
+      name: 'Clear',
+      onClick: function(e) {
+        that.clearLog();
+      }
+    }];
+    callback(toolList);
+  }
+
   /**
    * after init
    * @public
    */
-  onFinishInit() {
+  onReady() {
 
     $.bind($.one('.vc-log', this.$tabbox), 'click', function(e) {
       var target = e.target;
@@ -104,6 +108,10 @@ class VConsoleLogTab extends VConsolePlugin {
       stack = stack.replace(location.origin, '');
       console.error(stack);
     };
+  }
+
+  clearLog() {
+    $.one('.vc-log', this.$tabbox).innerHTML = '';
   }
 
   /**

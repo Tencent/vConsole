@@ -10,6 +10,7 @@ import './core.less';
 import tpl from './core.html';
 import tplTabbar from './tabbar.html';
 import tplTabbox from './tabbox.html';
+import tplToolItem from './tool_item.html';
 
 class VConsole {
 
@@ -127,9 +128,9 @@ class VConsole {
     });
 
     // clear a log box
-    $.bind($.one('.vc-clear'), 'click', function() {
-      that.clearLog(that.activedTab);
-    });
+    // $.bind($.one('.vc-clear'), 'click', function() {
+    //   that.clearLog(that.activedTab);
+    // });
 
     // show tab box
     $.bind($.one('.vc-tabbar', that.$dom), 'click', function(e) {
@@ -179,6 +180,7 @@ class VConsole {
    */
   _initPlugin(plugin) {
     var that = this;
+    // start init
     plugin.trigger('init');
     // render tab (if it is a tab plugin then it should has tab-related events)
     plugin.trigger('renderTab', function(tabboxHTML) {
@@ -196,7 +198,25 @@ class VConsole {
       }
       $.one('.vc-content', that.$dom).appendChild($tabbox);
     });
-    plugin.trigger('finishInit');
+    // render tool bar
+    plugin.trigger('addTool', function(toolList) {
+      if (!toolList) {
+        return;
+      }
+      let $defaultBtn = $.one('.vc-tool-last');
+      for (let item of toolList) {
+        let $item = $.render(tplToolItem, {
+          name: item.name || 'Undefined',
+          pluginID: plugin.id
+        });
+        if (tool.isFunction(item.onClick)) {
+          $.bind($item, 'click', item.onClick);
+        }
+        $defaultBtn.parentNode.insertBefore($item, $defaultBtn);
+      }
+    });
+    // end init
+    plugin.trigger('ready');
   }
 
   /**
@@ -204,8 +224,8 @@ class VConsole {
    * @private
    */
   _triggerPluginsEvent(eventName) {
-    for (let plugin of this.pluginList) {
-      plugin.trigger(eventName);
+    for (let id in this.pluginList) {
+      this.pluginList[id].trigger(eventName);
     }
   }
 
@@ -228,15 +248,15 @@ class VConsole {
   addPlugin(plugin) {
     // ignore this plugin if it has already been installed
     if (this.pluginList[plugin.id] !== undefined) {
+      console.warn('Plugin ' + plugin.id + ' has already been added.');
       return false;
     }
-    // trigger 'add' event
     this.pluginList[plugin.id] = plugin;
-    plugin.trigger('add');
     // init plugin only if vConsole is ready
     if (this.isReady) {
       this._initPlugin(plugin);
     }
+    return true;
   }
 
   /**
@@ -270,6 +290,9 @@ class VConsole {
     $.addClass($logbox, 'vc-actived');
     // scroll to bottom
     $.one('.vc-content', this.$dom).scrollTop = $.one('.vc-content', this.$dom).scrollHeight;
+    // show toolbar
+    $.removeClass($.all('.vc-tool', this.$dom), 'vc-actived');
+    $.addClass($.all('.vc-tool-' + tabID, this.$dom), 'vc-actived');
     // trigger plugin event
     this._triggerPluginEvent(this.activedTab, 'hide');
     this.activedTab = tabID;
