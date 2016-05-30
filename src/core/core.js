@@ -33,6 +33,7 @@ class VConsole {
       endX: 0,
       endY: 0
     };
+    this.bodyOverflowCSS = '';
 
     var _onload = function() {
       that._render();
@@ -269,6 +270,9 @@ class VConsole {
   show() {
     $.addClass(this.$dom, 'vc-toggle');
     this._triggerPluginsEvent('showConsole');
+    // set overflow:hidden to prevent scrolling
+    this.bodyOverflowCSS = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
   }
 
   /**
@@ -276,6 +280,8 @@ class VConsole {
    * @public
    */
   hide() {
+    // recover body style
+    document.body.style.overflow = this.bodyOverflowCSS;
     $.removeClass(this.$dom, 'vc-toggle');
     this._triggerPluginsEvent('hideConsole');
   }
