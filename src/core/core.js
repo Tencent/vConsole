@@ -245,6 +245,7 @@ class VConsole {
    */
   show() {
     $.addClass(this.$dom, 'vc-toggle');
+    this._triggerPluginsEvent('showConsole');
   }
 
   /**
@@ -253,6 +254,7 @@ class VConsole {
    */
   hide() {
     $.removeClass(this.$dom, 'vc-toggle');
+    this._triggerPluginsEvent('hideConsole');
   }
 
   /**
