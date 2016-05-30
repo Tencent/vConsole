@@ -209,6 +209,9 @@ class VConsole {
           name: item.name || 'Undefined',
           pluginID: plugin.id
         });
+        if (item.global == true) {
+          $.addClass($item, 'vc-global-tool');
+        }
         if (tool.isFunction(item.onClick)) {
           $.bind($item, 'click', item.onClick);
         }
