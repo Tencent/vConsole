@@ -102,6 +102,14 @@ class VConsole {
             offsetY = e.touches[0].pageY - that.switchPos.startY;
         var x = that.switchPos.x - offsetX,
             y = that.switchPos.y - offsetY;
+        if (x < 0) { x = 0; }
+        if (y < 0) { y = 0; }
+        if (x + $switch.offsetWidth > document.body.offsetWidth) {
+          x = document.body.offsetWidth - $switch.offsetWidth;
+        }
+        if (y + $switch.offsetHeight > document.body.offsetHeight) {
+          y = document.body.offsetHeight - $switch.offsetHeight;
+        }
         $switch.style.right = x + 'px';
         $switch.style.bottom = y + 'px';
         that.switchPos.endX = x;
@@ -128,11 +136,6 @@ class VConsole {
       that.hide();
     });
 
-    // clear a log box
-    // $.bind($.one('.vc-clear'), 'click', function() {
-    //   that.clearLog(that.activedTab);
-    // });
-
     // show tab box
     $.bind($.one('.vc-tabbar', that.$dom), 'click', function(e) {
       if ($.hasClass(e.target, 'vc-tab')) {
@@ -144,19 +147,6 @@ class VConsole {
       }
     });
 
-    // log-related actions
-    $.bind($.all('.vc-log'), 'click', function(e) {
-      var target = e.target;
-      // expand a line
-      if ($.hasClass(target, 'vc-fold-outer')) {
-        if ($.hasClass(target.parentElement, 'vc-toggle')) {
-          $.removeClass(target.parentElement, 'vc-toggle');
-        } else {
-          $.addClass(target.parentElement, 'vc-toggle');
-        }
-        e.preventDefault();
-      }
-    });
   };
 
   /**
