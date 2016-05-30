@@ -131,7 +131,7 @@ class VConsole {
       that.clearLog(that.activedTab);
     });
 
-    // show a log box
+    // show tab box
     $.bind($.one('.vc-tabbar', that.$dom), 'click', function(e) {
       if ($.hasClass(e.target, 'vc-tab')) {
         var tabName = e.target.dataset.tab;
@@ -197,7 +197,28 @@ class VConsole {
       $.one('.vc-content', that.$dom).appendChild($tabbox);
     });
     plugin.trigger('finishInit');
-  } 
+  }
+
+  /**
+   * trigger an event for each plugin
+   * @private
+   */
+  _triggerPluginsEvent(eventName) {
+    for (let plugin of this.pluginList) {
+      plugin.trigger(eventName);
+    }
+  }
+
+  /**
+   * trigger an event by plugin's name
+   * @private
+   */
+  _triggerPluginEvent(pluginName, eventName) {
+    let plugin = this.pluginList[pluginName];
+    if (plugin) {
+      plugin.trigger(eventName);
+    }
+  }
 
   /**
    * add a new plugin
@@ -238,16 +259,19 @@ class VConsole {
    * show a tab
    * @public
    */
-  showTab(tabName) {
-    var $logbox = $.one('#__vc_log_' + tabName);
+  showTab(tabID) {
+    var $logbox = $.one('#__vc_log_' + tabID);
     // set actived status
     $.removeClass($.all('.vc-tab', this.$dom), 'vc-actived');
-    $.addClass($.one('#__vc_tab_' + tabName), 'vc-actived');
+    $.addClass($.one('#__vc_tab_' + tabID), 'vc-actived');
     $.removeClass($.all('.vc-logbox', this.$dom), 'vc-actived');
     $.addClass($logbox, 'vc-actived');
     // scroll to bottom
     $.one('.vc-content', this.$dom).scrollTop = $.one('.vc-content', this.$dom).scrollHeight;
-    this.activedTab = tabName;
+    // trigger plugin event
+    this._triggerPluginEvent(this.activedTab, 'hide');
+    this.activedTab = tabID;
+    this._triggerPluginEvent(this.activedTab, 'show');
   }
 
 } // END class
