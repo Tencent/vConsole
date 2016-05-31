@@ -11,7 +11,7 @@
  */
 export function getDate(time) {
   let d = time>0 ? new Date(time) : new Date();
-  let day = d.getDay()<10 ? '0'+d.getDay() : d.getDay(),
+  let day = d.getDate()<10 ? '0'+d.getDate() : d.getDate(),
     month = d.getMonth()<9 ? '0'+(d.getMonth()+1) : (d.getMonth()+1),
     year = d.getFullYear(),
     hour = d.getHours()<10 ? '0'+d.getHours() : d.getHours(),
