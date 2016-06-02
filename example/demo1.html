@@ -73,6 +73,13 @@ $('.js_btn_ajax').on('tap', function(e) {
   showTips();
 });
 
+$.post('ajaxajaxajaxajaxajaxajaxajaxajax.php',  { id: Math.random() }, function(resp) {
+  console.log(resp);
+});
+$.post('ajax.php',  { id: Math.random() }, function(resp) {
+  console.log(resp);
+});
+
 // 用于页面内展示顶部tips
 var tipsTimer;
 function showTips() {

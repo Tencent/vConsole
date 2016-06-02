@@ -24,7 +24,7 @@ class VConsoleLogTab extends VConsolePlugin {
     this.console = {};
     this.logList = [];
 
-    this.mokeConsole();
+    this.mockConsole();
   }
 
   /**
@@ -86,7 +86,7 @@ class VConsoleLogTab extends VConsolePlugin {
    * replace window.console & window.onerror with vConsole method
    * @private
    */
-  mokeConsole() {
+  mockConsole() {
     let that = this;
     if (!window.console) {
       window.console = {};
