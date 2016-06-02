@@ -5,6 +5,7 @@
  */
 
 import {isArray} from '../lib/tool.js';
+import render from '../lib/mito.js';
 
 const $ = {};
 
@@ -122,19 +123,7 @@ $.bind = function($el, eventType, fn, useCapture) {
  * @param boolean whether to conver to HTML string
  * @return object|string
  */
-$.render = function(tpl, data, toString) {
-  var html = tpl;
-  for (let k in data) {
-    html = html.replace(new RegExp('{' + k + '}', 'g'), data[k]);
-  }
-  var dom = html;
-  if (!toString) {
-    let e = document.createElement('div');
-    e.innerHTML = html;
-    dom = e.children[0];
-  }
-  return dom;
-}
+$.render = render;
 
 
 /**
