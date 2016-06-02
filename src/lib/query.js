@@ -11,7 +11,7 @@ const $ = {};
 
 /**
  * get single element
- * @private
+ * @public
  */
 $.one = function(selector, contextElement) {
   if (contextElement) {
@@ -22,7 +22,7 @@ $.one = function(selector, contextElement) {
 
 /**
  * get multiple elements
- * @private
+ * @public
  */
 $.all = function(selector, contextElement) {
   let nodeList,
@@ -40,7 +40,7 @@ $.all = function(selector, contextElement) {
 
 /**
  * add className to an element
- * @private
+ * @public
  */
 $.addClass = function($el, className) {
   if (!$el) {
@@ -56,7 +56,7 @@ $.addClass = function($el, className) {
 
 /**
  * remove className from an element
- * @private
+ * @public
  */
 $.removeClass = function($el, className) {
   if (!$el) {
@@ -78,7 +78,7 @@ $.removeClass = function($el, className) {
 
 /**
  * see whether an element contains a className
- * @private
+ * @public
  */
 $.hasClass = function($el, className) {
   if (!$el) {
@@ -95,7 +95,7 @@ $.hasClass = function($el, className) {
 
 /**
  * bind an event to element(s)
- * @private
+ * @public
  * @param  array    $el      element object or array
  * @param  string    eventType  name of the event
  * @param  function  fn
@@ -115,6 +115,38 @@ $.bind = function($el, eventType, fn, useCapture) {
     $e.addEventListener(eventType, fn, useCapture);
   }
 }
+
+/**
+ * delegate an event to a parent element
+ * @public
+ * @param  array     $el        parent element
+ * @param  string    eventType  name of the event
+ * @param  string    selector   target's selector
+ * @param  function  fn
+ */
+$.delegate = function($el, eventType, selector, fn) {
+  if (!$el) { return; }
+  $el.addEventListener(eventType, function(e) {
+    let targets = $.all(selector, $el);
+    if (!targets) {
+      return;
+    }
+    findTarget:
+    for (let $target of targets) {
+      let $node = e.target;
+      while ($node) {
+        if ($node == $target) {
+          fn.call($node, e);
+          break findTarget;
+        }
+        $node = $node.parentNode;
+        if ($node == $el) {
+          break;
+        }
+      }
+    }
+  }, false);
+};
 
 /**
  * simply render a HTML template
