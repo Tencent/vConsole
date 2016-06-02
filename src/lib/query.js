@@ -72,7 +72,7 @@ $.removeClass = function($el, className) {
         arr[j] = '';
       }
     }
-    $e.className = arr.join(' ');
+    $e.className = arr.join(' ').trim();
   }
 }
 
