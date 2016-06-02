@@ -2,6 +2,21 @@
 
   font-size: 13px;
 
+  /* global */
+
+  .vc-max-height {
+    max-height: 250px;
+  }
+  .vc-max-height-line {
+    max-height: 44px;
+  }
+  .vc-min-height {
+    min-height: 40px;
+  }
+
+
+  /* compoment */
+
   .vc-switch {
     display: block;
     position: fixed;
@@ -192,7 +207,7 @@
         font-style: italic;
       }
       .vc-fold-outer:active {
-        background-color: rgba(0,0,0,0.15);
+        background-color: #E6E6E6;
       }
 
       .vc-fold-outer {
@@ -214,7 +229,6 @@
       .vc-fold-inner {
         display: none;
         white-space: pre-wrap;
-        max-height: 250px;
       }
     }
 
@@ -294,6 +308,29 @@
       }
     }
 
+    .vc-group {
+
+      .vc-group-preview {
+        -webkit-touch-callout: none;
+      }
+      .vc-group-preview:active {
+        background-color: #E6E6E6;
+      }
+
+      .vc-group-detail {
+        display: none;
+        padding: 0 0 10px 20px;
+        border-bottom: 1px solid #EEE;
+      }
+
+    }
+
+    .vc-group.vc-actived {
+      .vc-group-detail {
+        display: block;
+      }
+    }
+
     .vc-table {
 
       .vc-table-row {
@@ -303,27 +340,35 @@
         overflow: hidden;
         border-bottom: 1px solid #EEE;
       }
+      .vc-table-row.vc-left-border {
+        border-left: 1px solid #EEE;
+      }
 
       .vc-table-col {
         flex: 1;
         padding: 3px 4px;
         border-left: 1px solid #EEE;
-        overflow: hidden;
+        overflow: scroll;
+        white-space: pre-wrap;
         word-break: break-word;
         /*white-space: nowrap;
         text-overflow: ellipsis;*/
+        -webkit-overflow-scrolling: touch;
       }
       .vc-table-col:first-child {
         border: none;
       }
 
-      .vc-table-col-4 {
-        flex: 4;
-      }
-      .vc-table-col-6 {
-        flex: 4;
+      .vc-small .vc-table-col {
+        padding: 0 4px;
+        font-size: 12px;
       }
 
+      .vc-table-col-2 { flex: 2; }
+      .vc-table-col-3 { flex: 3; }
+      .vc-table-col-4 { flex: 4; }
+      .vc-table-col-5 { flex: 5; }
+      .vc-table-col-6 { flex: 6; }
 
       .vc-table-row-error {
         border-color: #F4A0AB;
@@ -333,6 +378,10 @@
           color: #DC143C;
           border-color: #F4A0AB;
         }
+      }
+
+      .vc-table-col-title {
+        font-weight: bold;
       }
     }
 

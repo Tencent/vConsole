@@ -79,7 +79,7 @@ class VConsole {
     var that = this;
 
     // drag & drop switch button
-    var $switch = $.one('.vc-switch');
+    var $switch = $.one('.vc-switch', that.$dom);
     $.bind($switch, 'touchstart', function(e) {
       that.switchPos.startX = e.touches[0].pageX;
       that.switchPos.startY = e.touches[0].pageY;
@@ -119,17 +119,17 @@ class VConsole {
     });
 
     // show console panel
-    $.bind($.one('.vc-switch'), 'click', function() {
+    $.bind($.one('.vc-switch', that.$dom), 'click', function() {
       that.show();
     })
 
     // hide console panel
-    $.bind($.one('.vc-hide'), 'click', function() {
+    $.bind($.one('.vc-hide', that.$dom), 'click', function() {
       that.hide();
     });
 
     // hide console panel when tap background mask
-    $.bind($.one('.vc-mask'), 'click', function(e) {
+    $.bind($.one('.vc-mask', that.$dom), 'click', function(e) {
       if (e.target != $.one('.vc-mask')) {
         return false;
       }
@@ -137,14 +137,12 @@ class VConsole {
     });
 
     // show tab box
-    $.bind($.one('.vc-tabbar', that.$dom), 'click', function(e) {
-      if ($.hasClass(e.target, 'vc-tab')) {
-        var tabName = e.target.dataset.tab;
-        if (tabName == that.activedTab) {
-          return;
-        }
-        that.showTab(tabName);
+    $.delegate($.one('.vc-tabbar', that.$dom), 'click', '.vc-tab', function(e) {
+      var tabName = this.dataset.tab;
+      if (tabName == that.activedTab) {
+        return;
       }
+      that.showTab(tabName);
     });
 
   };

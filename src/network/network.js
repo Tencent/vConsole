@@ -8,6 +8,7 @@ import $ from '../lib/query.js';
 import * as tool from '../lib/tool.js';
 import VConsolePlugin from '../lib/plugin.js';
 import tplTabbox from './tabbox.html';
+import tplHeader from './header.html';
 import tplItem from './item.html';
 
 class VConsoleNetworkTab extends VConsolePlugin {
@@ -16,6 +17,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
     super(...args);
 
     this.$tabbox = $.render(tplTabbox, {});
+    this.$header = null;
     this.reqList = {}; // URL as key, request item as value
     this.domList = {}; // URL as key, dom item as value
 
@@ -40,10 +42,49 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
   onReady() {
 
+    // header
+    this.renderHeader();
+
+    // expend group item
+    $.delegate($.one('.vc-log', this.$tabbox), 'click', '.vc-group-preview', function(e) {
+      let $group = this.parentNode;
+      if ($.hasClass($group, 'vc-actived')) {
+        $.removeClass($group, 'vc-actived');
+      } else {
+        $.addClass($group, 'vc-actived');
+      }
+      e.preventDefault();
+    });
+
   }
 
   clearLog() {
+    // remove list
+    this.reqList = {};
 
+    // remove dom
+    for (let id in this.domList) {
+      this.domList[id].remove();
+      this.domList[id] = undefined;
+    }
+    this.domList = {};
+
+    // update header
+    this.renderHeader();
+  }
+
+  renderHeader() {
+    let count = Object.keys(this.reqList).length,
+        $header = $.render(tplHeader, {count: count}),
+        $logbox = $.one('.vc-log', this.$tabbox);
+    if (this.$header) {
+      // update
+      this.$header.parentNode.replaceChild($header, this.$header);
+    } else {
+      // add
+      $logbox.parentNode.insertBefore($header, $logbox);
+    }
+    this.$header = $header;
   }
 
   /**
@@ -53,6 +94,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
    * @param object data
    */
   updateRequest(id, data) {
+    // see whether add new item into list
+    let preCount = Object.keys(this.reqList).length;
+
     // update item
     let item = this.reqList[id] || {};
     for (let key in data) {
@@ -66,7 +110,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
       url: item.url,
       status: item.status,
       type: '-',
-      costTime: item.costTime>0 ? item.costTime+'ms' : '-'
+      costTime: item.costTime>0 ? item.costTime+'ms' : '-',
+      header: item.header,
+      response: tool.htmlEncode(item.response)
     };
     if (item.readyState <= 1) {
       domData.status = 'Pending';
@@ -76,7 +122,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
     let $new = $.render(tplItem, domData),
         $old = this.domList[id];
     if (item.status >= 400) {
-      $.addClass($new, 'vc-table-row-error');
+      $.addClass($.one('.vc-group-preview', $new), 'vc-table-row-error');
     }
     if ($old) {
       $old.parentNode.replaceChild($new, $old);
@@ -84,6 +130,12 @@ class VConsoleNetworkTab extends VConsolePlugin {
       $.one('.vc-log', this.$tabbox).appendChild($new);
     }
     this.domList[id] = $new;
+
+    // update header
+    let curCount = Object.keys(this.reqList).length;
+    if (curCount != preCount) {
+      this.renderHeader();
+    }
   }
 
   /**

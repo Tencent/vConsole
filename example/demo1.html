@@ -45,12 +45,8 @@ $('.js_btn_log').on('tap', function(e) {
 $('.js_btn_log_obj').on('tap', function(e) {
   var obj = {
     'foo': 'bar',
-    'tips': 'JS对象会转为JSON字符串输出',
-    'a': function() {},
-    'b': null,
-    c: true,
-    d: undefined,
-    e: 2
+    'num': 3,
+    'tips': 'JS对象可以折叠展示'
   };
   console.log(obj);
   showTips();
@@ -71,13 +67,6 @@ $('.js_btn_ajax').on('tap', function(e) {
     console.log(resp);
   });
   showTips();
-});
-
-$.post('ajaxajaxajaxajaxajaxajaxajaxajax.php',  { id: Math.random() }, function(resp) {
-  console.log(resp);
-});
-$.post('ajax.php',  { id: Math.random() }, function(resp) {
-  console.log(resp);
 });
 
 // 用于页面内展示顶部tips

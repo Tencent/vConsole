@@ -41,7 +41,8 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     let date = tool.getDate(+new Date());
     this.renderLog({
       meta: date.hour + ':' + date.minute + ':' + date.second,
-      content: $.render(tplItemCode, {content: cmd, type: 'input'}, true)
+      content: $.render(tplItemCode, {content: cmd, type: 'input'}, true),
+      style: ''
     });
     // eval
     let result = eval(cmd);

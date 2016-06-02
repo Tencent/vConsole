@@ -209,7 +209,8 @@ class VConsoleLogTab extends VConsolePlugin {
     this.renderLog({
       logType: item.logType,
       content: line,
-      meta: date.hour + ':' + date.minute + ':' + date.second
+      meta: date.hour + ':' + date.minute + ':' + date.second,
+      style: ''
     });
 
     // print log to origin console
