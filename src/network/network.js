@@ -103,7 +103,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
       item[key] = data[key];
     }
     this.reqList[id] = item;
-    console.log(item);
+    // console.log(item);
     
     // update dom
     let domData = {
