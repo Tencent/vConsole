@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test: Plugin</title>
+  <link href="../example/lib/weui.min.css" rel="stylesheet"/>
+  <link href="../example/lib/demo.css" rel="stylesheet"/>
+
+  <script src="../example//lib/zepto.min.js"></script>
+  <script src="../example//lib/zepto.touch.min.js"></script>
+
+  <script src="../dist/vconsole.min.js"></script>
+</head>
+<body ontouchstart>
+  <div class="page">
+    <a onclick="newTab()" href="javascript:;" class="weui_btn weui_btn_default">newTab</a>
+    <a onclick="newTabWithTool()" href="javascript:;" class="weui_btn weui_btn_default">newTabWithTool</a>
+    <a onclick="newGlobalToolButton()" href="javascript:;" class="weui_btn weui_btn_default">newGlobalToolButton</a>
+  </div>
+</body>
+</html>
+
+<script>
+
+function newTab() {
+  console.info('newTab() Start');
+  // init
+  var id = 'tab1',
+      tab = new VConsolePlugin(id, 'Tab1');
+  // events
+  tab
+  .on('init', function() { console.log(id, 'init'); })
+  .on('renderTab', function(cb) {
+    console.log(id, 'renderTab');
+    cb('<div>I am ' + id+'</div>');
+  })
+  .on('ready', function() {  console.log(id, 'ready'); })
+  .on('show', function() { console.log(id, 'show'); })
+  .on('hide', function() { console.log(id, 'hide'); });
+  vConsole.addPlugin(tab);
+  console.info('newTab() End');
+}
+
+function newTabWithTool() {
+  console.info('newTabWithTool() Start');
+  // init
+  var id = 'tab2',
+      tab = new VConsolePlugin(id, 'Tab2');
+  // events
+  tab
+  .on('init', function() { console.log(id, 'init'); })
+  .on('renderTab', function(cb) {
+    console.log(id, 'renderTab');
+    cb('<div>I am ' + id+'</div>');
+  })
+  .on('addTool', function(cb) {
+    console.log(id, 'addTool');
+    cb([
+      {
+        name: 'Alert',
+        global: false,
+        onClick: function(e) {
+          alert('I am a tool button!');
+        }
+      }
+    ]);
+  })
+  .on('ready', function() {  console.log(id, 'ready'); })
+  .on('show', function() { console.log(id, 'show'); })
+  .on('hide', function() { console.log(id, 'hide'); });
+  vConsole.addPlugin(tab);
+  console.info('newTabWithTool() End');
+}
+
+function newGlobalToolButton() {
+  console.info('newGlobalToolButton() Start');
+  // init
+  var id = 'plugin3',
+      tab = new VConsolePlugin(id, 'Plugin3');
+  // events
+  tab.on('addTool', function(cb) {
+    console.log(id, 'addTool');
+    cb([
+      {
+        name: 'Global',
+        global: true,
+        onClick: function(e) {
+          alert('I am a global tool button!');
+        }
+      }
+    ]);
+  });
+  vConsole.addPlugin(tab);
+  console.info('newGlobalToolButton() End');
+}
+
+</script>
