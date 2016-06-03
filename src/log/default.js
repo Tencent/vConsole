@@ -40,6 +40,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     // print command to console
     let date = tool.getDate(+new Date());
     this.renderLog({
+      logType: 'log',
       meta: date.hour + ':' + date.minute + ':' + date.second,
       content: $.render(tplItemCode, {content: cmd, type: 'input'}, true),
       style: ''
@@ -54,6 +55,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       content = $.render(tplItemCode, {content: result, type: 'output'}, true);
     }
     this.renderLog({
+      logType: 'log',
       meta: '',
       content: content,
       style: 'vc-item-nometa'
