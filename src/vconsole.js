@@ -19,5 +19,5 @@ vConsole.addPlugin(systemTab);
 vConsole.addPlugin(networkTab);
 
 // export
-window.VConsolePlugin = VConsolePlugin;
+vConsole.VConsolePlugin = VConsolePlugin;
 export default vConsole;

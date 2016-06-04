@@ -27,7 +27,7 @@ function newTab() {
   console.info('newTab() Start');
   // init
   var id = 'tab1',
-      tab = new VConsolePlugin(id, 'Tab1');
+      tab = new vConsole.VConsolePlugin(id, 'Tab1');
   // events
   tab
   .on('init', function() { console.log(id, 'init'); })
@@ -46,11 +46,9 @@ function newTabWithTool() {
   console.info('newTabWithTool() Start');
   // init
   var id = 'tab2',
-      tab = new VConsolePlugin(id, 'Tab2');
+      tab = new vConsole.VConsolePlugin(id, 'Tab2');
   // events
-  tab
-  .on('init', function() { console.log(id, 'init'); })
-  .on('renderTab', function(cb) {
+  tab.on('renderTab', function(cb) {
     console.log(id, 'renderTab');
     cb('<div>I am ' + id+'</div>');
   })
@@ -65,10 +63,7 @@ function newTabWithTool() {
         }
       }
     ]);
-  })
-  .on('ready', function() {  console.log(id, 'ready'); })
-  .on('show', function() { console.log(id, 'show'); })
-  .on('hide', function() { console.log(id, 'hide'); });
+  });
   vConsole.addPlugin(tab);
   console.info('newTabWithTool() End');
 }
@@ -77,7 +72,7 @@ function newGlobalToolButton() {
   console.info('newGlobalToolButton() Start');
   // init
   var id = 'plugin3',
-      tab = new VConsolePlugin(id, 'Plugin3');
+      tab = new vConsole.VConsolePlugin(id, 'Plugin3');
   // events
   tab.on('addTool', function(cb) {
     console.log(id, 'addTool');
