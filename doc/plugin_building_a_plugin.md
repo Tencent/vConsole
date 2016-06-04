@@ -12,12 +12,12 @@ Plugin: Building a Plugin
 
 Make sure you have imported vConsole, then simply `new` an instance of class `VConsolePlugin`:
 
-```
+```javascript
 vConsole.VConsolePlugin(id, name)
 ```
 
-`id` (required) is an unique string.
-`name` (optional) is a string used for tab's display name.
+- `id` (required) is an unique string.
+- `name` (optional) is a string used for tab's display name.
 
 
 
@@ -34,12 +34,12 @@ While installing and running a plugin, vConsole will trigger some events to allo
 
 use `.on()` to bind an event:
 
-```
+```javascript
 on(eventName, callback)
 ```
 
-`eventName` (required) is a string.
-`callback` (required) is a callback function when an event is triggered.
+- `eventName` (required) is a string.
+- `callback` (required) is a callback function when an event is triggered.
 
 
 
@@ -82,14 +82,14 @@ myPlugin.on('addTool', function(callback) {
 });
 ```
 
-Again, `addTool` will be triggered during initialized, after `renderTab`. It's `callback` receives an array of tool button list. We make a button which can reload the current page.
+Again, `addTool` will be triggered during initialized, after `renderTab`. It's `callback` receives an `array` of tool button list. We make a button which can reload the current page.
 
 
 ## 3. Add to vConsole
 
 The final step is add your new plugin to vConsole:
 
-```
+```javascript
 vConsole.addPlugin(pluginObject)
 ```
 
@@ -103,3 +103,5 @@ vConsole.addPlugin(myPlugin);
 
 Make sure you have finish binding all necessary events to your plugin before adding to vConsole. Some events (related to initialization) would not be trigger for second time after adding.
 
+
+[Back to Index](./a_doc_index.md)

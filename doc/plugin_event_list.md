@@ -156,4 +156,4 @@ myPlugin.on('hideConsole', function() {
 ```
 
 
-
+[Back to Index](./a_doc_index.md)

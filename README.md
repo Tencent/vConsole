@@ -21,6 +21,7 @@ A lightweight, extendable front-end developer tool for mobile web page.
 <script src="path/to/vconsole.min.js"></script>
 <script>
 console.log('Hello world');
+// then tap vConsole button to see the log
 </script>
 ```
 
@@ -38,7 +39,10 @@ See [Tutorial](./doc/tutorial.md) for more details.
 
 ## Documentation
 
-
+ - [Tutorial](./doc/tutorial.md)
+ - [Plugin: Getting Started](./doc/plugin_getting_started.md)
+ - [Plugin: Building a Plugin](./doc/plugin_building_a_plugin.md)
+ - [Plugin: Event List](./doc/plugin_event_list.md)
 
 
 ## Changelog

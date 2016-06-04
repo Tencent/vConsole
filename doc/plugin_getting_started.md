@@ -19,3 +19,6 @@ vConsole.addPlugin(myPlugin);
 ```
 
 The above plugin has no function. See [Building a Plugin](./plugin_building_a_plugin.md) for more details.
+
+
+[Back to Index](./a_doc_index.md)
