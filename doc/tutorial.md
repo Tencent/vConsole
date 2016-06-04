@@ -85,19 +85,19 @@ console.log('UserID:', uid); // UserID: 233
 
 ### Special format
 
-Use `[default|system|...]` string to print logs to specific panel:
+Use `[default|system|...]` string to print logs to specific tab:
 
 ```javascript
 // [xxx] must be at the beginning of a log
 console.log('[system]', 'foo');
 console.log('[system] bar');
-// foo & bar will be printed to system panel
+// foo & bar will be printed to system tab
 ```
 
-Supported panels:
+Supported tabs:
 
 ```
-[default] Log panel (default)
-[system]  System panel
+[default] Log tab (default)
+[system]  System tab
 ```
 
