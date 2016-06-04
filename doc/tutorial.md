@@ -1,3 +1,5 @@
+English | [简体中文](./tutorial_CN.md)
+
 Tutorial
 ==============================
 

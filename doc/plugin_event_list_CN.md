@@ -11,6 +11,7 @@
 
 当插件开始初始化时触发。这个事件触发时，代表 vConsole 开始安装此插件，开发者可以在此时初始化一些配置。
 这个事件只会触发一次。
+
 注意，此时插件的 DOM 仍未就绪，插件还未被渲染到页面中。
 
 ##### Callback 参数：
@@ -28,6 +29,7 @@ myPlugin.on('init', function() {
 ## renderTab
 
 当 vConsole 尝试为此插件渲染新 tab 时触发。这个事件只会触发一次。
+
 绑定此事件后，vConsole 会认为此插件需要创建新 tab，并会将 callback 中获取的 HTML 用于渲染 tab。因此，只要绑定了此事件，新 tab 肯定会被渲染到页面中，无论 callback 传入的 HTML 是否为空。如果不需要添加新 tab，请不要绑定此事件。
 
 ##### Callback 参数
@@ -78,8 +80,7 @@ myPlugin.on('addTool', function(callback) {
 
 ## ready
 
-当插件初始化结束后触发。这个事件只会触发一次。
-此时插件已经成功安装并已渲染到页面。
+当插件初始化结束后触发。这个事件只会触发一次。此时插件已经成功安装并已渲染到页面。
 
 ##### Callback 参数：
 

@@ -1,3 +1,5 @@
+English | [简体中文](./a_doc_index_CN.md)
+
 Documentation Index
 ==============================
 
