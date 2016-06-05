@@ -1,7 +1,7 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
 
-#### v2.0.0 (2016-06-06)
+#### v2.0.0 (2016-06-05)
 
 - [FEATURE] Rebuild completely, support custom plugin, see [Plugin: Getting Started](./doc/plugin_getting_started).
 - [FEATURE] Support execute JS command line in Log tab

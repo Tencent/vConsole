@@ -1,7 +1,7 @@
 {
   "name": "vconsole",
-  "version": "1.3.0",
-  "description": "A virtual console panel for mobile page",
+  "version": "2.0.0",
+  "description": "A lightweight, extendable front-end developer tool for mobile web page.",
   "homepage": "https://github.com/WechatFE/vConsole",
   "main": "dist/vconsole.min.js",
   "scripts": {
