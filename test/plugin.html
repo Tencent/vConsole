@@ -103,7 +103,7 @@ function newTabUseDOM() {
   console.info('newTabUseDOM() Start');
   var tab = new vConsole.VConsolePlugin('tab5', 'Tab5');
   var $elm = document.createElement('DIV');
-  $elm.innerHTML = '<a href="javascript:;">Alert</a>';
+  $elm.innerHTML = '<p>It works</p>';
   tab.on('renderTab', function(cb) {
     cb($elm);
   });
