@@ -63,6 +63,12 @@ export function isObject(value) {
 export function isFunction(value) {
   return Object.prototype.toString.call(value) == '[object Function]';
 }
+export function isElement(value) {
+  return (
+    typeof HTMLElement === 'object' ? value instanceof HTMLElement : //DOM2
+      value && typeof value === "object" && value !== null && value.nodeType === 1 && typeof value.nodeName==="string"
+  );
+}
 
 /**
  * HTML encode a string

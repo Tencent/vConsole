@@ -17,6 +17,8 @@
     <a onclick="newTab()" href="javascript:;" class="weui_btn weui_btn_default">newTab</a>
     <a onclick="newTabWithTool()" href="javascript:;" class="weui_btn weui_btn_default">newTabWithTool</a>
     <a onclick="newGlobalToolButton()" href="javascript:;" class="weui_btn weui_btn_default">newGlobalToolButton</a>
+    <a onclick="newTabUseJQuery()" href="javascript:;" class="weui_btn weui_btn_default">newTabUseJQuery</a>
+    <a onclick="newTabUseDOM()" href="javascript:;" class="weui_btn weui_btn_default">newTabUseDOM</a>
   </div>
 </body>
 </html>
@@ -25,35 +27,31 @@
 
 function newTab() {
   console.info('newTab() Start');
-  // init
-  var id = 'tab1',
-      tab = new vConsole.VConsolePlugin(id, 'Tab1');
-  // events
+  var tab = new vConsole.VConsolePlugin('tab1', 'Tab1');
   tab
-  .on('init', function() { console.log(id, 'init'); })
+  .on('init', function() { console.log(this.id, 'init'); })
   .on('renderTab', function(cb) {
-    console.log(id, 'renderTab');
-    cb('<div>I am ' + id+'</div>');
+    console.log(this.id, 'renderTab');
+    cb('<div>I am ' + this.id+'</div>');
   })
-  .on('ready', function() {  console.log(id, 'ready'); })
-  .on('show', function() { console.log(id, 'show'); })
-  .on('hide', function() { console.log(id, 'hide'); });
+  .on('ready', function() {  console.log(this.id, 'ready'); })
+  .on('show', function() { console.log(this.id, 'show'); })
+  .on('hide', function() { console.log(this.id, 'hide'); })
+  .on('showConsole', function() { console.log(this.id, 'showConsole'); })
+  .on('hideConsole', function() { console.log(this.id, 'hideConsole'); });
   vConsole.addPlugin(tab);
   console.info('newTab() End');
 }
 
 function newTabWithTool() {
   console.info('newTabWithTool() Start');
-  // init
-  var id = 'tab2',
-      tab = new vConsole.VConsolePlugin(id, 'Tab2');
-  // events
+  var tab = new vConsole.VConsolePlugin('tab2', 'Tab2');
   tab.on('renderTab', function(cb) {
-    console.log(id, 'renderTab');
-    cb('<div>I am ' + id+'</div>');
+    console.log(this.id, 'renderTab');
+    cb('<div>I am ' + this.id+'</div>');
   })
   .on('addTool', function(cb) {
-    console.log(id, 'addTool');
+    console.log(this.id, 'addTool');
     cb([
       {
         name: 'Alert',
@@ -70,12 +68,9 @@ function newTabWithTool() {
 
 function newGlobalToolButton() {
   console.info('newGlobalToolButton() Start');
-  // init
-  var id = 'plugin3',
-      tab = new vConsole.VConsolePlugin(id, 'Plugin3');
-  // events
-  tab.on('addTool', function(cb) {
-    console.log(id, 'addTool');
+  var plugin = new vConsole.VConsolePlugin('plugin3', 'Plugin3');
+  plugin.on('addTool', function(cb) {
+    console.log(this.id, 'addTool');
     cb([
       {
         name: 'Global',
@@ -86,8 +81,34 @@ function newGlobalToolButton() {
       }
     ]);
   });
-  vConsole.addPlugin(tab);
+  vConsole.addPlugin(plugin);
   console.info('newGlobalToolButton() End');
+}
+
+function newTabUseJQuery() {
+  console.info('newTabUseJQuery() Start');
+  var tab = new vConsole.VConsolePlugin('tab4', 'Tab4');
+  var $html = $('<div><a href="javascript:;">Alert</a></div>');
+  $html.find('a').click(function() {
+    alert('OK');
+  });
+  tab.on('renderTab', function(cb) {
+    cb($html);
+  });
+  vConsole.addPlugin(tab);
+  console.info('newTabUseJQuery() End');
+}
+
+function newTabUseDOM() {
+  console.info('newTabUseDOM() Start');
+  var tab = new vConsole.VConsolePlugin('tab5', 'Tab5');
+  var $elm = document.createElement('DIV');
+  $elm.innerHTML = '<a href="javascript:;">Alert</a>';
+  tab.on('renderTab', function(cb) {
+    cb($elm);
+  });
+  vConsole.addPlugin(tab);
+  console.info('newTabUseDOM() End');
 }
 
 </script>

@@ -180,10 +180,14 @@ class VConsole {
       $.one('.vc-tabbar', that.$dom).appendChild($tabbar);
       // render tabbox
       let $tabbox = $.render(tplTabbox, {id: plugin.id});
-      if (tool.isString(tabboxHTML)) {
-        $tabbox.innerHTML += tabboxHTML;
-      } else if (!!tabboxHTML) {
-        $tabbox.appendChild(tabboxHTML);
+      if (!!tabboxHTML) {
+        if (tool.isString(tabboxHTML)) {
+          $tabbox.innerHTML += tabboxHTML;
+        } else if (tool.isFunction(tabboxHTML.appendTo)) {
+          tabboxHTML.appendTo($tabbox);
+        } else if (tool.isElement(tabboxHTML)) {
+          $tabbox.appendChild(tabboxHTML);
+        }
       }
       $.one('.vc-content', that.$dom).appendChild($tabbox);
     });
