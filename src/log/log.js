@@ -247,28 +247,28 @@ class VConsoleLogTab extends VConsolePlugin {
     outer = Object.prototype.toString.call(obj).replace('[object ', '').replace(']', '');
     outer += ' ' + preview;
 
-    // use a map to track whether a value has been iterated in previous level
+    // use a map to track parent relationship
     let objMap = [];
-    function _isIteratedInPreLevel(val, curLV) {
-      let is = false;
-      for (let item of objMap) {
-        if (item.obj == val && item.lv < curLV) {
-          is = true;
-          break;
+    function _hasSameParentAsChild(child) {
+      // find upper item which child is equal to this child
+      for (let i = objMap.length - 1; i >= 0; i--) {
+        if (objMap[i].child == child) {
+          return true;
         }
       }
-      return is;
+      return false;
     }
     
-    function _iterateObj(val) {
+    function _iterateObj(val, parent) {
+
       if (tool.isObject(val)) {
         // object
-        if (_isIteratedInPreLevel(val, lv)) {
+        if (_hasSameParentAsChild(val)) {
           // this object is circular, skip it
           inner += "{Circular Object}";
           return;
         }
-        objMap.push({obj: val, lv: lv});
+        objMap.push({parent: parent, child: val});
 
         let keys = Object.keys(val);
         inner += "{\n";
@@ -277,26 +277,37 @@ class VConsoleLogTab extends VConsolePlugin {
           let k = keys[i];
           if (!val.hasOwnProperty(k)) { continue; }
           inner += Array(lv + 1).join(p) + $.render(tplFoldCode, {type:'key', code:k}, true) + ': ';
-          _iterateObj(val[k]);
+          _iterateObj(val[k], val);
           if (i < keys.length - 1) {
             inner += ",\n";
           }
         }
         lv--;
         inner += "\n" + Array(lv + 1).join(p) + "}";
+
+        objMap.pop();
       } else if (tool.isArray(val)) {
         // array
+        if (_hasSameParentAsChild(val)) {
+          // this array is circular, skip it
+          inner += "[Circular Array]";
+          return;
+        }
+        objMap.push({parent: parent, child: val});
+
         inner += "[\n";
         lv++;
         for (let i=0; i<val.length; i++) {
           inner += Array(lv + 1).join(p) + $.render(tplFoldCode, {type:'key', code:i}, true) + ': ';
-          _iterateObj(val[i]);
+          _iterateObj(val[i], val);
           if (i < val.length - 1) {
             inner += ",\n";
           }
         }
         lv--;
         inner += "\n" + Array(lv + 1).join(p) + "]";
+
+        objMap.pop();
       } else if (tool.isString(val)) {
         inner += $.render(tplFoldCode, {type:'string', code:'"'+tool.htmlEncode(val)+'"'}, true);
       } else if (tool.isNumber(val)) {
@@ -313,7 +324,7 @@ class VConsoleLogTab extends VConsolePlugin {
         inner += JSON.stringify(val);
       }
     }
-    _iterateObj(obj);
+    _iterateObj(obj, null);
 
     let line = $.render(tplFold, {outer: outer, inner: inner}, true);
     return line;

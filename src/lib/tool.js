@@ -58,12 +58,7 @@ export function isSymbol(value) {
   return Object.prototype.toString.call(value) == '[object Symbol]';
 }
 export function isObject(value) {
-  let is = (
-    Object.prototype.toString.call(value) == '[object Object]'
-    ||
-    (value !== null && typeof value == 'object')
-  );
-  return is;
+  return Object.prototype.toString.call(value) == '[object Object]';
 }
 export function isFunction(value) {
   return Object.prototype.toString.call(value) == '[object Function]';
@@ -85,28 +80,27 @@ export function JSONStringify(obj) {
   let json = '',
       lv = 0;
 
-  // use a map to track whether a value has been iterated in previous level
+  // use a map to track parent relationship
   let objMap = [];
-  function _isIteratedInPreLevel(val, curLV) {
-    let is = false;
-    for (let item of objMap) {
-      if (item.obj == val && item.lv < curLV) {
-        is = true;
-        break;
+  function _hasSameParentAsChild(child) {
+    // find upper item which child is equal to this child
+    for (let i = objMap.length - 1; i >= 0; i--) {
+      if (objMap[i].child == child) {
+        return true;
       }
     }
-    return is;
+    return false;
   }
 
   function _iterateObj(val) {
     if (isObject(val)) {
       // object
-      if (_isIteratedInPreLevel(val, lv)) {
+      if (_hasSameParentAsChild(val)) {
         // this object is circular, skip it
-        json += "{Circular Object}";
+        json += "CircularObject";
         return;
       }
-      objMap.push({obj: val, lv: lv});
+      objMap.push({parent: parent, child: val});
 
       let keys = Object.keys(val);
       json += "{";
@@ -115,25 +109,36 @@ export function JSONStringify(obj) {
         let k = keys[i];
         if (!val.hasOwnProperty(k)) { continue; }
         json += k + ': ';
-        _iterateObj(val[k]);
+        _iterateObj(val[k], val);
         if (i < keys.length - 1) {
           json += ', ';
         }
       }
       lv--;
       json += '}';
+
+      objMap.pop();
     } else if (isArray(val)) {
       // array
+      if (_hasSameParentAsChild(val)) {
+        // this array is circular, skip it
+        json += "CircularArray";
+        return;
+      }
+      objMap.push({parent: parent, child: val});
+
       json += '[';
       lv++;
       for (let i=0; i<val.length; i++) {
-        _iterateObj(val[i]);
+        _iterateObj(val[i], val);
         if (i < val.length - 1) {
           json += ', ';
         }
       }
       lv--;
       json += ']';
+
+      objMap.pop();
     } else if (isString(val)) {
       json += '"'+val+'"';
     } else if (isNumber(val)) {
@@ -152,7 +157,7 @@ export function JSONStringify(obj) {
       json += 'unknown';
     }
   }
-  _iterateObj(obj);
+  _iterateObj(obj, null);
 
   return json;
 }

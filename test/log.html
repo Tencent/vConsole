@@ -17,6 +17,7 @@
     <a onclick="formattedLog()" href="javascript:;" class="weui_btn weui_btn_default">formattedLog</a>
     <a onclick="normalObject()" href="javascript:;" class="weui_btn weui_btn_default">normalObject</a>
     <a onclick="circularObject()" href="javascript:;" class="weui_btn weui_btn_default">circularObject</a>
+    <a onclick="circularArray()" href="javascript:;" class="weui_btn weui_btn_default">circularArray</a>
     <a onclick="largeObject()" href="javascript:;" class="weui_btn weui_btn_default">largeObject</a>
   </div>
 </body>
@@ -45,19 +46,25 @@ function normalObject() {
   console.info('normalObject() End');
 }
 
+function circularArray() {
+  console.info('circularArray() Start');
+  var arr = [];
+  arr[0] = 'foo';
+  arr[1] = arr;
+  console.log('A circular structure array:', arr);
+  console.info('circularArray() End');
+}
+
 function circularObject() {
-  console.info('circularObject() Start');
-  console.info('An child object printed in upper level will not be shown again in lower level.');
+  console.info('circularArray() Start');
   var obj = {
     foo: 'bar'
   };
-  console.log('A circular structure JSON:', {
-    'level_1.1': obj,
-    'level_1.2': {
-      'level_2.1': obj
-    },
-    'level_1.3': obj
-  });
+  obj.self = obj;
+  obj.next = {};
+  obj.next.next = obj.next;
+  obj.next.self = obj;
+  console.log('A circular structure JSON:', obj);
   console.info('circularObject() End');
 }
 
