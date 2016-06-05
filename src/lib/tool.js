@@ -58,7 +58,20 @@ export function isSymbol(value) {
   return Object.prototype.toString.call(value) == '[object Symbol]';
 }
 export function isObject(value) {
-  return Object.prototype.toString.call(value) == '[object Object]';
+  return (
+    Object.prototype.toString.call(value) == '[object Object]'
+    ||
+    // if it isn't a primitive value, then it is a common object
+    (
+      !isNumber(value) && 
+      !isString(value) && 
+      !isArray(value) && 
+      !isNull(value) && 
+      !isFunction(value) && 
+      !isUndefined(value) && 
+      !isSymbol(value)
+    )
+  );
 }
 export function isFunction(value) {
   return Object.prototype.toString.call(value) == '[object Function]';
