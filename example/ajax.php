@@ -1,3 +1,4 @@
 <?php
-header('Content-Type: text/html; charset=utf-8');
-echo '收到一个AJAX回包，请在[网络]中查看';
+header('Content-Type: application/json; charset=utf-8');
+$data = array('msg' => '收到一个AJAX回包，可在[Network]中查看');
+echo json_encode($data);

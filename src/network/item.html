@@ -1,0 +1,29 @@
+<div class="vc-group">
+  <dl class="vc-table-row vc-group-preview">
+    <dd class="vc-table-col vc-table-col-4">{{url}}</dd>
+    <dd class="vc-table-col">{{status}}</dd>
+    <dd class="vc-table-col">{{costTime}}</dd>
+  </dl>
+  <div class="vc-group-detail">
+    <div>
+      <dl class="vc-table-row vc-left-border">
+        <dt class="vc-table-col vc-table-col-title">Headers</dt>
+      </dl>
+      {{for (var key in header)}}
+      <div class="vc-table-row vc-left-border vc-small">
+        <div class="vc-table-col vc-table-col-2">{{key}}</div>
+        <div class="vc-table-col vc-table-col-4 vc-max-height-line">{{header[key]}}</div>
+      </div>
+      {{/for}}
+    </div>
+    <div>
+      <dl class="vc-table-row vc-left-border">
+        <dt class="vc-table-col vc-table-col-title">Response</dt>
+      </dl>
+      <div class="vc-table-row vc-left-border vc-small">
+        <pre class="vc-table-col vc-max-height vc-min-height">{{response}}</pre>
+      </div>
+    </div>
+
+  </div>
+</div>

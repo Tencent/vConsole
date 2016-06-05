@@ -43,10 +43,12 @@ $('.js_btn_log').on('tap', function(e) {
   showTips();
 });
 $('.js_btn_log_obj').on('tap', function(e) {
-  console.log({
+  var obj = {
     'foo': 'bar',
-    'tips': 'JS对象会转为JSON字符串输出'
-  });
+    'num': 3,
+    'tips': 'JS对象可以折叠展示'
+  };
+  console.log(obj);
   showTips();
 });
 $('.js_btn_trigger_error').on('tap', function(e) {

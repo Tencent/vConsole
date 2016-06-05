@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test: Log</title>
+  <link href="../example/lib/weui.min.css" rel="stylesheet"/>
+  <link href="../example/lib/demo.css" rel="stylesheet"/>
+
+  <script src="../example//lib/zepto.min.js"></script>
+  <script src="../example//lib/zepto.touch.min.js"></script>
+
+  <script src="../dist/vconsole.min.js"></script>
+</head>
+<body ontouchstart>
+  <div class="page">
+    <a onclick="formattedLog()" href="javascript:;" class="weui_btn weui_btn_default">formattedLog</a>
+    <a onclick="normalObject()" href="javascript:;" class="weui_btn weui_btn_default">normalObject</a>
+    <a onclick="circularObject()" href="javascript:;" class="weui_btn weui_btn_default">circularObject</a>
+    <a onclick="circularArray()" href="javascript:;" class="weui_btn weui_btn_default">circularArray</a>
+    <a onclick="largeObject()" href="javascript:;" class="weui_btn weui_btn_default">largeObject</a>
+  </div>
+</body>
+</html>
+
+<script>
+
+function formattedLog() {
+  console.info('formattedLog() Start');
+  console.log('[default]', 'This log should be shown in Log tab.');
+  console.log('[default] Switch to System tab to see next log.');
+  console.log('[system]', 'This log should be shown in System tab.');
+  console.info('formattedLog() End');
+}
+
+function normalObject() {
+  console.info('normalObject() Start');
+  console.log('A normal JSON:', {
+    number: 233,
+    string: 'Hello world',
+    boolean: true,
+    obj: {foo: 'bar'},
+    array: [8, 7, 6],
+    func: function(a) { alert('b'); }
+  });
+  console.info('normalObject() End');
+}
+
+function circularArray() {
+  console.info('circularArray() Start');
+  var arr = [];
+  arr[0] = 'foo';
+  arr[1] = arr;
+  console.log('A circular structure array:', arr);
+  console.info('circularArray() End');
+}
+
+function circularObject() {
+  console.info('circularArray() Start');
+  var obj = {
+    foo: 'bar'
+  };
+  obj.self = obj;
+  obj.next = {};
+  obj.next.next = obj.next;
+  obj.next.self = obj;
+  console.log('A circular structure JSON:', obj);
+  console.info('circularObject() End');
+}
+
+function largeObject() {
+  console.info('largeObject() Start');
+  var obj = {},
+      max = 500;
+  for (var i=1; i<=max; i++) {
+    obj[ 'key_' + i ] = Math.random();
+  }
+  console.log(max + ' keys:', obj);
+  console.info('largeObject() End');
+}
+
+</script>

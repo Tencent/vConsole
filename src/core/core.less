@@ -2,6 +2,21 @@
 
   font-size: 13px;
 
+  /* global */
+
+  .vc-max-height {
+    max-height: 250px;
+  }
+  .vc-max-height-line {
+    max-height: 44px;
+  }
+  .vc-min-height {
+    min-height: 40px;
+  }
+
+
+  /* compoment */
+
   .vc-switch {
     display: block;
     position: fixed;
@@ -49,10 +64,13 @@
 
   .vc-tabbar {
     border-bottom: 1px solid #D9D9D9;
-    overflow: hidden;
+    overflow: scroll;
+    height: 39px;
+    width: auto;
+    white-space: nowrap;
 
     .vc-tab {
-      float: left;
+      display: inline-block;
       line-height: 39px;
       padding: 0 15px;
       border-right: 1px solid #D9D9D9;
@@ -84,7 +102,7 @@
   .vc-logbox {
     display: none;
     position: relative;
-    height: 100%;
+    min-height: 100%;
 
     i {
       font-style: normal;
@@ -95,7 +113,7 @@
     }
 
     .vc-log:empty:before {
-      content: "No log";
+      content: "Empty";
       color: #999;
       position: absolute;
       top: 45%;
@@ -109,6 +127,7 @@
     .vc-item {
       margin: 0;
       padding: 6px 8px;
+      overflow: hidden;
       line-height: 1.3;
       border-bottom: 1px solid #EEE;
       word-break: break-word;
@@ -130,9 +149,59 @@
       background-color: #FFE4E1;
     }
 
+    .vc-item {
+
+      .vc-item-content {
+        margin-right: 60px;
+        display: block;
+      }
+
+      .vc-item-meta {
+        color: #888;
+        float: right;
+        width: 60px;
+        text-align: right;
+      }
+
+    }
+
+    .vc-item.vc-item-nometa {
+
+      .vc-item-content {
+        margin-right: 0;
+      }
+
+      .vc-item-meta {
+        display: none;
+      }
+
+    }
+
+    .vc-item .vc-item-code {
+      display: block;
+      white-space: pre-wrap;
+      overflow: scroll;
+      position: relative;
+    }
+    .vc-item .vc-item-code.vc-item-code-input,
+    .vc-item .vc-item-code.vc-item-code-output {
+      padding-left: 12px;
+    }
+    .vc-item .vc-item-code.vc-item-code-input:before,
+    .vc-item .vc-item-code.vc-item-code-output:before {
+      content: "›";
+      position: absolute;
+      top: -3px;
+      left: 0;
+      font-size: 16px;
+      color: #6A5ACD;
+    }
+    .vc-item .vc-item-code.vc-item-code-output:before {
+      content: "‹";
+    }
+
     .vc-item .vc-fold {
       display: block;
-      max-height: 300px;
       overflow: scroll;
       -webkit-overflow-scrolling: touch;
 
@@ -141,7 +210,7 @@
         font-style: italic;
       }
       .vc-fold-outer:active {
-        background-color: rgba(0,0,0,0.15);
+        background-color: #E6E6E6;
       }
 
       .vc-fold-outer {
@@ -162,6 +231,7 @@
 
       .vc-fold-inner {
         display: none;
+        white-space: pre-wrap;
       }
     }
 
@@ -182,11 +252,140 @@
     .vc-code-key {
       color: #905;
     }
-    .vc-code-number {
+    .vc-code-function {
+      color: #905;
+      font-style: italic;
+    }
+    .vc-code-number,
+    .vc-code-boolean {
       color: #0086B3;
     }
     .vc-code-string {
       color: #183691;
+    }
+    .vc-code-null,
+    .vc-code-undefined {
+      color: #666;
+    }
+
+    .vc-cmd {
+      position: absolute;
+      height: 40px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-top: 1px solid #D9D9D9;
+
+      .vc-cmd-input-wrap {
+        display: block;
+        height: 28px;
+        margin-right: 40px;
+        padding: 6px 8px;
+      }
+
+      .vc-cmd-input {
+        width: 100%;
+        border: none;
+        resize: none;
+        outline: none;
+        padding: 0;
+        font-size: 12px;
+      }
+      .vc-cmd-input::-webkit-input-placeholder {
+        line-height: 28px;
+      }
+
+      .vc-cmd-btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 40px;
+        border: none;
+        background-color: #EFEFF4;
+        outline: none;
+        -webkit-touch-callout: none;
+      }
+      .vc-cmd-btn:active {
+        background-color: rgba(0,0,0,0.15);
+      }
+    }
+
+    .vc-group {
+
+      .vc-group-preview {
+        -webkit-touch-callout: none;
+      }
+      .vc-group-preview:active {
+        background-color: #E6E6E6;
+      }
+
+      .vc-group-detail {
+        display: none;
+        padding: 0 0 10px 20px;
+        border-bottom: 1px solid #EEE;
+      }
+
+    }
+
+    .vc-group.vc-actived {
+      .vc-group-detail {
+        display: block;
+      }
+    }
+
+    .vc-table {
+
+      .vc-table-row {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        overflow: hidden;
+        border-bottom: 1px solid #EEE;
+      }
+      .vc-table-row.vc-left-border {
+        border-left: 1px solid #EEE;
+      }
+
+      .vc-table-col {
+        flex: 1;
+        padding: 3px 4px;
+        border-left: 1px solid #EEE;
+        overflow: scroll;
+        white-space: pre-wrap;
+        word-break: break-word;
+        /*white-space: nowrap;
+        text-overflow: ellipsis;*/
+        -webkit-overflow-scrolling: touch;
+      }
+      .vc-table-col:first-child {
+        border: none;
+      }
+
+      .vc-small .vc-table-col {
+        padding: 0 4px;
+        font-size: 12px;
+      }
+
+      .vc-table-col-2 { flex: 2; }
+      .vc-table-col-3 { flex: 3; }
+      .vc-table-col-4 { flex: 4; }
+      .vc-table-col-5 { flex: 5; }
+      .vc-table-col-6 { flex: 6; }
+
+      .vc-table-row-error {
+        border-color: #F4A0AB;
+        background-color: #FFE4E1;
+
+        .vc-table-col {
+          color: #DC143C;
+          border-color: #F4A0AB;
+        }
+      }
+
+      .vc-table-col-title {
+        font-weight: bold;
+      }
     }
 
   }
@@ -202,18 +401,27 @@
     left: 0;
     right: 0;
     bottom: 0;
-    overflow: hidden;
+    display: flex;
+    flex-direction: row;
 
     .vc-tool {
+      display: none;
       text-decoration: none;
       color: #000;
       width: 50%;
-      float: left;
+      flex: 1;
       text-align: center;
       position: relative;
       -webkit-touch-callout: none;
     }
+    .vc-tool.vc-actived,
+    .vc-tool.vc-global-tool {
+      display: block;
+    }
 
+    .vc-tool:active {
+      background-color: rgba(0,0,0,0.15);
+    }
     .vc-tool:after {
       content: " ";
       position: absolute;

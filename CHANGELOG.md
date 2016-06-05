@@ -1,6 +1,22 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
 
+#### v2.0.0 (2016-06-06)
+
+- [FEATURE] Rebuild completely, support custom plugin, see [Plugin: Getting Started](./doc/plugin_getting_started).
+- [FEATURE] Support execute JS command line in Log tab
+- [FEATURE] Support circular structure object in Log and System tab
+- [FEATURE] Support viewing request headers and response in Network tab
+- [IMPROVE] Switch button will not be dragged out of screen
+- [IMPROVE] Auto print User Agent in System tab
+- [IMPROVE] Show log's time in Log and System tab
+- [FIX] Fix issue that getDate() returns a wrong date
+- [FIX] Fix issue that sync AJAX becomes async AJAX
+
+
+
+# v1.x.x
+
 #### v1.3.0 (2016-05-20)
 
 - [ADD] Support Drag and Drop switch button
