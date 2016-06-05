@@ -26,7 +26,7 @@ Trigger while vConsole trying to create a new tab for a plugin. This event will 
 After binding this event, vConsole will get HTML from your callback to render a tab. A new tab will definitely be added if you bind this event, no matter what tab's HTML you set. Do not bind this event if you don't want to add a new tab.
 
 ##### Callback Arguments:
-- (required) function(html): a callback function that receives the content HTML of the new tab. `html` can be a HTML `string` or an `DOMElement` object.
+- (required) function(html): a callback function that receives the content HTML of the new tab. `html` can be a HTML `string` or an `HTMLElement` object (Or object which supports `appendTo()` method, like JQuery object).
 
 ##### Example:
 

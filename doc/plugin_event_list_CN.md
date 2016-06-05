@@ -33,7 +33,7 @@ myPlugin.on('init', function() {
 绑定此事件后，vConsole 会认为此插件需要创建新 tab，并会将 callback 中获取的 HTML 用于渲染 tab。因此，只要绑定了此事件，新 tab 肯定会被渲染到页面中，无论 callback 传入的 HTML 是否为空。如果不需要添加新 tab，请不要绑定此事件。
 
 ##### Callback 参数
-- (必填) function(html): 回调函数，接收一个 HTML 参数用于渲染 tab。`html` 可以为 HTML 字符串，或者 `DOMElement` 对象。
+- (必填) function(html): 回调函数，接收一个 HTML 参数用于渲染 tab。`html` 可以为 HTML 字符串，或者 `HTMLElement` 对象（或支持 `appendTo()` 方法的对象，如 jQuery 对象）。
 
 ##### 例子：
 
