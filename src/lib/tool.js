@@ -185,10 +185,16 @@ export function JSONStringify(obj) {
  * localStorage methods
  */
 export function setStorage(key, value) {
+  if (!window.localStorage) {
+    return;
+  }
   key = 'vConsole_' + key;
   localStorage.setItem(key, value);
 }
 export function getStorage(key) {
+  if (!window.localStorage) {
+    return;
+  }
   key = 'vConsole_' + key;
   return localStorage.getItem(key);
 }
