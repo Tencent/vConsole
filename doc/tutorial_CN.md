@@ -7,13 +7,15 @@
 
 ### 1.下载模块
 
-下载文件 `dist/vconsole.min.js` 到本地。
+下载 vConsole 的[最新版本](https://github.com/WechatFE/vConsole/releases/latest)。
 
 或者使用 `npm` 安装：
 
 ```
 npm install vconsole
 ```
+
+然后复制 `dist/vconsole.min.js` 到自己的项目中。
 
 ### 2.引入模块
 
