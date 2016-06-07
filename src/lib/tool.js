@@ -65,6 +65,7 @@ export function isObject(value) {
     (
       !isNumber(value) &&
       !isString(value) &&
+      !isBoolean(value) &&
       !isArray(value) &&
       !isNull(value) &&
       !isFunction(value) &&
