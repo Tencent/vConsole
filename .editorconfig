@@ -1,0 +1,25 @@
+# editorconfig.org
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.{html,js,ts,css,less,scss,xml,json}]
+indent_style = space
+indent_size = 2
+
+[*.yml]
+indent_style = space
+indent_size = 2
+
+[jdists]
+indent_style = space
+indent_size = 2

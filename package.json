@@ -5,7 +5,8 @@
   "homepage": "https://github.com/WechatFE/vConsole",
   "main": "dist/vconsole.min.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha",
+    "dist": "webpack && npm test"
   },
   "keywords": [
     "console",
@@ -29,7 +30,10 @@
     "less": "^2.5.3",
     "less-loader": "^2.2.3",
     "style-loader": "^0.13.1",
-    "webpack": "~1.12.11"
+    "webpack": "~1.12.11",
+    "jsdom": "^9.2.1",
+    "mocha": "^2.5.3",
+    "chai": "^3.5.0"
   },
   "author": "WechatFE Team",
   "license": "MIT"

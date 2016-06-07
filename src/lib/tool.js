@@ -63,12 +63,12 @@ export function isObject(value) {
     ||
     // if it isn't a primitive value, then it is a common object
     (
-      !isNumber(value) && 
-      !isString(value) && 
-      !isArray(value) && 
-      !isNull(value) && 
-      !isFunction(value) && 
-      !isUndefined(value) && 
+      !isNumber(value) &&
+      !isString(value) &&
+      !isArray(value) &&
+      !isNull(value) &&
+      !isFunction(value) &&
+      !isUndefined(value) &&
       !isSymbol(value)
     )
   );
@@ -185,10 +185,16 @@ export function JSONStringify(obj) {
  * localStorage methods
  */
 export function setStorage(key, value) {
+  if (!window.localStorage) {
+    return;
+  }
   key = 'vConsole_' + key;
   localStorage.setItem(key, value);
 }
 export function getStorage(key) {
+  if (!window.localStorage) {
+    return;
+  }
   key = 'vConsole_' + key;
   return localStorage.getItem(key);
 }
