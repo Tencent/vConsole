@@ -17,6 +17,14 @@ A lightweight, extendable front-end developer tool for mobile web page.
 
 ## Usage
 
+Download the [latest release](https://github.com/WechatFE/vConsole/releases/latest) or install via npm:
+
+```
+npm install vconsole
+```
+
+Import `dist/vconsole.min.js` to your project:
+
 ```html
 <script src="path/to/vconsole.min.js"></script>
 <script>

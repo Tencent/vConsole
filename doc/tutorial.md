@@ -7,13 +7,15 @@ Tutorial
 
 ### 1. Download
 
-Download file `dist/vconsole.min.js` to your project's directory.
+Download the [latest release](https://github.com/WechatFE/vConsole/releases/latest) of vConsole.
 
 Or, install via `npm` :
 
 ```
 npm install vconsole
 ```
+
+Then save `dist/vconsole.min.js` to your project.
 
 ### 2. Import
 
