@@ -64,7 +64,7 @@
 
   .vc-tabbar {
     border-bottom: 1px solid #D9D9D9;
-    overflow: scroll;
+    overflow-x: auto;
     height: 39px;
     width: auto;
     white-space: nowrap;
@@ -90,7 +90,7 @@
   .vc-content {
     background-color: #FFF;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     position: absolute;
     top: 40px;
     left: 0;
@@ -180,7 +180,7 @@
     .vc-item .vc-item-code {
       display: block;
       white-space: pre-wrap;
-      overflow: scroll;
+      overflow: auto;
       position: relative;
     }
     .vc-item .vc-item-code.vc-item-code-input,
@@ -202,7 +202,7 @@
 
     .vc-item .vc-fold {
       display: block;
-      overflow: scroll;
+      overflow: auto;
       -webkit-overflow-scrolling: touch;
 
       .vc-fold-outer {
@@ -351,7 +351,7 @@
         flex: 1;
         padding: 3px 4px;
         border-left: 1px solid #EEE;
-        overflow: scroll;
+        overflow: auto;
         white-space: pre-wrap;
         word-break: break-word;
         /*white-space: nowrap;
