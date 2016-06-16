@@ -183,7 +183,8 @@ class VConsoleNetworkTab extends VConsolePlugin {
           let header = XMLReq.getAllResponseHeaders() || '',
               headerArr = header.split("\n");
           // extract plain text to key-value format
-          for (let line of headerArr) {
+          for (let i=0; i<headerArr.length; i++) {
+            let line = headerArr[i];
             if (!line) { continue; }
             let arr = line.split(': ');
             let key = arr[0],

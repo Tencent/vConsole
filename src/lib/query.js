@@ -49,8 +49,8 @@ $.addClass = function($el, className) {
   if (!isArray($el)) {
     $el = [$el];
   }
-  for (let $e of $el) {
-    $e.className += ' ' + className;
+  for (let i=0; i<$el.length; i++) {
+    $el[i].className += ' ' + className;
   }
 }
 
@@ -65,14 +65,14 @@ $.removeClass = function($el, className) {
   if (!isArray($el)) {
     $el = [$el];
   }
-  for (let $e of $el) {
-    let arr = $e.className.split(' ');
+  for (let i=0; i<$el.length; i++) {
+    let arr = $el[i].className.split(' ');
     for (let j=0; j<arr.length; j++) {
       if (arr[j] == className) {
         arr[j] = '';
       }
     }
-    $e.className = arr.join(' ').trim();
+    $el[i].className = arr.join(' ').trim();
   }
 }
 
@@ -85,8 +85,8 @@ $.hasClass = function($el, className) {
     return false;
   }
   let arr = $el.className.split(' ');
-  for (let name of arr) {
-    if (name == className) {
+  for (let i=0; i<arr.length; i++) {
+    if (arr[i] == className) {
       return true;
     }
   }
@@ -111,8 +111,8 @@ $.bind = function($el, eventType, fn, useCapture) {
   if (!isArray($el)) {
     $el = [$el];
   }
-  for (let $e of $el) {
-    $e.addEventListener(eventType, fn, useCapture);
+  for (let i=0; i<$el.length; i++) {
+    $el[i].addEventListener(eventType, fn, useCapture);
   }
 }
 
@@ -132,10 +132,10 @@ $.delegate = function($el, eventType, selector, fn) {
       return;
     }
     findTarget:
-    for (let $target of targets) {
+    for (let i=0; i<targets.length; i++) {
       let $node = e.target;
       while ($node) {
-        if ($node == $target) {
+        if ($node == targets[i]) {
           fn.call($node, e);
           break findTarget;
         }

@@ -197,7 +197,8 @@ class VConsole {
         return;
       }
       let $defaultBtn = $.one('.vc-tool-last');
-      for (let item of toolList) {
+      for (let i=0; i<toolList.length; i++) {
+        let item = toolList[i];
         let $item = $.render(tplToolItem, {
           name: item.name || 'Undefined',
           pluginID: plugin.id

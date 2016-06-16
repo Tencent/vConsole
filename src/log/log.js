@@ -35,8 +35,8 @@ class VConsoleLogTab extends VConsolePlugin {
   onInit() {
     this.isReady = true;
     this.$tabbox = $.render(this.tplTabbox, {});
-    for (let item of this.logList) {
-      this.printLog(item);
+    for (let i=0; i<this.logList.length; i++) {
+      this.printLog(this.logList[i]);
     }
     this.logList = [];
   }
