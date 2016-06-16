@@ -1,6 +1,14 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
 
+#### v2.0.1 (2016-06-16)
+
+- [FIX] Fix error that vConsole may not work at X5 browser engine
+- [FIX] Fix error that `localStorage` is null in some kind of devices
+- [FIX] Fix boolean display error in Log tab
+- [IMPROVE] Improve UI in Android
+
+
 #### v2.0.0 (2016-06-05)
 
 - [FEATURE] Rebuild completely, support custom plugin, see [Plugin: Getting Started](./doc/plugin_getting_started.md).
