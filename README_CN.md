@@ -17,7 +17,9 @@ vConsole
 
 ## 上手
 
-下载 vConsole 的[最新版本](https://github.com/WechatFE/vConsole/releases/latest)，或者使用 npm 安装：
+下载 vConsole 的[最新版本](https://github.com/WechatFE/vConsole/releases/latest)。（不要直接下载 dev 分支下的 `dist/vconsole.min.js`）
+
+或者使用 npm 安装：
 
 ```
 npm install vconsole

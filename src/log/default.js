@@ -15,6 +15,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
   constructor(...args) {
     super(...args);
     this.tplTabbox = tplTabbox;
+    this.windowOnError = null;
   }
 
   onReady() {
@@ -30,6 +31,31 @@ class VConsoleDefaultTab extends VConsoleLogTab {
         that.evalCommand(cmd);
       }
     });
+  }
+
+  /**
+   * replace window.console & window.onerror with vConsole method
+   * @private
+   */
+  mockConsole() {
+    super.mockConsole();
+    var that = this;
+    if (tool.isFunction(window.onerror)) {
+      this.windowOnError = window.onerror;
+    }
+    window.onerror = function(message, source, lineNo, colNo, error) {
+      let msg = message;
+      if (source) {
+        msg += "\n" + source.replace(location.origin, '');
+      }
+      if (lineNo || colNo) {
+        msg += ':' + lineNo + ':' + colNo;
+      }
+      that.printLog({logType:'error', logs:[msg], noOrigin:true});
+      if (tool.isFunction(that.windowOnError)) {
+        that.windowOnError.apply(window, message, source, lineNo, colNo, error);
+      }
+    };
   }
 
   /**

@@ -19,6 +19,7 @@
     <a onclick="circularObject()" href="javascript:;" class="weui_btn weui_btn_default">circularObject</a>
     <a onclick="circularArray()" href="javascript:;" class="weui_btn weui_btn_default">circularArray</a>
     <a onclick="largeObject()" href="javascript:;" class="weui_btn weui_btn_default">largeObject</a>
+    <a onclick="windowError()" href="javascript:;" class="weui_btn weui_btn_default">window.error</a>
   </div>
 </body>
 </html>
@@ -77,6 +78,12 @@ function largeObject() {
   }
   console.log(max + ' keys:', obj);
   console.info('largeObject() End');
+}
+
+function windowError() {
+  console.info('windowError() Start');
+  a.b = 1;
+  console.info('windowError() End');
 }
 
 </script>
