@@ -83,7 +83,7 @@ class VConsoleLogTab extends VConsolePlugin {
   }
 
   /**
-   * replace window.console & window.onerror with vConsole method
+   * replace window.console with vConsole method
    * @private
    */
   mockConsole() {
@@ -102,13 +102,6 @@ class VConsoleLogTab extends VConsolePlugin {
     window.console.warn = function() { that.printLog({logType:'warn', logs:arguments}); };
     window.console.debug = function() { that.printLog({logType:'debug', logs:arguments}); };
     window.console.error = function() { that.printLog({logType:'error', logs:arguments}); };
-
-    window.onerror = function(message, source, lineNo, colNo, error) {
-      let stack = error.stack.split('at');
-      stack = stack[0] + ' ' + stack[1];
-      stack = stack.replace(location.origin, '');
-      console.error(stack);
-    };
   }
 
   clearLog() {
@@ -159,7 +152,9 @@ class VConsoleLogTab extends VConsolePlugin {
 
     if (!shouldBeHere) {
       // ignore this log and throw it to origin console
-      this.printOriginLog(item);
+      if (!item.noOrigin) {
+        this.printOriginLog(item);
+      }
       return;
     }
 
@@ -214,7 +209,9 @@ class VConsoleLogTab extends VConsolePlugin {
     });
 
     // print log to origin console
-    this.printOriginLog(item);
+    if (!item.noOrigin) {
+      this.printOriginLog(item);
+    }
   }
 
   /**
