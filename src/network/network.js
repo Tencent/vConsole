@@ -108,7 +108,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
     // update dom
     let domData = {
       url: item.url,
-      status: item.status,
+      status: item.status || '-',
       type: '-',
       costTime: item.costTime>0 ? item.costTime+'ms' : '-',
       header: item.header,
@@ -169,7 +169,6 @@ class VConsoleNetworkTab extends VConsolePlugin {
         // update status
         item.url = url;
         item.readyState = XMLReq.readyState;
-        item.status = XMLReq.status;
 
         if (XMLReq.readyState == 0) {
           // UNSENT
@@ -195,6 +194,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
           // LOADING
         } else if (XMLReq.readyState == 4) {
           // DONE
+          item.status = XMLReq.status;
           item.endTime = +new Date(),
           item.costTime = item.endTime - (item.startTime || item.endTime);
           item.response = XMLReq.response;
