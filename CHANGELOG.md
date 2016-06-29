@@ -1,5 +1,12 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### V2.1.0 (2016-06-29)
+
+- [FEATURE] Add `vConsole.tool` & `vConsole.$` helper functions, see [Helper Functions](./doc/helper_functions.md).
+- [FEATURE] Public properties & methods of vConsole are available, see [Public Properties & Methods](./doc/public_properties_methods.md).
+- [FIX] Fix issue that `error` in `window.onerror()` may be undefined.
+- [FIX] Fix error that `xhr.status` may be unavailable when `xhr.readyState < 4`.
+
 
 #### v2.0.1 (2016-06-16)
 
