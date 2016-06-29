@@ -49,7 +49,14 @@ See [Tutorial](./doc/tutorial.md) for more details.
 
 ## Documentation
 
+vConsole:
+
  - [Tutorial](./doc/tutorial.md)
+ - [Public Properties & Methods](./public_properties_methods.md)
+ - [Helper Functions](./helper_functions.md)
+
+Plugin:
+
  - [Plugin: Getting Started](./doc/plugin_getting_started.md)
  - [Plugin: Building a Plugin](./doc/plugin_building_a_plugin.md)
  - [Plugin: Event List](./doc/plugin_event_list.md)
