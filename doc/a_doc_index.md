@@ -7,6 +7,8 @@ Documentation Index
 ## vConsole
 
  - [Tutorial](./tutorial.md)
+ - [Public Properties & Methods](./public_properties_methods.md)
+ - [Helper Functions](./helper_functions.md)
 
 
 ## Plugin
