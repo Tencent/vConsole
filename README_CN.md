@@ -54,8 +54,8 @@ console.log('Hello world');
 vConsole 本体：
 
  - [使用教程](./doc/tutorial_CN.md)
- - [公共属性及方法](./public_properties_methods_CN.md)
- - [辅助函数](./helper_functions_CN.md)
+ - [公共属性及方法](./doc/public_properties_methods_CN.md)
+ - [辅助函数](./doc/helper_functions_CN.md)
 
 插件：
 

@@ -52,8 +52,8 @@ See [Tutorial](./doc/tutorial.md) for more details.
 vConsole:
 
  - [Tutorial](./doc/tutorial.md)
- - [Public Properties & Methods](./public_properties_methods.md)
- - [Helper Functions](./helper_functions.md)
+ - [Public Properties & Methods](./doc/public_properties_methods.md)
+ - [Helper Functions](./doc/helper_functions.md)
 
 Plugin:
 
