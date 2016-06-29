@@ -1,6 +1,5 @@
 [English](./CHANGELOG.md) | 简体中文
 
-
 #### v2.1.0 (2016-06-29)
 
 - 【特性】新增 `vConsole.tool` 及 `vConsole.$` 辅助函数，请查阅[辅助函数](./doc/helper_functions_CN.md)。
