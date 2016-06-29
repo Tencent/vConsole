@@ -7,6 +7,8 @@
 ## vConsole 本体
 
  - [使用教程](./tutorial_CN.md)
+ - [公共属性及方法](./public_properties_methods_CN.md)
+ - [辅助函数](./helper_functions_CN.md)
 
 
 ## Plugin 插件

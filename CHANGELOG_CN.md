@@ -1,5 +1,12 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### v2.1.0 (2016-06-29)
+
+- 【特性】新增 `vConsole.tool` 及 `vConsole.$` 辅助函数，请查阅[辅助函数](./doc/helper_functions_CN.md)。
+- 【特性】公开部分 vConsole 的属性及方法，请查阅[公共属性及方法](./doc/public_properties_methods_CN.md)。
+- 【修复】修复 `window.onerror()` 中 `error` 可能为空而导致堆栈读取错误的问题。
+- 【修复】修复当 `xhr.readyState < 4` 时读取 `xhr.status` 可能导致错误的问题。
+
 
 #### v2.0.1 (2016-06-16)
 

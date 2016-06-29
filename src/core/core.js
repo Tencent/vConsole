@@ -35,6 +35,10 @@ class VConsole {
     };
     this.bodyOverflowCSS = '';
 
+    // export helper functions to public
+    this.tool = tool;
+    this.$ = $;
+
     var _onload = function() {
       that._render();
       that._bindEvent();
