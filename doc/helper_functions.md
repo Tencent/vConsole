@@ -286,7 +286,7 @@ var data = {
 	list: ['Red', 'Blue', 'Yellow']	
 };
 
-var html = vConsole.&.render(tpl, data, true);
+var html = vConsole.$.render(tpl, data, true);
 document.body.innerHTML += html;
 ```
 
