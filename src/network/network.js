@@ -200,7 +200,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
           item.response = XMLReq.response;
         }
 
-        that.updateRequest(id, item);
+        if (!XMLReq._noVConsole) {
+          that.updateRequest(id, item);
+        }
         return _onreadystatechange.apply(XMLReq, arguments);
       };
 

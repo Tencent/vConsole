@@ -105,4 +105,20 @@ console.log('[system] bar');
 ```
 
 
+## 其他
+
+### Network 网络
+
+所有 `XMLHttpRequest` 请求都会被显示到 Network tab 中。
+
+若不希望一个请求显示在面板中，可添加属性 `_noVConsole = true` 到 XHR 对象中：
+
+```javascript
+var xhr = new XMLHttpRequest();
+xhr._noVConsole = true; // 不会显示到 tab 中
+xhr.open("GET", 'http://example.com/');
+xhr.send();
+```
+
+
 [前往：文档索引](./a_doc_index_CN.md)

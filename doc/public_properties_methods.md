@@ -6,6 +6,20 @@ Some useful vConsole properties and methods are available for plugin development
 ## Properties
 
 
+### vConsole.version
+
+The current version of vConsole.
+
+- Readonly
+- Type: string
+
+Example:
+
+```javascript
+vConsole.version // => "2.1.0"
+```
+
+
 ### vConsole.activedTab
 
 The actived tab's plugin id.

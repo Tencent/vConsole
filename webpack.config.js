@@ -26,6 +26,9 @@ module.exports = {
         test: /\.less$/,
         loader: 'style!css!less'
         // loader: ExtractTextPlugin.extract('style-loader', 'css-loader!less-loader') // 将css独立打包
+      },
+      {
+        test: /\.json$/, loader: 'json'
       }
     ]
   },

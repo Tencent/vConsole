@@ -6,6 +6,20 @@ vConsole 提供一些公共属性字段、函数方法，以便开发插件。
 ## 属性
 
 
+### vConsole.version
+
+当前 vConsole 的版本号。
+
+- 只读
+- 类型：string
+
+例子：
+
+```javascript
+vConsole.version // => "2.1.0"
+```
+
+
 ### vConsole.activedTab
 
 当前激活的 tab 的 plugin id。

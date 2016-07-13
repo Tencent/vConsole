@@ -1,5 +1,11 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### V2.x.x (2016-07-xx)
+
+- 【特性】新增 `vConsole.version` 属性，以获取当前版本号。
+- 【特性】新增 `XMLHttpRequest` 的 `xhr._noVConsole` 属性，以控制一个网络请求是否显示在 Network tab 中。
+
+
 #### v2.1.0 (2016-06-29)
 
 - 【特性】新增 `vConsole.tool` 及 `vConsole.$` 辅助函数，请查阅[辅助函数](./doc/helper_functions_CN.md)。
