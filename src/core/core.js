@@ -4,6 +4,7 @@
  * @author WechatFE
  */
 
+import pkg from '../../package.json';
 import * as tool from '../lib/tool.js';
 import $ from '../lib/query.js';
 import './core.less';
@@ -17,6 +18,7 @@ class VConsole {
   constructor() {
     var that = this;
 
+    this.version = pkg.version;
     this.html = tpl;
     this.$dom = null;
     this.activedTab = '';
