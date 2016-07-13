@@ -1,6 +1,6 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### V2.x.x (2016-07-xx)
+#### V2.2.0 (2016-07-13)
 
 - [FEATURE] Add `vConsole.version` property.
 - [FEATURE] Add `xhr._noVConsole` property to `XMLHttpRequest` objects to customize whether a XHR should display in Network tab.
