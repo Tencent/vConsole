@@ -106,4 +106,20 @@ Supported tabs:
 ```
 
 
+## Others
+
+### Network
+
+All `XMLHttpRequest` requests will be displayed in Network tab by default.
+
+To prevent the display, add `_noVConsole = true` to XHR object:
+
+```javascript
+var xhr = new XMLHttpRequest();
+xhr._noVConsole = true; // now this request would not be displayed in tab
+xhr.open("GET", 'http://example.com/');
+xhr.send();
+```
+
+
 [Goto: Documentation Index](./a_doc_index.md)
