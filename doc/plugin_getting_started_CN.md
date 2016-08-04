@@ -14,7 +14,7 @@
 两行创建一个 vConsole 插件：
 
 ```javascript
-var myPlugin = new VConsolePlugin('my_plugin', 'My Plugin');
+var myPlugin = new vConsole.VConsolePlugin('my_plugin', 'My Plugin');
 vConsole.addPlugin(myPlugin);
 ```
 
