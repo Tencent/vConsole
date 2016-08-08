@@ -75,27 +75,50 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     }
     console.info('[system]', 'Protocol:', logMsg);
 
-    // performance related
-    let performance = window.performance || window.msPerformance || window.webkitPerformance;
-
-    // timing
-    if (performance && performance.timing) {
-      let t = performance.timing,
-        start = t.navigationStart;
-      // console.info('[system]', 'debug', 'domainLookupEnd:', (t.domainLookupEnd - start)+'ms');
-      console.info('[system]', 'connectEndTime:', (t.connectEnd - start)+'ms');
-      console.info('[system]', 'responseEndTime:', (t.responseEnd - start)+'ms');
-      // console.info('[system]', 'domComplete:', (t.domComplete - start)+'ms');
-      // console.info('[system]', 'beforeReqTime:', (t.requestStart - start)+'ms');
-      if (t.secureConnectionStart > 0) {
-        console.info('[system]', 'SSL Cost:', (t.connectEnd - t.secureConnectionStart)+'ms');
-      }
-      // console.info('system', 'req&RespTime:', (t.responseEnd - t.requestStart)+'ms');
-      console.info('[system]', 'DomRenderCost:', (t.domComplete - t.domLoading)+'ms');
-    }
-
     // User Agent
     console.info('[system]', 'UA:', ua);
+
+    // performance related
+    // use `setTimeout` to make sure all timing points are available
+    setTimeout(function() {
+      let performance = window.performance || window.msPerformance || window.webkitPerformance;
+
+      // timing
+      if (performance && performance.timing) {
+        let t = performance.timing;
+
+        if (t.navigationStart && t.domainLookupStart) {
+          console.info('[system]', 'navigationCost:', (t.domainLookupStart - t.navigationStart)+'ms');
+        }
+        if (t.domainLookupEnd && t.domainLookupStart) {
+          console.info('[system]', 'dnsCost:', (t.domainLookupEnd - t.domainLookupStart)+'ms');
+        }
+        if (t.connectEnd && t.connectStart) {
+          console.info('[system]', 'tcpCost:', (t.connectEnd - t.connectStart)+'ms');
+        }
+        if (t.connectEnd && t.secureConnectionStart) {
+          console.info('[system]', 'sslCost:', (t.connectEnd - t.secureConnectionStart)+'ms');
+        }
+        if (t.responseStart && t.requestStart) {
+          console.info('[system]', 'requestCost:', (t.responseStart - t.requestStart)+'ms');
+        }
+        if (t.responseEnd && t.responseStart) {
+          console.info('[system]', 'responseCost:', (t.responseEnd - t.responseStart)+'ms');
+        }
+        if (t.domContentLoadedEventStart && t.domLoading) {
+          console.info('[system]', 'domContentCost:', (t.domContentLoadedEventStart - t.domLoading)+'ms');
+        }
+        if (t.domComplete && t.domLoading) {
+          console.info('[system]', 'domCompleteCost:', (t.domComplete - t.domLoading)+'ms');
+        }
+        if (t.loadEventEnd && t.loadEventStart) {
+          console.info('[system]', 'onLoadCost:', (t.loadEventEnd - t.loadEventStart)+'ms');
+        }
+        if (t.navigationStart && t.loadEventEnd) {
+          console.info('[system]', 'totalCost:', (t.loadEventEnd - t.navigationStart)+'ms');
+        }
+      }
+    }, 0);
   }
 
 } // END class
