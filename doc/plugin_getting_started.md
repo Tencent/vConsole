@@ -14,7 +14,7 @@ You can customize the functions of the tab and buttons.
 Two lines to create a vConsole plugin:
 
 ```javascript
-var myPlugin = new VConsolePlugin('my_plugin', 'My Plugin');
+var myPlugin = new vConsole.VConsolePlugin('my_plugin', 'My Plugin');
 vConsole.addPlugin(myPlugin);
 ```
 
