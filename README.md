@@ -62,6 +62,12 @@ Plugin:
  - [Plugin: Event List](./doc/plugin_event_list.md)
 
 
+## Plugins
+
+ - [vConsole-resources](https://github.com/WechatFE/vConsole-resources)
+ - [vConsole-sources](https://github.com/WechatFE/vConsole-sources)
+
+
 ## Changelog
 
 [CHANGELOG.md](./CHANGELOG.md)

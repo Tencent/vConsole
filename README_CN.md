@@ -65,6 +65,13 @@ vConsole 本体：
 
 
 
+## 插件列表
+
+ - [vConsole-resources](https://github.com/WechatFE/vConsole-resources)
+ - [vConsole-sources](https://github.com/WechatFE/vConsole-sources)
+
+
+
 ## 更新记录
 
 [CHANGELOG_CN.md](./CHANGELOG_CN.md)
