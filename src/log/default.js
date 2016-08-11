@@ -64,27 +64,35 @@ class VConsoleDefaultTab extends VConsoleLogTab {
    */
   evalCommand(cmd) {
     // print command to console
-    let date = tool.getDate(+new Date());
-    this.renderLog({
+    this.printLog({
       logType: 'log',
-      meta: date.hour + ':' + date.minute + ':' + date.second,
-      content: $.render(tplItemCode, {content: cmd, type: 'input'}, true),
+      content: $.render(tplItemCode, {content: cmd, type: 'input'}),
+      noMeta: true,
       style: ''
     });
     // eval
     let result = eval(cmd);
     // print result to console
-    let content = '';
+    let $content;
     if (tool.isArray(result) || tool.isObject(result)) {
-      content = this.getFoldedLine(result);
+      $content = this.getFoldedLine(result);
     } else {
-      content = $.render(tplItemCode, {content: result, type: 'output'}, true);
+      if (tool.isNull(result)) {
+        result = 'null';
+      } else if (tool.isUndefined(result)) {
+        result = 'undefined';
+      } else if (tool.isFunction(result)) {
+        result = 'function()'
+      } else if (tool.isString(result)) {
+        result = '"' + result + '"';
+      }
+      $content = $.render(tplItemCode, {content: result, type: 'output'});
     }
-    this.renderLog({
+    this.printLog({
       logType: 'log',
-      meta: '',
-      content: content,
-      style: 'vc-item-nometa'
+      content: $content,
+      noMeta: true,
+      style: ''
     });
   }
 

@@ -67,19 +67,6 @@ class VConsoleLogTab extends VConsolePlugin {
    */
   onReady() {
 
-    $.bind($.one('.vc-log', this.$tabbox), 'click', function(e) {
-      var target = e.target;
-      // expand a line
-      if ($.hasClass(target, 'vc-fold-outer')) {
-        if ($.hasClass(target.parentElement, 'vc-toggle')) {
-          $.removeClass(target.parentElement, 'vc-toggle');
-        } else {
-          $.addClass(target.parentElement, 'vc-toggle');
-        }
-        e.preventDefault();
-      }
-    });
-
   }
 
   /**
@@ -123,16 +110,22 @@ class VConsoleLogTab extends VConsolePlugin {
    * @protected
    * @param  string  tabName    auto|default|system
    * @param  string  logType    log|info|debug|error|warn
-   * @param  array  logs
+   * @param  array   logs       `logs` or `content` can't be empty
+   * @param  object  content    `logs` or `content` can't be empty
+   * @param  boolean noOrigin
+   * @param  boolean noMeta
+   * @param  int     date
+   * @param  string  style
+   * @param  string  meta
    */
   printLog(item) {
-    let logs = item.logs;
-    if (!logs.length) {
+    let logs = item.logs || [];
+    if (!logs.length && !item.content) {
       return;
     }
 
-    // convert logs to an array
-    logs = [].slice.call(logs);
+    // convert logs to a real array
+    logs = [].slice.call(logs || []);
 
     // check `[default]` format
     let shouldBeHere = true;
@@ -177,36 +170,53 @@ class VConsoleLogTab extends VConsolePlugin {
       }
     }
 
-    // generate plain text for a line
-    let line = '';
+    // use date as meta
+    if (!item.meta) {
+      let date = tool.getDate(item.date);
+      item.meta = date.hour + ':' + date.minute + ':' + date.second;
+    }
+
+    // create line
+    let $line = $.render(tplItem, {
+      logType: item.logType,
+      noMeta: !!item.noMeta,
+      meta: item.meta,
+      style: item.style || ''
+    });
+
+    let $content = $.one('.vc-item-content', $line);
+    // generate content from item.logs
     for (let i=0; i<logs.length; i++) {
+      let $log = document.createElement('SPAN');
       try {
         if (logs[i] === '') {
           // ignore empty string
           continue;
         } else if (tool.isFunction(logs[i])) {
           // convert function to string
-          line += ' ' + logs[i].toString();
+          $log.innerHTML = ' ' + logs[i].toString();
         } else if (tool.isObject(logs[i]) || tool.isArray(logs[i])) {
           // object or array
-          line += ' ' + this.getFoldedLine(logs[i]);
+          $log = this.getFoldedLine(logs[i]);
         } else {
           // default
-          line += ' ' + tool.htmlEncode(logs[i]).replace(/\n/g, '<br/>');
+          $log.innerHTML = ' ' + tool.htmlEncode(logs[i]).replace(/\n/g, '<br/>');
         }
       } catch (e) {
-        line += ' [' + (typeof logs[i]) + ']';
+        $log.innerHTML = ' [' + (typeof logs[i]) + ']';
+      }
+      if ($log) {
+        $content.appendChild($log);
       }
     }
+    // generate content from item.content
+    if (tool.isObject(item.content)) {
+      $content.appendChild(item.content);
+    }
 
-    // render
-    let date = tool.getDate(item.date);
-    this.renderLog({
-      logType: item.logType,
-      content: line,
-      meta: date.hour + ':' + date.minute + ':' + date.second,
-      style: ''
-    });
+    // render to panel
+    $.one('.vc-log', this.$tabbox).appendChild($line);
+    $.one('.vc-content').scrollTop = $.one('.vc-content').scrollHeight;
 
     // print log to origin console
     if (!item.noOrigin) {
@@ -215,116 +225,109 @@ class VConsoleLogTab extends VConsolePlugin {
   }
 
   /**
-   * render a log
+   * generate the HTML element of a folded line
    * @protected
    */
-  renderLog(item) {
-    let $item = $.render(tplItem, item);
-    $.one('.vc-log', this.$tabbox).appendChild($item);
-    $.one('.vc-content').scrollTop = $.one('.vc-content').scrollHeight;
-  }
-
-  /**
-   * generate the HTML of a folded line
-   * @protected
-   */
-  getFoldedLine(obj) {
-    let json = tool.JSONStringify(obj);
-    let outer = '',
-        inner = '',
-        preview = '';
-    let lv = 0,
-        p = '  ';
-
-    preview = json.substr(0, 26);
-    if (json.length > 26) {
-      preview += '...';
+  getFoldedLine(obj, outer) {
+    let that = this;
+    if (!outer) {
+      let json = tool.JSONStringify(obj);
+      let preview = json.substr(0, 26);
+      outer = tool.getObjName(obj);
+      if (json.length > 26) {
+        preview += '...';
+      }
+      outer += ' ' + preview;
     }
-
-    outer = Object.prototype.toString.call(obj).replace('[object ', '').replace(']', '');
-    outer += ' ' + preview;
-
-    // use a map to track parent relationship
-    let objMap = [];
-    function _hasSameParentAsChild(child) {
-      // find upper item which child is equal to this child
-      for (let i = objMap.length - 1; i >= 0; i--) {
-        if (objMap[i].child == child) {
-          return true;
+    let $line = $.render(tplFold, {outer: outer, lineType: 'obj'});
+    $.bind($.one('.vc-fold-outer', $line), 'click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if ($.hasClass($line, 'vc-toggle')) {
+        $.removeClass($line, 'vc-toggle');
+        $.removeClass($.one('.vc-fold-inner', $line), 'vc-toggle');
+        $.removeClass($.one('.vc-fold-outer', $line), 'vc-toggle');
+      } else {
+        $.addClass($line, 'vc-toggle');
+        $.addClass($.one('.vc-fold-inner', $line), 'vc-toggle');
+        $.addClass($.one('.vc-fold-outer', $line), 'vc-toggle');
+      }
+      let $content = $.one('.vc-fold-inner', $line);
+      if ($content.children.length == 0 && !!obj) {
+        // render object's keys
+        let keys = tool.getObjAllKeys(obj);
+        for (let i=0; i<keys.length; i++) {
+          let val = obj[keys[i]],
+              valueType = 'undefined',
+              keyType = '',
+              $line;
+          // handle value
+          if (tool.isString(val)) {
+            valueType = 'string';
+            val = '"' + val + '"';
+          } else if (tool.isNumber(val)) {
+            valueType = 'number';
+          } else if (tool.isBoolean(val)) {
+            valueType = 'boolean';
+          } else if (tool.isNull(val)) {
+            valueType = 'null';
+            val = 'null';
+          } else if (tool.isUndefined(val)) {
+            valueType = 'undefined';
+            val = 'undefined';
+          } else if (tool.isFunction(val)) {
+            valueType = 'function';
+            val = 'function()';
+          } else if (tool.isSymbol(val)) {
+            valueType = 'symbol';
+          }
+          // render
+          let $sub;
+          if (tool.isArray(val)) {
+            let name = tool.getObjName(val) + '[' + val.length + ']';
+            $sub = that.getFoldedLine(val, $.render(tplFoldCode, {
+              key: keys[i], keyType: keyType, value: name, valueType: 'array'
+            }, true));
+          } else if (tool.isObject(val)) {
+            let name = tool.getObjName(val);
+            $sub = that.getFoldedLine(val, $.render(tplFoldCode, {
+              key: keys[i], keyType: keyType, value: name, valueType: 'object'
+            }, true));
+          } else {
+            if (!obj.hasOwnProperty(keys[i])) {
+              keyType = 'private';
+            }
+            let renderData = {lineType: 'kv', key: keys[i], keyType: keyType, value: val, valueType: valueType};
+            $sub = $.render(tplFold, renderData);
+          }
+          $content.appendChild($sub);
+        }
+        // render object's prototype
+        if (tool.isObject(obj)) {
+          let proto = obj.__proto__,
+              $proto;
+          if (tool.isObject(proto)) {
+            $proto = that.getFoldedLine(proto, $.render(tplFoldCode, {
+              key: '__proto__',
+              keyType: 'private',
+              value: tool.getObjName(proto),
+              valueType: 'object'
+            }, true));
+          } else {
+            // if proto is not an object, it should be `null`
+            $proto = $.render(tplFoldCode, {
+              key: '__proto__',
+              keyType: 'private',
+              value: 'null',
+              valueType: 'null'
+            });
+          }
+          $content.appendChild($proto);
         }
       }
       return false;
-    }
-    
-    function _iterateObj(val, parent) {
-
-      if (tool.isObject(val)) {
-        // object
-        if (_hasSameParentAsChild(val)) {
-          // this object is circular, skip it
-          inner += "{Circular Object}";
-          return;
-        }
-        objMap.push({parent: parent, child: val});
-
-        let keys = Object.keys(val);
-        inner += "{\n";
-        lv++;
-        for (let i=0; i<keys.length; i++) {
-          let k = keys[i];
-          if (!val.hasOwnProperty(k)) { continue; }
-          inner += Array(lv + 1).join(p) + $.render(tplFoldCode, {type:'key', code:k}, true) + ': ';
-          _iterateObj(val[k], val);
-          if (i < keys.length - 1) {
-            inner += ",\n";
-          }
-        }
-        lv--;
-        inner += "\n" + Array(lv + 1).join(p) + "}";
-
-        objMap.pop();
-      } else if (tool.isArray(val)) {
-        // array
-        if (_hasSameParentAsChild(val)) {
-          // this array is circular, skip it
-          inner += "[Circular Array]";
-          return;
-        }
-        objMap.push({parent: parent, child: val});
-
-        inner += "[\n";
-        lv++;
-        for (let i=0; i<val.length; i++) {
-          inner += Array(lv + 1).join(p) + $.render(tplFoldCode, {type:'key', code:i}, true) + ': ';
-          _iterateObj(val[i], val);
-          if (i < val.length - 1) {
-            inner += ",\n";
-          }
-        }
-        lv--;
-        inner += "\n" + Array(lv + 1).join(p) + "]";
-
-        objMap.pop();
-      } else if (tool.isString(val)) {
-        inner += $.render(tplFoldCode, {type:'string', code:'"'+tool.htmlEncode(val)+'"'}, true);
-      } else if (tool.isNumber(val)) {
-        inner += $.render(tplFoldCode, {type:'number', code:val}, true);
-      } else if (tool.isBoolean(val)) {
-        inner += $.render(tplFoldCode, {type:'boolean', code:val}, true);
-      } else if (tool.isNull(val)) {
-        inner += $.render(tplFoldCode, {type:'null', code:'null'}, true);
-      } else if (tool.isUndefined(val)) {
-        inner += $.render(tplFoldCode, {type:'undefined', code:'undefined'}, true);
-      } else if (tool.isFunction(val)) {
-        inner += $.render(tplFoldCode, {type:'function', code:'function()'}, true);
-      } else {
-        inner += JSON.stringify(val);
-      }
-    }
-    _iterateObj(obj, null);
-
-    let line = $.render(tplFold, {outer: outer, inner: inner}, true);
-    return line;
+    });
+    return $line;
   }
 
 } // END class

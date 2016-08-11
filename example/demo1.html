@@ -45,7 +45,8 @@ $('.js_btn_log').on('tap', function(e) {
 $('.js_btn_log_obj').on('tap', function(e) {
   var obj = {
     'foo': 'bar',
-    'num': 3,
+    'obj': {'bool': true},
+    'arr': [9, 8, 7],
     'tips': 'JS对象可以折叠展示'
   };
   console.log(obj);
