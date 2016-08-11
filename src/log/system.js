@@ -31,11 +31,13 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     console.info('[system]', 'Now:', d.year+'-'+d.month+'-'+d.day+' '+d.hour+':'+d.minute+':'+d.second+'.'+d.millisecond);
 
     // device & system
-    logMsg = 'Unknown';
+    
     let ipod = ua.match(/(ipod).*\s([\d_]+)/i),
       ipad = ua.match(/(ipad).*\s([\d_]+)/i),
       iphone = ua.match(/(iphone)\sos\s([\d_]+)/i),
       android = ua.match(/(android)\s([\d\.]+)/i);
+    
+    logMsg = 'Unknown';
     if (android) {
       logMsg = 'Android ' + android[2];
     } else if (iphone) {
@@ -45,24 +47,18 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     } else if (ipod) {
       logMsg = 'iPod, iOS ' + ipod[2].replace(/_/g, '.');
     }
-    console.info('[system]', 'System:', logMsg);
-
+    let templogMsg = logMsg;
     // wechat app version
     let version = ua.match(/MicroMessenger\/([\d\.]+)/i);
     logMsg = 'Unknown';
     if (version && version[1]) {
       logMsg = version[1];
-      console.info('[system]', 'WeChat:', logMsg);
+      templogMsg += (', WeChat ' + logMsg);
+      console.info('[system]', 'System:', templogMsg);
+    } else {
+      console.info('[system]', 'System:', templogMsg);
     }
 
-    // network type
-    let network = ua.toLowerCase().match(/ nettype\/([^ ]+)/g);
-    logMsg = 'Unknown';
-    if (network && network[0]) {
-      network = network[0].split('/');
-      logMsg = network[1];
-      console.info('[system]', 'Network:', logMsg);
-    }
 
     // HTTP protocol
     logMsg = 'Unknown';
@@ -73,10 +69,23 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     } else {
       logMsg = location.protocol.replace(':', '');
     }
-    console.info('[system]', 'Protocol:', logMsg);
+    templogMsg = logMsg;
+    // network type
+    let network = ua.toLowerCase().match(/ nettype\/([^ ]+)/g);
+    logMsg = 'Unknown';
+    if (network && network[0]) {
+      network = network[0].split('/');
+      logMsg = network[1];
+      templogMsg += (', ' + logMsg);
+      console.info('[system]', 'Network:', templogMsg);
+    } else {
+      console.info('[system]', 'Protocol:', templogMsg);
+    }
 
     // User Agent
     console.info('[system]', 'UA:', ua);
+    
+    
 
     // performance related
     // use `setTimeout` to make sure all timing points are available
