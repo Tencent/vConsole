@@ -47,16 +47,19 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     } else if (ipod) {
       logMsg = 'iPod, iOS ' + ipod[2].replace(/_/g, '.');
     }
-    var templogMsg = logMsg;
+    let templogMsg = logMsg;
     // wechat app version
     let version = ua.match(/MicroMessenger\/([\d\.]+)/i);
     logMsg = 'Unknown';
     if (version && version[1]) {
       logMsg = version[1];
-      console.info('[system]', 'System:', templogMsg, ',' , 'WeChat:', logMsg);
+      templogMsg += (', WeChat ' + logMsg);
+      console.info('[system]', 'System:', templogMsg);
     } else {
       console.info('[system]', 'System:', templogMsg);
     }
+
+
     // HTTP protocol
     logMsg = 'Unknown';
     if (location.protocol == 'https:') {
@@ -73,7 +76,8 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     if (network && network[0]) {
       network = network[0].split('/');
       logMsg = network[1];
-      console.info('[system]', 'Network:', templogMsg , ',' , logMsg);
+      templogMsg += (', ' + logMsg);
+      console.info('[system]', 'Network:', templogMsg);
     } else {
       console.info('[system]', 'Protocol:', templogMsg);
     }
