@@ -183,6 +183,39 @@ export function JSONStringify(obj) {
 }
 
 /**
+ * get an object's all keys ignore whether they are not enumerable
+ */
+export function getObjAllKeys(obj) {
+  if (!isObject(obj) && !isArray(obj)) {
+    return [];
+  }
+  let dontEnums = [
+    'toString',
+    'toLocaleString',
+    'valueOf',
+    'hasOwnProperty',
+    'isPrototypeOf',
+    'propertyIsEnumerable',
+    'constructor'
+  ];
+  let keys = [];
+  for (let key in obj) {
+    if (dontEnums.indexOf(key) < 0) {
+      keys.push(key);
+    }
+  }
+  keys = keys.sort();
+  return keys;
+}
+
+/**
+ * get an object's prototype name
+ */
+export function getObjName(obj) {
+  return Object.prototype.toString.call(obj).replace('[object ', '').replace(']', '');
+}
+
+/**
  * localStorage methods
  */
 export function setStorage(key, value) {

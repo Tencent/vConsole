@@ -48,7 +48,7 @@
 
   .vc-panel {
     position: fixed;
-    min-height: 80%;
+    min-height: 85%;
     left: 0;
     right: 0;
     bottom: 0;
@@ -209,14 +209,11 @@
       .vc-fold-outer {
         display: block;
         font-style: italic;
+        padding-left: 10px;
+        position: relative;
       }
       .vc-fold-outer:active {
         background-color: #E6E6E6;
-      }
-
-      .vc-fold-outer {
-        padding-left: 10px;
-        position: relative;
       }
 
       .vc-fold-outer:before {
@@ -229,16 +226,7 @@
         border: transparent solid 4px;
         border-left-color: #000;
       }
-
-      .vc-fold-inner {
-        display: none;
-        white-space: pre-wrap;
-      }
-    }
-
-    .vc-item .vc-fold.vc-toggle {
-
-      .vc-fold-outer:before {
+      .vc-fold-outer.vc-toggle:before {
         top: 6px;
         left: 0;
         border-top-color: #000;
@@ -246,12 +234,26 @@
       }
 
       .vc-fold-inner {
+        display: none;
+        margin-left: 10px;
+      }
+      .vc-fold-inner.vc-toggle {
         display: block;
+      }
+
+      .vc-fold-inner .vc-code-key {
+        margin-left: 10px;
+      }
+      .vc-fold-outer .vc-code-key {
+        margin-left: 0;
       }
     }
 
     .vc-code-key {
       color: #905;
+    }
+    .vc-code-private-key {
+      color: #D391B5;
     }
     .vc-code-function {
       color: #905;
