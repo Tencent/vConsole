@@ -88,34 +88,36 @@ class VConsoleDefaultTab extends VConsoleLogTab {
         let t = performance.timing;
 
         if (t.navigationStart && t.domainLookupStart) {
-          console.info('[system]', 'navigationCost:', (t.domainLookupStart - t.navigationStart)+'ms');
+          console.info('[system]', 'navigation:', (t.domainLookupStart - t.navigationStart)+'ms');
         }
         if (t.domainLookupEnd && t.domainLookupStart) {
-          console.info('[system]', 'dnsCost:', (t.domainLookupEnd - t.domainLookupStart)+'ms');
+          console.info('[system]', 'dns:', (t.domainLookupEnd - t.domainLookupStart)+'ms');
         }
         if (t.connectEnd && t.connectStart) {
-          console.info('[system]', 'tcpCost:', (t.connectEnd - t.connectStart)+'ms');
-        }
-        if (t.connectEnd && t.secureConnectionStart) {
-          console.info('[system]', 'sslCost:', (t.connectEnd - t.secureConnectionStart)+'ms');
+          if (t.connectEnd && t.secureConnectionStart) {
+            console.info('[system]', 'tcp (ssl):', (t.connectEnd - t.connectStart)+'ms ('+(t.connectEnd - t.secureConnectionStart)+'ms)');
+          } else {
+            console.info('[system]', 'tcp:', (t.connectEnd - t.connectStart)+'ms');
+          }
         }
         if (t.responseStart && t.requestStart) {
-          console.info('[system]', 'requestCost:', (t.responseStart - t.requestStart)+'ms');
+          console.info('[system]', 'request:', (t.responseStart - t.requestStart)+'ms');
         }
         if (t.responseEnd && t.responseStart) {
-          console.info('[system]', 'responseCost:', (t.responseEnd - t.responseStart)+'ms');
-        }
-        if (t.domContentLoadedEventStart && t.domLoading) {
-          console.info('[system]', 'domContentCost:', (t.domContentLoadedEventStart - t.domLoading)+'ms');
+          console.info('[system]', 'response:', (t.responseEnd - t.responseStart)+'ms');
         }
         if (t.domComplete && t.domLoading) {
-          console.info('[system]', 'domCompleteCost:', (t.domComplete - t.domLoading)+'ms');
+          if (t.domContentLoadedEventStart && t.domLoading) {
+            console.info('[system]', 'domComplete (domLoaded):', (t.domComplete - t.domLoading)+'ms ('+(t.domContentLoadedEventStart - t.domLoading)+'ms)');
+          } else {
+            console.info('[system]', 'domComplete:', (t.domComplete - t.domLoading)+'ms');
+          }
         }
         if (t.loadEventEnd && t.loadEventStart) {
-          console.info('[system]', 'onLoadCost:', (t.loadEventEnd - t.loadEventStart)+'ms');
+          console.info('[system]', 'loadEvent:', (t.loadEventEnd - t.loadEventStart)+'ms');
         }
         if (t.navigationStart && t.loadEventEnd) {
-          console.info('[system]', 'totalCost:', (t.loadEventEnd - t.navigationStart)+'ms');
+          console.info('[system]', 'total (DOM):', (t.loadEventEnd - t.navigationStart)+'ms ('+(t.domComplete - t.navigationStart)+'ms)');
         }
       }
     }, 0);
