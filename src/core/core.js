@@ -44,7 +44,7 @@ class VConsole {
 
     let _onload = function() {
       that._render();
-      that._createTap() ;
+      that._mockTap() ;
       that._bindEvent();
       that._autoRun();
     };
@@ -86,7 +86,7 @@ class VConsole {
    * simulate tap event by touchstart & touchend
    * @private
    */
-  _createTap() {
+  _mockTap() {
     let tapTime = 700, // maximun tap interval
         tapBoundary = 10, // max tap move distance
         tapDelay = 200; // minimun time between two taps
@@ -130,7 +130,7 @@ class VConsole {
       touchHasMoved = false;
       targetElem = null;
 
-      e.preventDefault(); // prevent click 300ms later
+      // e.preventDefault(); // prevent click 300ms later. Danger
     }, false);
 
   }
@@ -181,30 +181,32 @@ class VConsole {
       }
     });
 
-    let listnerEvent = 'tap';
-    that.$dom.addEventListener(listnerEvent, function(e) {
-      let te = (e.target.nodeType === Node.TEXT_NODE ? e.target.parentNode : e.target);
-      let cn = te.className;
-      if(/vc-switch/.test(cn) === true){
-        that.show();
+    // show console panel
+    $.bind($.one('.vc-switch', that.$dom), 'tap', function() {
+      that.show();
+    });
+
+    // hide console panel
+    $.bind($.one('.vc-hide', that.$dom), 'tap', function() {
+      that.hide();
+    });
+
+    // hide console panel when tap background mask
+    $.bind($.one('.vc-mask', that.$dom), 'tap', function(e) {
+      if (e.target != $.one('.vc-mask')) {
+        return false;
       }
-      else if(/vc-hide/.test(cn) === true){
-        that.hide();
+      that.hide();
+    });
+
+    // show tab box
+    $.delegate($.one('.vc-tabbar', that.$dom), 'tap', '.vc-tab', function(e) {
+      let tabName = this.dataset.tab;
+      if (tabName == that.activedTab) {
+        return;
       }
-      else if(/vc-mask/.test(cn) === true){
-        if (e.target != $.one('.vc-mask')) {
-          return false;
-        }
-        that.hide();
-      }
-      else if(/vc-tab/.test(cn) === true){
-        let tabName = te.dataset.tab;
-        if (tabName == that.activedTab) {
-          return;
-        }
-        that.showTab(tabName);
-      }
-    }, false);
+      that.showTab(tabName);
+    });
 
   };
 
@@ -268,7 +270,7 @@ class VConsole {
           $.addClass($item, 'vc-global-tool');
         }
         if (tool.isFunction(item.onClick)) {
-          $.bind($item, 'click', item.onClick);
+          $.bind($item, 'tap', item.onClick);
         }
         $defaultBtn.parentNode.insertBefore($item, $defaultBtn);
       }
