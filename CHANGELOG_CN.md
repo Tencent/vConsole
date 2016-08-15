@@ -2,9 +2,6 @@
 
 #### V2.3.0 (2016-08-15)
 
-- [FEATURE] Objects or Arrays can be expended layer by layer.
-- [FEATURE] All object's properties, including private properties, can be enumerable now.
-- [IMPROVE] Support `tap` event within vConsole's DOM container.
 - 【特性】支持逐级展开 Object 或 Array 的子元素。
 - 【特性】支持显示 Object 内的不可枚举属性。
 - 【优化】支持在 vConsole 的 DOM 容器内使用 `tap` 事件以代替 `click` 事件。
