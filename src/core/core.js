@@ -13,10 +13,11 @@ import tplTabbar from './tabbar.html';
 import tplTabbox from './tabbox.html';
 import tplToolItem from './tool_item.html';
 
+
 class VConsole {
 
   constructor() {
-    var that = this;
+    let that = this;
 
     this.version = pkg.version;
     this.html = tpl;
@@ -41,8 +42,9 @@ class VConsole {
     this.tool = tool;
     this.$ = $;
 
-    var _onload = function() {
+    let _onload = function() {
       that._render();
+      that._createTap() ;
       that._bindEvent();
       that._autoRun();
     };
@@ -58,16 +60,18 @@ class VConsole {
    * @private
    */
   _render() {
-    var id = '#__vconsole';
+    let id = '#__vconsole';
     if (! $.one(id)) {
-      var e = document.createElement('div');
+      let e = document.createElement('div');
       e.innerHTML = this.html;
       document.body.appendChild(e.children[0]);
     }
     this.$dom = $.one(id);
 
+    
+
     // reposition switch button
-    var switchX = tool.getStorage('switch_x'),
+    let switchX = tool.getStorage('switch_x'),
         switchY = tool.getStorage('switch_y');
     if (switchX && switchY) {
       this.switchPos.x = switchX;
@@ -75,17 +79,77 @@ class VConsole {
       $.one('.vc-switch').style.right = switchX + 'px';
       $.one('.vc-switch').style.bottom = switchY + 'px';
     }
+
+    //remove from less to present transition effect
+    $.one('.vc-mask', this.$dom).style.display = 'none';
   };
 
+  /**
+   * simulate tap event by touchstart & touchend
+   * @private
+   */
+  _createTap() {
+    let tapTime = 700, //maximun tap interval
+        tapBoundary = 10, //max tap move distance
+        tapDelay = 200; //minimun time between two taps
+
+    let that = this;
+
+    let lastTouchStartTime,
+        touchstartX,
+        touchstartY,
+        touchHasMoved = false,
+        tapEvent,
+        targetElem = null;
+
+    this.$dom.addEventListener('touchstart', function(e) {//todo: if double click 
+      if(lastTouchStartTime === undefined){
+        let touch = e.targetTouches[0];
+        touchstartX = touch.pageX;
+        touchstartY = touch.pageY;
+        lastTouchStartTime = e.timeStamp;
+        targetElem = (e.target.nodeType === Node.TEXT_NODE ? e.target.parentNode : e.target);
+      }
+    }, false);
+
+    this.$dom.addEventListener('touchmove', function(e) {
+      let touch = e.changedTouches[0];
+      if(Math.abs(touch.pageX - touchstartX) > tapBoundary || Math.abs(touch.pageY - touchstartY) > tapBoundary){
+        touchHasMoved = true;
+      }
+     
+    });
+
+    this.$dom.addEventListener('touchend', function(e) {
+      //move and time within limits, dispatch tap
+      if(touchHasMoved === false && e.timeStamp - lastTouchStartTime < tapTime && targetElem != null){
+        //添加自定义tap事件
+        if(tapEvent === undefined){
+          tapEvent = document.createEvent('Event');
+          tapEvent.initEvent('tap', true, true);
+        }
+
+        targetElem.dispatchEvent(tapEvent);
+
+      }
+      //reset values
+      lastTouchStartTime = undefined,
+      touchHasMoved = false,
+      targetElem = null;
+
+      e.preventDefault();//prevent click 300ms later
+    }, false);
+
+  }
   /**
    * bind DOM events
    * @private
    */
   _bindEvent() {
-    var that = this;
+    let that = this;
 
     // drag & drop switch button
-    var $switch = $.one('.vc-switch', that.$dom);
+    let $switch = $.one('.vc-switch', that.$dom);
     $.bind($switch, 'touchstart', function(e) {
       that.switchPos.startX = e.touches[0].pageX;
       that.switchPos.startY = e.touches[0].pageY;
@@ -104,9 +168,9 @@ class VConsole {
     });
     $.bind($switch, 'touchmove', function(e) {
       if (e.touches.length > 0) {
-        var offsetX = e.touches[0].pageX - that.switchPos.startX,
+        let offsetX = e.touches[0].pageX - that.switchPos.startX,
             offsetY = e.touches[0].pageY - that.switchPos.startY;
-        var x = that.switchPos.x - offsetX,
+        let x = that.switchPos.x - offsetX,
             y = that.switchPos.y - offsetY;
         if (x < 0) { x = 0; }
         if (y < 0) { y = 0; }
@@ -124,32 +188,30 @@ class VConsole {
       }
     });
 
-    // show console panel
-    $.bind($.one('.vc-switch', that.$dom), 'click', function() {
-      that.show();
-    })
-
-    // hide console panel
-    $.bind($.one('.vc-hide', that.$dom), 'click', function() {
-      that.hide();
-    });
-
-    // hide console panel when tap background mask
-    $.bind($.one('.vc-mask', that.$dom), 'click', function(e) {
-      if (e.target != $.one('.vc-mask')) {
-        return false;
+    let listnerEvent = 'tap';
+    that.$dom.addEventListener(listnerEvent, function(e) {
+      let te = (e.target.nodeType === Node.TEXT_NODE ? e.target.parentNode : e.target);
+      let cn = te.className;
+      if(/vc-switch/.test(cn) === true){
+        that.show();
       }
-      that.hide();
-    });
-
-    // show tab box
-    $.delegate($.one('.vc-tabbar', that.$dom), 'click', '.vc-tab', function(e) {
-      var tabName = this.dataset.tab;
-      if (tabName == that.activedTab) {
-        return;
+      else if(/vc-hide/.test(cn) === true){
+        that.hide();
       }
-      that.showTab(tabName);
-    });
+      else if(/vc-mask/.test(cn) === true){
+        if (e.target != $.one('.vc-mask')) {
+          return false;
+        }
+        that.hide();
+      }
+      else if(/vc-tab/.test(cn) === true){
+        let tabName = te.dataset.tab;
+        if (tabName == that.activedTab) {
+          return;
+        }
+        that.showTab(tabName);
+      }
+    }, false);
 
   };
 
@@ -174,7 +236,7 @@ class VConsole {
    * @private
    */
   _initPlugin(plugin) {
-    var that = this;
+    let that = this;
     // start init
     plugin.trigger('init');
     // render tab (if it is a tab plugin then it should has tab-related events)
@@ -269,20 +331,30 @@ class VConsole {
   show() {
     $.addClass(this.$dom, 'vc-toggle');
     this._triggerPluginsEvent('showConsole');
-    // set overflow:hidden to prevent scrolling
-    this.bodyOverflowCSS = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    let mask = $.one('.vc-mask', this.$dom);
+    mask.style.display = 'block';
   }
 
   /**
-   * hide console panel
+   * hide console paneldocument.body.scrollTop
    * @public
    */
   hide() {
     // recover body style
-    document.body.style.overflow = this.bodyOverflowCSS;
+    //document.body.style.overflow = this.bodyOverflowCSS;
+
+
+    // recover body style----1
+
+
     $.removeClass(this.$dom, 'vc-toggle');
     this._triggerPluginsEvent('hideConsole');
+
+    let mask = $.one('.vc-mask', this.$dom);
+    mask.addEventListener('transitionend', function(evnet){
+      mask.style.display = 'none';
+    }, false);
+    
   }
 
   /**
@@ -290,7 +362,7 @@ class VConsole {
    * @public
    */
   showTab(tabID) {
-    var $logbox = $.one('#__vc_log_' + tabID);
+    let $logbox = $.one('#__vc_log_' + tabID);
     // set actived status
     $.removeClass($.all('.vc-tab', this.$dom), 'vc-actived');
     $.addClass($.one('#__vc_tab_' + tabID), 'vc-actived');
