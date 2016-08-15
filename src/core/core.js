@@ -137,7 +137,7 @@ class VConsole {
       touchHasMoved = false,
       targetElem = null;
 
-      e.preventDefault();//prevent click 300ms later
+      //e.preventDefault();//prevent click 300ms later. Danger
     }, false);
 
   }
