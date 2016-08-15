@@ -3,6 +3,7 @@
   font-size: 13px;
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 
+
   /* global */
 
   .vc-max-height {
@@ -34,16 +35,16 @@
   }
 
   .vc-mask {
-    display: none;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0,0,0, 0);
+    background: rgba(0,0,0, 0);
     z-index: 10001;
     transition: background .3s;
     -webkit-tap-highlight-color: transparent;
+    overflow-y: scroll;
   }
 
   .vc-panel {
@@ -440,6 +441,7 @@
 }
 
 #__vconsole.vc-toggle {
+
   .vc-switch {
     display: none;
   }
