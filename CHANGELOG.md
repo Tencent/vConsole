@@ -1,5 +1,12 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### V2.3.0 (2016-08-15)
+
+- [FEATURE] Objects or Arrays can be expended layer by layer.
+- [FEATURE] All object's properties, including private properties, can be enumerable now.
+- [IMPROVE] Support `tap` event within vConsole's DOM container to speed up `click` event.
+
+
 #### V2.2.1 (2016-08-08)
 
 - [IMPROVE] Add complete performance timing log to System tab.
