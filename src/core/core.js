@@ -68,8 +68,6 @@ class VConsole {
     }
     this.$dom = $.one(id);
 
-    
-
     // reposition switch button
     let switchX = tool.getStorage('switch_x'),
         switchY = tool.getStorage('switch_y');
@@ -80,7 +78,7 @@ class VConsole {
       $.one('.vc-switch').style.bottom = switchY + 'px';
     }
 
-    //remove from less to present transition effect
+    // remove from less to present transition effect
     $.one('.vc-mask', this.$dom).style.display = 'none';
   };
 
@@ -89,11 +87,9 @@ class VConsole {
    * @private
    */
   _createTap() {
-    let tapTime = 700, //maximun tap interval
-        tapBoundary = 10, //max tap move distance
-        tapDelay = 200; //minimun time between two taps
-
-    let that = this;
+    let tapTime = 700, // maximun tap interval
+        tapBoundary = 10, // max tap move distance
+        tapDelay = 200; // minimun time between two taps
 
     let lastTouchStartTime,
         touchstartX,
@@ -102,8 +98,8 @@ class VConsole {
         tapEvent,
         targetElem = null;
 
-    this.$dom.addEventListener('touchstart', function(e) {//todo: if double click 
-      if(lastTouchStartTime === undefined){
+    this.$dom.addEventListener('touchstart', function(e) { // todo: if double click 
+      if (lastTouchStartTime === undefined) {
         let touch = e.targetTouches[0];
         touchstartX = touch.pageX;
         touchstartY = touch.pageY;
@@ -114,30 +110,27 @@ class VConsole {
 
     this.$dom.addEventListener('touchmove', function(e) {
       let touch = e.changedTouches[0];
-      if(Math.abs(touch.pageX - touchstartX) > tapBoundary || Math.abs(touch.pageY - touchstartY) > tapBoundary){
+      if (Math.abs(touch.pageX - touchstartX) > tapBoundary || Math.abs(touch.pageY - touchstartY) > tapBoundary) {
         touchHasMoved = true;
       }
-     
     });
 
     this.$dom.addEventListener('touchend', function(e) {
-      //move and time within limits, dispatch tap
-      if(touchHasMoved === false && e.timeStamp - lastTouchStartTime < tapTime && targetElem != null){
-        //添加自定义tap事件
-        if(tapEvent === undefined){
+      // move and time within limits, dispatch tap
+      if (touchHasMoved === false && e.timeStamp - lastTouchStartTime < tapTime && targetElem != null) {
+        // add custom `tap` event
+        if (tapEvent === undefined) {
           tapEvent = document.createEvent('Event');
           tapEvent.initEvent('tap', true, true);
         }
-
         targetElem.dispatchEvent(tapEvent);
-
       }
-      //reset values
-      lastTouchStartTime = undefined,
-      touchHasMoved = false,
+      // reset values
+      lastTouchStartTime = undefined;
+      touchHasMoved = false;
       targetElem = null;
 
-      e.preventDefault();//prevent click 300ms later
+      e.preventDefault(); // prevent click 300ms later
     }, false);
 
   }
