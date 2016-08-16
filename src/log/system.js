@@ -25,13 +25,8 @@ class VConsoleDefaultTab extends VConsoleLogTab {
   	// print system info
     let ua = navigator.userAgent,
       logMsg = '';
-    
-    // current time
-    let d = tool.getDate();
-    console.info('[system]', 'Now:', d.year+'-'+d.month+'-'+d.day+' '+d.hour+':'+d.minute+':'+d.second+'.'+d.millisecond);
 
     // device & system
-    
     let ipod = ua.match(/(ipod).*\s([\d_]+)/i),
       ipad = ua.match(/(ipad).*\s([\d_]+)/i),
       iphone = ua.match(/(iphone)\sos\s([\d_]+)/i),
@@ -59,7 +54,6 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       console.info('[system]', 'System:', templogMsg);
     }
 
-
     // HTTP protocol
     logMsg = 'Unknown';
     if (location.protocol == 'https:') {
@@ -85,7 +79,6 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     // User Agent
     console.info('[system]', 'UA:', ua);
     
-    
 
     // performance related
     // use `setTimeout` to make sure all timing points are available
@@ -95,7 +88,9 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       // timing
       if (performance && performance.timing) {
         let t = performance.timing;
-
+        if (t.navigationStart) {
+          console.info('[system]', 'navigationStart:', t.navigationStart);
+        }
         if (t.navigationStart && t.domainLookupStart) {
           console.info('[system]', 'navigation:', (t.domainLookupStart - t.navigationStart)+'ms');
         }

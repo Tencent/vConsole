@@ -44,7 +44,7 @@ class VConsole {
 
     let _onload = function() {
       that._render();
-      that._mockTap() ;
+      that._mockTap();
       that._bindEvent();
       that._autoRun();
     };
