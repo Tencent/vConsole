@@ -1,5 +1,11 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### V2.3.1 (2016-08-16)
+
+- 【修复】删除 V2.3.0 中的 `tap` 事件，恢复为 `click` 事件（依旧支持快速响应），以避免冲突。
+- 【优化】删除 System tab 中的 `now` 项目并新增 `navigationStart` 时间戳。
+
+
 #### V2.3.0 (2016-08-15)
 
 - 【特性】支持逐级展开 Object 或 Array 的子元素。

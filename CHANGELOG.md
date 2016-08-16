@@ -1,5 +1,11 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### V2.3.1 (2016-08-16)
+
+- [FIX] Replace custom `tap` event (in V2.3.0) with `click` event (still support fast response) to prevent conflicts.
+- [IMPROVE] Remove `now` item and add `navigationStart` time in System tab.
+
+
 #### V2.3.0 (2016-08-15)
 
 - [FEATURE] Objects or Arrays can be expended layer by layer.
