@@ -46,7 +46,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
     this.renderHeader();
 
     // expend group item
-    $.delegate($.one('.vc-log', this.$tabbox), 'tap', '.vc-group-preview', function(e) {
+    $.delegate($.one('.vc-log', this.$tabbox), 'click', '.vc-group-preview', function(e) {
       let $group = this.parentNode;
       if ($.hasClass($group, 'vc-actived')) {
         $.removeClass($group, 'vc-actived');

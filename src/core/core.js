@@ -88,14 +88,12 @@ class VConsole {
    */
   _mockTap() {
     let tapTime = 700, // maximun tap interval
-        tapBoundary = 10, // max tap move distance
-        tapDelay = 200; // minimun time between two taps
+        tapBoundary = 10; // max tap move distance
 
     let lastTouchStartTime,
         touchstartX,
         touchstartY,
         touchHasMoved = false,
-        tapEvent,
         targetElem = null;
 
     this.$dom.addEventListener('touchstart', function(e) { // todo: if double click 
@@ -116,21 +114,18 @@ class VConsole {
     });
 
     this.$dom.addEventListener('touchend', function(e) {
-      // move and time within limits, dispatch tap
+      // move and time within limits, manually trigger `click` event
       if (touchHasMoved === false && e.timeStamp - lastTouchStartTime < tapTime && targetElem != null) {
-        // add custom `tap` event
-        if (tapEvent === undefined) {
-          tapEvent = document.createEvent('Event');
-          tapEvent.initEvent('tap', true, true);
+        if (tool.isFunction(targetElem.click)) {
+          targetElem.click();
+          e.preventDefault(); // prevent click 300ms later
         }
-        targetElem.dispatchEvent(tapEvent);
       }
+
       // reset values
       lastTouchStartTime = undefined;
       touchHasMoved = false;
       targetElem = null;
-
-      // e.preventDefault(); // prevent click 300ms later. Danger
     }, false);
 
   }
@@ -182,17 +177,17 @@ class VConsole {
     });
 
     // show console panel
-    $.bind($.one('.vc-switch', that.$dom), 'tap', function() {
+    $.bind($.one('.vc-switch', that.$dom), 'click', function() {
       that.show();
     });
 
     // hide console panel
-    $.bind($.one('.vc-hide', that.$dom), 'tap', function() {
+    $.bind($.one('.vc-hide', that.$dom), 'click', function() {
       that.hide();
     });
 
     // hide console panel when tap background mask
-    $.bind($.one('.vc-mask', that.$dom), 'tap', function(e) {
+    $.bind($.one('.vc-mask', that.$dom), 'click', function(e) {
       if (e.target != $.one('.vc-mask')) {
         return false;
       }
@@ -200,7 +195,7 @@ class VConsole {
     });
 
     // show tab box
-    $.delegate($.one('.vc-tabbar', that.$dom), 'tap', '.vc-tab', function(e) {
+    $.delegate($.one('.vc-tabbar', that.$dom), 'click', '.vc-tab', function(e) {
       let tabName = this.dataset.tab;
       if (tabName == that.activedTab) {
         return;
@@ -270,7 +265,7 @@ class VConsole {
           $.addClass($item, 'vc-global-tool');
         }
         if (tool.isFunction(item.onClick)) {
-          $.bind($item, 'tap', item.onClick);
+          $.bind($item, 'click', item.onClick);
         }
         $defaultBtn.parentNode.insertBefore($item, $defaultBtn);
       }

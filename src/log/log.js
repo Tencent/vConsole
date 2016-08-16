@@ -240,7 +240,7 @@ class VConsoleLogTab extends VConsolePlugin {
       outer += ' ' + preview;
     }
     let $line = $.render(tplFold, {outer: outer, lineType: 'obj'});
-    $.bind($.one('.vc-fold-outer', $line), 'tap', function(e) {
+    $.bind($.one('.vc-fold-outer', $line), 'click', function(e) {console.log('123')
       e.preventDefault();
       e.stopPropagation();
       if ($.hasClass($line, 'vc-toggle')) {
