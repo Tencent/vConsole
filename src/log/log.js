@@ -66,7 +66,30 @@ class VConsoleLogTab extends VConsolePlugin {
    * @public
    */
   onReady() {
+    let that = this;
 
+    let $subTabs = $.all('.vc-subtab', that.$tabbox);
+    $.bind($subTabs, 'click', function(e) {
+      e.preventDefault();
+      if ($.hasClass(this, 'vc-actived')) {
+        return false;
+      }
+      $.removeClass($subTabs, 'vc-actived');
+      $.addClass(this, 'vc-actived');
+
+      let logType = this.dataset.type,
+          $log = $.one('.vc-log', that.$tabbox);
+      $.removeClass($log, 'vc-log-partly-log');
+      $.removeClass($log, 'vc-log-partly-info');
+      $.removeClass($log, 'vc-log-partly-warn');
+      $.removeClass($log, 'vc-log-partly-error');
+      if (logType == 'all') {
+        $.removeClass($log, 'vc-log-partly');
+      } else {
+        $.addClass($log, 'vc-log-partly');
+        $.addClass($log, 'vc-log-partly-' + logType);
+      }
+    });
   }
 
   /**
@@ -240,7 +263,7 @@ class VConsoleLogTab extends VConsolePlugin {
       outer += ' ' + preview;
     }
     let $line = $.render(tplFold, {outer: outer, lineType: 'obj'});
-    $.bind($.one('.vc-fold-outer', $line), 'click', function(e) {console.log('123')
+    $.bind($.one('.vc-fold-outer', $line), 'click', function(e) {
       e.preventDefault();
       e.stopPropagation();
       if ($.hasClass($line, 'vc-toggle')) {

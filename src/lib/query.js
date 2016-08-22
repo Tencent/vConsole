@@ -50,7 +50,13 @@ $.addClass = function($el, className) {
     $el = [$el];
   }
   for (let i=0; i<$el.length; i++) {
-    $el[i].className += ' ' + className;
+    let name = $el[i].className || '',
+        arr = name.split(' ');
+    if (arr.indexOf(className) > -1) {
+      continue;
+    }
+    arr.push(className);
+    $el[i].className = arr.join(' ');
   }
 }
 
