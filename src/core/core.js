@@ -48,11 +48,12 @@ class VConsole {
       that._bindEvent();
       that._autoRun();
     };
-    if (document.readyState == 'complete') {
-      _onload();
-    } else {
-      $.bind(window, 'load', _onload);
-    }
+    // if (document.readyState == 'complete') {
+    //   _onload();
+    // } else {
+    //   $.bind(window, 'load', _onload);
+    // }
+    _onload();
   }
 
   /**
@@ -64,7 +65,7 @@ class VConsole {
     if (! $.one(id)) {
       let e = document.createElement('div');
       e.innerHTML = this.html;
-      document.body.appendChild(e.children[0]);
+      document.documentElement.appendChild(e.children[0]);
     }
     this.$dom = $.one(id);
 
@@ -218,7 +219,9 @@ class VConsole {
     }
 
     // show first tab
-    this.showTab(this.tabList[0]);
+    if (this.tabList.length > 0) {
+      this.showTab(this.tabList[0]);
+    }
   }
 
   /**
@@ -310,6 +313,10 @@ class VConsole {
     // init plugin only if vConsole is ready
     if (this.isReady) {
       this._initPlugin(plugin);
+      // if it's the first plugin, show it by default
+      if (this.tabList.length == 1) {
+        this.showTab(this.tabList[0]);
+      }
     }
     return true;
   }
