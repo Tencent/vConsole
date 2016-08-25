@@ -203,6 +203,16 @@ class VConsole {
       that.showTab(tabName);
     });
 
+    // after console panel, trigger a transitionend event to make panel's property 'display' change from 'block' to 'none'
+    $.bind($.one('.vc-panel', that.$dom), 'transitionend webkitTransitionEnd oTransitionEnd otransitionend', function(e) {
+      if (e.target != $.one('.vc-panel')) {
+        return false;
+      }
+      if (!$.hasClass(that.$dom, 'vc-toggle')) {
+        e.target.style.display = 'none';
+      }
+    });
+
   };
 
   /**
@@ -319,10 +329,18 @@ class VConsole {
    * @public
    */
   show() {
-    $.addClass(this.$dom, 'vc-toggle');
-    this._triggerPluginsEvent('showConsole');
-    let mask = $.one('.vc-mask', this.$dom);
-    mask.style.display = 'block';
+    let that = this;
+    // before show console panel, trigger a transitionstart event to make panel's property 'display' change from 'none' to 'block'
+    let panel = $.one('.vc-panel', this.$dom);
+    panel.style.display = 'block';
+
+    // set 10ms delay to fix confict between display and transition
+    setTimeout(function() {
+      $.addClass(that.$dom, 'vc-toggle');
+      that._triggerPluginsEvent('showConsole');
+      let mask = $.one('.vc-mask', that.$dom);
+      mask.style.display = 'block';
+    }, 10);
   }
 
   /**
