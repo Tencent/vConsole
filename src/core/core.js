@@ -117,10 +117,37 @@ class VConsole {
     this.$dom.addEventListener('touchend', function(e) {
       // move and time within limits, manually trigger `click` event
       if (touchHasMoved === false && e.timeStamp - lastTouchStartTime < tapTime && targetElem != null) {
-        if (tool.isFunction(targetElem.click)) {
-          targetElem.click();
+        let tagName = targetElem.tagName.toLowerCase(),
+            needFocus = false;
+        switch (tagName) {
+          case 'textarea': // focus
+            needFocus = true; break;
+          case 'input':
+            switch (targetElem.type) {
+              case 'button':
+              case 'checkbox':
+              case 'file':
+              case 'image':
+              case 'radio':
+              case 'submit':
+                needFocus = false; break;
+              default:
+                needFocus = !targetElem.disabled && !targetElem.readOnly;
+            }
+          default:
+            break;
+        }
+        if (needFocus) {
+          targetElem.focus();
+        } else {
           e.preventDefault(); // prevent click 300ms later
         }
+        let touch = e.changedTouches[0];
+        let event = document.createEvent('MouseEvents');
+        event.initMouseEvent('click', true, true, window, 1, touch.screenX, touch.screenY, touch.clientX, touch.clientY, false, false, false, false, 0, null);
+        event.forwardedTouchEvent = true;
+        event.initEvent('click', true, true);
+        targetElem.dispatchEvent(event);
       }
 
       // reset values
