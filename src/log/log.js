@@ -314,13 +314,13 @@ class VConsoleLogTab extends VConsolePlugin {
           } else if (tool.isObject(val)) {
             let name = tool.getObjName(val);
             $sub = that.getFoldedLine(val, $.render(tplFoldCode, {
-              key: keys[i], keyType: keyType, value: name, valueType: 'object'
+              key: tool.htmlEncode(keys[i]), keyType: keyType, value: name, valueType: 'object'
             }, true));
           } else {
             if (!obj.hasOwnProperty(keys[i])) {
               keyType = 'private';
             }
-            let renderData = {lineType: 'kv', key: keys[i], keyType: keyType, value: val, valueType: valueType};
+            let renderData = {lineType: 'kv', key: tool.htmlEncode(keys[i]), keyType: keyType, value: tool.htmlEncode(val), valueType: valueType};
             $sub = $.render(tplFold, renderData);
           }
           $content.appendChild($sub);
