@@ -25,8 +25,6 @@ class VConsole {
     this.activedTab = '';
     this.tabList = [];
     this.pluginList = {};
-    this.console = {}; // store native console methods
-    this.logList = []; // store logs when vConsole is not ready
     this.isReady = false;
     this.switchPos = {
       x: 10, // right
@@ -36,7 +34,6 @@ class VConsole {
       endX: 0,
       endY: 0
     };
-    this.bodyOverflowCSS = '';
 
     // export helper functions to public
     this.tool = tool;
@@ -70,9 +67,19 @@ class VConsole {
     this.$dom = $.one(id);
 
     // reposition switch button
+    let $switch = $.one('.vc-switch', this.$dom);
     let switchX = tool.getStorage('switch_x'),
         switchY = tool.getStorage('switch_y');
-    if (switchX && switchY) {
+    if (switchX || switchY) {
+      // check edge
+      if (switchX + $switch.offsetWidth > document.documentElement.offsetWidth) {
+        switchX = document.documentElement.offsetWidth - $switch.offsetWidth;
+      }
+      if (switchY + $switch.offsetHeight > document.documentElement.offsetHeight) {
+        switchY = document.documentElement.offsetHeight - $switch.offsetHeight;
+      }
+      if (switchX < 0) { switchX = 0; }
+      if (switchY < 0) { switchY = 0; }
       this.switchPos.x = switchX;
       this.switchPos.y = switchY;
       $.one('.vc-switch').style.right = switchX + 'px';
@@ -171,16 +178,14 @@ class VConsole {
       that.switchPos.startY = e.touches[0].pageY;
     });
     $.bind($switch, 'touchend', function(e) {
-      if (that.switchPos.endX != 0 || that.switchPos.endY != 0) {
-        that.switchPos.x = that.switchPos.endX;
-        that.switchPos.y = that.switchPos.endY;
-        that.switchPos.startX = 0;
-        that.switchPos.startY = 0;
-        that.switchPos.endX = 0;
-        that.switchPos.endY = 0;
-        tool.setStorage('switch_x', that.switchPos.x);
-        tool.setStorage('switch_y', that.switchPos.y);
-      }
+      that.switchPos.x = that.switchPos.endX;
+      that.switchPos.y = that.switchPos.endY;
+      that.switchPos.startX = 0;
+      that.switchPos.startY = 0;
+      that.switchPos.endX = 0;
+      that.switchPos.endY = 0;
+      tool.setStorage('switch_x', that.switchPos.x);
+      tool.setStorage('switch_y', that.switchPos.y);
     });
     $.bind($switch, 'touchmove', function(e) {
       if (e.touches.length > 0) {
@@ -188,14 +193,15 @@ class VConsole {
             offsetY = e.touches[0].pageY - that.switchPos.startY;
         let x = that.switchPos.x - offsetX,
             y = that.switchPos.y - offsetY;
+        // check edge
+        if (x + $switch.offsetWidth > document.documentElement.offsetWidth) {
+          x = document.documentElement.offsetWidth - $switch.offsetWidth;
+        }
+        if (y + $switch.offsetHeight > document.documentElement.offsetHeight) {
+          y = document.documentElement.offsetHeight - $switch.offsetHeight;
+        }
         if (x < 0) { x = 0; }
         if (y < 0) { y = 0; }
-        if (x + $switch.offsetWidth > document.body.offsetWidth) {
-          x = document.body.offsetWidth - $switch.offsetWidth;
-        }
-        if (y + $switch.offsetHeight > document.body.offsetHeight) {
-          y = document.body.offsetHeight - $switch.offsetHeight;
-        }
         $switch.style.right = x + 'px';
         $switch.style.bottom = y + 'px';
         that.switchPos.endX = x;
@@ -364,7 +370,8 @@ class VConsole {
    */
   show() {
     let that = this;
-    // before show console panel, trigger a transitionstart event to make panel's property 'display' change from 'none' to 'block'
+    // before show console panel, 
+    // trigger a transitionstart event to make panel's property 'display' change from 'none' to 'block'
     let panel = $.one('.vc-panel', this.$dom);
     panel.style.display = 'block';
 
@@ -372,8 +379,8 @@ class VConsole {
     setTimeout(function() {
       $.addClass(that.$dom, 'vc-toggle');
       that._triggerPluginsEvent('showConsole');
-      let mask = $.one('.vc-mask', that.$dom);
-      mask.style.display = 'block';
+      let $mask = $.one('.vc-mask', that.$dom);
+      $mask.style.display = 'block';
     }, 10);
   }
 
@@ -382,21 +389,13 @@ class VConsole {
    * @public
    */
   hide() {
-    // recover body style
-    //document.body.style.overflow = this.bodyOverflowCSS;
-
-
-    // recover body style----1
-
-
     $.removeClass(this.$dom, 'vc-toggle');
     this._triggerPluginsEvent('hideConsole');
 
-    let mask = $.one('.vc-mask', this.$dom);
-    mask.addEventListener('transitionend', function(evnet){
-      mask.style.display = 'none';
-    }, false);
-    
+    let $mask = $.one('.vc-mask', this.$dom);
+    $.bind($mask, 'transitionend', function(evnet) {
+      $mask.style.display = 'none';
+    });
   }
 
   /**
