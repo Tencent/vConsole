@@ -70,9 +70,19 @@ class VConsole {
     this.$dom = $.one(id);
 
     // reposition switch button
+    let $switch = $.one('.vc-switch', this.$dom);
     let switchX = tool.getStorage('switch_x'),
         switchY = tool.getStorage('switch_y');
-    if (switchX && switchY) {
+    if (switchX || switchY) {
+      // check edge
+      if (switchX < 0) { switchX = 0; }
+      if (switchY < 0) { switchY = 0; }
+      if (switchX + $switch.offsetWidth > document.documentElement.offsetWidth) {
+        switchX = document.documentElement.offsetWidth - $switch.offsetWidth;
+      }
+      if (switchY + $switch.offsetHeight > document.documentElement.offsetHeight) {
+        switchY = document.documentElement.offsetHeight - $switch.offsetHeight;
+      }
       this.switchPos.x = switchX;
       this.switchPos.y = switchY;
       $.one('.vc-switch').style.right = switchX + 'px';
@@ -171,16 +181,14 @@ class VConsole {
       that.switchPos.startY = e.touches[0].pageY;
     });
     $.bind($switch, 'touchend', function(e) {
-      if (that.switchPos.endX != 0 || that.switchPos.endY != 0) {
-        that.switchPos.x = that.switchPos.endX;
-        that.switchPos.y = that.switchPos.endY;
-        that.switchPos.startX = 0;
-        that.switchPos.startY = 0;
-        that.switchPos.endX = 0;
-        that.switchPos.endY = 0;
-        tool.setStorage('switch_x', that.switchPos.x);
-        tool.setStorage('switch_y', that.switchPos.y);
-      }
+      that.switchPos.x = that.switchPos.endX;
+      that.switchPos.y = that.switchPos.endY;
+      that.switchPos.startX = 0;
+      that.switchPos.startY = 0;
+      that.switchPos.endX = 0;
+      that.switchPos.endY = 0;
+      tool.setStorage('switch_x', that.switchPos.x);
+      tool.setStorage('switch_y', that.switchPos.y);
     });
     $.bind($switch, 'touchmove', function(e) {
       if (e.touches.length > 0) {
@@ -188,13 +196,14 @@ class VConsole {
             offsetY = e.touches[0].pageY - that.switchPos.startY;
         let x = that.switchPos.x - offsetX,
             y = that.switchPos.y - offsetY;
+        // check edge
         if (x < 0) { x = 0; }
         if (y < 0) { y = 0; }
-        if (x + $switch.offsetWidth > document.body.offsetWidth) {
-          x = document.body.offsetWidth - $switch.offsetWidth;
+        if (x + $switch.offsetWidth > document.documentElement.offsetWidth) {
+          x = document.documentElement.offsetWidth - $switch.offsetWidth;
         }
-        if (y + $switch.offsetHeight > document.body.offsetHeight) {
-          y = document.body.offsetHeight - $switch.offsetHeight;
+        if (y + $switch.offsetHeight > document.documentElement.offsetHeight) {
+          y = document.documentElement.offsetHeight - $switch.offsetHeight;
         }
         $switch.style.right = x + 'px';
         $switch.style.bottom = y + 'px';
