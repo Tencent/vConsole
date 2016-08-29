@@ -20,6 +20,8 @@ class VConsoleNetworkTab extends VConsolePlugin {
     this.$header = null;
     this.reqList = {}; // URL as key, request item as value
     this.domList = {}; // URL as key, dom item as value
+    this.isShow = false;
+    this.isInBottom = true; // whether the panel is in the bottom
 
     this.mockAjax();
   }
@@ -55,7 +57,41 @@ class VConsoleNetworkTab extends VConsolePlugin {
       }
       e.preventDefault();
     });
+    
+    let $content = $.one('.vc-content');
+    $.bind($content, 'scroll', function(e) {
+      if (!that.isShow) {
+        return;
+      }
+      if ($content.scrollTop + $content.offsetHeight >= $content.scrollHeight) {
+        that.isInBottom = true;
+      } else {
+        that.isInBottom = false;
+      }
+    });
 
+  }
+
+  onShow() {
+    this.isShow = true;
+    if (this.isInBottom == true) {
+      this.scrollToBottom();
+    }
+  }
+
+  onHide() {
+    this.isShow = false;
+  }
+
+  onShowConsole() {
+    if (this.isInBottom == true) {
+      this.scrollToBottom();
+    }
+  }
+
+  scrollToBottom() {
+    let $box = $.one('.vc-content');
+    $box.scrollTop = $box.scrollHeight - $box.offsetHeight;
   }
 
   clearLog() {
@@ -135,6 +171,11 @@ class VConsoleNetworkTab extends VConsolePlugin {
     let curCount = Object.keys(this.reqList).length;
     if (curCount != preCount) {
       this.renderHeader();
+    }
+
+    // scroll to bottom
+    if (this.isInBottom) {
+      this.scrollToBottom();
     }
   }
 

@@ -125,8 +125,8 @@ class VConsoleLogTab extends VConsolePlugin {
   }
 
   scrollToBottom() {
-    let $box = $.one('.vc-content');
-    $box.scrollTop = $box.scrollHeight - $box.offsetHeight;
+    let $content = $.one('.vc-content');
+    $content.scrollTop = $content.scrollHeight - $content.offsetHeight;
   }
 
   /**
