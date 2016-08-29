@@ -72,14 +72,14 @@ class VConsole {
         switchY = tool.getStorage('switch_y');
     if (switchX || switchY) {
       // check edge
-      if (switchX < 0) { switchX = 0; }
-      if (switchY < 0) { switchY = 0; }
       if (switchX + $switch.offsetWidth > document.documentElement.offsetWidth) {
         switchX = document.documentElement.offsetWidth - $switch.offsetWidth;
       }
       if (switchY + $switch.offsetHeight > document.documentElement.offsetHeight) {
         switchY = document.documentElement.offsetHeight - $switch.offsetHeight;
       }
+      if (switchX < 0) { switchX = 0; }
+      if (switchY < 0) { switchY = 0; }
       this.switchPos.x = switchX;
       this.switchPos.y = switchY;
       $.one('.vc-switch').style.right = switchX + 'px';
@@ -194,14 +194,14 @@ class VConsole {
         let x = that.switchPos.x - offsetX,
             y = that.switchPos.y - offsetY;
         // check edge
-        if (x < 0) { x = 0; }
-        if (y < 0) { y = 0; }
         if (x + $switch.offsetWidth > document.documentElement.offsetWidth) {
           x = document.documentElement.offsetWidth - $switch.offsetWidth;
         }
         if (y + $switch.offsetHeight > document.documentElement.offsetHeight) {
           y = document.documentElement.offsetHeight - $switch.offsetHeight;
         }
+        if (x < 0) { x = 0; }
+        if (y < 0) { y = 0; }
         $switch.style.right = x + 'px';
         $switch.style.bottom = y + 'px';
         that.switchPos.endX = x;
