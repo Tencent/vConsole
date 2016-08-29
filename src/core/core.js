@@ -372,8 +372,8 @@ class VConsole {
     let that = this;
     // before show console panel, 
     // trigger a transitionstart event to make panel's property 'display' change from 'none' to 'block'
-    let panel = $.one('.vc-panel', this.$dom);
-    panel.style.display = 'block';
+    let $panel = $.one('.vc-panel', this.$dom);
+    $panel.style.display = 'block';
 
     // set 10ms delay to fix confict between display and transition
     setTimeout(function() {
@@ -392,9 +392,11 @@ class VConsole {
     $.removeClass(this.$dom, 'vc-toggle');
     this._triggerPluginsEvent('hideConsole');
 
-    let $mask = $.one('.vc-mask', this.$dom);
+    let $mask = $.one('.vc-mask', this.$dom),
+        $panel = $.one('.vc-panel', this.$dom);
     $.bind($mask, 'transitionend', function(evnet) {
       $mask.style.display = 'none';
+      $panel.style.display = 'none';
     });
   }
 
@@ -410,7 +412,7 @@ class VConsole {
     $.removeClass($.all('.vc-logbox', this.$dom), 'vc-actived');
     $.addClass($logbox, 'vc-actived');
     // scroll to bottom
-    $.one('.vc-content', this.$dom).scrollTop = $.one('.vc-content', this.$dom).scrollHeight;
+    // $.one('.vc-content', this.$dom).scrollTop = $.one('.vc-content', this.$dom).scrollHeight;
     // show toolbar
     $.removeClass($.all('.vc-tool', this.$dom), 'vc-actived');
     $.addClass($.all('.vc-tool-' + tabID, this.$dom), 'vc-actived');
