@@ -379,8 +379,8 @@ class VConsole {
     setTimeout(function() {
       $.addClass(that.$dom, 'vc-toggle');
       that._triggerPluginsEvent('showConsole');
-      let mask = $.one('.vc-mask', that.$dom);
-      mask.style.display = 'block';
+      let $mask = $.one('.vc-mask', that.$dom);
+      $mask.style.display = 'block';
     }, 10);
   }
 
@@ -394,7 +394,7 @@ class VConsole {
 
     let $mask = $.one('.vc-mask', this.$dom);
     $.bind($mask, 'transitionend', function(evnet) {
-      mask.style.display = 'none';
+      $mask.style.display = 'none';
     });
   }
 
