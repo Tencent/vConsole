@@ -20,9 +20,11 @@ class VConsoleLogTab extends VConsolePlugin {
     this.allowUnformattedLog = true; // `[xxx]` format log
 
     this.isReady = false;
+    this.isShow = false;
     this.$tabbox = null;
     this.console = {};
     this.logList = [];
+    this.isInBottom = true; // whether the panel is in the bottom
 
     this.mockConsole();
   }
@@ -68,6 +70,7 @@ class VConsoleLogTab extends VConsolePlugin {
   onReady() {
     let that = this;
 
+    // log type filter
     let $subTabs = $.all('.vc-subtab', that.$tabbox);
     $.bind($subTabs, 'click', function(e) {
       e.preventDefault();
@@ -90,6 +93,40 @@ class VConsoleLogTab extends VConsolePlugin {
         $.addClass($log, 'vc-log-partly-' + logType);
       }
     });
+
+    let $content = $.one('.vc-content');
+    $.bind($content, 'scroll', function(e) {
+      if (!that.isShow) {
+        return;
+      }
+      if ($content.scrollTop + $content.offsetHeight >= $content.scrollHeight) {
+        that.isInBottom = true;
+      } else {
+        that.isInBottom = false;
+      }
+    });
+  }
+
+  onShow() {
+    this.isShow = true;
+    if (this.isInBottom == true) {
+      this.scrollToBottom();
+    }
+  }
+
+  onHide() {
+    this.isShow = false;
+  }
+
+  onShowConsole() {
+    if (this.isInBottom == true) {
+      this.scrollToBottom();
+    }
+  }
+
+  scrollToBottom() {
+    let $box = $.one('.vc-content');
+    $box.scrollTop = $box.scrollHeight - $box.offsetHeight;
   }
 
   /**
@@ -239,7 +276,11 @@ class VConsoleLogTab extends VConsolePlugin {
 
     // render to panel
     $.one('.vc-log', this.$tabbox).appendChild($line);
-    $.one('.vc-content').scrollTop = $.one('.vc-content').scrollHeight;
+
+    // scroll to bottom if it is in the bottom before
+    if (this.isInBottom) {
+      this.scrollToBottom();
+    }
 
     // print log to origin console
     if (!item.noOrigin) {
