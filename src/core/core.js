@@ -25,8 +25,6 @@ class VConsole {
     this.activedTab = '';
     this.tabList = [];
     this.pluginList = {};
-    this.console = {}; // store native console methods
-    this.logList = []; // store logs when vConsole is not ready
     this.isReady = false;
     this.switchPos = {
       x: 10, // right
@@ -36,7 +34,6 @@ class VConsole {
       endX: 0,
       endY: 0
     };
-    this.bodyOverflowCSS = '';
 
     // export helper functions to public
     this.tool = tool;
@@ -373,7 +370,8 @@ class VConsole {
    */
   show() {
     let that = this;
-    // before show console panel, trigger a transitionstart event to make panel's property 'display' change from 'none' to 'block'
+    // before show console panel, 
+    // trigger a transitionstart event to make panel's property 'display' change from 'none' to 'block'
     let panel = $.one('.vc-panel', this.$dom);
     panel.style.display = 'block';
 
@@ -391,21 +389,13 @@ class VConsole {
    * @public
    */
   hide() {
-    // recover body style
-    //document.body.style.overflow = this.bodyOverflowCSS;
-
-
-    // recover body style----1
-
-
     $.removeClass(this.$dom, 'vc-toggle');
     this._triggerPluginsEvent('hideConsole');
 
-    let mask = $.one('.vc-mask', this.$dom);
-    mask.addEventListener('transitionend', function(evnet){
+    let $mask = $.one('.vc-mask', this.$dom);
+    $.bind($mask, 'transitionend', function(evnet) {
       mask.style.display = 'none';
-    }, false);
-    
+    });
   }
 
   /**
