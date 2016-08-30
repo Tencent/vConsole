@@ -11,6 +11,7 @@ import './core.less';
 import tpl from './core.html';
 import tplTabbar from './tabbar.html';
 import tplTabbox from './tabbox.html';
+import tplTopBarItem from './topbar_item.html';
 import tplToolItem from './tool_item.html';
 
 
@@ -295,6 +296,38 @@ class VConsole {
       }
       $.one('.vc-content', that.$dom).appendChild($tabbox);
     });
+    // render top bar
+    plugin.trigger('addTopBar', function(btnList) {
+      if (!btnList) {
+        return;
+      }
+      let $topbar = $.one('.vc-topbar', that.$dom);
+      for (let i=0; i<btnList.length; i++) {
+        let item = btnList[i];
+        let $item = $.render(tplTopBarItem, {
+          name: item.name || 'Undefined',
+          className: item.className || '',
+          pluginID: plugin.id
+        });
+        if (item.data) {
+          for (let k in item.data) {
+            $item.dataset[k] = item.data[k];
+          }
+        }
+        if (tool.isFunction(item.onClick)) {
+          $.bind($item, 'click', function(e) {
+            let enable = item.onClick.call($item);
+            if (enable === false) {
+              // do nothing
+            } else {
+              $.removeClass($.all('.vc-topbar-' + plugin.id), 'vc-actived');
+              $.addClass($item, 'vc-actived');
+            }
+          });
+        }
+        $topbar.appendChild($item);
+      }
+    });
     // render tool bar
     plugin.trigger('addTool', function(toolList) {
       if (!toolList) {
@@ -413,9 +446,18 @@ class VConsole {
     $.addClass($logbox, 'vc-actived');
     // scroll to bottom
     // $.one('.vc-content', this.$dom).scrollTop = $.one('.vc-content', this.$dom).scrollHeight;
+    // show topbar
+    let $curTopbar = $.all('.vc-topbar-' + tabID, this.$dom);
+    $.removeClass($.all('.vc-toptab', this.$dom), 'vc-toggle');
+    $.addClass($curTopbar, 'vc-toggle');
+    if ($curTopbar.length > 0) {
+      $.addClass($.one('.vc-content', this.$dom), 'vc-has-topbar');
+    } else {
+      $.removeClass($.one('.vc-content', this.$dom), 'vc-has-topbar');
+    }
     // show toolbar
-    $.removeClass($.all('.vc-tool', this.$dom), 'vc-actived');
-    $.addClass($.all('.vc-tool-' + tabID, this.$dom), 'vc-actived');
+    $.removeClass($.all('.vc-tool', this.$dom), 'vc-toggle');
+    $.addClass($.all('.vc-tool-' + tabID, this.$dom), 'vc-toggle');
     // trigger plugin event
     this._triggerPluginEvent(this.activedTab, 'hide');
     this.activedTab = tabID;

@@ -51,9 +51,31 @@ class VConsoleLogTab extends VConsolePlugin {
     callback(this.$tabbox);
   }
 
+  onAddTopBar(callback) {
+    let that = this;
+    let types = ['All', 'Log', 'Info', 'Warn', 'Error'];
+    let btnList = [];
+    for (let i=0; i<types.length; i++) {
+      btnList.push({
+        name: types[i],
+        data: {type: types[i].toLowerCase()},
+        className: '',
+        onClick: function() {
+          if (!$.hasClass(this, 'vc-actived')) {
+            that.showLogType(this.dataset.type || 'all');
+          } else {
+            return false;
+          }
+        }
+      });
+    }
+    btnList[0].className = 'vc-actived';
+    callback(btnList);
+  }
+
   onAddTool(callback) {
-    var that = this;
-    var toolList = [{
+    let that = this;
+    let toolList = [{
       name: 'Clear',
       global: false,
       onClick: function(e) {
@@ -121,6 +143,20 @@ class VConsoleLogTab extends VConsolePlugin {
   onShowConsole() {
     if (this.isInBottom == true) {
       this.scrollToBottom();
+    }
+  }
+
+  showLogType(logType) {
+    let $log = $.one('.vc-log', this.$tabbox);
+    $.removeClass($log, 'vc-log-partly-log');
+    $.removeClass($log, 'vc-log-partly-info');
+    $.removeClass($log, 'vc-log-partly-warn');
+    $.removeClass($log, 'vc-log-partly-error');
+    if (logType == 'all') {
+      $.removeClass($log, 'vc-log-partly');
+    } else {
+      $.addClass($log, 'vc-log-partly');
+      $.addClass($log, 'vc-log-partly-' + logType);
     }
   }
 
