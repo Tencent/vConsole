@@ -108,6 +108,8 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    position: fixed;
+    width: 100%;
 
     .vc-subtab {
       flex: 1;
@@ -139,6 +141,9 @@
 
     .vc-log {
       -webkit-tap-highlight-color: transparent;
+    }
+    .vc-log.vc-has-sub-tabbar {
+      padding-top: 32px;
     }
 
     .vc-log:empty:before {
