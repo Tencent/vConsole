@@ -68,8 +68,8 @@ class VConsole {
 
     // reposition switch button
     let $switch = $.one('.vc-switch', this.$dom);
-    let switchX = tool.getStorage('switch_x'),
-        switchY = tool.getStorage('switch_y');
+    let switchX = tool.getStorage('switch_x') * 1,
+        switchY = tool.getStorage('switch_y') * 1;
     if (switchX || switchY) {
       // check edge
       if (switchX + $switch.offsetWidth > document.documentElement.offsetWidth) {
