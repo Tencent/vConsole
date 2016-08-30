@@ -43,6 +43,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
   }
 
   onReady() {
+    var that = this;
 
     // header
     this.renderHeader();
