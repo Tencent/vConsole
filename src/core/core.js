@@ -344,7 +344,9 @@ class VConsole {
           $.addClass($item, 'vc-global-tool');
         }
         if (tool.isFunction(item.onClick)) {
-          $.bind($item, 'click', item.onClick);
+          $.bind($item, 'click', function(e) {
+            item.onClick.call($item);
+          });
         }
         $defaultBtn.parentNode.insertBefore($item, $defaultBtn);
       }

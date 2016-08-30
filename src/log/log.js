@@ -78,7 +78,7 @@ class VConsoleLogTab extends VConsolePlugin {
     let toolList = [{
       name: 'Clear',
       global: false,
-      onClick: function(e) {
+      onClick: function() {
         that.clearLog();
       }
     }];
