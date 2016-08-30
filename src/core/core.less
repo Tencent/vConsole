@@ -102,16 +102,21 @@
     bottom: 40px;
     -webkit-overflow-scrolling: touch;
   }
+  .vc-content.vc-has-topbar {
+    top: 71px;
+  }
 
-  .vc-sub-tabbar {
+  .vc-topbar {
     background-color: #fbf9fe;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    position: fixed;
+    /*position: fixed;
+    top: 40px;*/
     width: 100%;
 
-    .vc-subtab {
+    .vc-toptab {
+      display: none;
       flex: 1;
       line-height: 30px;
       padding: 0 15px;
@@ -122,10 +127,13 @@
       -webkit-tap-highlight-color: transparent;
       -webkit-touch-callout: none;
     }
-    .vc-subtab:active {
+    .vc-toptab.vc-toggle {
+      display: block;
+    }
+    .vc-toptab:active {
       background-color: rgba(0,0,0,0.15);
     }
-    .vc-subtab.vc-actived {
+    .vc-toptab.vc-actived {
       border-bottom: 1px solid #3e82f7;
     }
   }
@@ -141,9 +149,6 @@
 
     .vc-log {
       -webkit-tap-highlight-color: transparent;
-    }
-    .vc-log.vc-has-sub-tabbar {
-      padding-top: 32px;
     }
 
     .vc-log:empty:before {
@@ -462,7 +467,7 @@
       position: relative;
       -webkit-touch-callout: none;
     }
-    .vc-tool.vc-actived,
+    .vc-tool.vc-toggle,
     .vc-tool.vc-global-tool {
       display: block;
     }
