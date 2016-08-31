@@ -54,6 +54,8 @@ data | object | optional | The dataset of the button, key-value format.
 className | string | optional | The className of the button.
 onClick | function | required | A callback function when user click the button. The target button will automatically be added actived style after this callback unless it returns `false`.
 
+##### Example:
+
 ```javascript
 var type;
 myPlugin.on('addTopBar', function(callback) {

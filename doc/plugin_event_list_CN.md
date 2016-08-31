@@ -62,6 +62,37 @@ data | object | 选填 | 按钮的 dataset，key-value 格式。
 className | string | 选填 | 按钮的 className。
 onClick | function | required | 点击按钮时的回调函数。触发回调后，除非回调函数返回 `false`，此按钮将自动变为选中的样式。
 
+##### 例子：
+
+```javascript
+var type;
+myPlugin.on('addTopBar', function(callback) {
+	var btnList = [];
+	btnList.push({
+		name: 'Apple',
+		className: '',
+		data: {type: 'apple'},
+		onClick: function() {
+			if (type != this.dataset.type) {
+				// `this` 指向当前按钮
+				type = this.dataset.type;
+			} else {
+				return false;
+			}
+		}
+	});
+	btnList.push({
+		name: 'Orange',
+		className: '',
+		data: {type: 'orange'},
+		onClick: function() {
+			type = this.dataset.type;
+		}
+	}
+	});
+});
+```
+
 
 
 ## addTool
