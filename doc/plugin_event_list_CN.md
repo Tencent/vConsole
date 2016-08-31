@@ -60,7 +60,7 @@ Property | | | |
 name | string | 必填 | 按钮展示的名字。
 data | object | 选填 | 按钮的 dataset，key-value 格式。
 className | string | 选填 | 按钮的 className。
-onClick | function | required | 点击按钮时的回调函数。触发回调后，除非回调函数返回 `false`，此按钮将自动变为选中的样式。
+onClick | function | 必填 | 点击按钮时的回调函数。触发回调后，除非回调函数返回 `false`，此按钮将自动变为选中的样式。
 
 ##### 例子：
 
