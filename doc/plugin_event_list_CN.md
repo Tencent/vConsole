@@ -90,6 +90,7 @@ myPlugin.on('addTopBar', function(callback) {
 		}
 	}
 	});
+	callback(btnList);
 });
 ```
 
