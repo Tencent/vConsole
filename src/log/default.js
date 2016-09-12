@@ -53,7 +53,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       }
       that.printLog({logType:'error', logs:[msg], noOrigin:true});
       if (tool.isFunction(that.windowOnError)) {
-        that.windowOnError.apply(window, message, source, lineNo, colNo, error);
+        that.windowOnError.call(window, message, source, lineNo, colNo, error);
       }
     };
   }
