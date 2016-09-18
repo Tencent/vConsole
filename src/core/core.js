@@ -205,12 +205,14 @@ class VConsole {
 
     let content = $.one('.vc-content', that.$dom);
 
-    content.addEventListener("touchstart", function () {
+    content.addEventListener("touchstart", function (e) {
       let top = content.scrollTop, totalScroll = content.scrollHeight, currentScroll = top + content.offsetHeight;
       if ( top === 0 ) {
           content.scrollTop = 1;
+          if (e.target.className != 'vc-cmd-input') e.preventDefault();
       } else if ( currentScroll === totalScroll ) {
           content.scrollTop = top - 1;
+          if (e.target.className != 'vc-cmd-input') e.preventDefault();
       }
 
     });
