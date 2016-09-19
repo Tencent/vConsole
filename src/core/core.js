@@ -41,6 +41,7 @@ class VConsole {
     this.$ = $;
 
     let _onload = function() {
+      console.debug('_onload')
       that._render();
       that._mockTap();
       that._bindEvent();
@@ -65,7 +66,6 @@ class VConsole {
         };
       _timer = setTimeout(_pollingDocument, 1);
     }
-    _onload();
   }
 
   /**
