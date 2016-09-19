@@ -46,11 +46,25 @@ class VConsole {
       that._bindEvent();
       that._autoRun();
     };
-    // if (document.readyState == 'complete') {
-    //   _onload();
-    // } else {
-    //   $.bind(window, 'load', _onload);
-    // }
+    if (document !== undefined) {
+      if (document.readyState == 'complete') {
+        _onload();
+      } else {
+        $.bind(window, 'load', _onload);
+      }
+    } else {
+      // if document does not exist, wait for it
+      let _timer;
+      let _pollingDocument = function() {
+          if (document && document.readyState == 'complete') {
+            _timer && clearTimeout(_timer);
+            _onload();
+          } else {
+            _timer = setTimeout(_pollingDocument, 1);
+          }
+        };
+      _timer = setTimeout(_pollingDocument, 1);
+    }
     _onload();
   }
 
