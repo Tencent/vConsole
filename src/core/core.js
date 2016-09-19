@@ -41,7 +41,6 @@ class VConsole {
     this.$ = $;
 
     let _onload = function() {
-      console.debug('_onload')
       that._render();
       that._mockTap();
       that._bindEvent();
