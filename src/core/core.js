@@ -268,11 +268,26 @@ class VConsole {
           totalScroll = $content.scrollHeight,
           currentScroll = top + $content.offsetHeight;
       if (top === 0) {
-          $content.scrollTop = 1;
-          if (e.target.className != 'vc-cmd-input') { e.preventDefault(); }
+        // when content is on the top,
+        // reset scrollTop to lower position to prevent iOS apply scroll action to background
+        $content.scrollTop = 1;
+        // however, when content's height is less than its container's height,
+        // scrollTop always equals to 0 (it is always on the top),
+        // so we need to prevent scroll event manually
+        if ($content.scrollTop === 0) {
+          if (e.target.className != 'vc-cmd-input') { // skip input
+            e.preventDefault();
+          }
+        }
       } else if (currentScroll === totalScroll) {
-          $content.scrollTop = top - 1;
-          if (e.target.className != 'vc-cmd-input') { e.preventDefault(); }
+        // when content is on the bottom,
+        // do similar processing
+        $content.scrollTop = top - 1;
+        if ($content.scrollTop === top) {
+          if (e.target.className != 'vc-cmd-input') {
+            e.preventDefault();
+          }
+        }
       }
     });
 
