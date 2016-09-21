@@ -263,6 +263,7 @@ class VConsole {
 
     // disable background scrolling
     let $content = $.one('.vc-content', that.$dom);
+    let preventMove = false;
     $.bind($content, 'touchstart', function (e) {
       let top = $content.scrollTop,
           totalScroll = $content.scrollHeight,
@@ -276,7 +277,7 @@ class VConsole {
         // so we need to prevent scroll event manually
         if ($content.scrollTop === 0) {
           if (e.target.className != 'vc-cmd-input') { // skip input
-            e.preventDefault();
+            preventMove = true;
           }
         }
       } else if (currentScroll === totalScroll) {
@@ -285,10 +286,20 @@ class VConsole {
         $content.scrollTop = top - 1;
         if ($content.scrollTop === top) {
           if (e.target.className != 'vc-cmd-input') {
-            e.preventDefault();
+            preventMove = true;
           }
         }
       }
+    });
+
+    $.bind($content, 'touchmove', function (e) {
+      if (preventMove) {
+        e.preventDefault();
+      }
+    });
+
+    $.bind($content, 'touchend', function (e) {
+      preventMove = false;
     });
 
   };
