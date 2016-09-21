@@ -1,5 +1,6 @@
 #__vconsole {
 
+  color: #000;
   font-size: 13px;
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 
@@ -35,6 +36,7 @@
   }
 
   .vc-mask {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -48,6 +50,7 @@
   }
 
   .vc-panel {
+    display: none;
     position: fixed;
     min-height: 85%;
     left: 0;
@@ -100,6 +103,41 @@
     bottom: 40px;
     -webkit-overflow-scrolling: touch;
   }
+  .vc-content.vc-has-topbar {
+    top: 71px;
+  }
+
+  .vc-topbar {
+    background-color: #fbf9fe;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    /*position: fixed;
+    top: 40px;*/
+    width: 100%;
+
+    .vc-toptab {
+      display: none;
+      flex: 1;
+      line-height: 30px;
+      padding: 0 15px;
+      border-bottom: 1px solid #D9D9D9;
+      text-decoration: none;
+      text-align: center;
+      color: #000;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+    }
+    .vc-toptab.vc-toggle {
+      display: block;
+    }
+    .vc-toptab:active {
+      background-color: rgba(0,0,0,0.15);
+    }
+    .vc-toptab.vc-actived {
+      border-bottom: 1px solid #3e82f7;
+    }
+  }
 
   .vc-logbox {
     display: none;
@@ -149,6 +187,16 @@
       color: #DC143C;
       border-color: #F4A0AB;
       background-color: #FFE4E1;
+    }
+
+    .vc-log.vc-log-partly .vc-item {
+      display: none;
+    }
+    .vc-log.vc-log-partly-log .vc-item-log,
+    .vc-log.vc-log-partly-info .vc-item-info,
+    .vc-log.vc-log-partly-warn .vc-item-warn,
+    .vc-log.vc-log-partly-error .vc-item-error {
+      display: block;
     }
 
     .vc-item {
@@ -420,7 +468,7 @@
       position: relative;
       -webkit-touch-callout: none;
     }
-    .vc-tool.vc-actived,
+    .vc-tool.vc-toggle,
     .vc-tool.vc-global-tool {
       display: block;
     }

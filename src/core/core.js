@@ -11,6 +11,7 @@ import './core.less';
 import tpl from './core.html';
 import tplTabbar from './tabbar.html';
 import tplTabbox from './tabbox.html';
+import tplTopBarItem from './topbar_item.html';
 import tplToolItem from './tool_item.html';
 
 
@@ -25,8 +26,6 @@ class VConsole {
     this.activedTab = '';
     this.tabList = [];
     this.pluginList = {};
-    this.console = {}; // store native console methods
-    this.logList = []; // store logs when vConsole is not ready
     this.isReady = false;
     this.switchPos = {
       x: 10, // right
@@ -36,7 +35,6 @@ class VConsole {
       endX: 0,
       endY: 0
     };
-    this.bodyOverflowCSS = '';
 
     // export helper functions to public
     this.tool = tool;
@@ -48,11 +46,12 @@ class VConsole {
       that._bindEvent();
       that._autoRun();
     };
-    if (document.readyState == 'complete') {
-      _onload();
-    } else {
-      $.bind(window, 'load', _onload);
-    }
+    // if (document.readyState == 'complete') {
+    //   _onload();
+    // } else {
+    //   $.bind(window, 'load', _onload);
+    // }
+    _onload();
   }
 
   /**
@@ -64,14 +63,24 @@ class VConsole {
     if (! $.one(id)) {
       let e = document.createElement('div');
       e.innerHTML = this.html;
-      document.body.appendChild(e.children[0]);
+      document.documentElement.appendChild(e.children[0]);
     }
     this.$dom = $.one(id);
 
     // reposition switch button
-    let switchX = tool.getStorage('switch_x'),
-        switchY = tool.getStorage('switch_y');
-    if (switchX && switchY) {
+    let $switch = $.one('.vc-switch', this.$dom);
+    let switchX = tool.getStorage('switch_x') * 1,
+        switchY = tool.getStorage('switch_y') * 1;
+    if (switchX || switchY) {
+      // check edge
+      if (switchX + $switch.offsetWidth > document.documentElement.offsetWidth) {
+        switchX = document.documentElement.offsetWidth - $switch.offsetWidth;
+      }
+      if (switchY + $switch.offsetHeight > document.documentElement.offsetHeight) {
+        switchY = document.documentElement.offsetHeight - $switch.offsetHeight;
+      }
+      if (switchX < 0) { switchX = 0; }
+      if (switchY < 0) { switchY = 0; }
       this.switchPos.x = switchX;
       this.switchPos.y = switchY;
       $.one('.vc-switch').style.right = switchX + 'px';
@@ -116,10 +125,37 @@ class VConsole {
     this.$dom.addEventListener('touchend', function(e) {
       // move and time within limits, manually trigger `click` event
       if (touchHasMoved === false && e.timeStamp - lastTouchStartTime < tapTime && targetElem != null) {
-        if (tool.isFunction(targetElem.click)) {
-          targetElem.click();
+        let tagName = targetElem.tagName.toLowerCase(),
+            needFocus = false;
+        switch (tagName) {
+          case 'textarea': // focus
+            needFocus = true; break;
+          case 'input':
+            switch (targetElem.type) {
+              case 'button':
+              case 'checkbox':
+              case 'file':
+              case 'image':
+              case 'radio':
+              case 'submit':
+                needFocus = false; break;
+              default:
+                needFocus = !targetElem.disabled && !targetElem.readOnly;
+            }
+          default:
+            break;
+        }
+        if (needFocus) {
+          targetElem.focus();
+        } else {
           e.preventDefault(); // prevent click 300ms later
         }
+        let touch = e.changedTouches[0];
+        let event = document.createEvent('MouseEvents');
+        event.initMouseEvent('click', true, true, window, 1, touch.screenX, touch.screenY, touch.clientX, touch.clientY, false, false, false, false, 0, null);
+        event.forwardedTouchEvent = true;
+        event.initEvent('click', true, true);
+        targetElem.dispatchEvent(event);
       }
 
       // reset values
@@ -143,16 +179,14 @@ class VConsole {
       that.switchPos.startY = e.touches[0].pageY;
     });
     $.bind($switch, 'touchend', function(e) {
-      if (that.switchPos.endX != 0 || that.switchPos.endY != 0) {
-        that.switchPos.x = that.switchPos.endX;
-        that.switchPos.y = that.switchPos.endY;
-        that.switchPos.startX = 0;
-        that.switchPos.startY = 0;
-        that.switchPos.endX = 0;
-        that.switchPos.endY = 0;
-        tool.setStorage('switch_x', that.switchPos.x);
-        tool.setStorage('switch_y', that.switchPos.y);
-      }
+      that.switchPos.x = that.switchPos.endX;
+      that.switchPos.y = that.switchPos.endY;
+      that.switchPos.startX = 0;
+      that.switchPos.startY = 0;
+      that.switchPos.endX = 0;
+      that.switchPos.endY = 0;
+      tool.setStorage('switch_x', that.switchPos.x);
+      tool.setStorage('switch_y', that.switchPos.y);
     });
     $.bind($switch, 'touchmove', function(e) {
       if (e.touches.length > 0) {
@@ -160,14 +194,15 @@ class VConsole {
             offsetY = e.touches[0].pageY - that.switchPos.startY;
         let x = that.switchPos.x - offsetX,
             y = that.switchPos.y - offsetY;
+        // check edge
+        if (x + $switch.offsetWidth > document.documentElement.offsetWidth) {
+          x = document.documentElement.offsetWidth - $switch.offsetWidth;
+        }
+        if (y + $switch.offsetHeight > document.documentElement.offsetHeight) {
+          y = document.documentElement.offsetHeight - $switch.offsetHeight;
+        }
         if (x < 0) { x = 0; }
         if (y < 0) { y = 0; }
-        if (x + $switch.offsetWidth > document.body.offsetWidth) {
-          x = document.body.offsetWidth - $switch.offsetWidth;
-        }
-        if (y + $switch.offsetHeight > document.body.offsetHeight) {
-          y = document.body.offsetHeight - $switch.offsetHeight;
-        }
         $switch.style.right = x + 'px';
         $switch.style.bottom = y + 'px';
         that.switchPos.endX = x;
@@ -215,6 +250,14 @@ class VConsole {
           if (e.target.className != 'vc-cmd-input') e.preventDefault();
       }
 
+    // after console panel, trigger a transitionend event to make panel's property 'display' change from 'block' to 'none'
+    $.bind($.one('.vc-panel', that.$dom), 'transitionend webkitTransitionEnd oTransitionEnd otransitionend', function(e) {
+      if (e.target != $.one('.vc-panel')) {
+        return false;
+      }
+      if (!$.hasClass(that.$dom, 'vc-toggle')) {
+        e.target.style.display = 'none';
+      }
     });
 
   };
@@ -232,7 +275,9 @@ class VConsole {
     }
 
     // show first tab
-    this.showTab(this.tabList[0]);
+    if (this.tabList.length > 0) {
+      this.showTab(this.tabList[0]);
+    }
   }
 
   /**
@@ -263,6 +308,38 @@ class VConsole {
       }
       $.one('.vc-content', that.$dom).appendChild($tabbox);
     });
+    // render top bar
+    plugin.trigger('addTopBar', function(btnList) {
+      if (!btnList) {
+        return;
+      }
+      let $topbar = $.one('.vc-topbar', that.$dom);
+      for (let i=0; i<btnList.length; i++) {
+        let item = btnList[i];
+        let $item = $.render(tplTopBarItem, {
+          name: item.name || 'Undefined',
+          className: item.className || '',
+          pluginID: plugin.id
+        });
+        if (item.data) {
+          for (let k in item.data) {
+            $item.dataset[k] = item.data[k];
+          }
+        }
+        if (tool.isFunction(item.onClick)) {
+          $.bind($item, 'click', function(e) {
+            let enable = item.onClick.call($item);
+            if (enable === false) {
+              // do nothing
+            } else {
+              $.removeClass($.all('.vc-topbar-' + plugin.id), 'vc-actived');
+              $.addClass($item, 'vc-actived');
+            }
+          });
+        }
+        $topbar.appendChild($item);
+      }
+    });
     // render tool bar
     plugin.trigger('addTool', function(toolList) {
       if (!toolList) {
@@ -279,7 +356,9 @@ class VConsole {
           $.addClass($item, 'vc-global-tool');
         }
         if (tool.isFunction(item.onClick)) {
-          $.bind($item, 'click', item.onClick);
+          $.bind($item, 'click', function(e) {
+            item.onClick.call($item);
+          });
         }
         $defaultBtn.parentNode.insertBefore($item, $defaultBtn);
       }
@@ -324,6 +403,10 @@ class VConsole {
     // init plugin only if vConsole is ready
     if (this.isReady) {
       this._initPlugin(plugin);
+      // if it's the first plugin, show it by default
+      if (this.tabList.length == 1) {
+        this.showTab(this.tabList[0]);
+      }
     }
     return true;
   }
@@ -333,10 +416,19 @@ class VConsole {
    * @public
    */
   show() {
-    $.addClass(this.$dom, 'vc-toggle');
-    this._triggerPluginsEvent('showConsole');
-    let mask = $.one('.vc-mask', this.$dom);
-    mask.style.display = 'block';
+    let that = this;
+    // before show console panel, 
+    // trigger a transitionstart event to make panel's property 'display' change from 'none' to 'block'
+    let $panel = $.one('.vc-panel', this.$dom);
+    $panel.style.display = 'block';
+
+    // set 10ms delay to fix confict between display and transition
+    setTimeout(function() {
+      $.addClass(that.$dom, 'vc-toggle');
+      that._triggerPluginsEvent('showConsole');
+      let $mask = $.one('.vc-mask', that.$dom);
+      $mask.style.display = 'block';
+    }, 10);
   }
 
   /**
@@ -344,21 +436,15 @@ class VConsole {
    * @public
    */
   hide() {
-    // recover body style
-    //document.body.style.overflow = this.bodyOverflowCSS;
-
-
-    // recover body style----1
-
-
     $.removeClass(this.$dom, 'vc-toggle');
     this._triggerPluginsEvent('hideConsole');
 
-    let mask = $.one('.vc-mask', this.$dom);
-    mask.addEventListener('transitionend', function(evnet){
-      mask.style.display = 'none';
-    }, false);
-    
+    let $mask = $.one('.vc-mask', this.$dom),
+        $panel = $.one('.vc-panel', this.$dom);
+    $.bind($mask, 'transitionend', function(evnet) {
+      $mask.style.display = 'none';
+      $panel.style.display = 'none';
+    });
   }
 
   /**
@@ -373,10 +459,19 @@ class VConsole {
     $.removeClass($.all('.vc-logbox', this.$dom), 'vc-actived');
     $.addClass($logbox, 'vc-actived');
     // scroll to bottom
-    $.one('.vc-content', this.$dom).scrollTop = $.one('.vc-content', this.$dom).scrollHeight;
+    // $.one('.vc-content', this.$dom).scrollTop = $.one('.vc-content', this.$dom).scrollHeight;
+    // show topbar
+    let $curTopbar = $.all('.vc-topbar-' + tabID, this.$dom);
+    $.removeClass($.all('.vc-toptab', this.$dom), 'vc-toggle');
+    $.addClass($curTopbar, 'vc-toggle');
+    if ($curTopbar.length > 0) {
+      $.addClass($.one('.vc-content', this.$dom), 'vc-has-topbar');
+    } else {
+      $.removeClass($.one('.vc-content', this.$dom), 'vc-has-topbar');
+    }
     // show toolbar
-    $.removeClass($.all('.vc-tool', this.$dom), 'vc-actived');
-    $.addClass($.all('.vc-tool-' + tabID, this.$dom), 'vc-actived');
+    $.removeClass($.all('.vc-tool', this.$dom), 'vc-toggle');
+    $.addClass($.all('.vc-tool-' + tabID, this.$dom), 'vc-toggle');
     // trigger plugin event
     this._triggerPluginEvent(this.activedTab, 'hide');
     this.activedTab = tabID;

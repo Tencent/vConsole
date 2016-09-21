@@ -20,9 +20,11 @@ class VConsoleLogTab extends VConsolePlugin {
     this.allowUnformattedLog = true; // `[xxx]` format log
 
     this.isReady = false;
+    this.isShow = false;
     this.$tabbox = null;
     this.console = {};
     this.logList = [];
+    this.isInBottom = true; // whether the panel is in the bottom
 
     this.mockConsole();
   }
@@ -49,12 +51,34 @@ class VConsoleLogTab extends VConsolePlugin {
     callback(this.$tabbox);
   }
 
+  onAddTopBar(callback) {
+    let that = this;
+    let types = ['All', 'Log', 'Info', 'Warn', 'Error'];
+    let btnList = [];
+    for (let i=0; i<types.length; i++) {
+      btnList.push({
+        name: types[i],
+        data: {type: types[i].toLowerCase()},
+        className: '',
+        onClick: function() {
+          if (!$.hasClass(this, 'vc-actived')) {
+            that.showLogType(this.dataset.type || 'all');
+          } else {
+            return false;
+          }
+        }
+      });
+    }
+    btnList[0].className = 'vc-actived';
+    callback(btnList);
+  }
+
   onAddTool(callback) {
-    var that = this;
-    var toolList = [{
+    let that = this;
+    let toolList = [{
       name: 'Clear',
       global: false,
-      onClick: function(e) {
+      onClick: function() {
         that.clearLog();
       }
     }];
@@ -66,7 +90,79 @@ class VConsoleLogTab extends VConsolePlugin {
    * @public
    */
   onReady() {
+    let that = this;
 
+    // log type filter
+    let $subTabs = $.all('.vc-subtab', that.$tabbox);
+    $.bind($subTabs, 'click', function(e) {
+      e.preventDefault();
+      if ($.hasClass(this, 'vc-actived')) {
+        return false;
+      }
+      $.removeClass($subTabs, 'vc-actived');
+      $.addClass(this, 'vc-actived');
+
+      let logType = this.dataset.type,
+          $log = $.one('.vc-log', that.$tabbox);
+      $.removeClass($log, 'vc-log-partly-log');
+      $.removeClass($log, 'vc-log-partly-info');
+      $.removeClass($log, 'vc-log-partly-warn');
+      $.removeClass($log, 'vc-log-partly-error');
+      if (logType == 'all') {
+        $.removeClass($log, 'vc-log-partly');
+      } else {
+        $.addClass($log, 'vc-log-partly');
+        $.addClass($log, 'vc-log-partly-' + logType);
+      }
+    });
+
+    let $content = $.one('.vc-content');
+    $.bind($content, 'scroll', function(e) {
+      if (!that.isShow) {
+        return;
+      }
+      if ($content.scrollTop + $content.offsetHeight >= $content.scrollHeight) {
+        that.isInBottom = true;
+      } else {
+        that.isInBottom = false;
+      }
+    });
+  }
+
+  onShow() {
+    this.isShow = true;
+    if (this.isInBottom == true) {
+      this.scrollToBottom();
+    }
+  }
+
+  onHide() {
+    this.isShow = false;
+  }
+
+  onShowConsole() {
+    if (this.isInBottom == true) {
+      this.scrollToBottom();
+    }
+  }
+
+  showLogType(logType) {
+    let $log = $.one('.vc-log', this.$tabbox);
+    $.removeClass($log, 'vc-log-partly-log');
+    $.removeClass($log, 'vc-log-partly-info');
+    $.removeClass($log, 'vc-log-partly-warn');
+    $.removeClass($log, 'vc-log-partly-error');
+    if (logType == 'all') {
+      $.removeClass($log, 'vc-log-partly');
+    } else {
+      $.addClass($log, 'vc-log-partly');
+      $.addClass($log, 'vc-log-partly-' + logType);
+    }
+  }
+
+  scrollToBottom() {
+    let $content = $.one('.vc-content');
+    $content.scrollTop = $content.scrollHeight - $content.offsetHeight;
   }
 
   /**
@@ -216,7 +312,11 @@ class VConsoleLogTab extends VConsolePlugin {
 
     // render to panel
     $.one('.vc-log', this.$tabbox).appendChild($line);
-    $.one('.vc-content').scrollTop = $.one('.vc-content').scrollHeight;
+
+    // scroll to bottom if it is in the bottom before
+    if (this.isInBottom) {
+      this.scrollToBottom();
+    }
 
     // print log to origin console
     if (!item.noOrigin) {
@@ -240,7 +340,7 @@ class VConsoleLogTab extends VConsolePlugin {
       outer += ' ' + preview;
     }
     let $line = $.render(tplFold, {outer: outer, lineType: 'obj'});
-    $.bind($.one('.vc-fold-outer', $line), 'click', function(e) {console.log('123')
+    $.bind($.one('.vc-fold-outer', $line), 'click', function(e) {
       e.preventDefault();
       e.stopPropagation();
       if ($.hasClass($line, 'vc-toggle')) {
@@ -291,13 +391,13 @@ class VConsoleLogTab extends VConsolePlugin {
           } else if (tool.isObject(val)) {
             let name = tool.getObjName(val);
             $sub = that.getFoldedLine(val, $.render(tplFoldCode, {
-              key: keys[i], keyType: keyType, value: name, valueType: 'object'
+              key: tool.htmlEncode(keys[i]), keyType: keyType, value: name, valueType: 'object'
             }, true));
           } else {
             if (!obj.hasOwnProperty(keys[i])) {
               keyType = 'private';
             }
-            let renderData = {lineType: 'kv', key: keys[i], keyType: keyType, value: val, valueType: valueType};
+            let renderData = {lineType: 'kv', key: tool.htmlEncode(keys[i]), keyType: keyType, value: tool.htmlEncode(val), valueType: valueType};
             $sub = $.render(tplFold, renderData);
           }
           $content.appendChild($sub);

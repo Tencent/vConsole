@@ -45,6 +45,57 @@ myPlugin.on('renderTab', function(callback) {
 ```
 
 
+## addTopBar
+
+当 vConsole 尝试为此插件添加新的 topbar 按钮时触发。这个事件只会触发一次。
+
+#### Callback 参数：
+
+- (必填) function(btnList): 回调函数，接收一个带有按钮配置信息的 `array` 数组。
+
+按钮的参数为：
+
+Property | | | |
+------- | ------- | ------- | -------
+name | string | 必填 | 按钮展示的名字。
+data | object | 选填 | 按钮的 dataset，key-value 格式。
+className | string | 选填 | 按钮的 className。
+onClick | function | 必填 | 点击按钮时的回调函数。触发回调后，除非回调函数返回 `false`，此按钮将自动变为选中的样式。
+
+##### 例子：
+
+```javascript
+var type;
+myPlugin.on('addTopBar', function(callback) {
+	var btnList = [];
+	btnList.push({
+		name: 'Apple',
+		className: '',
+		data: {type: 'apple'},
+		onClick: function() {
+			if (type != this.dataset.type) {
+				// `this` 指向当前按钮
+				type = this.dataset.type;
+			} else {
+				return false;
+			}
+		}
+	});
+	btnList.push({
+		name: 'Orange',
+		className: '',
+		data: {type: 'orange'},
+		onClick: function() {
+			type = this.dataset.type;
+		}
+	}
+	});
+	callback(btnList);
+});
+```
+
+
+
 ## addTool
 
 当 vConsole 尝试为此插件添加新的 tool 按钮时触发。这个事件只会触发一次。
@@ -59,7 +110,7 @@ Property | | | |
 ------- | ------- | ------- | -------
 name | string | 必填 | 按钮展示的名字。
 global | boolean | 选填，默认 `false` | `false` 时，当切换到别的 tab 后，按钮就会被隐藏；`true` 时，按钮变成全局可见。
-onClick | function(event) | 必填 | 点击按钮时的回调函数。
+onClick | function() | 必填 | 点击按钮时的回调函数。
 
 ##### 例子：
 

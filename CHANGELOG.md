@@ -1,5 +1,15 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### V2.4.0 (2016-08-31)
+
+- [FEATURE] Add `addTopBar` plugin event, see [Plugin: Event List](./doc/plugin_event_list.md).
+- [FEATURE] Add log type filter to Log & System tab.
+- [IMPROVE] Log list will not automatically scroll to bottom while printing new logs if the viewport is not at the end of list.
+- [IMPROVE] Fix UI bugs.
+- [FIX] Fix XSS issue when print object logs.
+- [FIX] Switch button will not be positioned out of edges in some special cases.
+
+
 #### V2.3.1 (2016-08-16)
 
 - [FIX] Replace custom `tap` event (in V2.3.0) with `click` event (still support fast response) to prevent conflicts.
