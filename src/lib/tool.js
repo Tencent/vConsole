@@ -127,7 +127,7 @@ export function JSONStringify(obj) {
       lv++;
       for (let i=0; i<keys.length; i++) {
         let k = keys[i];
-        if (!val.hasOwnProperty(k)) { continue; }
+        if (val.hasOwnProperty && !val.hasOwnProperty(k)) { continue; }
         json += k + ': ';
         _iterateObj(val[k], val);
         if (i < keys.length - 1) {

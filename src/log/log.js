@@ -394,7 +394,7 @@ class VConsoleLogTab extends VConsolePlugin {
               key: tool.htmlEncode(keys[i]), keyType: keyType, value: name, valueType: 'object'
             }, true));
           } else {
-            if (!obj.hasOwnProperty(keys[i])) {
+            if (obj.hasOwnProperty && !obj.hasOwnProperty(keys[i])) {
               keyType = 'private';
             }
             let renderData = {lineType: 'kv', key: tool.htmlEncode(keys[i]), keyType: keyType, value: tool.htmlEncode(val), valueType: valueType};
