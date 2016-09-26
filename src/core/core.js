@@ -276,7 +276,7 @@ class VConsole {
         // scrollTop always equals to 0 (it is always on the top),
         // so we need to prevent scroll event manually
         if ($content.scrollTop === 0) {
-          if (e.target.className != 'vc-cmd-input') { // skip input
+          if (!$.hasClass(e.target, 'vc-cmd-input')) { // skip input
             preventMove = true;
           }
         }
@@ -285,7 +285,7 @@ class VConsole {
         // do similar processing
         $content.scrollTop = top - 1;
         if ($content.scrollTop === top) {
-          if (e.target.className != 'vc-cmd-input') {
+          if (!$.hasClass(e.target, 'vc-cmd-input')) {
             preventMove = true;
           }
         }
