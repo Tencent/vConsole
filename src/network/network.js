@@ -268,7 +268,4 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
 } // END class
 
-
-const tab = new VConsoleNetworkTab('network', 'Network');
-
-export default tab;
+export default VConsoleNetworkTab;

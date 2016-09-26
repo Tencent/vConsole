@@ -98,6 +98,4 @@ class VConsoleDefaultTab extends VConsoleLogTab {
 
 } // END class
 
-const tab = new VConsoleDefaultTab('default', 'Log');
-
-export default tab;
+export default VConsoleDefaultTab;

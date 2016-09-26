@@ -8,7 +8,7 @@ import * as tool from '../lib/tool.js';
 import VConsoleLogTab from './log.js';
 import tplTabbox from './tabbox_system.html';
 
-class VConsoleDefaultTab extends VConsoleLogTab {
+class VConsoleSystemTab extends VConsoleLogTab {
 
   constructor(...args) {
     super(...args);
@@ -129,6 +129,4 @@ class VConsoleDefaultTab extends VConsoleLogTab {
 
 } // END class
 
-const tab = new VConsoleDefaultTab('system', 'System');
-
-export default tab;
+export default VConsoleSystemTab;
