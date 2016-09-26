@@ -434,6 +434,7 @@ class VConsole {
    * add a new plugin
    * @public
    * @param object VConsolePlugin object
+   * @return boolean
    */
   addPlugin(plugin) {
     // ignore this plugin if it has already been installed
@@ -447,6 +448,60 @@ class VConsole {
       this._initPlugin(plugin);
       // if it's the first plugin, show it by default
       if (this.tabList.length == 1) {
+        this.showTab(this.tabList[0]);
+      }
+    }
+    return true;
+  }
+
+  /**
+   * remove a plugin
+   * @public
+   * @param string pluginID
+   * @return boolean
+   */
+  removePlugin(pluginID) {
+    pluginID = (pluginID + '').toLowerCase();
+    let plugin = this.pluginList[pluginID];
+    // skip if is has not been installed
+    if (plugin === undefined) {
+      console.warn('Plugin ' + pluginID + ' does not exist.');
+      return false;
+    }
+    // trigger `remove` event before uninstall
+    plugin.trigger('remove');
+    // the plugin will not be initialized before vConsole is ready,
+    // so the plugin does not need to handle DOM-related actions in this case
+    if (this.isReady) {
+      let $tabbar = $.one('#__vc_tab_' + pluginID);
+      $tabbar && $tabbar.parentNode.removeChild($tabbar);
+      // remove topbar
+      let $topbar = $.all('.vc-topbar-' + pluginID, this.$dom);
+      for (let i=0; i<$topbar.length; i++) {
+        $topbar[i].parentNode.removeChild($topbar[i]);
+      }
+      // remove content
+      let $content = $.one('#__vc_log_' + pluginID);
+      $content && $content.parentNode.removeChild($content);
+      // remove tool bar
+      let $toolbar = $.all('.vc-tool-' + pluginID, this.$dom);
+      for (let i=0; i<$toolbar.length; i++) {
+        $toolbar[i].parentNode.removeChild($toolbar[i]);
+      }
+    }
+    // remove plugin from list
+    let index = this.tabList.indexOf(pluginID);
+    if (index > -1) {
+      this.tabList.splice(index, 1);
+    }
+    try {
+      delete this.pluginList[pluginID];
+    } catch (e) {
+      this.pluginList[pluginID] = undefined;
+    }
+    // show the first plugin by default
+    if (this.activedTab == pluginID) {
+      if (this.tabList.length > 0) {
         this.showTab(this.tabList[0]);
       }
     }

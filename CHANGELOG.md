@@ -1,5 +1,13 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### V2.x.0 (2016-09-xx)
+
+- [FEATURE] Add `vConsole.removePlugin()` method, see [Public Properties & Methods](./doc/public_properties_methods.md).
+- [FEATURE] Add `remove` plugin event, see [Plugin: Event List](./doc/plugin_event_list.md).
+- [IMPROVE] Disable page scrolling while vConsole is scrolling.
+- [FIX] Fix `window.onerror()` typo.
+
+
 #### V2.4.0 (2016-08-31)
 
 - [FEATURE] Add `addTopBar` plugin event, see [Plugin: Event List](./doc/plugin_event_list.md).

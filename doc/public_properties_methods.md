@@ -78,6 +78,23 @@ vConsole.addPlugin(myPlugin);
 ```
 
 
+### vConsole.removePlugin(pluginID)
+
+Remove an existing plugin.
+
+##### Parameters:
+- (required) pluginID: A string, plugin's id.
+
+##### Return:
+- Boolean: `true` for success, `false` for failure.
+
+##### Example:
+
+```javascript
+vConsole.removePlugin('my_plugin');
+```
+
+
 ### vConsole.showTab(pluginID)
 
 Activating a tab according to its plugin id.

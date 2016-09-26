@@ -78,6 +78,23 @@ vConsole.addPlugin(myPlugin);
 ```
 
 
+### vConsole.removePlugin(pluginID)
+
+卸载一个插件。
+
+##### 参数：
+- (required) pluginID: 插件的 plugin id。
+
+##### 返回：
+- Boolean: 成功为 `true`，失败为 `false`。
+
+##### 例子：
+
+```javascript
+vConsole.removePlugin('my_plugin');
+```
+
+
 ### vConsole.showTab(pluginID)
 
 根据 plugin id 激活显示一个 tab。

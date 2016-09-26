@@ -146,6 +146,25 @@ myPlugin.on('ready', function() {
 ```
 
 
+## remove
+
+当插件即将卸载前触发。这个事件只会触发一次。
+
+需要注意的是，如果在 vConsole ready 之前就卸载插件，那么此事件会在 `init` 之前就被调用。
+
+##### Callback 参数：
+
+- 无
+
+##### 例子：
+
+```javascript
+myPlugin.on('remove', function() {
+	// do something...
+});
+```
+
+
 ## show
 
 当插件的 tab 被显示时触发。只有绑定了 `renderTab` 事件的插件才会收到此事件。

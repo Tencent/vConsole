@@ -129,6 +129,20 @@ class VConsoleLogTab extends VConsolePlugin {
     });
   }
 
+  /**
+   * before remove
+   * @public
+   */
+  onRemove() {
+    // recover original console
+    window.console.log = this.console.log;
+    window.console.info = this.console.info;
+    window.console.warn = this.console.warn;
+    window.console.debug = this.console.debug;
+    window.console.error = this.console.error;
+    this.console = {};
+  }
+
   onShow() {
     this.isShow = true;
     if (this.isInBottom == true) {

@@ -22,6 +22,8 @@ class VConsoleNetworkTab extends VConsolePlugin {
     this.domList = {}; // URL as key, dom item as value
     this.isShow = false;
     this.isInBottom = true; // whether the panel is in the bottom
+    this._open = undefined; // the origin function
+    this._send = undefined;
 
     this.mockAjax();
   }
@@ -71,6 +73,16 @@ class VConsoleNetworkTab extends VConsolePlugin {
       }
     });
 
+  }
+
+  onRemove() {
+    // recover original functions
+    if (window.XMLHttpRequest) {
+      window.XMLHttpRequest.prototype.open = this._open;
+      window.XMLHttpRequest.prototype.send = this._send;
+      this._open = undefined;
+      this._send = undefined;
+    }
   }
 
   onShow() {
@@ -191,6 +203,8 @@ class VConsoleNetworkTab extends VConsolePlugin {
     let that = this;
     let _open = window.XMLHttpRequest.prototype.open,
         _send = window.XMLHttpRequest.prototype.send;
+    that._open = _open;
+    that._send = _send;
 
     // mock open()
     window.XMLHttpRequest.prototype.open = function() {

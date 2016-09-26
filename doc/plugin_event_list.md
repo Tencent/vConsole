@@ -137,6 +137,25 @@ myPlugin.on('ready', function() {
 ```
 
 
+## remove
+
+Trigger before starting to uninitialize a plugin. This event will only be triggered once.
+
+Note that this event may be called before `init` event if you remove a plugin before vConsole is ready.
+
+##### Callback Arguments:
+
+- none
+
+##### Example:
+
+```javascript
+myPlugin.on('remove', function() {
+	// do something...
+});
+```
+
+
 ## show
 
 Trigger when a tab is shown. Only the plugin binded with `renderTab` will receive this event.
