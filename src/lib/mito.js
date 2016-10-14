@@ -17,10 +17,10 @@ export default function render(tpl, data, toString) {
       if ( line.match(/^ ?else/g) ) {
         // else  --> } else {
         code += '} ' + line + ' {\n';
-      } else if ( line.match(/\/(if|for|switch)/g) ) {
+      } else if ( line.match(/\/(if|for|switch|while)/g) ) {
         // /if  -->  }
         code += '}\n';
-      } else if ( line.match(/^ ?if|for|switch/g) ) {
+      } else if ( line.match(/^ ?if|for|switch|while/g) ) {
         // if (age)  -->  if (this.age) {
         code += line + ' {\n';
       } else if ( line.match(/^ ?(break|continue) ?$/g) ) {
