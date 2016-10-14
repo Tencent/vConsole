@@ -60,7 +60,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
       }
       e.preventDefault();
     });
-    
+
     let $content = $.one('.vc-content');
     $.bind($content, 'scroll', function(e) {
       if (!that.isShow) {
@@ -153,7 +153,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
     }
     this.reqList[id] = item;
     // console.log(item);
-    
+
     // update dom
     let domData = {
       url: item.url,

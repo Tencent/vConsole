@@ -15,7 +15,7 @@ class VConsoleLogTab extends VConsolePlugin {
 
   constructor(...args) {
     super(...args);
-    
+
     this.tplTabbox = ''; // MUST be overwrite in child class
     this.allowUnformattedLog = true; // `[xxx]` format log
 
@@ -30,14 +30,14 @@ class VConsoleLogTab extends VConsolePlugin {
   }
 
   /**
-   * when vConsole is ready, 
+   * when vConsole is ready,
    * this event will be triggered (after 'add' event)
    * @public
    */
   onInit() {
     this.isReady = true;
     this.$tabbox = $.render(this.tplTabbox, {});
-    for (let i=0; i<this.logList.length; i++) {
+    for (let i = 0; i < this.logList.length; i++) {
       this.printLog(this.logList[i]);
     }
     this.logList = [];
@@ -55,10 +55,12 @@ class VConsoleLogTab extends VConsolePlugin {
     let that = this;
     let types = ['All', 'Log', 'Info', 'Warn', 'Error'];
     let btnList = [];
-    for (let i=0; i<types.length; i++) {
+    for (let i = 0; i < types.length; i++) {
       btnList.push({
         name: types[i],
-        data: {type: types[i].toLowerCase()},
+        data: {
+          type: types[i].toLowerCase()
+        },
         className: '',
         onClick: function() {
           if (!$.hasClass(this, 'vc-actived')) {
@@ -103,7 +105,7 @@ class VConsoleLogTab extends VConsolePlugin {
       $.addClass(this, 'vc-actived');
 
       let logType = this.dataset.type,
-          $log = $.one('.vc-log', that.$tabbox);
+        $log = $.one('.vc-log', that.$tabbox);
       $.removeClass($log, 'vc-log-partly-log');
       $.removeClass($log, 'vc-log-partly-info');
       $.removeClass($log, 'vc-log-partly-warn');
@@ -194,11 +196,36 @@ class VConsoleLogTab extends VConsolePlugin {
       this.console.debug = window.console.debug;
       this.console.error = window.console.error;
     }
-    window.console.log = function() { that.printLog({logType:'log', logs:arguments}); };
-    window.console.info = function() { that.printLog({logType:'info', logs:arguments}); };
-    window.console.warn = function() { that.printLog({logType:'warn', logs:arguments}); };
-    window.console.debug = function() { that.printLog({logType:'debug', logs:arguments}); };
-    window.console.error = function() { that.printLog({logType:'error', logs:arguments}); };
+    window.console.log = function() {
+      that.printLog({
+        logType: 'log',
+        logs: arguments
+      });
+    };
+    window.console.info = function() {
+      that.printLog({
+        logType: 'info',
+        logs: arguments
+      });
+    };
+    window.console.warn = function() {
+      that.printLog({
+        logType: 'warn',
+        logs: arguments
+      });
+    };
+    window.console.debug = function() {
+      that.printLog({
+        logType: 'debug',
+        logs: arguments
+      });
+    };
+    window.console.error = function() {
+      that.printLog({
+        logType: 'error',
+        logs: arguments
+      });
+    };
   }
 
   clearLog() {
@@ -291,41 +318,42 @@ class VConsoleLogTab extends VConsolePlugin {
       logType: item.logType,
       noMeta: !!item.noMeta,
       meta: item.meta,
-      style: item.style || ''
+      style: item.style || '',
+      logContent: logs
     });
 
-    let $content = $.one('.vc-item-content', $line);
-    // generate content from item.logs
-    for (let i=0; i<logs.length; i++) {
-      let $log = document.createElement('SPAN');
-      try {
-        if (logs[i] === '') {
-          // ignore empty string
-          continue;
-        } else if (tool.isFunction(logs[i])) {
-          // convert function to string
-          $log.innerHTML = ' ' + logs[i].toString();
-        } else if (tool.isObject(logs[i]) || tool.isArray(logs[i])) {
-          // object or array
-          $log = this.getFoldedLine(logs[i]);
-        } else {
-          // default
-          $log.innerHTML = ' ' + tool.htmlEncode(logs[i]).replace(/\n/g, '<br/>');
-        }
-      } catch (e) {
-        $log.innerHTML = ' [' + (typeof logs[i]) + ']';
-      }
-      if ($log) {
-        $content.appendChild($log);
-      }
-    }
-    // generate content from item.content
-    if (tool.isObject(item.content)) {
-      $content.appendChild(item.content);
-    }
+    // let $content = $.one('.vc-item-content', $line);
+    // // generate content from item.logs
+    // for (let i=0; i<logs.length; i++) {
+    //   let $log = document.createElement('SPAN');
+    //   try {
+    //     if (logs[i] === '') {
+    //       // ignore empty string
+    //       continue;
+    //     } else if (tool.isFunction(logs[i])) {
+    //       // convert function to string
+    //       $log.innerHTML = ' ' + logs[i].toString();
+    //     } else if (tool.isObject(logs[i]) || tool.isArray(logs[i])) {
+    //       // object or array
+    //       $log = this.getFoldedLine(logs[i]);
+    //     } else {
+    //       // default
+    //       $log.innerHTML = ' ' + tool.htmlEncode(logs[i]).replace(/\n/g, '<br/>');
+    //     }
+    //   } catch (e) {
+    //     $log.innerHTML = ' [' + (typeof logs[i]) + ']';
+    //   }
+    //   if ($log) {
+    //     $content.appendChild($log);
+    //   }
+    // }
+    // // generate content from item.content
+    // if (tool.isObject(item.content)) {
+    //   $content.appendChild(item.content);
+    // }
 
     // render to panel
-    $.one('.vc-log', this.$tabbox).appendChild($line);
+    $.one('.vc-log', this.$tabbox).insertAdjacentElement('afterend', $line);
 
     // scroll to bottom if it is in the bottom before
     if (this.isInBottom) {
@@ -353,7 +381,10 @@ class VConsoleLogTab extends VConsolePlugin {
       }
       outer += ' ' + preview;
     }
-    let $line = $.render(tplFold, {outer: outer, lineType: 'obj'});
+    let $line = $.render(tplFold, {
+      outer: outer,
+      lineType: 'obj'
+    });
     $.bind($.one('.vc-fold-outer', $line), 'click', function(e) {
       e.preventDefault();
       e.stopPropagation();
@@ -370,11 +401,11 @@ class VConsoleLogTab extends VConsolePlugin {
       if ($content.children.length == 0 && !!obj) {
         // render object's keys
         let keys = tool.getObjAllKeys(obj);
-        for (let i=0; i<keys.length; i++) {
+        for (let i = 0; i < keys.length; i++) {
           let val = obj[keys[i]],
-              valueType = 'undefined',
-              keyType = '',
-              $line;
+            valueType = 'undefined',
+            keyType = '',
+            $line;
           // handle value
           if (tool.isString(val)) {
             valueType = 'string';
@@ -400,18 +431,30 @@ class VConsoleLogTab extends VConsolePlugin {
           if (tool.isArray(val)) {
             let name = tool.getObjName(val) + '[' + val.length + ']';
             $sub = that.getFoldedLine(val, $.render(tplFoldCode, {
-              key: keys[i], keyType: keyType, value: name, valueType: 'array'
+              key: keys[i],
+              keyType: keyType,
+              value: name,
+              valueType: 'array'
             }, true));
           } else if (tool.isObject(val)) {
             let name = tool.getObjName(val);
             $sub = that.getFoldedLine(val, $.render(tplFoldCode, {
-              key: tool.htmlEncode(keys[i]), keyType: keyType, value: name, valueType: 'object'
+              key: tool.htmlEncode(keys[i]),
+              keyType: keyType,
+              value: name,
+              valueType: 'object'
             }, true));
           } else {
             if (obj.hasOwnProperty && !obj.hasOwnProperty(keys[i])) {
               keyType = 'private';
             }
-            let renderData = {lineType: 'kv', key: tool.htmlEncode(keys[i]), keyType: keyType, value: tool.htmlEncode(val), valueType: valueType};
+            let renderData = {
+              lineType: 'kv',
+              key: tool.htmlEncode(keys[i]),
+              keyType: keyType,
+              value: tool.htmlEncode(val),
+              valueType: valueType
+            };
             $sub = $.render(tplFold, renderData);
           }
           $content.appendChild($sub);
@@ -419,7 +462,7 @@ class VConsoleLogTab extends VConsolePlugin {
         // render object's prototype
         if (tool.isObject(obj)) {
           let proto = obj.__proto__,
-              $proto;
+            $proto;
           if (tool.isObject(proto)) {
             $proto = that.getFoldedLine(proto, $.render(tplFoldCode, {
               key: '__proto__',
