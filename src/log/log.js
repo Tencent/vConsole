@@ -318,42 +318,45 @@ class VConsoleLogTab extends VConsolePlugin {
       logType: item.logType,
       noMeta: !!item.noMeta,
       meta: item.meta,
-      style: item.style || '',
-      logContent: logs
+      style: item.style || ''
     });
 
-    // let $content = $.one('.vc-item-content', $line);
-    // // generate content from item.logs
-    // for (let i=0; i<logs.length; i++) {
-    //   let $log = document.createElement('SPAN');
-    //   try {
-    //     if (logs[i] === '') {
-    //       // ignore empty string
-    //       continue;
-    //     } else if (tool.isFunction(logs[i])) {
-    //       // convert function to string
-    //       $log.innerHTML = ' ' + logs[i].toString();
-    //     } else if (tool.isObject(logs[i]) || tool.isArray(logs[i])) {
-    //       // object or array
-    //       $log = this.getFoldedLine(logs[i]);
-    //     } else {
-    //       // default
-    //       $log.innerHTML = ' ' + tool.htmlEncode(logs[i]).replace(/\n/g, '<br/>');
-    //     }
-    //   } catch (e) {
-    //     $log.innerHTML = ' [' + (typeof logs[i]) + ']';
-    //   }
-    //   if ($log) {
-    //     $content.appendChild($log);
-    //   }
-    // }
-    // // generate content from item.content
-    // if (tool.isObject(item.content)) {
-    //   $content.appendChild(item.content);
-    // }
-
     // render to panel
-    $.one('.vc-log', this.$tabbox).insertAdjacentElement('afterend', $line);
+    $.one('.vc-log', this.$tabbox).insertAdjacentElement('beforeend', $line);
+
+    let $content = $.one('.vc-item-content', $line);
+    // generate content from item.logs
+    for (let i=0; i<logs.length; i++) {
+      let log;
+      try {
+        if (logs[i] === '') {
+          // ignore empty string
+          continue;
+        } else if (tool.isFunction(logs[i])) {
+          // convert function to string
+          log = '<span> ' + logs[i].toString() + '</span>';
+        } else if (tool.isObject(logs[i]) || tool.isArray(logs[i])) {
+          // object or array
+          log = this.getFoldedLine(logs[i]);
+        } else {
+          // default
+          log = '<span> ' + tool.htmlEncode(logs[i]).replace(/\n/g, '<br/>') + '</span>';
+        }
+      } catch (e) {
+        log = '<span> [' + (typeof logs[i]) + ']</span>';
+      }
+      if (log) {
+        if (typeof log === 'string')
+          $content.insertAdjacentHTML('beforeend', log);
+        else
+          $content.insertAdjacentElement('beforeend', log);
+      }
+    }
+
+    // generate content from item.content
+    if (tool.isObject(item.content)) {
+      $content.insertAdjacentElement('beforeend', item.content);
+    }
 
     // scroll to bottom if it is in the bottom before
     if (this.isInBottom) {
@@ -457,7 +460,7 @@ class VConsoleLogTab extends VConsolePlugin {
             };
             $sub = $.render(tplFold, renderData);
           }
-          $content.appendChild($sub);
+          $content.insertAdjacentElement('beforeend', $sub);
         }
         // render object's prototype
         if (tool.isObject(obj)) {
@@ -479,7 +482,7 @@ class VConsoleLogTab extends VConsolePlugin {
               valueType: 'null'
             });
           }
-          $content.appendChild($proto);
+          $content.insertAdjacentElement('beforeend', $proto);
         }
       }
       return false;

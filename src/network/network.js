@@ -176,7 +176,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
     if ($old) {
       $old.parentNode.replaceChild($new, $old);
     } else {
-      $.one('.vc-log', this.$tabbox).appendChild($new);
+      $.one('.vc-log', this.$tabbox).insertAdjacentElement('beforeend', $new);
     }
     this.domList[id] = $new;
 

@@ -76,7 +76,7 @@ class VConsole {
     if (! $.one(id)) {
       let e = document.createElement('div');
       e.innerHTML = this.html;
-      document.documentElement.appendChild(e.children[0]);
+      document.documentElement.insertAdjacentElement('beforeend', e.children[0]);
     }
     this.$dom = $.one(id);
 
@@ -118,7 +118,7 @@ class VConsole {
         touchHasMoved = false,
         targetElem = null;
 
-    this.$dom.addEventListener('touchstart', function(e) { // todo: if double click 
+    this.$dom.addEventListener('touchstart', function(e) { // todo: if double click
       if (lastTouchStartTime === undefined) {
         let touch = e.targetTouches[0];
         touchstartX = touch.pageX;
@@ -336,7 +336,7 @@ class VConsole {
       that.tabList.push(plugin.id);
       // render tabbar
       let $tabbar = $.render(tplTabbar, {id: plugin.id, name: plugin.name});
-      $.one('.vc-tabbar', that.$dom).appendChild($tabbar);
+      $.one('.vc-tabbar', that.$dom).insertAdjacentElement('beforeend', $tabbar);
       // render tabbox
       let $tabbox = $.render(tplTabbox, {id: plugin.id});
       if (!!tabboxHTML) {
@@ -345,10 +345,10 @@ class VConsole {
         } else if (tool.isFunction(tabboxHTML.appendTo)) {
           tabboxHTML.appendTo($tabbox);
         } else if (tool.isElement(tabboxHTML)) {
-          $tabbox.appendChild(tabboxHTML);
+          $tabbox.insertAdjacentElement('beforeend', tabboxHTML);
         }
       }
-      $.one('.vc-content', that.$dom).appendChild($tabbox);
+      $.one('.vc-content', that.$dom).insertAdjacentElement('beforeend', $tabbox);
     });
     // render top bar
     plugin.trigger('addTopBar', function(btnList) {
@@ -379,7 +379,7 @@ class VConsole {
             }
           });
         }
-        $topbar.appendChild($item);
+        $topbar.insertAdjacentElement('beforeend', $item);
       }
     });
     // render tool bar
@@ -514,7 +514,7 @@ class VConsole {
    */
   show() {
     let that = this;
-    // before show console panel, 
+    // before show console panel,
     // trigger a transitionstart event to make panel's property 'display' change from 'none' to 'block'
     let $panel = $.one('.vc-panel', this.$dom);
     $panel.style.display = 'block';
