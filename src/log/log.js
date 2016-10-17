@@ -321,9 +321,6 @@ class VConsoleLogTab extends VConsolePlugin {
       style: item.style || ''
     });
 
-    // render to panel
-    $.one('.vc-log', this.$tabbox).insertAdjacentElement('beforeend', $line);
-
     let $content = $.one('.vc-item-content', $line);
     // generate content from item.logs
     for (let i=0; i<logs.length; i++) {
@@ -357,6 +354,9 @@ class VConsoleLogTab extends VConsolePlugin {
     if (tool.isObject(item.content)) {
       $content.insertAdjacentElement('beforeend', item.content);
     }
+
+    // render to panel
+    $.one('.vc-log', this.$tabbox).insertAdjacentElement('beforeend', $line);
 
     // scroll to bottom if it is in the bottom before
     if (this.isInBottom) {
