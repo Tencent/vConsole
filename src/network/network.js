@@ -62,7 +62,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
       }
       e.preventDefault();
     });
-    
+
     let $content = $.one('.vc-content');
     $.bind($content, 'scroll', function(e) {
       if (!that.isShow) {
@@ -162,7 +162,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
     if (!this.isReady) {
       return;
     }
-    
+
     // update dom
     let domData = {
       url: item.url,
@@ -185,7 +185,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
     if ($old) {
       $old.parentNode.replaceChild($new, $old);
     } else {
-      $.one('.vc-log', this.$tabbox).appendChild($new);
+      $.one('.vc-log', this.$tabbox).insertAdjacentElement('beforeend', $new);
     }
     this.domList[id] = $new;
 
