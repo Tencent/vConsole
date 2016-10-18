@@ -20,6 +20,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
     this.$header = null;
     this.reqList = {}; // URL as key, request item as value
     this.domList = {}; // URL as key, dom item as value
+    this.isReady = false;
     this.isShow = false;
     this.isInBottom = true; // whether the panel is in the bottom
     this._open = undefined; // the origin function
@@ -46,6 +47,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
   onReady() {
     var that = this;
+    that.isReady = true;
 
     // header
     this.renderHeader();
@@ -73,6 +75,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
       }
     });
 
+    for (let k in that.reqList) {
+      that.updateRequest(k, {});
+    }
   }
 
   onRemove() {
@@ -153,6 +158,10 @@ class VConsoleNetworkTab extends VConsolePlugin {
     }
     this.reqList[id] = item;
     // console.log(item);
+
+    if (!this.isReady) {
+      return;
+    }
     
     // update dom
     let domData = {

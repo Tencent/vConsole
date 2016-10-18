@@ -555,8 +555,6 @@ class VConsole {
     $.addClass($.one('#__vc_tab_' + tabID), 'vc-actived');
     $.removeClass($.all('.vc-logbox', this.$dom), 'vc-actived');
     $.addClass($logbox, 'vc-actived');
-    // scroll to bottom
-    // $.one('.vc-content', this.$dom).scrollTop = $.one('.vc-content', this.$dom).scrollHeight;
     // show topbar
     let $curTopbar = $.all('.vc-topbar-' + tabID, this.$dom);
     $.removeClass($.all('.vc-toptab', this.$dom), 'vc-toggle');

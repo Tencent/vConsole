@@ -35,12 +35,7 @@ class VConsoleLogTab extends VConsolePlugin {
    * @public
    */
   onInit() {
-    this.isReady = true;
     this.$tabbox = $.render(this.tplTabbox, {});
-    for (let i=0; i<this.logList.length; i++) {
-      this.printLog(this.logList[i]);
-    }
-    this.logList = [];
   }
 
   /**
@@ -91,6 +86,7 @@ class VConsoleLogTab extends VConsolePlugin {
    */
   onReady() {
     let that = this;
+    that.isReady = true;
 
     // log type filter
     let $subTabs = $.all('.vc-subtab', that.$tabbox);
@@ -127,6 +123,11 @@ class VConsoleLogTab extends VConsolePlugin {
         that.isInBottom = false;
       }
     });
+    
+    for (let i=0; i<that.logList.length; i++) {
+      that.printLog(that.logList[i]);
+    }
+    that.logList = [];
   }
 
   /**
