@@ -66,6 +66,7 @@ Plugin:
 
  - [vConsole-resources](https://github.com/WechatFE/vConsole-resources)
  - [vConsole-sources](https://github.com/WechatFE/vConsole-sources)
+ - [vConsole-elements](https://github.com/WechatFE/vConsole-elements)
 
 
 ## Changelog
