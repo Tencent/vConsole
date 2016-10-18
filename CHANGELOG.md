@@ -1,5 +1,12 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### V2.5.1 (2016-10-18)
+
+- [FIX] Fix `scrollHeight` error in some cases.
+- [FIX] Fix flex layout in iOS 8 devices.
+- [IMPROVE] Performance enhancement.
+
+
 #### V2.5.0 (2016-09-28)
 
 - [FEATURE] Add `vConsole.removePlugin()` method, see [Public Properties & Methods](./doc/public_properties_methods.md).
