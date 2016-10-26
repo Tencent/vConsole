@@ -79,6 +79,12 @@ vConsole 本体：
 
 
 
+## CDN
+
+- [v2.5.1](https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/2.5.1/vconsole.min.js)
+
+
+
 ## 交流反馈
 
 QQ 群：497430533

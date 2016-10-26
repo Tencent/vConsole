@@ -69,6 +69,11 @@ Plugin:
  - [vConsole-elements](https://github.com/WechatFE/vConsole-elements)
 
 
+## CDN
+
+- [v2.5.1](https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/2.5.1/vconsole.min.js)
+
+
 ## Changelog
 
 [CHANGELOG.md](./CHANGELOG.md)
