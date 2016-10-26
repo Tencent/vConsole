@@ -74,6 +74,13 @@ Plugin:
 [CHANGELOG.md](./CHANGELOG.md)
 
 
+## Feedback
+
+QQ Group: 497430533
+
+![](./example/snapshot/qq_group.png)
+
+
 ## License
 
 The MIT License (http://opensource.org/licenses/MIT)

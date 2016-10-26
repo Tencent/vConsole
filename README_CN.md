@@ -78,6 +78,15 @@ vConsole 本体：
 [CHANGELOG_CN.md](./CHANGELOG_CN.md)
 
 
+
+## 交流反馈
+
+QQ 群：497430533
+
+![](./example/snapshot/qq_group.png)
+
+
+
 ## License
 
 The MIT License (http://opensource.org/licenses/MIT)
