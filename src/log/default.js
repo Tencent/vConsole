@@ -71,29 +71,38 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       style: ''
     });
     // eval
-    let result = eval(cmd);
-    // print result to console
-    let $content;
-    if (tool.isArray(result) || tool.isObject(result)) {
-      $content = this.getFoldedLine(result);
-    } else {
-      if (tool.isNull(result)) {
-        result = 'null';
-      } else if (tool.isUndefined(result)) {
-        result = 'undefined';
-      } else if (tool.isFunction(result)) {
-        result = 'function()'
-      } else if (tool.isString(result)) {
-        result = '"' + result + '"';
+    try {
+      let result = eval(cmd);
+      // print result to console
+      let $content;
+      if (tool.isArray(result) || tool.isObject(result)) {
+        $content = this.getFoldedLine(result);
+      } else {
+        if (tool.isNull(result)) {
+          result = 'null';
+        } else if (tool.isUndefined(result)) {
+          result = 'undefined';
+        } else if (tool.isFunction(result)) {
+          result = 'function()'
+        } else if (tool.isString(result)) {
+          result = '"' + result + '"';
+        }
+        $content = $.render(tplItemCode, {content: result, type: 'output'});
       }
-      $content = $.render(tplItemCode, {content: result, type: 'output'});
+      this.printLog({
+        logType: 'log',
+        content: $content,
+        noMeta: true,
+        style: ''
+      });
+    } catch (e) {
+      this.printLog({
+        logType: 'error',
+        logs: [e.message],
+        noMeta: true,
+        style: ''
+      });
     }
-    this.printLog({
-      logType: 'log',
-      content: $content,
-      noMeta: true,
-      style: ''
-    });
   }
 
 } // END class
