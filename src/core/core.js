@@ -99,6 +99,18 @@ class VConsole {
       $.one('.vc-switch').style.right = switchX + 'px';
       $.one('.vc-switch').style.bottom = switchY + 'px';
     }
+    
+    // 支持拖拽按钮 .vc-switch
+    $switch.ondragstart = function (e) {
+      return true;
+    }
+    $switch.ondragend = function(ev) {
+      $switch.style.left = ev.pageX + 'px';
+      $switch.style.top = ev.pageY + 'px';
+      $switch.style.right = 'auto';
+      $switch.style.bottom = 'auto';
+      return false
+    };
 
     // remove from less to present transition effect
     $.one('.vc-mask', this.$dom).style.display = 'none';
