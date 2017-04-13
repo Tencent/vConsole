@@ -43,7 +43,7 @@ class VConsoleSystemTab extends VConsoleLogTab {
       logMsg = 'iPod, iOS ' + ipod[2].replace(/_/g, '.');
     }
     let templogMsg = logMsg;
-    // wechat app version
+    // wechat client version
     let version = ua.match(/MicroMessenger\/([\d\.]+)/i);
     logMsg = 'Unknown';
     if (version && version[1]) {
