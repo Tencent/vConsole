@@ -1,6 +1,6 @@
 {
   "name": "vconsole",
-  "version": "2.5.3",
+  "version": "2.5.3-dev",
   "description": "A lightweight, extendable front-end developer tool for mobile web page.",
   "homepage": "https://github.com/WechatFE/vConsole",
   "main": "dist/vconsole.min.js",
