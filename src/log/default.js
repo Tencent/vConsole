@@ -31,6 +31,17 @@ class VConsoleDefaultTab extends VConsoleLogTab {
         that.evalCommand(cmd);
       }
     });
+
+    // create a global variable to save custom command's result
+    let code = '';
+    code += 'if (!!window) {';
+    code += 'window.__vConsole_cmd_result = undefined;';
+    code += 'window.__vConsole_cmd_error = false;';
+    code += '}';
+    let script = document.createElement('SCRIPT');
+    script.innerHTML = code;
+    document.documentElement.appendChild(script);
+    document.documentElement.removeChild(script);
   }
 
   /**
@@ -70,10 +81,25 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       noMeta: true,
       style: ''
     });
-    // eval
-    try {
-      let result = eval(cmd);
-      // print result to console
+    // do not use `eval` or `new Function` to avoid `unsafe-eval` CSP rule
+    let code = '';
+    code += 'try {\n';
+    code +=   'window.__vConsole_cmd_result = (function() {\n';
+    code +=     'return ' + cmd + ';\n';
+    code +=   '})();\n';
+    code +=   'window.__vConsole_cmd_error = false;\n';
+    code += '} catch (e) {\n';
+    code +=   'window.__vConsole_cmd_result = e.message;\n';
+    code +=   'window.__vConsole_cmd_error = true;\n';
+    code += '}';
+    let script = document.createElement('SCRIPT');
+    script.innerHTML = code;
+    document.documentElement.appendChild(script);
+    let result = window.__vConsole_cmd_result,
+        error = window.__vConsole_cmd_error;
+    document.documentElement.removeChild(script);
+    // print result to console
+    if (error == false) {
       let $content;
       if (tool.isArray(result) || tool.isObject(result)) {
         $content = this.getFoldedLine(result);
@@ -95,10 +121,10 @@ class VConsoleDefaultTab extends VConsoleLogTab {
         noMeta: true,
         style: ''
       });
-    } catch (e) {
+    } else {
       this.printLog({
         logType: 'error',
-        logs: [e.message],
+        logs: [result],
         noMeta: true,
         style: ''
       });

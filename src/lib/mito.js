@@ -7,7 +7,8 @@
 
 export default function render(tpl, data, toString) {
   let pattern = /\{\{([^\}]+)\}\}/g,
-    code = 'var arr = [];\n',
+    code = '',
+    codeWrap = '',
     pointer = 0,
     match = [];
   let addCode = function(line, isJS) {
@@ -38,21 +39,34 @@ export default function render(tpl, data, toString) {
       code += 'arr.push("' + line.replace(/"/g, '\\"' )+ '");\n';
     }
   };
+  // init global param
+  window.__mito_data = data;
+  window.__mito_code = "";
+  window.__mito_result = "";
   // remove spaces after switch
   tpl = tpl.replace(/(\{\{ ?switch(.+?)\}\})[\r\n\t ]+\{\{/g, '$1{{');
   // line breaks
   tpl = tpl.replace(/^\n/, '').replace(/\n/g, '\\\n');
-  // extract {{code}}
+  // init code
+  codeWrap = '(function(){\n';
+  code = 'var arr = [];\n';
   while (match = pattern.exec(tpl)) {
     addCode( tpl.slice(pointer, match.index), false );
     addCode( match[1], true );
     pointer = match.index + match[0].length;
   }
   addCode( tpl.substr(pointer, tpl.length - pointer), false );
-  code += 'return arr.join("");';
-  code = 'with (this) {\n' + code + '\n}';
-  // console.log("code:\n"+code);
-  let dom = (new Function(code)).apply(data);
+  code += '__mito_result = arr.join("");';
+  code = 'with (__mito_data) {\n' + code + '\n}';
+  codeWrap += code;
+  codeWrap += '})();';
+  // console.log("code:\n"+codeWrap);
+  // run code, do NOT use `eval` or `new Function` to avoid `unsafe-eval` CSP rule
+  let script = document.createElement('SCRIPT');
+  script.innerHTML = codeWrap;
+  document.documentElement.appendChild(script);
+  let dom = __mito_result;
+  document.documentElement.removeChild(script);
   if (!toString) {
     let e = document.createElement('div');
     e.innerHTML = dom;
