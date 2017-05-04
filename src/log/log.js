@@ -6,10 +6,12 @@
 
 import * as tool from '../lib/tool.js';
 import $ from '../lib/query.js';
+import VConsole from '../core/core.js';
 import VConsolePlugin from '../lib/plugin.js';
 import tplItem from './item.html';
 import tplFold from './item_fold.html';
 import tplFoldCode from './item_fold_code.html';
+import tplTabbox from './tabbox_system.html';
 
 class VConsoleLogTab extends VConsolePlugin {
 
@@ -125,7 +127,7 @@ class VConsoleLogTab extends VConsolePlugin {
         that.isInBottom = false;
       }
     });
-    
+
     for (let i=0; i<that.logList.length; i++) {
       that.printLog(that.logList[i]);
     }
@@ -269,14 +271,16 @@ class VConsoleLogTab extends VConsolePlugin {
     let shouldBeHere = true;
     let pattern = /^\[(\w+)\] ?/i;
     let targetTabName = '';
+    let targetTabID = '';
     if (tool.isString(logs[0])) {
       let match = logs[0].match(pattern);
       if (match !== null && match.length > 0) {
-        targetTabName = match[1].toLowerCase();
+        targetTabName = match[1];
+        targetTabID = targetTabName.toLowerCase();
       }
     }
-    if (targetTabName) {
-      shouldBeHere = (targetTabName == this.id);
+    if (targetTabID) {
+      shouldBeHere = (targetTabID == this.id);
     } else if (this.allowUnformattedLog == false) {
       shouldBeHere = false;
     }
@@ -492,6 +496,14 @@ class VConsoleLogTab extends VConsolePlugin {
   }
 
 } // END class
+
+VConsoleLogTab.prototype.VConsoleGeneralTab = class extends VConsoleLogTab {
+  constructor(...arg) {
+    super(...arg);
+    this.tplTabbox = tplTabbox;
+    this.allowUnformattedLog = false;
+  }
+}
 
 
 export default VConsoleLogTab;

@@ -44,6 +44,37 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     document.documentElement.removeChild(script);
   }
 
+  printLog(item) {
+    let logs = item.logs || [];
+    if (!logs.length && !item.content) {
+      return;
+    }
+
+    // convert logs to a real array
+    logs = [].slice.call(logs || []);
+    // check `[default]` format
+    let shouldBeHere = true;
+    let pattern = /^\[(\w+)\] ?/i;
+    let targetTabName = '';
+    let targetTabID = '';
+    if (tool.isString(logs[0])) {
+      let match = logs[0].match(pattern);
+      if (match !== null && match.length > 0) {
+        targetTabName = match[1];
+        targetTabID = targetTabName.toLowerCase();
+      }
+    }
+    if (targetTabID && targetTabID !== this.id && !this.host.pluginList[targetTabID]) {
+      const newTab = new this.VConsoleGeneralTab(targetTabID, targetTabName)
+      newTab.host = this.host
+      this.host.addPlugin(newTab)
+      newTab.printLog(item)
+      return
+    }
+
+    super.printLog(item);
+  }
+
   /**
    * replace window.console & window.onerror with vConsole method
    * @private
@@ -70,7 +101,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
   }
 
   /**
-   * 
+   *
    * @private
    */
   evalCommand(cmd) {

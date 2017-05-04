@@ -443,6 +443,7 @@ class VConsole {
       return false;
     }
     this.pluginList[plugin.id] = plugin;
+    plugin.host = this
     // init plugin only if vConsole is ready
     if (this.isReady) {
       this._initPlugin(plugin);
