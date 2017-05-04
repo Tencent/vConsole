@@ -5,7 +5,7 @@
  */
 
 class VConsolePlugin {
-  
+
   constructor(id, name = 'newPlugin') {
     this.id = id;
     this.name = name;
