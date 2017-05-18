@@ -85,6 +85,31 @@ export function isElement(value) {
 }
 
 /**
+ * check whether an object is plain (using {})
+ * @param object obj
+ * @return boolean
+ */
+export function isPlainObject(obj) {
+  let hasOwn = Object.prototype.hasOwnProperty;
+  // Must be an Object.
+  if (!obj || typeof obj !== 'object' || obj.nodeType || isWindow(obj)) {
+    return false;
+  }
+  try {
+    if (obj.constructor && !hasOwn.call(obj, 'constructor') && !hasOwn.call(obj.constructor.prototype, 'isPrototypeOf')) {
+      return false;
+    }
+  } catch (e) {
+    return false;
+  }
+  let key;
+  for (key in obj) {}
+  return key === undefined || hasOwn.call(obj, key);
+}
+
+
+
+/**
  * HTML encode a string
  * @param string text
  * @return string
