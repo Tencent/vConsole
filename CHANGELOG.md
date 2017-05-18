@@ -1,7 +1,9 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### V2.5.3-dev (2016-12-27)
+#### V2.5.3-dev (2017-xx-xx)
 
+- [FEATURE] Support `Query String Parameters` and `Form Data` in Network tab.
+- [IMPROVE] Auto format JSON response in Network tab.
 - [IMPROVE] Support CSP rule `unsafe-eval`.
 
 

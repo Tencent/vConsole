@@ -166,16 +166,49 @@ class VConsoleNetworkTab extends VConsolePlugin {
     // update dom
     let domData = {
       url: item.url,
-      status: item.status || '-',
-      type: '-',
+      status: item.status,
+      method: item.method || '-',
       costTime: item.costTime>0 ? item.costTime+'ms' : '-',
-      header: item.header,
-      response: tool.htmlEncode(item.response)
+      header: item.header || null,
+      getData: item.getData || null,
+      postData: item.postData || null,
+      response: null
     };
-    if (item.readyState <= 1) {
+    switch (item.responseType) {
+      case '':
+      case 'text':
+        // try to parse JSON
+        if (tool.isString(item.response)) {
+          try {
+            domData.response = JSON.parse(item.response);
+            domData.response = JSON.stringify(domData.response, null, 1);
+            domData.response = tool.htmlEncode(domData.response);
+          } catch (e) {
+            // not a JSON string
+            domData.response = tool.htmlEncode(item.response);
+          }
+        } else {
+          domData.response = Object.prototype.toString.call(item.response);
+        }
+        break;
+      case 'json':
+        domData.response = JSON.stringify(item.response, null, 1);
+        break;
+      case 'blob':
+      case 'document':
+      case 'arraybuffer':
+      default:
+        domData.response = Object.prototype.toString.call(item.response);
+        break;
+    }
+    if (item.readyState == 0 || item.readyState == 1) {
       domData.status = 'Pending';
-    } else if (item.readyState < 4) {
+    } else if (item.readyState == 2 || item.readyState == 3) {
       domData.status = 'Loading';
+    } else if (item.readyState == 4) {
+      // do nothing
+    } else {
+      domData.status = 'Unknown';
     }
     let $new = $.render(tplItem, domData),
         $old = this.domList[id];
@@ -219,11 +252,14 @@ class VConsoleNetworkTab extends VConsolePlugin {
     window.XMLHttpRequest.prototype.open = function() {
       let XMLReq = this;
       let args = [].slice.call(arguments),
+          method = args[0],
           url = args[1],
           id = that.getUniqueID();
 
-      // may be used by other methods
+      // may be used by other functions
       XMLReq._requestID = id;
+      XMLReq._method = method;
+      XMLReq._url = url;
 
       // mock onreadystatechange
       let _onreadystatechange = XMLReq.onreadystatechange || function() {};
@@ -232,8 +268,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
         let item = that.reqList[id] || {};
 
         // update status
-        item.url = url;
         item.readyState = XMLReq.readyState;
+        item.status = XMLReq.status;
+        item.responseType = XMLReq.responseType;
 
         if (XMLReq.readyState == 0) {
           // UNSENT
@@ -259,7 +296,6 @@ class VConsoleNetworkTab extends VConsolePlugin {
           // LOADING
         } else if (XMLReq.readyState == 4) {
           // DONE
-          item.status = XMLReq.status;
           item.endTime = +new Date(),
           item.costTime = item.endTime - (item.startTime || item.endTime);
           item.response = XMLReq.response;
@@ -272,6 +308,51 @@ class VConsoleNetworkTab extends VConsolePlugin {
       };
 
       return _open.apply(XMLReq, args);
+    };
+
+    // mock send()
+    window.XMLHttpRequest.prototype.send = function() {
+      let XMLReq = this;
+      let args = [].slice.call(arguments),
+          data = args[0];
+
+      let item = that.reqList[XMLReq._requestID] || {};
+      item.method = XMLReq._method.toUpperCase();
+
+      let query = XMLReq._url.split('?'); // a.php?b=c&d=?e => ['a.php', 'b=c&d=', '?e']
+      item.url = query.shift(); // => ['b=c&d=', '?e']
+      
+      if (query.length > 0) {
+        item.getData = {};
+        query = query.join('?'); // => 'b=c&d=?e'
+        query = query.split('&'); // => ['b=c', 'd=?e']
+        for (let q of query) {
+          q = q.split('=');
+          item.getData[ q[0] ] = q[1];
+        }
+      }
+
+      if (item.method == 'POST') {
+        
+        // save POST data
+        if (tool.isString(data)) {
+          let arr = data.split('&');
+          item.postData = {};
+          for (let q of arr) {
+            q = q.split('=');
+            item.postData[ q[0] ] = q[1];
+          }
+        } else if (tool.isPlainObject(data)) {
+          item.postData = data;
+        }
+
+      }
+
+      if (!XMLReq._noVConsole) {
+        that.updateRequest(XMLReq._requestID, item);
+      }
+
+      return _send.apply(XMLReq, args);
     };
 
   };

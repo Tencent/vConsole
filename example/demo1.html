@@ -29,7 +29,8 @@
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_log_obj">打印Object</a>
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_trigger_error">触发JS Error</a>
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_log_sys">打印到系统面板</a>
-    <a href="javascript:;" class="weui_btn weui_btn_default js_btn_ajax">发起AJAX</a>
+    <a href="javascript:;" class="weui_btn weui_btn_default js_btn_ajax_get">发起AJAX(GET)</a>
+    <a href="javascript:;" class="weui_btn weui_btn_default js_btn_ajax_post">发起AJAX(POST)</a>
   </div>
   <div class="weui_toptips weui_notice" id="js_tips">已打印log</div>
 </body>
@@ -62,9 +63,16 @@ $('.js_btn_log_sys').on('tap', function(e) {
   console.log('[system]', '当前时间戳:', (+new Date()));
   showTips();
 });
-$('.js_btn_ajax').on('tap', function(e) {
+$('.js_btn_ajax_get').on('tap', function(e) {
   // 发起一个AJAX
-  $.post('ajax.php',  { id: Math.random() }, function(resp) {
+  $.get('ajax.php',  { id: Math.random(), action: 'Get' }, function(resp) {
+    console.log(resp);
+  });
+  showTips();
+});
+$('.js_btn_ajax_post').on('tap', function(e) {
+  // 发起一个AJAX
+  $.post('ajax.php',  { id: Math.random(), action: 'Post' }, function(resp) {
     console.log(resp);
   });
   showTips();
