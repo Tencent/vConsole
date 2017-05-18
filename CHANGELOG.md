@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### V2.5.3-dev (2016-12-27)
+
+- [IMPROVE] Support CSP rule `unsafe-eval`.
+
+
 #### V2.5.2 (2016-12-27)
 
 - [FIX] Catch errors when eval custom commands in Log tab.
