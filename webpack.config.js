@@ -23,8 +23,8 @@ module.exports = {
         test: /\.js$/, loader: 'babel'
       },
       {
-        test: /\.scss$/,
-        loader: 'style!css!sass'
+        test: /\.less$/,
+        loader: 'style!css!less'
         // loader: ExtractTextPlugin.extract('style-loader', 'css-loader!less-loader') // 将css独立打包
       },
       {

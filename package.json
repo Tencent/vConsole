@@ -33,8 +33,6 @@
     "less": "^2.5.3",
     "less-loader": "^2.2.3",
     "mocha": "^2.5.3",
-    "node-sass": "^4.5.3",
-    "sass-loader": "^6.0.5",
     "style-loader": "^0.13.1",
     "webpack": "~1.12.11"
   },

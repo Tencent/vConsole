@@ -7,7 +7,7 @@
 import pkg from '../../package.json';
 import * as tool from '../lib/tool.js';
 import $ from '../lib/query.js';
-import './core.scss';
+import './core.less';
 import tpl from './core.html';
 import tplTabbar from './tabbar.html';
 import tplTabbox from './tabbox.html';
