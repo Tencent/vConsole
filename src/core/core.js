@@ -7,7 +7,7 @@
 import pkg from '../../package.json';
 import * as tool from '../lib/tool.js';
 import $ from '../lib/query.js';
-import './core.less';
+import './core.scss';
 import tpl from './core.html';
 import tplTabbar from './tabbar.html';
 import tplTabbox from './tabbox.html';
@@ -45,6 +45,7 @@ class VConsole {
       that._mockTap();
       that._bindEvent();
       that._autoRun();
+      that._mdFont();
     };
     if (document !== undefined) {
       if (document.readyState == 'complete') {
@@ -64,6 +65,25 @@ class VConsole {
           }
         };
       _timer = setTimeout(_pollingDocument, 1);
+    }
+  }
+
+  /**
+   * modify #__vconsole font-size
+   * @private
+   */
+  _mdFont() {
+    var vcEl = document.getElementById('__vconsole');
+    var dpr = window.devicePixelRatio || 1;
+    var viewportEl = document.querySelector('[name="viewport"]');
+
+    if (viewportEl && viewportEl.content) {
+      var initialScale = viewportEl.content.match(/initial\-scale\=\d+(\.\d+)?/);
+      var scale = initialScale ? parseFloat(initialScale[0].split('=')[1]) : 1;
+
+      if (scale < 1) {
+        vcEl.style.fontSize = 13 * dpr + 'px';
+      }
     }
   }
 

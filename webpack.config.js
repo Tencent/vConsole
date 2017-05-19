@@ -19,12 +19,12 @@ module.exports = {
       {
         test: /\.html$/, loader: 'html'
       },
-      { 
+      {
         test: /\.js$/, loader: 'babel'
       },
       {
-        test: /\.less$/,
-        loader: 'style!css!less'
+        test: /\.scss$/,
+        loader: 'style!css!sass'
         // loader: ExtractTextPlugin.extract('style-loader', 'css-loader!less-loader') // 将css独立打包
       },
       {
