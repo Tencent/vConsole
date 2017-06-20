@@ -238,9 +238,6 @@ class VConsoleLogTab extends VConsolePlugin {
       return;
     }
 
-    // convert logs to a real array
-    logs = [].slice.call(logs || []);
-
     // check `[default]` format
     let shouldBeHere = true;
     let pattern = /^\[(\w+)\] ?/i;
