@@ -125,7 +125,7 @@ class VConsoleLogTab extends VConsolePlugin {
         that.isInBottom = false;
       }
     });
-    
+
     for (let i=0; i<that.logList.length; i++) {
       that.printLog(that.logList[i]);
     }
@@ -187,46 +187,22 @@ class VConsoleLogTab extends VConsolePlugin {
    * @private
    */
   mockConsole() {
-    let that = this;
+    const methodList = ['log', 'info', 'warn', 'debug', 'error'];
+
     if (!window.console) {
       window.console = {};
     } else {
-      this.console.log = window.console.log;
-      this.console.info = window.console.info;
-      this.console.warn = window.console.warn;
-      this.console.debug = window.console.debug;
-      this.console.error = window.console.error;
+      methodList.map(method => this.console[method] = window.console[method]);
     }
-    window.console.log = function() {
-      that.printLog({
-        logType: 'log',
-        logs: arguments
-      });
-    };
-    window.console.info = function() {
-      that.printLog({
-        logType: 'info',
-        logs: arguments
-      });
-    };
-    window.console.warn = function() {
-      that.printLog({
-        logType: 'warn',
-        logs: arguments
-      });
-    };
-    window.console.debug = function() {
-      that.printLog({
-        logType: 'debug',
-        logs: arguments
-      });
-    };
-    window.console.error = function() {
-      that.printLog({
-        logType: 'error',
-        logs: arguments
-      });
-    };
+
+    methodList.map(method => {
+      window.console[method] = (...args) => {
+        this.printLog({
+          logType: method,
+          logs: args
+        });
+      };
+    });
   }
 
   clearLog() {
