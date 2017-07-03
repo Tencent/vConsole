@@ -83,6 +83,10 @@ export function isElement(value) {
       value && typeof value === "object" && value !== null && value.nodeType === 1 && typeof value.nodeName==="string"
   );
 }
+export function isWindow(value) {
+  var toString = Object.prototype.toString.call(value);
+  return toString == '[object global]' || toString == '[object Window]' || toString == '[object DOMWindow]';
+}
 
 /**
  * check whether an object is plain (using {})
