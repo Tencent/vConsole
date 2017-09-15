@@ -134,90 +134,20 @@ export function htmlEncode(text) {
 /**
  * JSON stringify, support circular structure
  */
-export function JSONStringify(obj) {
-  let json = '',
-      lv = 0;
 
-  // use a map to track parent relationship
-  let objMap = [];
-  function _hasSameParentAsChild(child) {
-    // find upper item which child is equal to this child
-    for (let i = objMap.length - 1; i >= 0; i--) {
-      if (objMap[i].child == child) {
-        return true;
-      }
+export function JSONStringify(stringObject, formatOption = '\t', replaceString = 'CIRCULAR_DEPENDECY_OBJECT') {
+  let cache = [];
+  const returnStringObject = JSON.stringify(stringObject, (key, value) => {
+    if (typeof value === 'object' && value !== null) {
+      if (~cache.indexOf(value)) {
+        return replaceString;
+      } 
+      cache.push(value);
     }
-    return false;
-  }
-
-  function _iterateObj(val) {
-    if (isObject(val)) {
-      // object
-      if (_hasSameParentAsChild(val)) {
-        // this object is circular, skip it
-        json += "CircularObject";
-        return;
-      }
-      objMap.push({parent: parent, child: val});
-
-      let keys = Object.keys(val);
-      json += "{";
-      lv++;
-      for (let i=0; i<keys.length; i++) {
-        let k = keys[i];
-        if (val.hasOwnProperty && !val.hasOwnProperty(k)) { continue; }
-        json += k + ': ';
-        _iterateObj(val[k], val);
-        if (i < keys.length - 1) {
-          json += ', ';
-        }
-      }
-      lv--;
-      json += '}';
-
-      objMap.pop();
-    } else if (isArray(val)) {
-      // array
-      if (_hasSameParentAsChild(val)) {
-        // this array is circular, skip it
-        json += "CircularArray";
-        return;
-      }
-      objMap.push({parent: parent, child: val});
-
-      json += '[';
-      lv++;
-      for (let i=0; i<val.length; i++) {
-        _iterateObj(val[i], val);
-        if (i < val.length - 1) {
-          json += ', ';
-        }
-      }
-      lv--;
-      json += ']';
-
-      objMap.pop();
-    } else if (isString(val)) {
-      json += '"'+val+'"';
-    } else if (isNumber(val)) {
-      json += val;
-    } else if (isBoolean(val)) {
-      json += val;
-    } else if (isNull(val)) {
-      json += 'null';
-    } else if (isUndefined(val)) {
-      json += 'undefined';
-    } else if (isFunction(val)) {
-      json += 'function()';
-    } else if (isSymbol(val)) {
-      json += 'symbol';
-    } else {
-      json += 'unknown';
-    }
-  }
-  _iterateObj(obj, null);
-
-  return json;
+    return value;
+  }, formatOption);
+  cache = null;
+  return returnStringObject;
 }
 
 /**

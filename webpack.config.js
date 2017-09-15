@@ -49,5 +49,4 @@ module.exports = {
     })
     // ,new ExtractTextPlugin('[name].min.css') // 将css独立打包
   ]
-
 };
