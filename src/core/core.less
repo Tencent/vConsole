@@ -1,38 +1,43 @@
 #__vconsole {
+  @font: 13;
+  @fontSize: 13px;
 
   color: #000;
-  font-size: 13px;
+  font-size: @fontSize;
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 
 
   /* global */
 
   .vc-max-height {
-    max-height: 250px;
+    max-height: 250em / @font;
   }
   .vc-max-height-line {
-    max-height: 44px;
+    max-height: 44em / @font;
   }
   .vc-min-height {
-    min-height: 40px;
+    min-height: 40em / @font;
   }
 
+  dd, dl, pre {
+    margin: 0;
+  }
 
   /* compoment */
 
   .vc-switch {
     display: block;
     position: fixed;
-    right: 10px;
-    bottom: 10px;
+    right: 10em / @font;
+    bottom: 10em / @font;
     color: #FFF;
     background-color: #04BE02;
     line-height: 1;
-    font-size: 14px;
-    padding: 8px 16px;
+    font-size: 14em / @font;
+    padding: 8em / @font 16em / @font;
     z-index: 10000;
-    border-radius: 4px;
-    box-shadow: 0 0 8px rgba(0,0,0,0.4);
+    border-radius: 4em / @font;
+    box-shadow: 0 0 8em / @font rgba(0,0,0,0.4);
   }
 
   .vc-mask {
@@ -70,14 +75,14 @@
   .vc-tabbar {
     border-bottom: 1px solid #D9D9D9;
     overflow-x: auto;
-    height: 39px;
+    height: 39em / @font;
     width: auto;
     white-space: nowrap;
 
     .vc-tab {
       display: inline-block;
-      line-height: 39px;
-      padding: 0 15px;
+      line-height: 39em / @font;
+      padding: 0 15em / @font;
       border-right: 1px solid #D9D9D9;
       text-decoration: none;
       color: #000;
@@ -97,14 +102,14 @@
     overflow-x: hidden;
     overflow-y: auto;
     position: absolute;
-    top: 40px;
+    top: 40em / @font;
     left: 0;
     right: 0;
-    bottom: 40px;
+    bottom: 40em / @font;
     -webkit-overflow-scrolling: touch;
   }
   .vc-content.vc-has-topbar {
-    top: 71px;
+    top: 71em / @font;
   }
 
   .vc-topbar {
@@ -121,8 +126,8 @@
       display: none;
       flex: 1;
       -webkit-box-flex: 1;
-      line-height: 30px;
-      padding: 0 15px;
+      line-height: 30em / @font;
+      padding: 0 15em / @font;
       border-bottom: 1px solid #D9D9D9;
       text-decoration: none;
       text-align: center;
@@ -151,6 +156,7 @@
     }
 
     .vc-log {
+      padding-bottom: 39em / @font;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -162,13 +168,13 @@
       left: 0;
       right: 0;
       bottom: 0;
-      font-size: 15px;
+      font-size: 15em / @font;
       text-align: center;
     }
 
     .vc-item {
       margin: 0;
-      padding: 6px 8px;
+      padding: 6em / @font 8em / @font;
       overflow: hidden;
       line-height: 1.3;
       border-bottom: 1px solid #EEE;
@@ -204,14 +210,14 @@
     .vc-item {
 
       .vc-item-content {
-        margin-right: 60px;
+        margin-right: 60em / @font;
         display: block;
       }
 
       .vc-item-meta {
         color: #888;
         float: right;
-        width: 60px;
+        width: 60em / @font;
         text-align: right;
       }
 
@@ -237,15 +243,15 @@
     }
     .vc-item .vc-item-code.vc-item-code-input,
     .vc-item .vc-item-code.vc-item-code-output {
-      padding-left: 12px;
+      padding-left: 12em / @font;
     }
     .vc-item .vc-item-code.vc-item-code-input:before,
     .vc-item .vc-item-code.vc-item-code-output:before {
       content: "›";
       position: absolute;
-      top: -3px;
+      top: -3em / @font;
       left: 0;
-      font-size: 16px;
+      font-size: 16em / @font;
       color: #6A5ACD;
     }
     .vc-item .vc-item-code.vc-item-code-output:before {
@@ -260,7 +266,7 @@
       .vc-fold-outer {
         display: block;
         font-style: italic;
-        padding-left: 10px;
+        padding-left: 10em / @font;
         position: relative;
       }
       .vc-fold-outer:active {
@@ -270,15 +276,15 @@
       .vc-fold-outer:before {
         content: "";
         position: absolute;
-        top: 4px;
-        left: 2px;
+        top: 4em / @font;
+        left: 2em / @font;
         width: 0;
         height: 0;
-        border: transparent solid 4px;
+        border: transparent solid 4em / @font;
         border-left-color: #000;
       }
       .vc-fold-outer.vc-toggle:before {
-        top: 6px;
+        top: 6em / @font;
         left: 0;
         border-top-color: #000;
         border-left-color: transparent;
@@ -286,14 +292,14 @@
 
       .vc-fold-inner {
         display: none;
-        margin-left: 10px;
+        margin-left: 10em / @font;
       }
       .vc-fold-inner.vc-toggle {
         display: block;
       }
 
       .vc-fold-inner .vc-code-key {
-        margin-left: 10px;
+        margin-left: 10em / @font;
       }
       .vc-fold-outer .vc-code-key {
         margin-left: 0;
@@ -324,7 +330,7 @@
 
     .vc-cmd {
       position: absolute;
-      height: 40px;
+      height: 40em / @font;
       left: 0;
       right: 0;
       bottom: 0;
@@ -333,9 +339,9 @@
 
       .vc-cmd-input-wrap {
         display: block;
-        height: 28px;
-        margin-right: 40px;
-        padding: 6px 8px;
+        height: 28em / @font;
+        margin-right: 40em / @font;
+        padding: 6em / @font 8em / @font;
       }
 
       .vc-cmd-input {
@@ -344,10 +350,10 @@
         resize: none;
         outline: none;
         padding: 0;
-        font-size: 12px;
+        font-size: 12em / @font;
       }
       .vc-cmd-input::-webkit-input-placeholder {
-        line-height: 28px;
+        line-height: 28em / @font;
       }
 
       .vc-cmd-btn {
@@ -355,11 +361,12 @@
         top: 0;
         right: 0;
         bottom: 0;
-        width: 40px;
+        width: 40em / @font;
         border: none;
         background-color: #EFEFF4;
         outline: none;
         -webkit-touch-callout: none;
+        font-size: 1em;
       }
       .vc-cmd-btn:active {
         background-color: rgba(0,0,0,0.15);
@@ -377,7 +384,7 @@
 
       .vc-group-detail {
         display: none;
-        padding: 0 0 10px 20px;
+        padding: 0 0 10em / @font 20em / @font;
         border-bottom: 1px solid #EEE;
       }
 
@@ -408,7 +415,7 @@
       .vc-table-col {
         flex: 1;
         -webkit-box-flex: 1;
-        padding: 3px 4px;
+        padding: 3em / @font 4em / @font;
         border-left: 1px solid #EEE;
         overflow: auto;
         white-space: pre-wrap;
@@ -422,8 +429,8 @@
       }
 
       .vc-small .vc-table-col {
-        padding: 0 4px;
-        font-size: 12px;
+        padding: 0 4em / @font;
+        font-size: 12em / @font;
       }
 
       .vc-table-col-2 { flex: 2; -webkit-box-flex: 2; }
@@ -455,7 +462,7 @@
 
   .vc-toolbar {
     border-top: 1px solid #D9D9D9;
-    line-height: 39px;
+    line-height: 39em / @font;
     position: absolute;
     left: 0;
     right: 0;
@@ -487,8 +494,8 @@
     .vc-tool:after {
       content: " ";
       position: absolute;
-      top: 7px;
-      bottom: 7px;
+      top: 7em / @font;
+      bottom: 7em / @font;
       right: 0;
       border-left: 1px solid #D9D9D9;
     }
@@ -497,7 +504,7 @@
       border: none;
     }
   }
-  
+
 }
 
 #__vconsole.vc-toggle {
