@@ -89,4 +89,4 @@ QQ Group: 497430533
 
 ## License
 
-The MIT License (http://opensource.org/licenses/MIT)
+[The MIT License](./LICENSE)

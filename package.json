@@ -36,6 +36,6 @@
     "style-loader": "^0.13.1",
     "webpack": "~1.12.11"
   },
-  "author": "WechatFE Team",
+  "author": "Tencent",
   "license": "MIT"
 }
