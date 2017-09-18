@@ -2,7 +2,7 @@
   "name": "vconsole",
   "version": "2.5.3-dev",
   "description": "A lightweight, extendable front-end developer tool for mobile web page.",
-  "homepage": "https://github.com/WechatFE/vConsole",
+  "homepage": "https://github.com/Tencent/vConsole",
   "main": "dist/vconsole.min.js",
   "scripts": {
     "test": "mocha",
@@ -15,7 +15,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WechatFE/vConsole.git"
+    "url": "git+https://github.com/Tencent/vConsole.git"
   },
   "dependencies": {},
   "devDependencies": {

@@ -17,7 +17,7 @@ A lightweight, extendable front-end developer tool for mobile web page.
 
 ## Usage
 
-Download the [latest release](https://github.com/WechatFE/vConsole/releases/latest). (DO NOT copy `dist/vconsole.min.js` in the dev branch)
+Download the [latest release](https://github.com/Tencent/vConsole/releases/latest). (DO NOT copy `dist/vconsole.min.js` in the dev branch)
 
 Or, install via npm:
 
