@@ -10,7 +10,7 @@ module.exports = {
   output: {
     path: './dist',
     filename: '[name].min.js',
-    library: 'vConsole',
+    library: 'VConsole',
     libraryTarget: 'umd',
     umdNameDefine: true
   },

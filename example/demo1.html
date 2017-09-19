@@ -36,6 +36,10 @@
 </body>
 
 <script>
+window.vConsole = new window.VConsole({
+  // defaultPlugins: ['system', 'network']
+});
+
 console.info('欢迎使用 vConsole。vConsole 是一个由微信公众平台前端团队研发的 Web 前端开发者面板，可用于展示 console 日志，方便开发、调试。');
 
 $('.js_btn_log').on('tap', function(e) {

@@ -16,6 +16,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 import pkg from '../../package.json';
 import * as tool from '../lib/tool.js';
 import $ from '../lib/query.js';
+
 import './core.less';
 import tpl from './core.html';
 import tplTabbar from './tabbar.html';
@@ -23,19 +24,34 @@ import tplTabbox from './tabbox.html';
 import tplTopBarItem from './topbar_item.html';
 import tplToolItem from './tool_item.html';
 
+// built-in plugins
+import VConsoleDefaultPlugin from '../log/default.js';
+import VConsoleSystemPlugin from '../log/system.js';
+import VConsoleNetworkPlugin from '../network/network.js';
+
+const VCONSOLE_ID = '#__vconsole';
 
 class VConsole {
 
-  constructor() {
+  constructor(opt) {
+    if (!!$.one(VCONSOLE_ID)) {
+      console.warn('vConsole is already exists.');
+      return;
+    }
     let that = this;
 
     this.version = pkg.version;
-    this.html = tpl;
     this.$dom = null;
+
+    this.isInited = false;
+    this.option = {
+      defaultPlugins: ['system', 'network']
+    };
+
     this.activedTab = '';
     this.tabList = [];
     this.pluginList = {};
-    this.isReady = false;
+
     this.switchPos = {
       x: 10, // right
       y: 10, // bottom
@@ -49,10 +65,22 @@ class VConsole {
     this.tool = tool;
     this.$ = $;
 
+    // merge options
+    if (tool.isObject(opt)) {
+      for (let key in opt) {
+        this.option[key] = opt[key];
+      }
+    }
+
+    // try to init
     let _onload = function() {
+      if (that.isInited) {
+        return;
+      }
       that._render();
       that._mockTap();
       that._bindEvent();
+      that._addBuiltInPlugins();
       that._autoRun();
     };
     if (document !== undefined) {
@@ -65,7 +93,7 @@ class VConsole {
       // if document does not exist, wait for it
       let _timer;
       let _pollingDocument = function() {
-          if (document && document.readyState == 'complete') {
+          if (!!document && document.readyState == 'complete') {
             _timer && clearTimeout(_timer);
             _onload();
           } else {
@@ -81,13 +109,12 @@ class VConsole {
    * @private
    */
   _render() {
-    let id = '#__vconsole';
-    if (! $.one(id)) {
+    if (! $.one(VCONSOLE_ID)) {
       let e = document.createElement('div');
-      e.innerHTML = this.html;
+      e.innerHTML = tpl;
       document.documentElement.insertAdjacentElement('beforeend', e.children[0]);
     }
-    this.$dom = $.one(id);
+    this.$dom = $.one(VCONSOLE_ID);
 
     // reposition switch button
     let $switch = $.one('.vc-switch', this.$dom);
@@ -321,15 +348,37 @@ class VConsole {
     $.bind($content, 'touchend', function (e) {
       preventMove = false;
     });
-
   };
+
+  /**
+   * add built-in plugins
+   */
+  _addBuiltInPlugins() {
+    // add default log plugin
+    this.addPlugin(new VConsoleDefaultPlugin('default', 'Log'));
+
+    // add other built-in plugins according to user's config
+    const list = this.option.defaultPlugins;
+    const plugins = {
+      'system': {proto: VConsoleSystemPlugin, name: 'System'},
+      'network': {proto: VConsoleNetworkPlugin, name: 'Network'}
+    };
+    if (!!list && tool.isArray(list)) {
+      for (let i=0; i<list.length; i++) {
+        let tab = plugins[list[i]];
+        if (!!tab) {
+          this.addPlugin(new tab.proto(list[i], tab.name));
+        }
+      }
+    }
+  }
 
   /**
    * auto run after initialization
    * @private
    */
   _autoRun() {
-    this.isReady = true;
+    this.isInited = true;
 
     // init plugins
     for (let id in this.pluginList) {
@@ -464,7 +513,7 @@ class VConsole {
     }
     this.pluginList[plugin.id] = plugin;
     // init plugin only if vConsole is ready
-    if (this.isReady) {
+    if (this.isInited) {
       this._initPlugin(plugin);
       // if it's the first plugin, show it by default
       if (this.tabList.length == 1) {
@@ -492,7 +541,7 @@ class VConsole {
     plugin.trigger('remove');
     // the plugin will not be initialized before vConsole is ready,
     // so the plugin does not need to handle DOM-related actions in this case
-    if (this.isReady) {
+    if (this.isInited) {
       let $tabbar = $.one('#__vc_tab_' + pluginID);
       $tabbar && $tabbar.parentNode.removeChild($tabbar);
       // remove topbar
@@ -533,6 +582,9 @@ class VConsole {
    * @public
    */
   show() {
+    if (!this.isInited) {
+      return;
+    }
     let that = this;
     // before show console panel,
     // trigger a transitionstart event to make panel's property 'display' change from 'none' to 'block'
@@ -549,10 +601,13 @@ class VConsole {
   }
 
   /**
-   * hide console paneldocument.body.scrollTop
+   * hide console panel
    * @public
    */
   hide() {
+    if (!this.isInited) {
+      return;
+    }
     $.removeClass(this.$dom, 'vc-toggle');
     this._triggerPluginsEvent('hideConsole');
 
@@ -569,6 +624,9 @@ class VConsole {
    * @public
    */
   showTab(tabID) {
+    if (!this.isInited) {
+      return;
+    }
     let $logbox = $.one('#__vc_log_' + tabID);
     // set actived status
     $.removeClass($.all('.vc-tab', this.$dom), 'vc-actived');
