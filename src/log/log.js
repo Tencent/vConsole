@@ -146,7 +146,6 @@ class VConsoleLogTab extends VConsolePlugin {
    * @public
    */
   onRemove() {
-    // recover original console
     window.console.log = this.console.log;
     window.console.info = this.console.info;
     window.console.warn = this.console.warn;
@@ -188,7 +187,9 @@ class VConsoleLogTab extends VConsolePlugin {
 
   scrollToBottom() {
     let $content = $.one('.vc-content');
-    $content.scrollTop = $content.scrollHeight - $content.offsetHeight;
+    if ($content) {
+      $content.scrollTop = $content.scrollHeight - $content.offsetHeight;
+    }
   }
 
   /**
@@ -196,12 +197,15 @@ class VConsoleLogTab extends VConsolePlugin {
    * @private
    */
   mockConsole() {
+    const that = this;
     const methodList = ['log', 'info', 'warn', 'debug', 'error'];
 
     if (!window.console) {
       window.console = {};
     } else {
-      methodList.map(method => this.console[method] = window.console[method]);
+      methodList.map(function(method) {
+        that.console[method] = window.console[method];
+      });
     }
 
     methodList.map(method => {

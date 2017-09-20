@@ -651,6 +651,23 @@ class VConsole {
     this._triggerPluginEvent(this.activedTab, 'show');
   }
 
+  /**
+   * uninstall vConsole
+   * @public
+   */
+  destroy() {
+    if (!this.isInited) {
+      return;
+    }
+    // remove plugins
+    let IDs = Object.keys(this.pluginList);
+    for (let i = IDs.length - 1; i >= 0; i--) {
+      this.removePlugin(IDs[i]);
+    }
+    // remove DOM
+    this.$dom.parentNode.removeChild(this.$dom);
+  }
+
 } // END class
 
 export default VConsole;
