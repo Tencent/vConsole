@@ -19,6 +19,10 @@ $dev_mode = isset($_GET['dev_mode']) ? $_GET['dev_mode'] : '0';
   <?php if ($dev_mode == '1') { ?>
     <!-- 引入vConsole的JS库 -->
     <script src="../dist/vconsole.min.js"></script>
+    <script>
+      // 初始化vConsole
+      window.vConsole = new window.VConsole();
+    </script>
   <?php } ?>
 </head>
 

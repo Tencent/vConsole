@@ -31,13 +31,16 @@
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_log_sys">打印到系统面板</a>
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_ajax_get">发起AJAX(GET)</a>
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_ajax_post">发起AJAX(POST)</a>
+
+    <a href="javascript:;" class="weui_btn weui_btn_warn js_btn_destroy">销毁vConsole</a>
   </div>
   <div class="weui_toptips weui_notice" id="js_tips">已打印log</div>
 </body>
 
 <script>
+// 初始化vConsole
 window.vConsole = new window.VConsole({
-  // defaultPlugins: ['system', 'network']
+  // defaultPlugins: ['system', 'network'] // 可以在此设定要默认加载的面板
 });
 
 console.info('欢迎使用 vConsole。vConsole 是一个由微信公众平台前端团队研发的 Web 前端开发者面板，可用于展示 console 日志，方便开发、调试。');
@@ -80,6 +83,13 @@ $('.js_btn_ajax_post').on('tap', function(e) {
     console.log(resp);
   });
   showTips();
+});
+$('.js_btn_destroy').on('tap', function(e) {
+  if ($(this).hasClass('weui_btn_disabled')) {
+    return false;
+  }
+  $(this).addClass('weui_btn_disabled');
+  window.vConsole.destroy();
 });
 
 // 用于页面内展示顶部tips
