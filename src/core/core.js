@@ -403,6 +403,7 @@ class VConsole {
    */
   _initPlugin(plugin) {
     let that = this;
+    plugin.setVConsole(this);
     // start init
     plugin.trigger('init');
     // render tab (if it is a tab plugin then it should has tab-related events)
