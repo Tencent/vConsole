@@ -2,10 +2,34 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### V3.0.0-dev (2017-xx-xx)
 
-- [FEATRUE] Require manual init vConsole `var vConsole = new VConsole()`.
-- [FEATURE] Support `Query String Parameters` and `Form Data` in Network tab.
-- [IMPROVE] Auto format JSON response in Network tab.
+Basic:
+
+- [FEATRUE] Require manual init vConsole `var vConsole = new VConsole(option)`.
+- [FEATRUE] Add configuaration `vConsole.option`, which can be set when `new VConsole` or `setOption(key, value)`.
+- [FEATURE] Support for custom loading of default built-in plugins by using `defaultPlugins` in the above option.
+- [FEATURE] Add `setOption(key, value)` method.
 - [IMPROVE] Support CSP rule `unsafe-eval`.
+- [IMPROVE] Optimize `font-size` when `initial-scale < 1`.
+
+Log plugin:
+
+- [FEATURE] Support `maxLogNumber` option to limit maximum log number.
+- [FIX] Fix the crash caused by printing large objects.
+- [IMPROVE] Only the logs written as `console.log('[system]', xxx)` will be shown in System tab, so `console.log('[system] xxx')` will be shown in default log tab.
+
+Network plugin:
+
+- [FEATURE] Support `Query String Parameters` and `Form Data`.
+- [IMPROVE] Auto format JSON response.
+- [FIX] Fix bug that XHR status is always "Pending" when using 3rd HTTP libraries.
+
+Plugins:
+
+- [FEATURE] Plugins can get vConsole instance by `this.vConsole` on/after `init` event is called.
+- [FEATURE] Add `updateOption` event to detect `vConsole.option` changes.
+- [FEATURE] Add Element tab as a built-in plugin.
+- [FEATURE] Add Storage tab as a built-in plugin.
+
 
 
 ## V2.x.x

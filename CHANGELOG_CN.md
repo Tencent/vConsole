@@ -1,5 +1,39 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### V3.0.0-dev (2017-xx-xx)
+
+基础：
+
+- 【特性】需要手动初始化 vConsole：`var vConsole = new VConsole(option)`。
+- 【特性】新增 `vConsole.option` 配置项，配置项可在实例化时传入，也可通过 `vConsole.setOption(key, value)` 更新。
+- 【特性】支持自定义按需加载内置插件，配置项为 `option` 里的 `defaultPlugins` 字段。
+- 【优化】支持 CSP 规则 `unsafe-eval`。
+- 【优化】优化 `initial-scale < 1` 时的 `font-size`。
+
+Log 插件：
+
+- 【特性】支持 `maxLogNumber` 配置项，以控制面板内展示的最多日志数量。
+- 【修复】修复打印大型复杂 object 时引起的崩溃问题。
+- 【优化】只有 `console.log('[system]', xxx)` 这种将 `[system]` 放在第一位参数的写法，才会输出到 System 面板。因此可以规避 `[foo] bar` 这类格式无法正确打印到 Log 面板的问题。
+
+Network 插件：
+
+- 【特性】新增 `Query String Parameters` 和 `Form Data` 两栏，以展示 GET 和 POST 的参数。
+- 【优化】自动格式化展示 JSON 类型的回包。
+- 【修复】修复 status 一直为 "Pending" 的问题。这种问题一般是引入了第三方的 HTTP 库而引起的。
+
+
+插件模块：
+
+- 【特性】在 `init` 事件触发时/之后，插件实例内可以通过 `this.vConsole` 来获取到 vConsole 的对象实例。
+- 【特性】新增 `updateOption` 事件，以监测 `vConsole.option` 的更新。
+- 【特性】新增 Element 面板作为默认的内置插件。
+- 【特性】新增 Storage 面板作为默认的内置插件。
+
+
+
+## V2.x.x
+
 #### V2.5.2 (2016-12-27)
 
 - 【修复】捕获执行自定义命令行时发生的错误。
