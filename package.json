@@ -6,7 +6,7 @@
   "main": "dist/vconsole.min.js",
   "scripts": {
     "test": "mocha",
-    "dist": "webpack && npm test"
+    "dist": "webpack"
   },
   "keywords": [
     "console",
