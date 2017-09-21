@@ -23,18 +23,41 @@ npm install vconsole
 
 ```html
 <head>
-	<script src="path/to/vconsole.min.js"></script>
+  <script src="path/to/vconsole.min.js"></script>
+  <script>
+    var vc = new VConsole();
+  </script>
 </head>
 ```
 
 (2) 如果使用了 AMD/CMD 规范，可在 module 内使用 `require()` 引入模块：
 
 ```javascript
-var vConsole = require('path/to/vconsole.min.js');
+var VConsole = require('path/to/vconsole.min.js');
+var vc = new VConsole();
 ```
+
+请注意，`VConsole` 只是 vConsole 的原型，而非一个已实例化的对象。所以在手动 `new` 实例化之前，vConsole 不会被插入到网页中。
 
 
 ## 使用方法
+
+### 初始化 & 配置
+
+引入后, 需要手动初始化 vConsole：
+
+```javascript
+var vc = new VConsole(option);
+```
+
+`option` 是一个选填的 object 对象，具体配置定义请参阅 [公共属性及方法](./public_properties_methods_CN.md)。
+
+使用 `setOption()` 来更新 `option`：
+
+```javascript
+vc.setOption('maxLogNumber', 5000);
+// 或者：
+vc.setOption({maxLogNumber: 5000});
 
 
 ### 打印日志
@@ -88,24 +111,15 @@ console.log('UserID:', uid); // 打印出 UserID: 233
 
 ### 特殊格式
 
-支持使用 `[default|system|...]` 的格式将 log 输出到指定 tab 面板：
+支持使用 `[system]` 作为第一个参数，来将 log 输出到 System 面板：
 
 ```javascript
-// [xxx] 须写在 log 的最开始
-console.log('[system]', 'foo');
-console.log('[system] bar');
-// System 面板将打印出两行，分别为 foo 和 bar
-```
-
-目前支持的 tab 面板有：
-
-```
-[default] Log 日志（默认）
-[system]  System 系统
+console.log('[system]', 'foo'); // 'foo' 会输出到 System 面板
+console.log('[system] bar'); // 这行日志会输出到 Log 面板而非 System 面板
 ```
 
 
-## 其他
+## 内置插件
 
 ### Network 网络
 

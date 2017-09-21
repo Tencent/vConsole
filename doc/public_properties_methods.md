@@ -16,8 +16,33 @@ The current version of vConsole.
 Example:
 
 ```javascript
-vConsole.version // => "2.1.0"
+vConsole.version // => "3.0.0"
 ```
+
+
+### vConsole.option
+
+A configuration object.
+
+- Writable
+- Type: object
+
+Key            | Type    | Optional | Default value                               | Description
+-------------- | ------- | -------- | ------------------------------------------- | -------------------
+defaultPlugins | Array   | true     | ['system', 'network', 'element', 'storage'] | Listed built-in plugins will be inited and loaded into vConsole. 
+maxLogNumber   | Number  | true     | 1000                                        | Overflow logs will be removed from log tabs.
+
+Example:
+
+```javascript
+// get
+vConsole.option // => {...}
+// set
+vConsole.setOption('maxLogNumber', 5000);
+// or:
+vConsole.setOption({maxLogNumber: 5000});
+```
+
 
 
 ### vConsole.activedTab
@@ -58,6 +83,26 @@ vConsole's HTML element.
 
 
 ## Methods
+
+
+### vConsole.setOption(keyOrObj[, value])
+
+Update `vConsole.option`.
+
+##### Parameters:
+- (required) keyOrObj: The key of option, or a key-value object.
+- (optional) value: The value of an option.
+
+##### Return:
+- None
+
+##### Example:
+
+```javascript
+vConsole.setOption('maxLogNumber', 5000);
+// or:
+vConsole.setOption({maxLogNumber: 5000});
+```
 
 
 ### vConsole.addPlugin(plugin)

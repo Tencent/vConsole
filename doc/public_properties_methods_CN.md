@@ -16,7 +16,31 @@ vConsole 提供一些公共属性字段、函数方法，以便开发插件。
 例子：
 
 ```javascript
-vConsole.version // => "2.1.0"
+vConsole.version // => "3.0.0"
+```
+
+
+### vConsole.option
+
+配置项。
+
+- 可写
+- 类型：object
+
+键名           | 类型     | 可选     | 默认值                                       | 描述
+-------------- | ------- | -------- | ------------------------------------------- | -------------------
+defaultPlugins | Array   | true     | ['system', 'network', 'element', 'storage'] | 需要自动初始化并加载的内置插件。 
+maxLogNumber   | Number  | true     | 1000                                        | 超出上限的日志会被自动清除。
+
+例子：
+
+```javascript
+// get
+vConsole.option // => {...}
+// set
+vConsole.setOption('maxLogNumber', 5000);
+// 或者：
+vConsole.setOption({maxLogNumber: 5000});
 ```
 
 
@@ -58,6 +82,26 @@ vConsole 的 HTML element。
 
 
 ## 方法
+
+
+### vConsole.setOption(keyOrObj[, value])
+
+更新 `vConsole.option` 配置项。
+
+##### 参数：
+- (required) keyOrObj: 配置项的 key 值，或直接传入 key-value 格式的 object 对象。
+- (optional) value: 配置项的 value 值。
+
+##### 返回：
+- 无
+
+##### 例子：
+
+```javascript
+vConsole.setOption('maxLogNumber', 5000);
+// 或者：
+vConsole.setOption({maxLogNumber: 5000});
+```
 
 
 ### vConsole.addPlugin(plugin)

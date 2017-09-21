@@ -23,18 +23,45 @@ Then save `dist/vconsole.min.js` to your project.
 
 ```html
 <head>
-	<script src="path/to/vconsole.min.js"></script>
+  <script src="path/to/vconsole.min.js"></script>
+  <script>
+    var vc = new VConsole();
+  </script>
 </head>
 ```
 
 (2) Under AMD/CMD rule, use `require()` to import vConsole.
 
 ```javascript
-var vConsole = require('path/to/vconsole.min.js');
+var VConsole = require('path/to/vconsole.min.js');
+var vc = new VConsole();
 ```
+
+Notice that `VConsole` is the prototype of vConsole. So vConsole panel will not be inserted into your page until you `new` it manually.
 
 
 ## Usage
+
+### Initialization & Configuaration
+
+After imported, vConsole should be inited manually:
+
+```javascript
+var vc = new VConsole(option);
+```
+
+`option` is an optional object.
+
+See [Public Properties & Methods](./public_properties_methods.md) for definition.
+
+Use `setOption()` to update `option`:
+
+```javascript
+vc.setOption('maxLogNumber', 5000);
+// or:
+vc.setOption({maxLogNumber: 5000});
+```
+
 
 ### Print logs
 
@@ -89,24 +116,15 @@ console.log('UserID:', uid); // UserID: 233
 
 ### Special format
 
-Use `[default|system|...]` string to print logs to specific tab:
+Use `[system]` as the first parameter to print logs to System tab:
 
 ```javascript
-// [xxx] must be at the beginning of a log
-console.log('[system]', 'foo');
-console.log('[system] bar');
-// foo & bar will be printed to system tab
-```
-
-Supported tabs:
-
-```
-[default] Log tab (default)
-[system]  System tab
+console.log('[system]', 'foo'); // 'foo' will be printed to System tab
+console.log('[system] bar'); // this log will show in Log tab instead of System tab
 ```
 
 
-## Others
+## Built-in Plugins
 
 ### Network
 

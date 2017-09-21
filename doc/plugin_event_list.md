@@ -224,4 +224,21 @@ myPlugin.on('hideConsole', function() {
 ```
 
 
+## updateOption
+
+Trigger when `vConsole.setOption()` is called.
+
+##### Callback Arguments:
+
+- none
+
+##### Example:
+
+```javascript
+myPlugin.on('updateOption', function() {
+	// do something
+});
+```
+
+
 [Back to Index](./a_doc_index.md)

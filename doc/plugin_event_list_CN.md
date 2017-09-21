@@ -233,4 +233,21 @@ myPlugin.on('hideConsole', function() {
 ```
 
 
+## updateOption
+
+当 `vConsole.setOption()` 被调用时触发
+
+##### Callback 参数：
+
+- none
+
+##### 例子:
+
+```javascript
+myPlugin.on('updateOption', function() {
+	// do something
+});
+```
+
+
 [返回索引](./a_doc_index_CN.md)
