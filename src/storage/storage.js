@@ -10,10 +10,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 */
 
 /**
- * vConsole Resouces Plugin
+ * vConsole Storage Plugin
  */
 
-import './style.less';
 import VConsolePlugin from '../lib/plugin.js';
 import tplTabbox from './tabbox.html';
 import tplList from './list.html';
@@ -38,6 +37,31 @@ class VConsoleStorageTab extends VConsolePlugin {
     callback(this.$tabbox);
   }
 
+  onAddTopBar(callback) {
+    let that = this;
+    let types = ['Cookies', 'LocalStorage'];
+    let btnList = [];
+    for (let i = 0; i < types.length; i++) {
+      btnList.push({
+        name: types[i],
+        data: {
+          type: types[i].toLowerCase()
+        },
+        className: '',
+        onClick: function() {
+          if (!$.hasClass(this, 'vc-actived')) {
+            that.currentType = this.dataset.type;
+            that.renderStorage();
+          } else {
+            return false;
+          }
+        }
+      });
+    }
+    btnList[0].className = 'vc-actived';
+    callback(btnList);
+  }
+
   onAddTool(callback) {
     let that = this;
     let toolList = [{
@@ -57,19 +81,15 @@ class VConsoleStorageTab extends VConsolePlugin {
   }
 
   onReady() {
-    let that = this;
+    // do nothing
+  }
 
-    $.delegate($.one('.vc-sub-tabbar', that.$tabbox), 'click', '.vc-subtab', function(e) {
-      $.removeClass($.all('.vc-subtab', that.$tabbox), 'vc-actived');
-      $.addClass(this, 'vc-actived');
-
-      that.currentType = this.dataset.type;
-      that.renderStorage();
-    });
-
-    // show default list
-    this.currentType = 'cookies';
-    this.renderStorage();
+  onShow() {
+    // show default panel
+    if (this.currentType == '') {
+      this.currentType = 'cookies';
+      this.renderStorage();
+    }
   }
 
   clearLog() {
