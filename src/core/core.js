@@ -29,6 +29,7 @@ import VConsoleDefaultPlugin from '../log/default.js';
 import VConsoleSystemPlugin from '../log/system.js';
 import VConsoleNetworkPlugin from '../network/network.js';
 import VConsoleElementPlugin from '../element/element.js';
+import VConsoleStoragePlugin from '../storage/storage.js';
 
 const VCONSOLE_ID = '#__vconsole';
 
@@ -36,7 +37,7 @@ class VConsole {
 
   constructor(opt) {
     if (!!$.one(VCONSOLE_ID)) {
-      console.warn('vConsole is already exists.');
+      console.debug('vConsole is already exists.');
       return;
     }
     let that = this;
@@ -363,13 +364,16 @@ class VConsole {
     const plugins = {
       'system': {proto: VConsoleSystemPlugin, name: 'System'},
       'network': {proto: VConsoleNetworkPlugin, name: 'Network'},
-      'element': {proto: VConsoleElementPlugin, name: 'Element'}
+      'element': {proto: VConsoleElementPlugin, name: 'Element'},
+      'storage': {proto: VConsoleStoragePlugin, name: 'Storage'}
     };
     if (!!list && tool.isArray(list)) {
       for (let i=0; i<list.length; i++) {
         let tab = plugins[list[i]];
         if (!!tab) {
           this.addPlugin(new tab.proto(list[i], tab.name));
+        } else {
+          console.debug('Unrecognized default plugin ID:', list[i]);
         }
       }
     }
@@ -510,7 +514,7 @@ class VConsole {
   addPlugin(plugin) {
     // ignore this plugin if it has already been installed
     if (this.pluginList[plugin.id] !== undefined) {
-      console.warn('Plugin ' + plugin.id + ' has already been added.');
+      console.debug('Plugin ' + plugin.id + ' has already been added.');
       return false;
     }
     this.pluginList[plugin.id] = plugin;
@@ -536,7 +540,7 @@ class VConsole {
     let plugin = this.pluginList[pluginID];
     // skip if is has not been installed
     if (plugin === undefined) {
-      console.warn('Plugin ' + pluginID + ' does not exist.');
+      console.debug('Plugin ' + pluginID + ' does not exist.');
       return false;
     }
     // trigger `remove` event before uninstall
