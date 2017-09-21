@@ -32,8 +32,10 @@ class VConsoleLogTab extends VConsolePlugin {
     this.isShow = false;
     this.$tabbox = null;
     this.console = {};
-    this.logList = [];
+    this.logList = []; // save logs before ready
     this.isInBottom = true; // whether the panel is in the bottom
+    this.maxLogNumber = 1000;
+    this.logNumber = 0;
 
     this.mockConsole();
   }
@@ -45,6 +47,8 @@ class VConsoleLogTab extends VConsolePlugin {
    */
   onInit() {
     this.$tabbox = $.render(this.tplTabbox, {});
+    this.maxLogNumber = this.vConsole.option.maxLogNumber || this.maxLogNumber;
+    this.maxLogNumber = Math.max(1, this.maxLogNumber);
   }
 
   /**
@@ -347,6 +351,14 @@ class VConsoleLogTab extends VConsolePlugin {
 
     // render to panel
     $.one('.vc-log', this.$tabbox).insertAdjacentElement('beforeend', $line);
+
+    // remove overflow logs
+    this.logNumber++;
+    if (this.logNumber > this.maxLogNumber) {
+      let $firstItem = $.one('.vc-item', this.$tabbox);
+      $firstItem.parentNode.removeChild($firstItem);
+      this.logNumber--;
+    }
 
     // scroll to bottom if it is in the bottom before
     if (this.isInBottom) {
