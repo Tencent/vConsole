@@ -27,6 +27,7 @@ class VConsoleElementsTab extends VConsolePlugin {
     super(...args);
     let that = this;
 
+    that.isInited = false;
     that.node = {};
     that.$tabbox = $.render(tplTabbox, {});
     that.nodes = [];
@@ -87,8 +88,11 @@ class VConsoleElementsTab extends VConsolePlugin {
     callback(toolList);
   }
 
-  onReady() {
-    let that = this;
+  onShow() {
+    if (this.isInited) {
+      return;
+    }
+    this.isInited = true;
 
     this.node = this.getNode(document.documentElement);
     // console.log(this.node);
