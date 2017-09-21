@@ -1,0 +1,6 @@
+<span class="vcelm-node">&lt;{{node.tagName.toLowerCase()}}{{if (node.className || node.attributes.length)}}
+  <i class="vcelm-k">
+    {{for (var i=0; i<node.attributes.length; i++)}}
+      {{if (node.attributes[i].value !== '')}}
+        {{node.attributes[i].name}}="<i class="vcelm-v">{{node.attributes[i].value}}</i>"{{else}}
+        {{node.attributes[i].name}}{{/if}}{{/for}}</i>{{/if}}&gt;</span>

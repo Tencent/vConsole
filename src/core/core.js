@@ -28,6 +28,7 @@ import tplToolItem from './tool_item.html';
 import VConsoleDefaultPlugin from '../log/default.js';
 import VConsoleSystemPlugin from '../log/system.js';
 import VConsoleNetworkPlugin from '../network/network.js';
+import VConsoleElementPlugin from '../element/element.js';
 
 const VCONSOLE_ID = '#__vconsole';
 
@@ -361,7 +362,8 @@ class VConsole {
     const list = this.option.defaultPlugins;
     const plugins = {
       'system': {proto: VConsoleSystemPlugin, name: 'System'},
-      'network': {proto: VConsoleNetworkPlugin, name: 'Network'}
+      'network': {proto: VConsoleNetworkPlugin, name: 'Network'},
+      'element': {proto: VConsoleElementPlugin, name: 'Element'}
     };
     if (!!list && tool.isArray(list)) {
       for (let i=0; i<list.length; i++) {

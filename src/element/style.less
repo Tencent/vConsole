@@ -1,0 +1,67 @@
+/* color */
+.vcelm-node {
+  color: #183691;
+}
+.vcelm-k {
+  color: #0086B3;
+}
+.vcelm-v {
+  color: #905;
+}
+
+/* layout */
+.vcelm-l {
+  padding-left: 8px;
+  position: relative;
+  word-wrap: break-word;
+  line-height: 1;
+}
+/*.vcelm-l.vcelm-noc {
+  padding-left: 0;
+}*/
+.vcelm-l.vc-toggle > .vcelm-node {
+  display: block;
+}
+.vcelm-l .vcelm-node:active {
+  background-color: rgba(0,0,0,0.15);
+}
+.vcelm-l.vcelm-noc .vcelm-node:active {
+  background-color: transparent;
+}
+.vcelm-t {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* level */
+.vcelm-l .vcelm-l {
+  display: none;
+}
+.vcelm-l.vc-toggle > .vcelm-l {
+  margin-left: 4px;
+  display: block;
+}
+
+
+/* arrow */
+.vcelm-l:before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 6px;
+  left: 3px;
+  width: 0;
+  height: 0;
+  border: transparent solid 3px;
+  border-left-color: #000;
+}
+.vcelm-l.vc-toggle:before {
+  display: block;
+  top: 6px;
+  left: 0;
+  border-top-color: #000;
+  border-left-color: transparent;
+}
+.vcelm-l.vcelm-noc:before {
+  display: none;
+}
