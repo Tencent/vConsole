@@ -47,7 +47,7 @@ class VConsole {
 
     this.isInited = false;
     this.option = {
-      defaultPlugins: ['system', 'network']
+      defaultPlugins: ['system', 'network', 'element', 'storage']
     };
 
     this.activedTab = '';
