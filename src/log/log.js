@@ -20,6 +20,8 @@ import tplItem from './item.html';
 import tplFold from './item_fold.html';
 import tplFoldCode from './item_fold_code.html';
 
+const DEFAULT_MAX_LOG_NUMBER = 1000;
+
 class VConsoleLogTab extends VConsolePlugin {
 
   constructor(...args) {
@@ -34,7 +36,7 @@ class VConsoleLogTab extends VConsolePlugin {
     this.console = {};
     this.logList = []; // save logs before ready
     this.isInBottom = true; // whether the panel is in the bottom
-    this.maxLogNumber = 1000;
+    this.maxLogNumber = DEFAULT_MAX_LOG_NUMBER;
     this.logNumber = 0;
 
     this.mockConsole();
@@ -47,8 +49,7 @@ class VConsoleLogTab extends VConsolePlugin {
    */
   onInit() {
     this.$tabbox = $.render(this.tplTabbox, {});
-    this.maxLogNumber = this.vConsole.option.maxLogNumber || this.maxLogNumber;
-    this.maxLogNumber = Math.max(1, this.maxLogNumber);
+    this.updateMaxLogNumber();
   }
 
   /**
@@ -172,6 +173,32 @@ class VConsoleLogTab extends VConsolePlugin {
   onShowConsole() {
     if (this.isInBottom == true) {
       this.scrollToBottom();
+    }
+  }
+
+  onUpdateOption() {
+    if (this.vConsole.option.maxLogNumber != this.maxLogNumber) {
+      this.updateMaxLogNumber();
+      this.limitMaxLogs();
+    }
+  }
+
+  updateMaxLogNumber() {
+    this.maxLogNumber = this.vConsole.option.maxLogNumber || DEFAULT_MAX_LOG_NUMBER;
+    this.maxLogNumber = Math.max(1, this.maxLogNumber);
+  }
+
+  limitMaxLogs() {
+    if (!this.isReady) {
+      return;
+    }
+    while (this.logNumber > this.maxLogNumber) {
+      let $firstItem = $.one('.vc-item', this.$tabbox);
+      if (!$firstItem) {
+        break;
+      }
+      $firstItem.parentNode.removeChild($firstItem);
+      this.logNumber--;
     }
   }
 
@@ -354,11 +381,7 @@ class VConsoleLogTab extends VConsolePlugin {
 
     // remove overflow logs
     this.logNumber++;
-    if (this.logNumber > this.maxLogNumber) {
-      let $firstItem = $.one('.vc-item', this.$tabbox);
-      $firstItem.parentNode.removeChild($firstItem);
-      this.logNumber--;
-    }
+    this.limitMaxLogs();
 
     // scroll to bottom if it is in the bottom before
     if (this.isInBottom) {

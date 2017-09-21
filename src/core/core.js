@@ -659,6 +659,24 @@ class VConsole {
   }
 
   /**
+   * update option(s)
+   * @public
+   */
+  setOption(keyOrObj, value) {
+    if (tool.isString(keyOrObj)) {
+      this.option[keyOrObj] = value;
+      this._triggerPluginsEvent('updateOption');
+    } else if (tool.isObject(keyOrObj)) {
+      for (let k in keyOrObj) {
+        this.option[k] = keyOrObj[k];
+      }
+      this._triggerPluginsEvent('updateOption');
+    } else {
+      console.debug('The first parameter of vConsole.setOption() must be a string or an object.');
+    }
+  }
+
+  /**
    * uninstall vConsole
    * @public
    */
