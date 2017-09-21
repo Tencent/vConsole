@@ -256,7 +256,7 @@ class VConsoleLogTab extends VConsolePlugin {
 
     // check `[default]` format
     let shouldBeHere = true;
-    let pattern = /^\[(\w+)\] ?/i;
+    let pattern = /^\[(\w+)\]$/i;
     let targetTabName = '';
     if (tool.isString(logs[0])) {
       let match = logs[0].match(pattern);
@@ -264,7 +264,6 @@ class VConsoleLogTab extends VConsolePlugin {
         targetTabName = match[1].toLowerCase();
       }
     }
-    // this.printOriginLog({logType:'info', logs:['!!!', targetTabName, this.id, '['+logs.join(' ')+']']});
     if (targetTabName) {
       shouldBeHere = (targetTabName == this.id);
     } else if (this.allowUnformattedLog == false) {
