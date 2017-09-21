@@ -18,7 +18,6 @@ class VConsolePlugin {
   constructor(id, name = 'newPlugin') {
     this.id = id;
     this.name = name;
-    this.vConsole = null;
 
     this.eventList = {};
   }
@@ -43,8 +42,14 @@ class VConsolePlugin {
     this._name = value;
   }
 
-  setVConsole(obj) {
-    this.vConsole = obj;
+  get vConsole() {
+    return this._vConsole || undefined;
+  }
+  set vConsole(value) {
+    if (!value) {
+      throw 'vConsole cannot be empty';
+    }
+    this._vConsole = value;
   }
 
   /**
