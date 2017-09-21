@@ -10,7 +10,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 */
 
 /**
- * vConsole Default Tab
+ * vConsole Network Tab
  */
 
 import $ from '../lib/query.js';
@@ -63,11 +63,14 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
     // expend group item
     $.delegate($.one('.vc-log', this.$tabbox), 'click', '.vc-group-preview', function(e) {
+      let xhrID = this.dataset.xhrid;
       let $group = this.parentNode;
       if ($.hasClass($group, 'vc-actived')) {
         $.removeClass($group, 'vc-actived');
+        that.updateRequest(xhrID, {actived: false});
       } else {
         $.addClass($group, 'vc-actived');
+        that.updateRequest(xhrID, {actived: true});
       }
       e.preventDefault();
     });
@@ -174,6 +177,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
     // update dom
     let domData = {
+      id: id,
       url: item.url,
       status: item.status,
       method: item.method || '-',
@@ -181,7 +185,8 @@ class VConsoleNetworkTab extends VConsolePlugin {
       header: item.header || null,
       getData: item.getData || null,
       postData: item.postData || null,
-      response: null
+      response: null,
+      actived: !!item.actived
     };
     switch (item.responseType) {
       case '':
@@ -196,18 +201,22 @@ class VConsoleNetworkTab extends VConsolePlugin {
             // not a JSON string
             domData.response = tool.htmlEncode(item.response);
           }
-        } else {
+        } else if (typeof item.response != 'undefined') {
           domData.response = Object.prototype.toString.call(item.response);
         }
         break;
       case 'json':
-        domData.response = JSON.stringify(item.response, null, 1);
+        if (typeof item.response != 'undefined') {
+          domData.response = JSON.stringify(item.response, null, 1);
+        }
         break;
       case 'blob':
       case 'document':
       case 'arraybuffer':
       default:
-        domData.response = Object.prototype.toString.call(item.response);
+        if (typeof item.response != 'undefined') {
+          domData.response = Object.prototype.toString.call(item.response);
+        }
         break;
     }
     if (item.readyState == 0 || item.readyState == 1) {
@@ -264,6 +273,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
           method = args[0],
           url = args[1],
           id = that.getUniqueID();
+      let timer = null;
 
       // may be used by other functions
       XMLReq._requestID = id;
@@ -272,7 +282,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
       // mock onreadystatechange
       let _onreadystatechange = XMLReq.onreadystatechange || function() {};
-      XMLReq.onreadystatechange = function() {
+      let onreadystatechange = function() {
 
         let item = that.reqList[id] || {};
 
@@ -283,10 +293,14 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
         if (XMLReq.readyState == 0) {
           // UNSENT
-          item.startTime = (+new Date());
+          if (!item.startTime) {
+            item.startTime = (+new Date());
+          }
         } else if (XMLReq.readyState == 1) {
           // OPENED
-          item.startTime = (+new Date());
+          if (!item.startTime) {
+            item.startTime = (+new Date());
+          }
         } else if (XMLReq.readyState == 2) {
           // HEADERS_RECEIVED
           item.header = {};
@@ -305,9 +319,12 @@ class VConsoleNetworkTab extends VConsolePlugin {
           // LOADING
         } else if (XMLReq.readyState == 4) {
           // DONE
+          clearInterval(timer);
           item.endTime = +new Date(),
           item.costTime = item.endTime - (item.startTime || item.endTime);
           item.response = XMLReq.response;
+        } else {
+          clearInterval(timer);
         }
 
         if (!XMLReq._noVConsole) {
@@ -315,6 +332,17 @@ class VConsoleNetworkTab extends VConsolePlugin {
         }
         return _onreadystatechange.apply(XMLReq, arguments);
       };
+      XMLReq.onreadystatechange = onreadystatechange;
+
+      // some 3rd libraries will change XHR's default function
+      // so we use a timer to avoid lost tracking of readyState
+      let preState = -1;
+      timer = setInterval(function() {
+        if (preState != XMLReq.readyState) {
+          preState = XMLReq.readyState;
+          onreadystatechange.call(XMLReq);
+        }
+      }, 10);
 
       return _open.apply(XMLReq, args);
     };
