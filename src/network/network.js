@@ -63,14 +63,14 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
     // expend group item
     $.delegate($.one('.vc-log', this.$tabbox), 'click', '.vc-group-preview', function(e) {
-      let xhrID = this.dataset.xhrid;
+      let reqID = this.dataset.reqid;
       let $group = this.parentNode;
       if ($.hasClass($group, 'vc-actived')) {
         $.removeClass($group, 'vc-actived');
-        that.updateRequest(xhrID, {actived: false});
+        that.updateRequest(reqID, {actived: false});
       } else {
         $.addClass($group, 'vc-actived');
-        that.updateRequest(xhrID, {actived: true});
+        that.updateRequest(reqID, {actived: true});
       }
       e.preventDefault();
     });
