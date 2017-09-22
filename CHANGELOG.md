@@ -1,6 +1,6 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### V3.0.0-dev (2017-xx-xx)
+#### V3.0.0 (2017-09-22)
 
 Basic:
 

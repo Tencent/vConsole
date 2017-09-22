@@ -25,7 +25,7 @@ Then save `dist/vconsole.min.js` to your project.
 <head>
   <script src="path/to/vconsole.min.js"></script>
   <script>
-    var vc = new VConsole();
+    var vConsole = new VConsole();
   </script>
 </head>
 ```
@@ -34,7 +34,7 @@ Then save `dist/vconsole.min.js` to your project.
 
 ```javascript
 var VConsole = require('path/to/vconsole.min.js');
-var vc = new VConsole();
+var vConsole = new VConsole();
 ```
 
 Notice that `VConsole` is the prototype of vConsole. So vConsole panel will not be inserted into your page until you `new` it manually.
@@ -47,7 +47,7 @@ Notice that `VConsole` is the prototype of vConsole. So vConsole panel will not 
 After imported, vConsole should be inited manually:
 
 ```javascript
-var vc = new VConsole(option);
+var vConsole = new VConsole(option);
 ```
 
 `option` is an optional object.
@@ -57,9 +57,9 @@ See [Public Properties & Methods](./public_properties_methods.md) for definition
 Use `setOption()` to update `option`:
 
 ```javascript
-vc.setOption('maxLogNumber', 5000);
+vConsole.setOption('maxLogNumber', 5000);
 // or:
-vc.setOption({maxLogNumber: 5000});
+vConsole.setOption({maxLogNumber: 5000});
 ```
 
 

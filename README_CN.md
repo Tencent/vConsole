@@ -11,6 +11,8 @@ vConsole
 
 - 查看 console 日志
 - 查看网络请求
+- 查看页面 element 结构
+- 查看 Cookies 和 localStorage
 - 手动执行 JS 命令行
 - 自定义插件
 
@@ -30,8 +32,9 @@ npm install vconsole
 ```html
 <script src="path/to/vconsole.min.js"></script>
 <script>
-console.log('Hello world');
-// 然后点击右下角 vConsole 按钮即可查看到 log
+  // 初始化
+  var vConsole = new VConsole();
+  console.log('Hello world');
 </script>
 ```
 
@@ -67,9 +70,7 @@ vConsole 本体：
 
 ## 插件列表
 
- - [vConsole-resources](https://github.com/WechatFE/vConsole-resources)
  - [vConsole-sources](https://github.com/WechatFE/vConsole-sources)
- - [vConsole-elements](https://github.com/WechatFE/vConsole-elements)
  - [vconsole-webpack-plugin](https://github.com/diamont1001/vconsole-webpack-plugin)
 
 

@@ -25,7 +25,7 @@ npm install vconsole
 <head>
   <script src="path/to/vconsole.min.js"></script>
   <script>
-    var vc = new VConsole();
+    var vConsole = new VConsole();
   </script>
 </head>
 ```
@@ -34,7 +34,7 @@ npm install vconsole
 
 ```javascript
 var VConsole = require('path/to/vconsole.min.js');
-var vc = new VConsole();
+var vConsole = new VConsole();
 ```
 
 请注意，`VConsole` 只是 vConsole 的原型，而非一个已实例化的对象。所以在手动 `new` 实例化之前，vConsole 不会被插入到网页中。
@@ -47,7 +47,7 @@ var vc = new VConsole();
 引入后, 需要手动初始化 vConsole：
 
 ```javascript
-var vc = new VConsole(option);
+var vConsole = new VConsole(option);
 ```
 
 `option` 是一个选填的 object 对象，具体配置定义请参阅 [公共属性及方法](./public_properties_methods_CN.md)。
@@ -55,9 +55,9 @@ var vc = new VConsole(option);
 使用 `setOption()` 来更新 `option`：
 
 ```javascript
-vc.setOption('maxLogNumber', 5000);
+vConsole.setOption('maxLogNumber', 5000);
 // 或者：
-vc.setOption({maxLogNumber: 5000});
+vConsole.setOption({maxLogNumber: 5000});
 
 
 ### 打印日志
