@@ -104,6 +104,25 @@ vConsole.setOption({maxLogNumber: 5000});
 ```
 
 
+### vConsole.destroy()
+
+析构一个 vConsole 对象实例，并将 vConsole 面板从页面中移除。
+
+##### 参数：
+- 无
+
+##### 返回：
+- 无
+
+##### 例子：
+
+```javascript
+var vConsole = new VConsole();
+// ... do something
+vConsole.destroy();
+```
+
+
 ### vConsole.addPlugin(plugin)
 
 添加一个新插件。重名的插件会被忽略。

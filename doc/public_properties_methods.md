@@ -44,7 +44,6 @@ vConsole.setOption({maxLogNumber: 5000});
 ```
 
 
-
 ### vConsole.activedTab
 
 The actived tab's plugin id.
@@ -102,6 +101,25 @@ Update `vConsole.option`.
 vConsole.setOption('maxLogNumber', 5000);
 // or:
 vConsole.setOption({maxLogNumber: 5000});
+```
+
+
+### vConsole.destroy()
+
+Destroy an vConsole instance object and remove vConsole panel from document.
+
+##### Parameters:
+- None
+
+##### Return:
+- None
+
+##### Example:
+
+```javascript
+var vConsole = new VConsole();
+// ... do something
+vConsole.destroy();
 ```
 
 
