@@ -62,13 +62,19 @@ export default function render(tpl, data, toString) {
   codeWrap += '})();';
   // console.log("code:\n"+codeWrap);
   // run code, do NOT use `eval` or `new Function` to avoid `unsafe-eval` CSP rule
+  let scriptList = document.getElementsByTagName('script');
+  let nonce = '';
+  if (scriptList.length > 0) {
+    nonce = scriptList[0].getAttribute('nonce') || ''; // get nonce to avoid `unsafe-inline`
+  }
   let script = document.createElement('SCRIPT');
   script.innerHTML = codeWrap;
+  script.setAttribute('nonce', nonce);
   document.documentElement.appendChild(script);
   let dom = __mito_result;
   document.documentElement.removeChild(script);
   if (!toString) {
-    let e = document.createElement('div');
+    let e = document.createElement('DIV');
     e.innerHTML = dom;
     dom = e.children[0];
   }
