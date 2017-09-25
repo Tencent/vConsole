@@ -74,6 +74,9 @@ class VConsole {
       }
     }
 
+    // add built-in plugins
+    this._addBuiltInPlugins();
+
     // try to init
     let _onload = function() {
       if (that.isInited) {
@@ -82,7 +85,6 @@ class VConsole {
       that._render();
       that._mockTap();
       that._bindEvent();
-      that._addBuiltInPlugins();
       that._autoRun();
     };
     if (document !== undefined) {
@@ -103,6 +105,33 @@ class VConsole {
           }
         };
       _timer = setTimeout(_pollingDocument, 1);
+    }
+  }
+
+  /**
+   * add built-in plugins
+   */
+  _addBuiltInPlugins() {
+    // add default log plugin
+    this.addPlugin(new VConsoleDefaultPlugin('default', 'Log'));
+
+    // add other built-in plugins according to user's config
+    const list = this.option.defaultPlugins;
+    const plugins = {
+      'system': {proto: VConsoleSystemPlugin, name: 'System'},
+      'network': {proto: VConsoleNetworkPlugin, name: 'Network'},
+      'element': {proto: VConsoleElementPlugin, name: 'Element'},
+      'storage': {proto: VConsoleStoragePlugin, name: 'Storage'}
+    };
+    if (!!list && tool.isArray(list)) {
+      for (let i=0; i<list.length; i++) {
+        let tab = plugins[list[i]];
+        if (!!tab) {
+          this.addPlugin(new tab.proto(list[i], tab.name));
+        } else {
+          console.debug('Unrecognized default plugin ID:', list[i]);
+        }
+      }
     }
   }
 
@@ -351,33 +380,6 @@ class VConsole {
       preventMove = false;
     });
   };
-
-  /**
-   * add built-in plugins
-   */
-  _addBuiltInPlugins() {
-    // add default log plugin
-    this.addPlugin(new VConsoleDefaultPlugin('default', 'Log'));
-
-    // add other built-in plugins according to user's config
-    const list = this.option.defaultPlugins;
-    const plugins = {
-      'system': {proto: VConsoleSystemPlugin, name: 'System'},
-      'network': {proto: VConsoleNetworkPlugin, name: 'Network'},
-      'element': {proto: VConsoleElementPlugin, name: 'Element'},
-      'storage': {proto: VConsoleStoragePlugin, name: 'Storage'}
-    };
-    if (!!list && tool.isArray(list)) {
-      for (let i=0; i<list.length; i++) {
-        let tab = plugins[list[i]];
-        if (!!tab) {
-          this.addPlugin(new tab.proto(list[i], tab.name));
-        } else {
-          console.debug('Unrecognized default plugin ID:', list[i]);
-        }
-      }
-    }
-  }
 
   /**
    * auto run after initialization
