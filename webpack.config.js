@@ -34,7 +34,7 @@ module.exports = {
   },
   plugins: [
     new webpack.BannerPlugin([
-        pkg.name + ' v' + pkg.version + ' (' + pkg.homepage + ')',
+        'vConsole v' + pkg.version + ' (' + pkg.homepage + ')',
         '',
         'Tencent is pleased to support the open source community by making vConsole available.',
         'Copyright (C) 2017 THL A29 Limited, a Tencent company. All rights reserved.',
