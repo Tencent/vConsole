@@ -10,10 +10,10 @@
 
 ## 1. 实例化插件
 
-插件原型挂载在 `vConsole.VConsolePlugin` 中：
+插件原型挂载在 `VConsole.VConsolePlugin` 中：
 
 ```javascript
-vConsole.VConsolePlugin(id, name)
+VConsole.VConsolePlugin(id, name)
 ```
 
 - `id` (必填) 字符串，插件的 id，必须保证唯一，不能与其他插件冲突。
@@ -22,7 +22,7 @@ vConsole.VConsolePlugin(id, name)
 所以这一步只需将插件 `new` 出来即可：
 
 ```javascript
-var myPlugin = new vConsole.VConsolePlugin('my_plugin', 'My Plugin');
+var myPlugin = new VConsole.VConsolePlugin('my_plugin', 'My Plugin');
 ```
 
 

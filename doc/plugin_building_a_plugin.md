@@ -13,7 +13,7 @@ Plugin: Building a Plugin
 Make sure you have imported vConsole, then simply `new` an instance of class `VConsolePlugin`:
 
 ```javascript
-vConsole.VConsolePlugin(id, name)
+VConsole.VConsolePlugin(id, name)
 ```
 
 - `id` (required) is an unique string.
@@ -24,7 +24,7 @@ vConsole.VConsolePlugin(id, name)
 Example:
 
 ```javascript
-var myPlugin = new vConsole.VConsolePlugin('my_plugin', 'My Plugin');
+var myPlugin = new VConsole.VConsolePlugin('my_plugin', 'My Plugin');
 ```
 
 
@@ -68,7 +68,7 @@ myPlugin.on('renderTab', function(callback) {
 
 `renderTab` will be triggered while a plugin is being initialized. We simply pass a HTML string to `callback`, then this HTML will be rendered as the content of a new tab, which name is `name`.
 
-To add a tool button, use `addTool event:
+To add a tool button, use `addTool` event:
 
 ```javascript
 myPlugin.on('addTool', function(callback) {
