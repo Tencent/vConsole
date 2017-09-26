@@ -47,8 +47,14 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     code += 'window.__vConsole_cmd_result = undefined;';
     code += 'window.__vConsole_cmd_error = false;';
     code += '}';
+    let scriptList = document.getElementsByTagName('script');
+    let nonce = '';
+    if (scriptList.length > 0) {
+      nonce = scriptList[0].getAttribute('nonce') || ''; // get nonce to avoid `unsafe-inline`
+    }
     let script = document.createElement('SCRIPT');
     script.innerHTML = code;
+    script.setAttribute('nonce', nonce);
     document.documentElement.appendChild(script);
     document.documentElement.removeChild(script);
   }
