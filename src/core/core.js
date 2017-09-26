@@ -254,7 +254,6 @@ class VConsole {
       touchHasMoved = false;
       targetElem = null;
     }, false);
-
   }
   /**
    * bind DOM events
@@ -465,7 +464,7 @@ class VConsole {
       if (!toolList) {
         return;
       }
-      let $defaultBtn = $.one('.vc-tool-last');
+      let $defaultBtn = $.one('.vc-tool-last', that.$dom);
       for (let i=0; i<toolList.length; i++) {
         let item = toolList[i];
         let $item = $.render(tplToolItem, {
