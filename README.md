@@ -73,7 +73,8 @@ Plugin:
 
 ## CDN
 
-- [v2.5.1](https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/2.5.1/vconsole.min.js)
+- [v3.0.0](https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js) (Recommended)
+- [v2.5.2](https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/2.5.2/vconsole.min.js)
 
 
 ## Changelog
