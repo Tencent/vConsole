@@ -7,7 +7,7 @@
 - 【特性】需要手动初始化 vConsole：`var vConsole = new VConsole(option)`。
 - 【特性】新增 `vConsole.option` 配置项，配置项可在实例化时传入，也可通过 `vConsole.setOption(key, value)` 更新。
 - 【特性】支持自定义按需加载内置插件，配置项为 `option` 里的 `defaultPlugins` 字段。
-- 【优化】支持 CSP 规则 `unsafe-eval`。
+- 【优化】支持 CSP 规则 `unsafe-eval` 和 `unsafe-inline`。
 - 【优化】优化 `initial-scale < 1` 时的 `font-size`。
 
 Log 插件：

@@ -8,7 +8,7 @@ Basic:
 - [FEATRUE] Add configuaration `vConsole.option`, which can be set when `new VConsole` or `setOption(key, value)`.
 - [FEATURE] Support for custom loading of default built-in plugins by using `defaultPlugins` in the above option.
 - [FEATURE] Add `setOption(key, value)` method.
-- [IMPROVE] Support CSP rule `unsafe-eval`.
+- [IMPROVE] Support CSP rule `unsafe-eval` and `unsafe-inline`.
 - [IMPROVE] Optimize `font-size` when `initial-scale < 1`.
 
 Log plugin:
