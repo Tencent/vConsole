@@ -17,10 +17,10 @@
     "type": "git",
     "url": "git+https://github.com/Tencent/vConsole.git"
   },
-  "dependencies": {},
   "devDependencies": {
     "babel-core": "^6.7.7",
     "babel-loader": "^6.2.4",
+    "babel-polyfill": "^6.26.0",
     "babel-plugin-add-module-exports": "^0.1.4",
     "babel-preset-es2015": "^6.6.0",
     "babel-preset-stage-3": "^6.5.0",
