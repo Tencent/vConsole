@@ -1,5 +1,11 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### V3.x.x (dev)
+
+- 【特性】新增 `vConsole.showSwitch()` 及 `vConsole.hideSwitch()` 方法，请查阅[公共属性及方法](./doc/public_properties_methods_CN.md)。
+- 【特性】新增 `onReady` 回调方法，位于 `vConsole.option`。
+
+
 #### V3.0.0 (2017-09-27)
 
 基础：
@@ -48,7 +54,7 @@ Network 插件：
 
 #### V2.5.0 (2016-09-28)
 
-- 【特性】新增 `vConsole.removePlugin()` 方法，请查阅[Public Properties & Methods](./doc/public_properties_methods_CN.md)。
+- 【特性】新增 `vConsole.removePlugin()` 方法，请查阅[公共属性及方法](./doc/public_properties_methods_CN.md)。
 - 【特性】新增 `remove` 插件事件，请查阅[插件：Event 事件列表](./doc/plugin_event_list_CN.md)。
 - 【优化】页面不会随着 vConsole 的滚动而滚动。
 - 【修复】修正 `window.onerror()` 内的函数调用笔误。
