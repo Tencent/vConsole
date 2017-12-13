@@ -397,8 +397,17 @@ class VConsole {
       this.showTab(this.tabList[0]);
     }
 
-    if (tool.isFunction(this.option.onReady)) {
-      this.option.onReady.call(this);
+    this.triggerEvent('ready');
+  }
+
+  /**
+   * trigger a vConsole.option event
+   * @protect
+   */
+  triggerEvent(eventName, param) {
+    eventName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1);
+    if (tool.isFunction(this.option[eventName])) {
+      this.option[eventName].apply(this, param);
     }
   }
 
