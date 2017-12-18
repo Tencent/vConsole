@@ -32,6 +32,7 @@
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_ajax_get">发起AJAX(GET)</a>
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_ajax_post">发起AJAX(POST)</a>
 
+    <a href="javascript:;" class="weui_btn weui_btn_default js_btn_clear">清除日志</a>
     <a href="javascript:;" class="weui_btn weui_btn_warn js_btn_hideswitch">隐藏按钮</a>
     <a href="javascript:;" class="weui_btn weui_btn_warn js_btn_destroy">销毁vConsole</a>
   </div>
@@ -91,6 +92,9 @@ $('.js_btn_ajax_post').on('tap', function(e) {
     console.log(resp);
   });
   showTips();
+});
+$('.js_btn_clear').on('tap', function(e) {
+  console.clear();
 });
 $('.js_btn_hideswitch').on('tap', function(e) {
   var that = this;

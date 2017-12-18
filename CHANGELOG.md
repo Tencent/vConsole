@@ -4,6 +4,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 - [FEATURE] Add `vConsole.showSwitch()` and `vConsole.hideSwitch()` methods, see [Public Properties & Methods](./doc/public_properties_methods.md).
 - [FEATURE] Add `onReady` and `onClearLog` callback function to `vConsole.option`.
+- [FEATURE] Auto clear logs when `console.clear()` is called.
 
 
 #### V3.0.0 (2017-09-27)
