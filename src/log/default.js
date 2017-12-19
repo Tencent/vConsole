@@ -77,7 +77,10 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       if (lineNo || colNo) {
         msg += ':' + lineNo + ':' + colNo;
       }
-      that.printLog({logType:'error', logs:[msg], noOrigin:true});
+      //print error stack info
+      let stack = !!error && !!error.stack;
+      let statckInfo = (stack && error.stack.toString()) || '';
+      that.printLog({logType:'error', logs:[msg, statckInfo], noOrigin:true});
       if (tool.isFunction(that.windowOnError)) {
         that.windowOnError.call(window, message, source, lineNo, colNo, error);
       }
@@ -85,7 +88,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
   }
 
   /**
-   * 
+   *
    * @private
    */
   evalCommand(cmd) {
