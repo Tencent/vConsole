@@ -91,6 +91,7 @@ class VConsoleLogTab extends VConsolePlugin {
       global: false,
       onClick: function() {
         that.clearLog();
+        that.vConsole.triggerEvent('clearLog');
       }
     }];
     callback(toolList);
@@ -258,7 +259,7 @@ class VConsoleLogTab extends VConsolePlugin {
 
   clearLog() {
     $.one('.vc-log', this.$tabbox).innerHTML = '';
-    this.vConsole.triggerEvent('clearLog');
+    
   }
 
   /**
