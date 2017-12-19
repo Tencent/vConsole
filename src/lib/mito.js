@@ -45,8 +45,8 @@ export default function render(tpl, data, toString) {
   window.__mito_result = "";
   // remove spaces after switch
   tpl = tpl.replace(/(\{\{ ?switch(.+?)\}\})[\r\n\t ]+\{\{/g, '$1{{');
-  // line breaks
-  tpl = tpl.replace(/^\n/, '').replace(/\n/g, '\\\n');
+  // remove all \r\n
+  tpl = tpl.replace(/\r?\n/g, '');
   // init code
   codeWrap = '(function(){\n';
   code = 'var arr = [];\n';
