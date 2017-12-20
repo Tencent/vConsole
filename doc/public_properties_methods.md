@@ -27,10 +27,11 @@ A configuration object.
 - Writable
 - Type: object
 
-Key            | Type    | Optional | Default value                               | Description
--------------- | ------- | -------- | ------------------------------------------- | -------------------
-defaultPlugins | Array   | true     | ['system', 'network', 'element', 'storage'] | Listed built-in plugins will be inited and loaded into vConsole. 
-maxLogNumber   | Number  | true     | 1000                                        | Overflow logs will be removed from log tabs.
+Key            | Type     | Optional | Default value                               | Description
+-------------- | -------- | -------- | ------------------------------------------- | -------------------
+defaultPlugins | Array    | true     | ['system', 'network', 'element', 'storage'] | Listed built-in plugins will be inited and loaded into vConsole. 
+onReady        | Function | true     |                                             | Trigger after vConsole is inited and default plugins is loaded.
+maxLogNumber   | Number   | true     | 1000                                        | Overflow logs will be removed from log tabs.
 
 Example:
 
@@ -208,6 +209,42 @@ Hide vConsole panel. This method will trigger plugin event `hideConsole`.
 
 ```javascript
 vConsole.hide();
+```
+
+
+### vConsole.showSwitch()
+
+Show vConsole switch button.
+
+##### Parameters:
+- None
+
+##### Return:
+- None
+
+##### Example:
+
+```javascript
+vConsole.showSwitch();
+```
+
+
+### vConsole.hideSwitch()
+
+Hide vConsole switch button. 
+
+After the button is hidden, the user will not be able to call vConsole manually. The button or panel must be shown programmably via `vConsole.showSwitch()` or `vConsole.show()`.
+
+##### Parameters:
+- None
+
+##### Return:
+- None
+
+##### Example:
+
+```javascript
+vConsole.hideSwitch();
 ```
 
 

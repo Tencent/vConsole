@@ -32,6 +32,8 @@
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_ajax_get">发起AJAX(GET)</a>
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_ajax_post">发起AJAX(POST)</a>
 
+    <a href="javascript:;" class="weui_btn weui_btn_default js_btn_clear">清除日志</a>
+    <a href="javascript:;" class="weui_btn weui_btn_warn js_btn_hideswitch">隐藏按钮</a>
     <a href="javascript:;" class="weui_btn weui_btn_warn js_btn_destroy">销毁vConsole</a>
   </div>
   <div class="weui_toptips weui_notice" id="js_tips">已打印log</div>
@@ -41,7 +43,13 @@
 // 初始化vConsole
 window.vConsole = new window.VConsole({
   defaultPlugins: ['system', 'network', 'element', 'storage'], // 可以在此设定要默认加载的面板
-  maxLogNumber: 1000
+  maxLogNumber: 1000,
+  onReady: function() {
+    // console.log('vConsole is ready.');
+  },
+  onClearLog: function() {
+    // console.log('on clearLog');
+  }
 });
 
 console.info('欢迎使用 vConsole。vConsole 是一个由微信公众平台前端团队研发的 Web 前端开发者面板，可用于展示 console 日志，方便开发、调试。');
@@ -85,12 +93,38 @@ $('.js_btn_ajax_post').on('tap', function(e) {
   });
   showTips();
 });
-$('.js_btn_destroy').on('tap', function(e) {
+$('.js_btn_clear').on('tap', function(e) {
+  console.clear();
+});
+$('.js_btn_hideswitch').on('tap', function(e) {
+  var that = this;
   if ($(this).hasClass('weui_btn_disabled')) {
     return false;
   }
   $(this).addClass('weui_btn_disabled');
+  window.vConsole.hideSwitch();
+  var count = 6;
+  var cb = function() {
+    count--;
+    if (count == 0) {
+      window.vConsole.showSwitch();
+      $(that).removeClass('weui_btn_disabled');
+      $(that).html('隐藏按钮');
+      clearInterval(timer);
+      return;
+    }
+    $(that).html('隐藏按钮(' + count + ')');
+  }
+  cb();
+  var timer = setInterval(cb, 1000);
+});
+$('.js_btn_destroy').on('tap', function(e) {
+  if ($(this).hasClass('weui_btn_disabled')) {
+    return false;
+  }
+  $('.weui_btn').addClass('weui_btn_disabled');
   window.vConsole.destroy();
+  $(this).html('刷新页面以重载vConsole');
 });
 
 // 用于页面内展示顶部tips

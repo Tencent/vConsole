@@ -396,6 +396,19 @@ class VConsole {
     if (this.tabList.length > 0) {
       this.showTab(this.tabList[0]);
     }
+
+    this.triggerEvent('ready');
+  }
+
+  /**
+   * trigger a vConsole.option event
+   * @protect
+   */
+  triggerEvent(eventName, param) {
+    eventName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1);
+    if (tool.isFunction(this.option[eventName])) {
+      this.option[eventName].apply(this, param);
+    }
   }
 
   /**
@@ -625,6 +638,29 @@ class VConsole {
       $mask.style.display = 'none';
       $panel.style.display = 'none';
     });
+  }
+
+  /**
+   * show switch button
+   * @public
+   */
+  showSwitch() {
+    if (!this.isInited) {
+      return;
+    }
+    let $switch = $.one('.vc-switch', this.$dom);
+    $switch.style.display = 'block';
+  }
+
+  /**
+   * hide switch button
+   */
+  hideSwitch() {
+    if (!this.isInited) {
+      return;
+    }
+    let $switch = $.one('.vc-switch', this.$dom);
+    $switch.style.display = 'none';
   }
 
   /**

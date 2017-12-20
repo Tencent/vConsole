@@ -27,10 +27,11 @@ vConsole.version // => "3.0.0"
 - 可写
 - 类型：object
 
-键名           | 类型     | 可选     | 默认值                                       | 描述
--------------- | ------- | -------- | ------------------------------------------- | -------------------
-defaultPlugins | Array   | true     | ['system', 'network', 'element', 'storage'] | 需要自动初始化并加载的内置插件。 
-maxLogNumber   | Number  | true     | 1000                                        | 超出上限的日志会被自动清除。
+键名           | 类型      | 可选     | 默认值                                       | 描述
+-------------- | -------- | -------- | ------------------------------------------- | -------------------
+defaultPlugins | Array    | true     | ['system', 'network', 'element', 'storage'] | 需要自动初始化并加载的内置插件。 
+onReady        | Function | true     |                                             | 回调方法，当 vConsole 完成初始化并加载完内置插件后触发。
+maxLogNumber   | Number   | true     | 1000                                        | 超出上限的日志会被自动清除。
 
 例子：
 
@@ -181,7 +182,7 @@ vConsole.showTab("system"); // 显示 System tab
 
 显示 vConsole 主面板。这个方法会触发插件事件 `showConsole`。
 
-##### 参数
+##### 参数：
 - 无
 
 ##### 返回：
@@ -198,7 +199,7 @@ vConsole.show();
 
 隐藏 vConsole 主面板。这个方法会触发插件事件 `hideConsole`。
 
-##### 参数
+##### 参数：
 - 无
 
 ##### 返回：
@@ -208,6 +209,42 @@ vConsole.show();
 
 ```javascript
 vConsole.hide();
+```
+
+
+### vConsole.showSwitch()
+
+显示 vConsole 的开关按钮。
+
+##### 参数：
+- 无
+
+##### 返回：
+- 无
+
+##### 例子：
+
+```javascript
+vConsole.showSwitch();
+```
+
+
+### vConsole.hideSwitch()
+
+隐藏 vConsole 的开关按钮
+
+隐藏后，用户将无法手动唤起 vConsole 面板。因此按钮或面板必须通过 `vConsole.showSwitch()` 或 `vConsole.show()` 来展示出来。
+
+##### 参数：
+- 无
+
+##### 返回：
+- 无
+
+##### 例子：
+
+```javascript
+vConsole.hideSwitch();
 ```
 
 
