@@ -46,7 +46,7 @@ export default function render(tpl, data, toString) {
   // remove spaces after switch
   tpl = tpl.replace(/(\{\{ ?switch(.+?)\}\})[\r\n\t ]+\{\{/g, '$1{{');
   // line breaks
-  tpl = tpl.replace(/^\n/, '').replace(/\n/g, '\\\n');
+  tpl = tpl.replace(/^[\r\n]/, '').replace(/\n/g, '\\\n').replace(/\r/g, '\\\r');
   // init code
   codeWrap = '(function(){\n';
   code = 'var arr = [];\n';

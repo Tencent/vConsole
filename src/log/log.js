@@ -91,6 +91,7 @@ class VConsoleLogTab extends VConsolePlugin {
       global: false,
       onClick: function() {
         that.clearLog();
+        that.vConsole.triggerEvent('clearLog');
       }
     }];
     callback(toolList);
@@ -156,6 +157,7 @@ class VConsoleLogTab extends VConsolePlugin {
     window.console.warn = this.console.warn;
     window.console.debug = this.console.debug;
     window.console.error = this.console.error;
+    window.console.clear = this.console.clear;
     this.console = {};
   }
 
@@ -237,6 +239,7 @@ class VConsoleLogTab extends VConsolePlugin {
       methodList.map(function(method) {
         that.console[method] = window.console[method];
       });
+      that.console.clear = window.console.clear;
     }
 
     methodList.map(method => {
@@ -247,10 +250,16 @@ class VConsoleLogTab extends VConsolePlugin {
         });
       };
     });
+
+    window.console.clear = (...args) => {
+      that.clearLog();
+      that.console.clear.apply(window.console, args);
+    };
   }
 
   clearLog() {
     $.one('.vc-log', this.$tabbox).innerHTML = '';
+    
   }
 
   /**
