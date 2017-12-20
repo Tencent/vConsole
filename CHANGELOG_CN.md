@@ -6,6 +6,7 @@
 - 【特性】新增 `onReady` 及 `onClearLog` 回调方法，位于 `vConsole.option`。
 - 【特性】调用 `console.clear` 时将自动清除面板中的日志。
 - 【修复】修复 Windows 下构建引起的 `\r` 转义问题。
+- 【修复】修复 iOS8 或其它低版本系统中的 `Symbol` 错误。
 
 
 #### V3.0.0 (2017-09-27)
