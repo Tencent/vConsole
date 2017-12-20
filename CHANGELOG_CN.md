@@ -1,10 +1,11 @@
 [English](./CHANGELOG.md) | 简体中文
 
-#### V3.x.x (dev)
+#### V3.1.0-dev (2017-12-xx)
 
 - 【特性】新增 `vConsole.showSwitch()` 及 `vConsole.hideSwitch()` 方法，请查阅[公共属性及方法](./doc/public_properties_methods_CN.md)。
 - 【特性】新增 `onReady` 及 `onClearLog` 回调方法，位于 `vConsole.option`。
 - 【特性】调用 `console.clear` 时将自动清除面板中的日志。
+- 【修复】修复 Windows 下构建引起的 `\r` 转义问题。
 
 
 #### V3.0.0 (2017-09-27)
