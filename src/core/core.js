@@ -311,6 +311,11 @@ class VConsole {
       that.hide();
     });
 
+    // reload browser
+    $.bind($.one('.vc-reload', that.$dom), 'click', function() {
+      that.reload();
+    })
+
     // hide console panel when tap background mask
     $.bind($.one('.vc-mask', that.$dom), 'click', function(e) {
       if (e.target != $.one('.vc-mask')) {
@@ -638,6 +643,14 @@ class VConsole {
       $mask.style.display = 'none';
       $panel.style.display = 'none';
     });
+  }
+
+  /** 
+   * reload browser
+   * @public
+   */
+  reload() {
+    window.location.reload();
   }
 
   /**
