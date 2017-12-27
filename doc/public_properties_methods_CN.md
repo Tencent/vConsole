@@ -31,6 +31,7 @@ vConsole.version // => "3.0.0"
 -------------- | -------- | -------- | ------------------------------------------- | -------------------
 defaultPlugins | Array    | true     | ['system', 'network', 'element', 'storage'] | 需要自动初始化并加载的内置插件。 
 onReady        | Function | true     |                                             | 回调方法，当 vConsole 完成初始化并加载完内置插件后触发。
+onClearLog     | Function | true     |                                             | 回调方法，点击 Log 或 System 面板的 "Clear" 按钮后出发。
 maxLogNumber   | Number   | true     | 1000                                        | 超出上限的日志会被自动清除。
 
 例子：
