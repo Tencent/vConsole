@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### V3.1.1-dev (2018-01-xx)
+
+- [FIX] Fix `setOption()` error.
+
+
 #### V3.1.0 (2017-12-27)
 
 - [FEATURE] Add `vConsole.showSwitch()` and `vConsole.hideSwitch()` methods, see [Public Properties & Methods](./doc/public_properties_methods.md).

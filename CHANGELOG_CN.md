@@ -1,5 +1,10 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### V3.1.1 (2018-01-xx)
+
+- 【修复】修复初始化后立即调用 `setOption` 引起的错误。
+
+
 #### V3.1.0 (2017-12-27)
 
 - 【特性】新增 `vConsole.showSwitch()` 及 `vConsole.hideSwitch()` 方法，请查阅[公共属性及方法](./doc/public_properties_methods_CN.md)。
