@@ -417,7 +417,6 @@ class VConsole {
    */
   _initPlugin(plugin) {
     let that = this;
-    console.debug('_initPlugin');
     plugin.vConsole = this;
     // start init
     plugin.trigger('init');
