@@ -1,8 +1,9 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### V3.1.1-dev (2018-01-xx)
+#### V3.1.1-dev (2018-04-xx)
 
 - [FIX] Fix `setOption()` error.
+- [FIX] Fix cookies' value wrong display.
 
 
 #### V3.1.0 (2017-12-27)
