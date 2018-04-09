@@ -166,7 +166,7 @@ class VConsoleLogTab extends VConsolePlugin {
   onShow() {
     this.isShow = true;
     if (this.isInBottom == true) {
-      this.scrollToBottom();
+      this.autoScrollToBottom();
     }
   }
 
@@ -176,7 +176,7 @@ class VConsoleLogTab extends VConsolePlugin {
 
   onShowConsole() {
     if (this.isInBottom == true) {
-      this.scrollToBottom();
+      this.autoScrollToBottom();
     }
   }
 
@@ -217,6 +217,12 @@ class VConsoleLogTab extends VConsolePlugin {
     } else {
       $.addClass($log, 'vc-log-partly');
       $.addClass($log, 'vc-log-partly-' + logType);
+    }
+  }
+
+  autoScrollToBottom() {
+    if (!this.vConsole.option.disableLogScrolling) {
+      this.scrollToBottom();
     }
   }
 
@@ -412,7 +418,7 @@ class VConsoleLogTab extends VConsolePlugin {
 
     // scroll to bottom if it is in the bottom before
     if (this.isInBottom) {
-      this.scrollToBottom();
+      this.autoScrollToBottom();
     }
 
     // print log to origin console

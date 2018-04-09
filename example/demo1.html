@@ -44,6 +44,7 @@
 window.vConsole = new window.VConsole({
   defaultPlugins: ['system', 'network', 'element', 'storage'], // 可以在此设定要默认加载的面板
   maxLogNumber: 1000,
+  // disableLogScrolling: true,
   onReady: function() {
     console.log('vConsole is ready.');
   },
@@ -51,6 +52,38 @@ window.vConsole = new window.VConsole({
     console.log('on clearLog');
   }
 });
+
+
+setInterval(function() {
+  console.log(Date.now())
+}, 500)
+  function setStyle(selector, styles) {
+    var $elems = document.querySelectorAll(selector);
+    for (var i=0; i<$elems.length; i++) {
+      for (var k in styles) {
+        $elems[i].style[k] = styles[k];
+      }
+    }
+  }
+  var hackVConsole = function() {
+    setStyle('.vc-switch', {display: 'none'});
+    setStyle('.vc-global-tool.vc-hide', {display: 'none'});
+    setStyle('.vc-panel', {'min-height': '100%'});
+    setStyle('.vc-cmd', {height: '0', overflow:'hidden', border:'none', visibility:'hidden'});
+    setStyle('.vc-log', {'padding-bottom':'0'})
+    setStyle('#__vconsole', {'font-size':'13px'});
+    // re-position 'clear' button to right-top
+    setStyle('.vc-content', {bottom:'0'});
+    setStyle('.vc-tool-default, .vc-tool-system', {position:'fixed', display: 'inline-block', top:'4px', right:'0', width:'60px', height:'34px', 'background-color':'#FBF9FE', 'border':'1px solid #D9D9D9', 'border-right':'none', 'line-height':'34px', 'border-radius':'3px 0 0 0'});
+    vConsole.show()
+  }
+
+  var hackTimer = setInterval(function() {
+    if (window.vConsole.isInited) {
+      clearInterval(hackTimer)
+      hackVConsole()
+    }
+  }, 300);
 
 
 console.info('欢迎使用 vConsole。vConsole 是一个由微信公众平台前端团队研发的 Web 前端开发者面板，可用于展示 console 日志，方便开发、调试。');
