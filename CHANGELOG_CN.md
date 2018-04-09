@@ -1,7 +1,8 @@
 [English](./CHANGELOG.md) | 简体中文
 
-#### V3.1.1 (2018-04-xx)
+#### V3.2.0 (2018-04-xx)
 
+- 【特性】支持 `console.time()` 及 `console.timeEnd()`。
 - 【修复】修复初始化后立即调用 `setOption` 引起的错误。
 - 【修复】修复 cookies 显示错误的问题。
 

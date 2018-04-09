@@ -1,7 +1,8 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### V3.1.1-dev (2018-04-xx)
+#### V3.2.0-dev (2018-04-xx)
 
+- [FEATURE] Support `console.time()` and `console.timeEnd()`.
 - [FIX] Fix `setOption()` error.
 - [FIX] Fix cookies' value wrong display.
 
