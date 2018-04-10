@@ -288,7 +288,10 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
         // update status
         item.readyState = XMLReq.readyState;
-        if (XMLReq.readyState > 1) item.status = XMLReq.status;
+        item.status = 0;
+        if (XMLReq.readyState > 1) {
+          item.status = XMLReq.status;
+        }
         item.responseType = XMLReq.responseType;
 
         if (XMLReq.readyState == 0) {

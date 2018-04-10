@@ -1,11 +1,12 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### V3.2.0-dev (2018-04-xx)
+#### V3.2.0 (2018-04-10)
 
 - [FEATURE] Support `console.time()` and `console.timeEnd()`.
 - [FEATRUE] Add `disableLogScrolling` (in `vConsole.option`).
 - [FIX] Fix `setOption()` error.
 - [FIX] Fix cookies' value wrong display.
+- [FIX] Fix "Uncaught InvalidStateError". (by @fireyy)
 
 
 #### V3.1.0 (2017-12-27)
