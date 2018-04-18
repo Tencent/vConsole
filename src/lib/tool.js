@@ -58,10 +58,10 @@ export function isBoolean(value) {
   return Object.prototype.toString.call(value) == '[object Boolean]';
 }
 export function isUndefined(value) {
-  return Object.prototype.toString.call(value) == '[object Undefined]';
+  return value === undefined;
 }
 export function isNull(value) {
-  return Object.prototype.toString.call(value) == '[object Null]';
+  return value === null;
 }
 export function isSymbol(value) {
   return Object.prototype.toString.call(value) == '[object Symbol]';
