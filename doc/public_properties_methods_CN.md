@@ -16,7 +16,7 @@ vConsole 提供一些公共属性字段、函数方法，以便开发插件。
 例子：
 
 ```javascript
-vConsole.version // => "3.0.0"
+vConsole.version // => "3.1.0"
 ```
 
 
@@ -27,12 +27,13 @@ vConsole.version // => "3.0.0"
 - 可写
 - 类型：object
 
-键名           | 类型      | 可选     | 默认值                                       | 描述
--------------- | -------- | -------- | ------------------------------------------- | -------------------
-defaultPlugins | Array    | true     | ['system', 'network', 'element', 'storage'] | 需要自动初始化并加载的内置插件。 
-onReady        | Function | true     |                                             | 回调方法，当 vConsole 完成初始化并加载完内置插件后触发。
-onClearLog     | Function | true     |                                             | 回调方法，点击 Log 或 System 面板的 "Clear" 按钮后出发。
-maxLogNumber   | Number   | true     | 1000                                        | 超出上限的日志会被自动清除。
+键名                  | 类型      | 可选     | 默认值                                       | 描述
+--------------------- | -------- | -------- | ------------------------------------------- | -------------------
+defaultPlugins        | Array    | true     | ['system', 'network', 'element', 'storage'] | 需要自动初始化并加载的内置插件。 
+onReady               | Function | true     |                                             | 回调方法，当 vConsole 完成初始化并加载完内置插件后触发。
+onClearLog            | Function | true     |                                             | 回调方法，点击 Log 或 System 面板的 "Clear" 按钮后出发。
+maxLogNumber          | Number   | true     | 1000                                        | 超出上限的日志会被自动清除。
+disableLogScrolling   | Boolean  | true     |                                             | 若为 `false`，有新日志时面板将不会自动滚动到底部。
 
 例子：
 

@@ -16,7 +16,7 @@ The current version of vConsole.
 Example:
 
 ```javascript
-vConsole.version // => "3.0.0"
+vConsole.version // => "3.1.0"
 ```
 
 
@@ -27,12 +27,13 @@ A configuration object.
 - Writable
 - Type: object
 
-Key            | Type     | Optional | Default value                               | Description
--------------- | -------- | -------- | ------------------------------------------- | -------------------
-defaultPlugins | Array    | true     | ['system', 'network', 'element', 'storage'] | Listed built-in plugins will be inited and loaded into vConsole. 
-onReady        | Function | true     |                                             | Trigger after vConsole is inited and default plugins is loaded.
-onClearLog     | Function | true     |                                             | Trigger after click "Clear" button in Log and System panel.
-maxLogNumber   | Number   | true     | 1000                                        | Overflow logs will be removed from log tabs.
+Key                   | Type     | Optional | Default value                               | Description
+--------------------- | -------- | -------- | ------------------------------------------- | -------------------
+defaultPlugins        | Array    | true     | ['system', 'network', 'element', 'storage'] | Listed built-in plugins will be inited and loaded into vConsole. 
+onReady               | Function | true     |                                             | Trigger after vConsole is inited and default plugins is loaded.
+onClearLog            | Function | true     |                                             | Trigger after click "Clear" button in Log and System panel.
+maxLogNumber          | Number   | true     | 1000                                        | Overflow logs will be removed from log tabs.
+disableLogScrolling   | Boolean  | true     |                                             | If `false`, panel will not scroll to bottom while printing new logs.
 
 Example:
 

@@ -157,6 +157,8 @@ class VConsoleLogTab extends VConsolePlugin {
     window.console.warn = this.console.warn;
     window.console.debug = this.console.debug;
     window.console.error = this.console.error;
+    window.console.time = this.console.time;
+    window.console.timeEnd = this.console.timeEnd;
     window.console.clear = this.console.clear;
     this.console = {};
   }
@@ -164,7 +166,7 @@ class VConsoleLogTab extends VConsolePlugin {
   onShow() {
     this.isShow = true;
     if (this.isInBottom == true) {
-      this.scrollToBottom();
+      this.autoScrollToBottom();
     }
   }
 
@@ -174,7 +176,7 @@ class VConsoleLogTab extends VConsolePlugin {
 
   onShowConsole() {
     if (this.isInBottom == true) {
-      this.scrollToBottom();
+      this.autoScrollToBottom();
     }
   }
 
@@ -218,6 +220,12 @@ class VConsoleLogTab extends VConsolePlugin {
     }
   }
 
+  autoScrollToBottom() {
+    if (!this.vConsole.option.disableLogScrolling) {
+      this.scrollToBottom();
+    }
+  }
+
   scrollToBottom() {
     let $content = $.one('.vc-content');
     if ($content) {
@@ -239,6 +247,8 @@ class VConsoleLogTab extends VConsolePlugin {
       methodList.map(function(method) {
         that.console[method] = window.console[method];
       });
+      that.console.time = window.console.time;
+      that.console.timeEnd = window.console.timeEnd;
       that.console.clear = window.console.clear;
     }
 
@@ -250,6 +260,20 @@ class VConsoleLogTab extends VConsolePlugin {
         });
       };
     });
+
+    const timeLog = {}
+    window.console.time = function(label) {
+      timeLog[label] = Date.now();
+    };
+    window.console.timeEnd = function(label) {
+      var pre = timeLog[label];
+      if (pre) {
+        console.log(label + ':', (Date.now() - pre) + 'ms');
+        delete timeLog[label];
+      } else {
+        console.log(label + ': 0ms');
+      }
+    };
 
     window.console.clear = (...args) => {
       that.clearLog();
@@ -394,7 +418,7 @@ class VConsoleLogTab extends VConsolePlugin {
 
     // scroll to bottom if it is in the bottom before
     if (this.isInBottom) {
-      this.scrollToBottom();
+      this.autoScrollToBottom();
     }
 
     // print log to origin console
