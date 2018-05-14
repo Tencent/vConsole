@@ -30,6 +30,112 @@ class VConsoleDefaultTab extends VConsoleLogTab {
   onReady() {
     let that = this;
     super.onReady();
+  var winKeys = [];
+
+  var cache_obj = {};
+  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+    return typeof obj
+  } : function (obj) {
+    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj
+  };
+
+  function JSONStringify(stringObject, arr) {
+
+    var formatOption = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '\t';
+    var replaceString = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'CIRCULAR_DEPENDECY_OBJECT';
+    var cache = [];
+
+    var returnStringObject = JSON.stringify(stringObject, function (key, value) {
+      var k = key;
+      if (k != '' && isNaN(Number.parseInt(k))) {
+        arr.push(key);
+      }
+      if ((typeof  value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value !== null) {
+        if (~cache.indexOf(value)) {
+          return replaceString
+        }
+        cache.push(value)
+      }
+      return value
+    }, formatOption);
+    cache = null;
+  }
+  $.one('.vc-cmd-input').onkeyup = function () {
+    var prompted = $.one('.vc-cmd-prompted');
+    prompted.style.display = 'none';
+    prompted.innerHTML = '';
+    var value = this.value;
+    if (value.length > 0) {
+      if ('.' == value.substring(value.length - 1)) {
+        var key = value.substring(0, value.length - 1);
+        if (!cache_obj[key]) {
+          var val = [];
+          cache_obj[key] = {};
+          JSONStringify(eval('(' + key + ')'), val);
+          cache_obj[key] = val;
+        }
+        cache_obj[key].sort();
+        for (var i = 0; i < cache_obj[key].length; i++) {
+          var li = document.createElement('li');
+          li.setAttribute('style', ' border-bottom: solid 1px');
+          var _key = cache_obj[key][i];
+          li.innerHTML = _key;
+          li.onclick = function () {
+            $.one('.vc-cmd-input').value = (value + this.innerHTML);
+            prompted.style.display = 'none';
+          };
+          prompted.appendChild(li);
+        }
+      } else if ('.' != value.substring(value.length - 1) && value.indexOf('.') < 0) {
+        winKeys.sort();
+        for (var i = 0; i < winKeys.length; i++) {
+          if (winKeys[i].toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+            var li = document.createElement('li');
+            li.setAttribute('style', ' border-bottom: solid 1px');
+            li.innerHTML = winKeys[i];
+            li.onclick = function () {
+              $.one('.vc-cmd-input').value = this.innerHTML;
+              prompted.style.display = 'none';
+            };
+            prompted.appendChild(li);
+          }
+        }
+      } else {
+        var arr = value.split('.');
+        var key = arr[0];
+        if (cache_obj[arr[0]]) {
+          cache_obj[arr[0]].sort();
+          for (var i = 0; i < cache_obj[arr[0]].length; i++) {
+            var li = document.createElement('li');
+            li.setAttribute('style', ' border-bottom: solid 1px');
+            var _key = cache_obj[arr[0]][i];
+            if (_key.indexOf(arr[1]) >= 0) {
+              li.innerHTML = _key;
+              li.onclick = function () {
+                $.one('.vc-cmd-input').value = (key + '.' + this.innerHTML);
+                prompted.style.display = 'none';
+              };
+              prompted.appendChild(li);
+            }
+          }
+        }
+      }
+      if (prompted.children.length > 0) {
+        prompted.style.display = 'block';
+        var m = prompted.children.length * 25 + 80;
+        if (m > 100) {
+          m = 200;
+        }
+        prompted.style.marginTop = -m + 'px';
+      }
+    } else {
+      prompted.style.display = 'none';
+    }
+  };
+  setTimeout(function () {
+    JSONStringify(this, winKeys);
+  },200);
+
 
     $.bind($.one('.vc-cmd', this.$tabbox), 'submit', function(e) {
       e.preventDefault();
@@ -38,6 +144,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       $input.value = '';
       if (cmd !== '') {
         that.evalCommand(cmd);
+
       }
     });
 
