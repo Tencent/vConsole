@@ -147,9 +147,16 @@ export function JSONStringify(stringObject, formatOption = '\t', replaceString =
     return value;
   }, formatOption);
   cache = null;*/
-var returnStringObject = '{\n';
-  for (let key of Reflect.ownKeys(stringObject)) {
-    returnStringObject+=key+':'+stringObject[key]+',\n';
+let returnStringObject = '{\n';
+  let keys = getObjAllKeys(stringObject);
+for(let i = 0; i < keys.length; i ++){
+  let key = keys[i];
+  try {
+    returnStringObject += key + ':' + stringObject[key] + ',\n';
+  } catch (e) {
+    //console.log(e);
+    continue;
+  }
   }
   returnStringObject+='}';
   return returnStringObject;

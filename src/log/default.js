@@ -30,110 +30,84 @@ class VConsoleDefaultTab extends VConsoleLogTab {
   onReady() {
     let that = this;
     super.onReady();
-  var winKeys = Object.getOwnPropertyNames(window).sort();
+    window.winKeys = Object.getOwnPropertyNames(window).sort();
 
-  var cache_obj = {};
-  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-    return typeof obj
-  } : function (obj) {
-    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj
-  };
+    let cache_obj = {};
 
-  function JSONStringify(stringObject, arr) {
-
-    var formatOption = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '\t';
-    var replaceString = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'CIRCULAR_DEPENDECY_OBJECT';
-    var cache = [];
-
-    var returnStringObject = JSON.stringify(stringObject, function (key, value) {
-      var k = key;
-      if (k != '' && isNaN(Number.parseInt(k))) {
-        arr.push(key);
-      }
-      if ((typeof  value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value !== null) {
-        if (~cache.indexOf(value)) {
-          return replaceString
-        }
-        cache.push(value)
-      }
-      return value
-    }, formatOption);
-    cache = null;
-  }
-  $.one('.vc-cmd-input').onkeyup = function () {
-    var prompted = $.one('.vc-cmd-prompted');
-    prompted.style.display = 'none';
-    prompted.innerHTML = '';
-    var value = this.value;
-    if (value.length > 0) {
-      if ('.' == value.substring(value.length - 1)) {
-        var key = value.substring(0, value.length - 1);
-        if (!cache_obj[key]) {
-         /* var val = [];
-          cache_obj[key] = {};
-          JSONStringify(eval('(' + key + ')'), val);*/
-          cache_obj[key] = Object.getOwnPropertyNames(eval('(' + key + ')')).sort();
-        }
-        cache_obj[key].sort();
-        for (var i = 0; i < cache_obj[key].length; i++) {
-          var li = document.createElement('li');
-          li.setAttribute('style', ' border-bottom: solid 1px');
-          var _key = cache_obj[key][i];
-          li.innerHTML = _key;
-          li.onclick = function () {
-            $.one('.vc-cmd-input').value = (value + this.innerHTML);
-            prompted.style.display = 'none';
-          };
-          prompted.appendChild(li);
-        }
-      } else if ('.' != value.substring(value.length - 1) && value.indexOf('.') < 0) {
-        for (var i = 0; i < winKeys.length; i++) {
-          if (winKeys[i].toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-            var li = document.createElement('li');
+    $.one('.vc-cmd-input').onkeyup = function () {
+      let prompted = $.one('.vc-cmd-prompted');
+      prompted.style.display = 'none';
+      prompted.innerHTML = '';
+      let value = this.value;
+      if (value.length > 0) {
+        if ('.' == value.substring(value.length - 1)) {
+          let key = value.substring(0, value.length - 1);
+          if (!cache_obj[key]) {
+            /* let val = [];
+             cache_obj[key] = {};
+             JSONStringify(eval('(' + key + ')'), val);*/
+            cache_obj[key] = Object.getOwnPropertyNames(eval('(' + key + ')')).sort();
+          }
+          cache_obj[key].sort();
+          for (let i = 0; i < cache_obj[key].length; i++) {
+            let li = document.createElement('li');
             li.setAttribute('style', ' border-bottom: solid 1px');
-            li.innerHTML = winKeys[i];
+            let _key = cache_obj[key][i];
+            li.innerHTML = _key;
             li.onclick = function () {
-              $.one('.vc-cmd-input').value = this.innerHTML;
+              $.one('.vc-cmd-input').value = (value + this.innerHTML);
               prompted.style.display = 'none';
             };
             prompted.appendChild(li);
           }
-        }
-      } else {
-        var arr = value.split('.');
-        var key = arr[0];
-        if (cache_obj[arr[0]]) {
-          cache_obj[arr[0]].sort();
-          for (var i = 0; i < cache_obj[arr[0]].length; i++) {
-            var li = document.createElement('li');
-            li.setAttribute('style', ' border-bottom: solid 1px');
-            var _key = cache_obj[arr[0]][i];
-            if (_key.indexOf(arr[1]) >= 0) {
-              li.innerHTML = _key;
+        } else if ('.' != value.substring(value.length - 1) && value.indexOf('.') < 0) {
+          for (let i = 0; i < winKeys.length; i++) {
+            if (winKeys[i].toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+              let li = document.createElement('li');
+              li.setAttribute('style', ' border-bottom: solid 1px');
+              li.innerHTML = winKeys[i];
               li.onclick = function () {
-                $.one('.vc-cmd-input').value = (key + '.' + this.innerHTML);
+                $.one('.vc-cmd-input').value = this.innerHTML;
                 prompted.style.display = 'none';
               };
               prompted.appendChild(li);
             }
           }
+        } else {
+          let arr = value.split('.');
+          let key = arr[0];
+          if (cache_obj[arr[0]]) {
+            cache_obj[arr[0]].sort();
+            for (let i = 0; i < cache_obj[arr[0]].length; i++) {
+              let li = document.createElement('li');
+              li.setAttribute('style', ' border-bottom: solid 1px');
+              let _key = cache_obj[arr[0]][i];
+              if (_key.indexOf(arr[1]) >= 0) {
+                li.innerHTML = _key;
+                li.onclick = function () {
+                  $.one('.vc-cmd-input').value = (key + '.' + this.innerHTML);
+                  prompted.style.display = 'none';
+                };
+                prompted.appendChild(li);
+              }
+            }
+          }
         }
-      }
-      if (prompted.children.length > 0) {
-        prompted.style.display = 'block';
-        var m = prompted.children.length * 25 + 80;
-        if (m > 100) {
-          m = 200;
+        if (prompted.children.length > 0) {
+          prompted.style.display = 'block';
+          let m = prompted.children.length * 25 + 80;
+          if (m > 100) {
+            m = 200;
+          }
+          prompted.style.marginTop = -m + 'px';
         }
-        prompted.style.marginTop = -m + 'px';
+      } else {
+        prompted.style.display = 'none';
       }
-    } else {
-      prompted.style.display = 'none';
-    }
-  };
+    };
 
 
-    $.bind($.one('.vc-cmd', this.$tabbox), 'submit', function(e) {
+    $.bind($.one('.vc-cmd', this.$tabbox), 'submit', function (e) {
       e.preventDefault();
       let $input = $.one('.vc-cmd-input', e.target),
         cmd = $input.value;
@@ -168,11 +142,11 @@ class VConsoleDefaultTab extends VConsoleLogTab {
    */
   mockConsole() {
     super.mockConsole();
-    var that = this;
+    let that = this;
     if (tool.isFunction(window.onerror)) {
       this.windowOnError = window.onerror;
     }
-    window.onerror = function(message, source, lineNo, colNo, error) {
+    window.onerror = function (message, source, lineNo, colNo, error) {
       let msg = message;
       if (source) {
         msg += "\n" + source.replace(location.origin, '');
@@ -183,7 +157,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       //print error stack info
       let stack = !!error && !!error.stack;
       let statckInfo = (stack && error.stack.toString()) || '';
-      that.printLog({logType:'error', logs:[msg, statckInfo], noOrigin:true});
+      that.printLog({logType: 'error', logs: [msg, statckInfo], noOrigin: true});
       if (tool.isFunction(that.windowOnError)) {
         that.windowOnError.call(window, message, source, lineNo, colNo, error);
       }
@@ -203,59 +177,67 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       style: ''
     });
     // do not use `eval` or `new Function` to avoid `unsafe-eval` CSP rule
-    let code = '';
-    code += 'try {\n';
-    code +=   'window.__vConsole_cmd_result = (function() {\n';
-    code +=     'return ' + cmd + ';\n';
-    code +=   '})();\n';
-    code +=   'window.__vConsole_cmd_error = false;\n';
-    code += '} catch (e) {\n';
-    code +=   'window.__vConsole_cmd_result = e.message;\n';
-    code +=   'window.__vConsole_cmd_error = true;\n';
-    code += '}';
-    let scriptList = document.getElementsByTagName('script');
-    let nonce = '';
-    if (scriptList.length > 0) {
-      nonce = scriptList[0].getAttribute('nonce') || ''; // get nonce to avoid `unsafe-inline`
-    }
-    let script = document.createElement('SCRIPT');
-    script.innerHTML = code;
-    script.setAttribute('nonce', nonce);
-    document.documentElement.appendChild(script);
-    let result = window.__vConsole_cmd_result,
-        error = window.__vConsole_cmd_error;
-    document.documentElement.removeChild(script);
-    // print result to console
-    if (error == false) {
-      let $content;
-      if (tool.isArray(result) || tool.isObject(result)) {
-        $content = this.getFoldedLine(result);
-      } else {
-        if (tool.isNull(result)) {
-          result = 'null';
-        } else if (tool.isUndefined(result)) {
-          result = 'undefined';
-        } else if (tool.isFunction(result)) {
-          result = 'function()'
-        } else if (tool.isString(result)) {
-          result = '"' + result + '"';
-        }
-        $content = $.render(tplItemCode, {content: result, type: 'output'});
+    /*  let code = '';
+      code += 'try {\n';
+      code +=   'window.__vConsole_cmd_result = (function() {\n';
+      code +=     'return ' + cmd + ';\n';
+      code +=   '})();\n';
+      code +=   'window.__vConsole_cmd_error = false;\n';
+      code += '} catch (e) {\n';
+      code +=   'window.__vConsole_cmd_result = e.message;\n';
+      code +=   'window.__vConsole_cmd_error = true;\n';
+      code += '}';
+      let scriptList = document.getElementsByTagName('script');
+      let nonce = '';
+      if (scriptList.length > 0) {
+        nonce = scriptList[0].getAttribute('nonce') || ''; // get nonce to avoid `unsafe-inline`
       }
-      this.printLog({
-        logType: 'log',
-        content: $content,
-        noMeta: true,
-        style: ''
-      });
-    } else {
-      this.printLog({
-        logType: 'error',
-        logs: [result],
-        noMeta: true,
-        style: ''
-      });
+      let script = document.createElement('SCRIPT');
+      script.innerHTML = code;
+      script.setAttribute('nonce', nonce);
+      document.documentElement.appendChild(script);
+      let result = window.__vConsole_cmd_result,
+          error = window.__vConsole_cmd_error;
+      document.documentElement.removeChild(script);*/
+    /*    let code = '  try {';
+        code += cmd;
+        code += '  } catch (e) {';
+        code += 'window.__vConsole_cmd_error = true;window.__vConsole_cmd_result = e.message;}';
+        eval(code.replace(new RegExp('\n', 'gi'), ''));*/
+    let result = void 0;
+
+    try {
+      result = eval.call(window, '(' + cmd + ')');
+    } catch (e) {
+      result = eval.call(window, cmd);
     }
+    /*    debugger
+        let result = window.__vConsole_cmd_result,
+          error = window.__vConsole_cmd_error;*/
+
+    // print result to console
+    let $content;
+    if (tool.isArray(result) || tool.isObject(result)) {
+      $content = this.getFoldedLine(result);
+    } else {
+      if (tool.isNull(result)) {
+        result = 'null';
+      } else if (tool.isUndefined(result)) {
+        result = 'undefined';
+      } else if (tool.isFunction(result)) {
+        result = 'function()'
+      } else if (tool.isString(result)) {
+        result = '"' + result + '"';
+      }
+      $content = $.render(tplItemCode, {content: result, type: 'output'});
+    }
+    this.printLog({
+      logType: 'log',
+      content: $content,
+      noMeta: true,
+      style: ''
+    });
+    window.winKeys = Object.getOwnPropertyNames(window).sort();
   }
 
 } // END class

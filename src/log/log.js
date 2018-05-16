@@ -283,7 +283,7 @@ class VConsoleLogTab extends VConsolePlugin {
 
   clearLog() {
     $.one('.vc-log', this.$tabbox).innerHTML = '';
-    
+
   }
 
   /**
@@ -463,10 +463,15 @@ class VConsoleLogTab extends VConsolePlugin {
         // render object's keys
         let keys = tool.getObjAllKeys(obj);
         for (let i = 0; i < keys.length; i++) {
-          let val = obj[keys[i]],
+          let val ,
             valueType = 'undefined',
             keyType = '',
             $line;
+          try {
+             val = obj[keys[i]];
+          } catch (e) {
+            continue;
+          }
           // handle value
           if (tool.isString(val)) {
             valueType = 'string';
