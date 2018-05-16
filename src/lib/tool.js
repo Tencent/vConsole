@@ -137,19 +137,24 @@ export function htmlEncode(text) {
 
 export function JSONStringify(stringObject, formatOption = '\t', replaceString = 'CIRCULAR_DEPENDECY_OBJECT') {
   let cache = [];
-  const returnStringObject = JSON.stringify(stringObject, (key, value) => {
+/*  const returnStringObject = JSON.stringify(stringObject, (key, value) => {
     if (typeof value === 'object' && value !== null) {
       if (~cache.indexOf(value)) {
         return replaceString;
-      } 
+      }
       cache.push(value);
     }
     return value;
   }, formatOption);
-  cache = null;
+  cache = null;*/
+var returnStringObject = '{\n';
+  for (let key of Reflect.ownKeys(stringObject)) {
+    returnStringObject+=key+':'+stringObject[key]+',\n';
+  }
+  returnStringObject+='}';
   return returnStringObject;
 }
-
+window.JSON.stringify=JSONStringify;
 /**
  * get an object's all keys ignore whether they are not enumerable
  */
@@ -157,7 +162,7 @@ export function getObjAllKeys(obj) {
   if (!isObject(obj) && !isArray(obj)) {
     return [];
   }
-  let dontEnums = [
+/*  let dontEnums = [
     'toString',
     'toLocaleString',
     'valueOf',
@@ -172,8 +177,8 @@ export function getObjAllKeys(obj) {
       keys.push(key);
     }
   }
-  keys = keys.sort();
-  return keys;
+  keys = keys.sort();*/
+  return  Object.getOwnPropertyNames(obj).sort();
 }
 
 /**

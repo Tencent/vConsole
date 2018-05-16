@@ -30,7 +30,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
   onReady() {
     let that = this;
     super.onReady();
-  var winKeys = [];
+  var winKeys = Object.getOwnPropertyNames(window).sort();
 
   var cache_obj = {};
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
@@ -69,10 +69,10 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       if ('.' == value.substring(value.length - 1)) {
         var key = value.substring(0, value.length - 1);
         if (!cache_obj[key]) {
-          var val = [];
+         /* var val = [];
           cache_obj[key] = {};
-          JSONStringify(eval('(' + key + ')'), val);
-          cache_obj[key] = val;
+          JSONStringify(eval('(' + key + ')'), val);*/
+          cache_obj[key] = Object.getOwnPropertyNames(eval('(' + key + ')')).sort();
         }
         cache_obj[key].sort();
         for (var i = 0; i < cache_obj[key].length; i++) {
@@ -87,7 +87,6 @@ class VConsoleDefaultTab extends VConsoleLogTab {
           prompted.appendChild(li);
         }
       } else if ('.' != value.substring(value.length - 1) && value.indexOf('.') < 0) {
-        winKeys.sort();
         for (var i = 0; i < winKeys.length; i++) {
           if (winKeys[i].toLowerCase().indexOf(value.toLowerCase()) >= 0) {
             var li = document.createElement('li');
@@ -132,9 +131,6 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       prompted.style.display = 'none';
     }
   };
-  setTimeout(function () {
-    JSONStringify(this, winKeys);
-  },200);
 
 
     $.bind($.one('.vc-cmd', this.$tabbox), 'submit', function(e) {
