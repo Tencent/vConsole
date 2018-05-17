@@ -46,19 +46,22 @@ class VConsoleDefaultTab extends VConsoleLogTab {
             /* let val = [];
              cache_obj[key] = {};
              JSONStringify(eval('(' + key + ')'), val);*/
-            cache_obj[key] = Object.getOwnPropertyNames(eval('(' + key + ')')).sort();
-          }
-          cache_obj[key].sort();
-          for (let i = 0; i < cache_obj[key].length; i++) {
-            let li = document.createElement('li');
-            li.setAttribute('style', ' border-bottom: solid 1px');
-            let _key = cache_obj[key][i];
-            li.innerHTML = _key;
-            li.onclick = function () {
-              $.one('.vc-cmd-input').value = (value + this.innerHTML);
-              prompted.style.display = 'none';
-            };
-            prompted.appendChild(li);
+            try {
+              cache_obj[key] = Object.getOwnPropertyNames(eval('(' + key + ')')).sort();
+              for (let i = 0; i < cache_obj[key].length; i++) {
+                let li = document.createElement('li');
+                li.setAttribute('style', ' border-bottom: solid 1px');
+                let _key = cache_obj[key][i];
+                li.innerHTML = _key;
+                li.onclick = function () {
+                  $.one('.vc-cmd-input').value = (value + this.innerHTML);
+                  prompted.style.display = 'none';
+                };
+                prompted.appendChild(li);
+              }
+            } catch (e) {
+              ;
+            }
           }
         } else if ('.' != value.substring(value.length - 1) && value.indexOf('.') < 0) {
           for (let i = 0; i < winKeys.length; i++) {
@@ -209,7 +212,11 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     try {
       result = eval.call(window, '(' + cmd + ')');
     } catch (e) {
-      result = eval.call(window, cmd);
+      try {
+        result = eval.call(window, cmd);
+      } catch (e) {
+        ;
+      }
     }
     /*    debugger
         let result = window.__vConsole_cmd_result,
