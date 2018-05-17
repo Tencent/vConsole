@@ -31,37 +31,88 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     let that = this;
     super.onReady();
     window.winKeys = Object.getOwnPropertyNames(window).sort();
+    window.keyTypes = {};
+    for (let i = 0; i < winKeys.length; i++) {
+      keyTypes[winKeys[i]] = typeof  window[winKeys[i]];
+    }
 
     let cache_obj = {};
 
-    $.one('.vc-cmd-input').onkeyup = function () {
+    let ID_REGEX = /[a-zA-Z_0-9\$\-\u00A2-\uFFFF]/;
+
+    function retrievePrecedingIdentifier(text, pos, regex) {
+      regex = regex || ID_REGEX;
+      let buf = [];
+      for (let i = pos - 1; i >= 0; i--) {
+        if (regex.test(text[i])) {
+          buf.push(text[i]);
+        } else {
+          break;
+        }
+      }
+      if (buf.length == 0) {
+        regex = /\./;
+        for (let i = pos - 1; i >= 0; i--) {
+          if (regex.test(text[i]))
+            buf.push(text[i]);
+          else
+            break;
+        }
+      }
+      if (buf.length == 0) {
+        let arr = (text.match(/[\(\)\[\]\{\}]/gi) || []);
+        return arr[arr.length - 1];
+      }
+      return buf.reverse().join("");
+    };
+
+    $.one('.vc-cmd-input').onkeyup = function (e) {
+      if (e.keyCode == 8 || e.keyCode == 46) {
+        return;
+      }
       let prompted = $.one('.vc-cmd-prompted');
       prompted.style.display = 'none';
       prompted.innerHTML = '';
       let value = this.value;
-      if (value.length > 0) {
-        if ('.' == value.substring(value.length - 1)) {
-          let key = value.substring(0, value.length - 1);
+      let temp_value = this.value;
+      value = retrievePrecedingIdentifier(value, value.length);
+      if (value && value.length > 0) {
+        if (/\(/.test(value)) {
+          $.one('.vc-cmd-input').value += ')';
+          return;
+        }
+        if (/\[/.test(value)) {
+          $.one('.vc-cmd-input').value += ']';
+          return;
+        }
+        if (/\{/.test(value)) {
+          $.one('.vc-cmd-input').value += '}';
+          return;
+        }
+        if ('.' == value) {
+          let key = retrievePrecedingIdentifier(temp_value, temp_value.length - 1);
           if (!cache_obj[key]) {
-            /* let val = [];
-             cache_obj[key] = {};
-             JSONStringify(eval('(' + key + ')'), val);*/
             try {
               cache_obj[key] = Object.getOwnPropertyNames(eval('(' + key + ')')).sort();
-              for (let i = 0; i < cache_obj[key].length; i++) {
-                let li = document.createElement('li');
-                li.setAttribute('style', ' border-bottom: solid 1px');
-                let _key = cache_obj[key][i];
-                li.innerHTML = _key;
-                li.onclick = function () {
-                  $.one('.vc-cmd-input').value = (value + this.innerHTML);
-                  prompted.style.display = 'none';
-                };
-                prompted.appendChild(li);
-              }
             } catch (e) {
               ;
             }
+          }
+          try {
+            for (let i = 0; i < cache_obj[key].length; i++) {
+              let li = document.createElement('li');
+              li.setAttribute('style', ' border-bottom: solid 1px');
+              let _key = cache_obj[key][i];
+              li.innerHTML = _key;
+              li.onclick = function () {
+                $.one('.vc-cmd-input').value = '';
+                $.one('.vc-cmd-input').value = temp_value + this.innerHTML;
+                prompted.style.display = 'none';
+              };
+              prompted.appendChild(li);
+            }
+          } catch (e) {
+            ;
           }
         } else if ('.' != value.substring(value.length - 1) && value.indexOf('.') < 0) {
           for (let i = 0; i < winKeys.length; i++) {
@@ -70,7 +121,11 @@ class VConsoleDefaultTab extends VConsoleLogTab {
               li.setAttribute('style', ' border-bottom: solid 1px');
               li.innerHTML = winKeys[i];
               li.onclick = function () {
+                $.one('.vc-cmd-input').value = '';
                 $.one('.vc-cmd-input').value = this.innerHTML;
+                if (keyTypes[this.innerHTML] == 'function') {
+                  $.one('.vc-cmd-input').value += '()';
+                }
                 prompted.style.display = 'none';
               };
               prompted.appendChild(li);
@@ -88,7 +143,8 @@ class VConsoleDefaultTab extends VConsoleLogTab {
               if (_key.indexOf(arr[1]) >= 0) {
                 li.innerHTML = _key;
                 li.onclick = function () {
-                  $.one('.vc-cmd-input').value = (key + '.' + this.innerHTML);
+                  $.one('.vc-cmd-input').value = '';
+                  $.one('.vc-cmd-input').value = temp_value + this.innerHTML;
                   prompted.style.display = 'none';
                 };
                 prompted.appendChild(li);
@@ -121,7 +177,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       }
     });
 
-    // create a global variable to save custom command's result
+    // create a global letiable to save custom command's result
     let code = '';
     code += 'if (!!window) {';
     code += 'window.__vConsole_cmd_result = undefined;';
