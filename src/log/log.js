@@ -283,7 +283,7 @@ class VConsoleLogTab extends VConsolePlugin {
 
   clearLog() {
     $.one('.vc-log', this.$tabbox).innerHTML = '';
-
+    this.logNumber = 0;
   }
 
   /**
