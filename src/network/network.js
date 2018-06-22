@@ -208,6 +208,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
       case 'json':
         if (typeof item.response != 'undefined') {
           domData.response = JSON.stringify(item.response, null, 1);
+          domData.response = tool.htmlEncode(domData.response);
         }
         break;
       case 'blob':
