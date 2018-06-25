@@ -58,7 +58,7 @@ var vConsole = new VConsole(option);
 vConsole.setOption('maxLogNumber', 5000);
 // 或者：
 vConsole.setOption({maxLogNumber: 5000});
-
+```
 
 ### 打印日志
 
