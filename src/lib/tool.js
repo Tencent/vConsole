@@ -185,6 +185,13 @@ export function getObjAllKeys(obj) {
     }
   }
   keys = keys.sort();*/
+  if (isArray(obj)) {
+    const m = [];
+    obj.forEach((_, index) => {
+      m.push(index)
+    });
+    return m.concat('length');
+  }
   return  Object.getOwnPropertyNames(obj).sort();
 }
 
