@@ -24,7 +24,6 @@ class VConsoleDefaultTab extends VConsoleLogTab {
   constructor(...args) {
     super(...args);
     this.tplTabbox = tplTabbox;
-    this.windowOnError = null;
   }
 
   onReady() {
