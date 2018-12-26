@@ -65,7 +65,7 @@ export default function render(tpl, data, toString) {
   let scriptList = document.getElementsByTagName('script');
   let nonce = '';
   if (scriptList.length > 0) {
-    nonce = scriptList[0].getAttribute('nonce') || ''; // get nonce to avoid `unsafe-inline`
+    nonce = scriptList[0].nonce || ''; // get nonce to avoid `unsafe-inline`
   }
   let script = document.createElement('SCRIPT');
   script.innerHTML = codeWrap;

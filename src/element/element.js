@@ -52,7 +52,7 @@ class VConsoleElementsTab extends VConsolePlugin {
   onAddTool(callback) {
     let that = this;
     let toolList = [{
-      name: 'Expend',
+      name: 'Expand',
       global: false,
       onClick: function(e) {
         if (that.activedElem) {
@@ -233,7 +233,7 @@ class VConsoleElementsTab extends VConsolePlugin {
     let $view = (new NodeView(node)).get();
     // connect to node
     node.view = $view;
-    // expend
+    // expand
     $.delegate($view, 'click', '.vcelm-node', function(event) {
       event.stopPropagation();
       let $parent = this.parentNode;
