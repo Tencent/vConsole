@@ -435,9 +435,9 @@ class VConsoleLogTab extends VConsolePlugin {
     let that = this;
     if (!outer) {
       let json = tool.JSONStringify(obj);
-      let preview = json.substr(0, 26);
+      let preview = json.substr(0, 36);
       outer = tool.getObjName(obj);
-      if (json.length > 26) {
+      if (json.length > 36) {
         preview += '...';
       }
       outer += ' ' + preview;
