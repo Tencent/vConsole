@@ -150,9 +150,15 @@ class VConsoleStorageTab extends VConsolePlugin {
       let item = items[i].split('=');
       let name = item.shift().replace(/^ /, ''),
           value = item.join('=');
+      try {
+        name = decodeURIComponent(name);
+        value = decodeURIComponent(value);
+      } catch(e) {
+        console.log(e, name, value);
+      }
       list.push({
-        name: decodeURIComponent(name),
-        value: decodeURIComponent(value)
+        name: name,
+        value: value
       });
     }
     return list;

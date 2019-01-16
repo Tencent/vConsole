@@ -107,6 +107,8 @@
     right: 0;
     bottom: 40em / @font;
     -webkit-overflow-scrolling: touch;
+    margin-bottom: constant(safe-area-inset-bottom);
+    margin-bottom: env(safe-area-inset-bottom);
   }
   .vc-content.vc-has-topbar {
     top: 71em / @font;
@@ -371,6 +373,21 @@
       .vc-cmd-btn:active {
         background-color: rgba(0,0,0,0.15);
       }
+
+      .vc-cmd-prompted {
+        position: fixed;
+        width: 100%;
+        background-color: #FBF9FE;
+        border: 1px solid #D9D9D9;
+        overflow-x: scroll;
+        display: none;
+      }
+      .vc-cmd-prompted li {
+        list-style: none;
+        line-height: 30px;
+        padding: 0 6em / @font;
+        border-bottom: 1px solid #D9D9D9;
+      }
     }
 
     .vc-group {
@@ -514,6 +531,13 @@
       border: none;
     }
   }
+  @supports (bottom: constant(safe-area-inset-bottom)) or (bottom: env(safe-area-inset-bottom)) {
+    .vc-toolbar,
+    .vc-switch {
+      bottom: constant(safe-area-inset-bottom);
+      bottom: env(safe-area-inset-bottom);
+    }
+  }
 
 }
 
@@ -532,9 +556,4 @@
     -webkit-transform: translate(0, 0);
     transform: translate(0, 0);
   }
-}
-.vc-cmd-prompted li{
-  list-style: none;
-  line-height: 30px;
-  margin-left: -20px;
 }

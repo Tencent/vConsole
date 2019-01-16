@@ -1,39 +1,39 @@
 var pkg = require('./package.json');
-var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var Webpack = require('webpack');
+var Path = require('path');
 
 module.exports = {
+  mode: 'production',
   devtool: false,
   entry: {
-    vconsole : './src/vconsole.js'
+    vconsole : Path.resolve(__dirname, './src/vconsole.js')
   },
   output: {
-    path: './dist',
+    path: Path.resolve(__dirname, './dist'),
     filename: '[name].min.js',
     library: 'VConsole',
     libraryTarget: 'umd',
-    umdNameDefine: true
+    umdNamedDefine: true
   },
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.html$/, loader: 'html?minimize=false'
+        test: /\.html$/, loader: 'html-loader?minimize=false'
       },
       { 
-        test: /\.js$/, loader: 'babel'
+        test: /\.js$/, loader: 'babel-loader'
       },
       {
         test: /\.less$/,
-        loader: 'style!css!less'
-        // loader: ExtractTextPlugin.extract('style-loader', 'css-loader!less-loader') // 将css独立打包
-      },
-      {
-        test: /\.json$/, loader: 'json'
+        loader: 'style-loader!css-loader!less-loader'
       }
     ]
   },
+  stats: {
+    colors: true,
+  },
   plugins: [
-    new webpack.BannerPlugin([
+    new Webpack.BannerPlugin([
         'vConsole v' + pkg.version + ' (' + pkg.homepage + ')',
         '',
         'Tencent is pleased to support the open source community by making vConsole available.',
@@ -42,11 +42,5 @@ module.exports = {
         'http://opensource.org/licenses/MIT',
         'Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.'
     ].join('\n'))
-    ,new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    })
-    // ,new ExtractTextPlugin('[name].min.css') // 将css独立打包
   ]
 };
