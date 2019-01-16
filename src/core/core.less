@@ -373,6 +373,21 @@
       .vc-cmd-btn:active {
         background-color: rgba(0,0,0,0.15);
       }
+
+      .vc-cmd-prompted {
+        position: fixed;
+        width: 100%;
+        background-color: #FBF9FE;
+        border: 1px solid #D9D9D9;
+        overflow-x: scroll;
+        display: none;
+      }
+      .vc-cmd-prompted li {
+        list-style: none;
+        line-height: 30px;
+        padding: 0 6em / @font;
+        border-bottom: 1px solid #D9D9D9;
+      }
     }
 
     .vc-group {
@@ -540,9 +555,4 @@
     -webkit-transform: translate(0, 0);
     transform: translate(0, 0);
   }
-}
-.vc-cmd-prompted li{
-  list-style: none;
-  line-height: 30px;
-  margin-left: -20px;
 }
