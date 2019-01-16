@@ -107,6 +107,8 @@
     right: 0;
     bottom: 40em / @font;
     -webkit-overflow-scrolling: touch;
+    margin-bottom: constant(safe-area-inset-bottom);
+    margin-bottom: env(safe-area-inset-bottom);
   }
   .vc-content.vc-has-topbar {
     top: 71em / @font;
@@ -512,6 +514,12 @@
 
     .vc-tool-last:after {
       border: none;
+    }
+  }
+  @supports (bottom: constant(safe-area-inset-bottom)) or (bottom: env(safe-area-inset-bottom)) {
+    .vc-toolbar {
+      bottom: constant(safe-area-inset-bottom);
+      bottom: env(safe-area-inset-bottom);
     }
   }
 
