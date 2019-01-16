@@ -128,6 +128,7 @@ class VConsoleStorageTab extends VConsolePlugin {
         break;
       case 'sessionstorage':
         list = this.getSessionStorageList();
+        break;
       default:
         return false;
     }
