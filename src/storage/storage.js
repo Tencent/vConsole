@@ -29,7 +29,8 @@ class VConsoleStorageTab extends VConsolePlugin {
     this.currentType = ''; // cookies, localstorage, ...
     this.typeNameMap = {
       'cookies': 'Cookies',
-      'localstorage': 'LocalStorage'
+      'localstorage': 'LocalStorage',
+      'sessionstorage': 'SessionStorage'
     }
   }
 
@@ -39,7 +40,7 @@ class VConsoleStorageTab extends VConsolePlugin {
 
   onAddTopBar(callback) {
     let that = this;
-    let types = ['Cookies', 'LocalStorage'];
+    let types = ['Cookies', 'LocalStorage', 'SessionStorage'];
     let btnList = [];
     for (let i = 0; i < types.length; i++) {
       btnList.push({
@@ -106,6 +107,9 @@ class VConsoleStorageTab extends VConsolePlugin {
       case 'localstorage':
         this.clearLocalStorageList();
         break;
+      case 'sessionstorage':
+        this.clearSessionStorageList();
+        break;
       default:
         return false;
     }
@@ -121,6 +125,9 @@ class VConsoleStorageTab extends VConsolePlugin {
         break;
       case 'localstorage':
         list = this.getLocalStorageList();
+        break;
+      case 'sessionstorage':
+        list = this.getSessionStorageList();
         break;
       default:
         return false;
@@ -185,6 +192,27 @@ class VConsoleStorageTab extends VConsolePlugin {
     }
   }
 
+  getSessionStorageList() {
+    if (!window.sessionStorage) {
+      return [];
+    }
+
+    try {
+      let list = []
+      for (var i = 0; i < sessionStorage.length; i++) {
+        let name = sessionStorage.key(i),
+            value = sessionStorage.getItem(name);
+        list.push({
+          name: name,
+          value: value
+        });
+      }
+      return list;
+    } catch (e) {
+      return [];
+    }
+  }
+
   clearCookieList() {
     if (!document.cookie || !navigator.cookieEnabled) {
       return;
@@ -204,6 +232,16 @@ class VConsoleStorageTab extends VConsolePlugin {
         this.renderStorage();
       } catch (e) {
         alert('localStorage.clear() fail.');
+      }
+    }
+  }
+  clearSessionStorageList() {
+    if (!!window.sessionStorage) {
+      try {
+        sessionStorage.clear();
+        this.renderStorage();
+      } catch (e) {
+        alert('sessionStorage.clear() fail.');
       }
     }
   }
