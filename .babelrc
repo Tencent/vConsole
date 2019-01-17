@@ -1,11 +1,11 @@
 {
   "presets": [
     [
-      "@babel/env",
+      "@babel/preset-env",
       {
-        "modules": 'umd',
+        "modules": "umd",
         "targets": {
-          "node": "8.9",
+          "ie": "9",
         },
       },
     ],
