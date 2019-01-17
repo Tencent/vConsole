@@ -1,12 +1,14 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### V3.2.1 (2019-01-16)
+#### V3.2.2 (2019-01-17)
 
 - [FEATURE] Add console command prompt. (by @65147400)
+- [FEATURE] Add SessionStorage support in Storage tab. (by @hkc452)
 - [FIX] Fix `JSON.stringify` function which was incorrectly rewritten.
 - [FIX] Fix `logNumber` bug which was not reset when clear logs. (by @liuyuekeng)
 - [FIX] Fix unencoded HTML tag in Network tab. (by @mokang)
 - [FIX] Fix possible crash when decode content in Storage tab. (by @wolfsilver)
+- [FIX] Fix CSP buy cause by `nonce` attribute. (by @scotthuang)
 - [IMPROVE] Add bottom safe area to adapt to full screen such as iPhone X. (by @dingyi1993)
 
 
