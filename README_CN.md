@@ -12,7 +12,7 @@ vConsole
 - 查看 console 日志
 - 查看网络请求
 - 查看页面 element 结构
-- 查看 Cookies 和 localStorage，还支持SessionStorage
+- 查看 Cookies、localStorage 和 SessionStorage
 - 手动执行 JS 命令行
 - 自定义插件
 

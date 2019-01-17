@@ -1,12 +1,14 @@
 [English](./CHANGELOG.md) | 简体中文
 
-#### V3.2.1 (2019-01-16)
+#### V3.2.2 (2019-01-17)
 
 - 【特性】新增控制台输入提示。 (by @65147400)
+- 【特性】支持 SessionStorage。 (by @hkc452)
 - 【修复】修复 `JSON.stringify` 函数被错误地改写的问题。
 - 【修复】修复清空日志时没有重置 `logNumber` 的问题。 (by @liuyuekeng)
 - 【修复】修复 Network 面板中 HTML 标签未被 encode 的问题。 (by @mokang)
 - 【修复】修复 Storage 面板 decode 内容时可能会导致崩溃的问题。 (by @wolfsilver)
+- 【修复】修复 CSP 签名获取失败问题。 (by @scotthuang)
 - 【优化】增加底部安全区域，适配 iPhone X 等全面屏。 (by @dingyi1993)
 
 

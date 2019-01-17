@@ -12,7 +12,7 @@ A lightweight, extendable front-end developer tool for mobile web page.
 - View console logs
 - View network requests
 - View document elements
-- View Cookies and localStorages, even SessionStorage
+- View Cookies, LocalStorage and SessionStorage
 - Execute JS command manually
 - Custom plugin
 
