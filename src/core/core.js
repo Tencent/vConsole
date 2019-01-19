@@ -74,6 +74,24 @@ class VConsole {
       }
     }
 
+    if(this.option.onlyTest){
+      // only show in this environments
+      let defaultEnvs = ['localhost', 'test']
+      let environments = this.option.environments || defaultEnvs
+      if(!tool.isArray(environments)){
+        console.warn(`"environments" expected type Array. it's inoperative now`);
+      }else {
+        this.isInEnv = environments.some(item => {
+          return location.host.includes(item)
+        })
+        
+        if(!this.isInEnv){
+          return false
+        }
+      }
+    }
+
+
     // add built-in plugins
     this._addBuiltInPlugins();
 
