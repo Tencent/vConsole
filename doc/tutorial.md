@@ -87,6 +87,16 @@ console.error('bar'); // red word, pink background
 ```
 
 
+### Other methods
+
+Supported `console` methods:
+
+```javascript
+console.time('foo');    // start a timer named "foo"
+console.timeEnd('foo'); // stop "foo" timer and print the elapsed time
+```
+
+
 ### Formatted object / array
 
 Object or Array variable will be printed as formatted JSON:

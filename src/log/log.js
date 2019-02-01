@@ -21,11 +21,14 @@ import tplFold from './item_fold.html';
 import tplFoldCode from './item_fold_code.html';
 
 const DEFAULT_MAX_LOG_NUMBER = 1000;
+const ADDED_LOG_TAB_ID = [];
 
 class VConsoleLogTab extends VConsolePlugin {
+  static AddedLogID = [];
 
   constructor(...args) {
     super(...args);
+    ADDED_LOG_TAB_ID.push(this.id);
 
     this.tplTabbox = ''; // MUST be overwrite in child class
     this.allowUnformattedLog = true; // `[xxx]` format log
@@ -161,6 +164,11 @@ class VConsoleLogTab extends VConsolePlugin {
     window.console.timeEnd = this.console.timeEnd;
     window.console.clear = this.console.clear;
     this.console = {};
+
+    const idx = ADDED_LOG_TAB_ID.indexOf(this.id);
+    if (idx > -1) {
+      ADDED_LOG_TAB_ID.splice(idx, 1);
+    }
   }
 
   onShow() {
@@ -321,17 +329,31 @@ class VConsoleLogTab extends VConsolePlugin {
     // check `[default]` format
     let shouldBeHere = true;
     let pattern = /^\[(\w+)\]$/i;
-    let targetTabName = '';
+    let targetTabID = '';
+    let isInAddedTab = false;
     if (tool.isString(logs[0])) {
       let match = logs[0].match(pattern);
       if (match !== null && match.length > 0) {
-        targetTabName = match[1].toLowerCase();
+        targetTabID = match[1].toLowerCase();
+        isInAddedTab = ADDED_LOG_TAB_ID.indexOf(targetTabID) > -1;
       }
     }
-    if (targetTabName) {
-      shouldBeHere = (targetTabName == this.id);
-    } else if (this.allowUnformattedLog == false) {
+
+    if (targetTabID === this.id) {
+      // target tab is current tab
+      shouldBeHere = true;
+    } else if (isInAddedTab === true) {
+      // target tab is not current tab, but in added tab list
+      // so throw this log to other tab
       shouldBeHere = false;
+    } else {
+      // target tab is not in added tab list
+      if (this.id === 'default') {
+        // show this log in default tab
+        shouldBeHere = true;
+      } else {
+        shouldBeHere = false;
+      }
     }
 
     if (!shouldBeHere) {
@@ -354,7 +376,7 @@ class VConsoleLogTab extends VConsolePlugin {
     }
 
     // remove `[xxx]` format
-    if (tool.isString(logs[0])) {
+    if (tool.isString(logs[0]) && isInAddedTab) {
       logs[0] = logs[0].replace(pattern, '');
       if (logs[0] === '') {
         logs.shift();
