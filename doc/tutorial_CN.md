@@ -84,6 +84,16 @@ console.error('bar'); // 红底红字
 ```
 
 
+### 其他方法
+
+支持以下 `console` 方法：
+
+```javascript
+console.time('foo');    // 启动名为 foo 的计时器
+console.timeEnd('foo'); // 停止 foo 计时器并输出经过的时间
+```
+
+
 ### Object/Array 结构化展示
 
 支持打印 Object 或 Array 变量，会以结构化 JSON 形式输出（并折叠）：
@@ -116,6 +126,12 @@ console.log('UserID:', uid); // 打印出 UserID: 233
 ```javascript
 console.log('[system]', 'foo'); // 'foo' 会输出到 System 面板
 console.log('[system] bar'); // 这行日志会输出到 Log 面板而非 System 面板
+```
+
+若编写自定义 log 面板插件，亦可通过上述格式将 log 输出到自定义面板：
+
+```javascript
+console.log('[myplugin]', 'bar'); // 'myplugin' 为自定义面板插件的 id
 ```
 
 

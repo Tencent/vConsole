@@ -208,7 +208,11 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       //print error stack info
       let stack = !!error && !!error.stack;
       let statckInfo = (stack && error.stack.toString()) || '';
-      that.printLog({logType: 'error', logs: [msg, statckInfo], noOrigin: true});
+      that.printLog({
+        logType: 'error',
+        logs: [msg, statckInfo],
+        noOrigin: true
+      });
       if (tool.isFunction(that.windowOnError)) {
         that.windowOnError.call(window, message, source, lineNo, colNo, error);
       }
@@ -224,7 +228,6 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     this.printLog({
       logType: 'log',
       content: $.render(tplItemCode, {content: cmd, type: 'input'}),
-      noMeta: true,
       style: ''
     });
     // do not use `eval` or `new Function` to avoid `unsafe-eval` CSP rule
@@ -289,7 +292,6 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     this.printLog({
       logType: 'log',
       content: $content,
-      noMeta: true,
       style: ''
     });
     window.winKeys = Object.getOwnPropertyNames(window).sort();
