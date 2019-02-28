@@ -13,7 +13,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole System Tab
  */
 
-import * as tool from '../lib/tool.js';
 import VConsoleLogTab from './log.js';
 import tplTabbox from './tabbox_system.html';
 

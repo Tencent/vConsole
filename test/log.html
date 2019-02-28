@@ -20,6 +20,7 @@
     <a onclick="circularArray()" href="javascript:;" class="weui_btn weui_btn_default">circularArray</a>
     <a onclick="largeObject()" href="javascript:;" class="weui_btn weui_btn_default">largeObject</a>
     <a onclick="smallArray()" href="javascript:;" class="weui_btn weui_btn_default">smallArray</a>
+    <a onclick="repeatLog()" href="javascript:;" class="weui_btn weui_btn_default">repeatLog</a>
     <a onclick="windowError()" href="javascript:;" class="weui_btn weui_btn_default">window.error</a>
   </div>
 </body>
@@ -40,7 +41,7 @@ window.vConsole = new window.VConsole({
 function formattedLog() {
   console.info('formattedLog() Start');
   console.log('[default]', 'This log should be shown in Log tab.');
-  console.log('[default] Switch to System tab to see next log.');
+  console.log('[default]', 'Switch to System tab to see next log.');
   console.log('[system]', 'This log should be shown in System tab.');
   console.info('formattedLog() End');
 }
@@ -96,6 +97,19 @@ function smallArray() {
   var arr = [0,1,2,3,4,5,6,7,8,9,10,11];
   console.log(arr);
   console.info('smallArray() End');
+}
+
+function repeatLog() {
+  console.log('repeatLog() Start');
+  var count = 0;
+  var timer = setInterval(() => {
+    count ++;
+    console.log('repeat', 'foo bar');
+    if (count >= 100) {
+      clearInterval(timer);
+      console.log('repeatLog() End');
+    }
+  }, 50);
 }
 
 function windowError() {

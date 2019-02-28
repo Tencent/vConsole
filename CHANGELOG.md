@@ -1,5 +1,11 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### V3.3.0 (2019-02-02)
+
+- [FEATURE] Add the ability to collapse the same log.
+- [FIX] Fix issue which formatted log (like `console.log('[foo]', 'bar')`) will not display in Log tab.
+
+
 #### V3.2.2 (2019-01-17)
 
 - [FEATURE] Add console command prompt. (by @65147400)

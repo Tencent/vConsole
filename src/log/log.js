@@ -21,11 +21,19 @@ import tplFold from './item_fold.html';
 import tplFoldCode from './item_fold_code.html';
 
 const DEFAULT_MAX_LOG_NUMBER = 1000;
+const ADDED_LOG_TAB_ID = [];
+let preLog = {
+  // _id: string
+  // logType: string
+  // logText: string
+};
 
 class VConsoleLogTab extends VConsolePlugin {
+  static AddedLogID = [];
 
   constructor(...args) {
     super(...args);
+    ADDED_LOG_TAB_ID.push(this.id);
 
     this.tplTabbox = ''; // MUST be overwrite in child class
     this.allowUnformattedLog = true; // `[xxx]` format log
@@ -161,6 +169,11 @@ class VConsoleLogTab extends VConsolePlugin {
     window.console.timeEnd = this.console.timeEnd;
     window.console.clear = this.console.clear;
     this.console = {};
+
+    const idx = ADDED_LOG_TAB_ID.indexOf(this.id);
+    if (idx > -1) {
+      ADDED_LOG_TAB_ID.splice(idx, 1);
+    }
   }
 
   onShow() {
@@ -256,7 +269,7 @@ class VConsoleLogTab extends VConsolePlugin {
       window.console[method] = (...args) => {
         this.printLog({
           logType: method,
-          logs: args
+          logs: args,
         });
       };
     });
@@ -284,6 +297,7 @@ class VConsoleLogTab extends VConsolePlugin {
   clearLog() {
     $.one('.vc-log', this.$tabbox).innerHTML = '';
     this.logNumber = 0;
+    preLog = {};
   }
 
   /**
@@ -299,15 +313,14 @@ class VConsoleLogTab extends VConsolePlugin {
   /**
    * print a log to log box
    * @protected
-   * @param  string  tabName    auto|default|system
+   * @param  string  _id        random unique id
+   * @param  string  tabName    default|system
    * @param  string  logType    log|info|debug|error|warn
    * @param  array   logs       `logs` or `content` can't be empty
    * @param  object  content    `logs` or `content` can't be empty
    * @param  boolean noOrigin
-   * @param  boolean noMeta
    * @param  int     date
    * @param  string  style
-   * @param  string  meta
    */
   printLog(item) {
     let logs = item.logs || [];
@@ -321,17 +334,31 @@ class VConsoleLogTab extends VConsolePlugin {
     // check `[default]` format
     let shouldBeHere = true;
     let pattern = /^\[(\w+)\]$/i;
-    let targetTabName = '';
+    let targetTabID = '';
+    let isInAddedTab = false;
     if (tool.isString(logs[0])) {
       let match = logs[0].match(pattern);
       if (match !== null && match.length > 0) {
-        targetTabName = match[1].toLowerCase();
+        targetTabID = match[1].toLowerCase();
+        isInAddedTab = ADDED_LOG_TAB_ID.indexOf(targetTabID) > -1;
       }
     }
-    if (targetTabName) {
-      shouldBeHere = (targetTabName == this.id);
-    } else if (this.allowUnformattedLog == false) {
+
+    if (targetTabID === this.id) {
+      // target tab is current tab
+      shouldBeHere = true;
+    } else if (isInAddedTab === true) {
+      // target tab is not current tab, but in added tab list
+      // so throw this log to other tab
       shouldBeHere = false;
+    } else {
+      // target tab is not in added tab list
+      if (this.id === 'default') {
+        // show this log in default tab
+        shouldBeHere = true;
+      } else {
+        shouldBeHere = false;
+      }
     }
 
     if (!shouldBeHere) {
@@ -340,6 +367,11 @@ class VConsoleLogTab extends VConsolePlugin {
         this.printOriginLog(item);
       }
       return;
+    }
+
+    // add id
+    if (!item._id) {
+      item._id = '__vc_' + Math.random().toString(36).substring(2, 8);
     }
 
     // save log date
@@ -354,24 +386,83 @@ class VConsoleLogTab extends VConsolePlugin {
     }
 
     // remove `[xxx]` format
-    if (tool.isString(logs[0])) {
+    if (tool.isString(logs[0]) && isInAddedTab) {
       logs[0] = logs[0].replace(pattern, '');
       if (logs[0] === '') {
         logs.shift();
       }
     }
 
-    // use date as meta
-    if (!item.meta) {
-      let date = tool.getDate(item.date);
-      item.meta = date.hour + ':' + date.minute + ':' + date.second;
+    // make for previous log
+    const curLog = {
+      _id: item._id,
+      logType: item.logType,
+      logText: [],
+      hasContent: !!item.content,
+      count: 1,
+    };
+    for (let i = 0; i < logs.length; i++) {
+      if (tool.isFunction(logs[i])) {
+        curLog.logText.push(logs[i].toString());
+      } else if (tool.isObject(logs[i]) || tool.isArray(logs[i])) {
+        curLog.logText.push(tool.JSONStringify(logs[i]));
+      } else {
+        curLog.logText.push(logs[i]);
+      }
     }
+    curLog.logText = curLog.logText.join(' ');
+
+    // check repeat
+    if (!curLog.hasContent && preLog.logType === curLog.logType && preLog.logText === curLog.logText) {
+      this.printRepeatLog();
+    } else {
+      this.printNewLog(item, logs);
+      // save previous log
+      preLog = curLog;
+    }
+
+
+    // scroll to bottom if it is in the bottom before
+    if (this.isInBottom) {
+      this.autoScrollToBottom();
+    }
+
+    // print log to origin console
+    if (!item.noOrigin) {
+      this.printOriginLog(item);
+    }
+  }
+
+  /**
+   * 
+   * @protected
+   */
+  printRepeatLog() {
+    const $item = $.one('#' + preLog._id);
+    let $repeat = $.one('.vc-item-repeat', $item);
+    if (!$repeat) {
+      $repeat = document.createElement('i');
+      $repeat.className = 'vc-item-repeat';
+      $item.insertBefore($repeat, $item.lastChild);
+    }
+    if (!preLog.count) {
+      // preLog.count = 1;
+    }
+    preLog.count++;
+    $repeat.innerHTML = preLog.count;
+    return;
+  }
+
+  /**
+   * 
+   * @protected
+   */
+  printNewLog(item, logs) {
 
     // create line
     let $line = $.render(tplItem, {
+      _id: item._id,
       logType: item.logType,
-      noMeta: !!item.noMeta,
-      meta: item.meta,
       style: item.style || ''
     });
 
@@ -415,16 +506,6 @@ class VConsoleLogTab extends VConsolePlugin {
     // remove overflow logs
     this.logNumber++;
     this.limitMaxLogs();
-
-    // scroll to bottom if it is in the bottom before
-    if (this.isInBottom) {
-      this.autoScrollToBottom();
-    }
-
-    // print log to origin console
-    if (!item.noOrigin) {
-      this.printOriginLog(item);
-    }
   }
 
   /**

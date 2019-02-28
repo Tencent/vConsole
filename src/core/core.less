@@ -213,28 +213,26 @@
 
       .vc-item-content {
         margin-right: 60em / @font;
-        display: block;
+        display: inline-block;
       }
 
-      .vc-item-meta {
-        color: #888;
-        float: right;
-        width: 60em / @font;
-        text-align: right;
+      .vc-item-repeat {
+        display: inline-block;
+        margin-right: 4em / @font;
+        padding: 0 @fontSize / 2;
+        color: #D7E0EF;
+        background-color: #42597F;
+        border-radius: @fontSize / 1.5;
       }
-
     }
 
-    .vc-item.vc-item-nometa {
-
-      .vc-item-content {
-        margin-right: 0;
-      }
-
-      .vc-item-meta {
-        display: none;
-      }
-
+    .vc-item.vc-item-error .vc-item-repeat {
+      color: #901818;
+      background-color: #DC2727;
+    }
+    .vc-item.vc-item-warn .vc-item-repeat {
+      color: #987D20;
+      background-color: #F4BD02;
     }
 
     .vc-item .vc-item-code {
