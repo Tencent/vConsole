@@ -58,7 +58,7 @@ $.addClass = function($el, className) {
 }
 
 /**
- * remove classNames from an or multiple element(s)
+ * remove className(s) from an or multiple element(s)
  * @public
  */
 $.removeClass = function($el, className) {
