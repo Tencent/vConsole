@@ -731,6 +731,9 @@ class VConsole {
     }
     // remove DOM
     this.$dom.parentNode.removeChild(this.$dom);
+
+    // reverse isInited when destroyed
+    this.isInited = false;
   }
 
 } // END class
