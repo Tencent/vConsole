@@ -173,7 +173,7 @@ myPlugin.on('show', function() {
 ```
 
 
-## Hide
+## hide
 
 Trigger when a tab is hidden. Only the plugin binded with `renderTab` will receive this event.
 
