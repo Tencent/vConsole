@@ -423,7 +423,7 @@ class VConsoleLogTab extends VConsolePlugin {
 
 
     // scroll to bottom if it is in the bottom before
-    if (this.isInBottom) {
+    if (this.isInBottom && this.isShow) {
       this.autoScrollToBottom();
     }
 
@@ -434,7 +434,7 @@ class VConsoleLogTab extends VConsolePlugin {
   }
 
   /**
-   * 
+   *
    * @protected
    */
   printRepeatLog() {
@@ -454,7 +454,7 @@ class VConsoleLogTab extends VConsolePlugin {
   }
 
   /**
-   * 
+   *
    * @protected
    */
   printNewLog(item, logs) {
