@@ -23,10 +23,7 @@ const $ = {};
  * @public
  */
 $.one = function(selector, contextElement) {
-  if (contextElement) {
-    return contextElement.querySelector(selector);
-  }
-  return document.querySelector(selector);
+  return (contextElement || document).querySelector(selector)
 }
 
 /**
@@ -34,21 +31,12 @@ $.one = function(selector, contextElement) {
  * @public
  */
 $.all = function(selector, contextElement) {
-  let nodeList,
-    list = [];
-  if (contextElement) {
-    nodeList = contextElement.querySelectorAll(selector);
-  } else {
-    nodeList = document.querySelectorAll(selector);
-  }
-  if (nodeList && nodeList.length > 0) {
-    list = Array.prototype.slice.call(nodeList);
-  }
-  return list;
+  const nodeList = (contextElement || document).querySelectorAll(selector)
+  return Array.from(nodeList)
 }
 
 /**
- * add className to an element
+ * add className(s) to an or multiple element(s)
  * @public
  */
 $.addClass = function($el, className) {
@@ -59,18 +47,18 @@ $.addClass = function($el, className) {
     $el = [$el];
   }
   for (let i=0; i<$el.length; i++) {
-    let name = $el[i].className || '',
-        arr = name.split(' ');
-    if (arr.indexOf(className) > -1) {
-      continue;
+    if (isArray(className)) {
+      className.forEach(name => $el[0].classList.add(name));
+    } else if (className.split(' ')[1]) {
+      className.split(' ').forEach(name => $el[0].classList.add(name))
+    } else {
+      $el[0].classList.add(className);
     }
-    arr.push(className);
-    $el[i].className = arr.join(' ');
   }
 }
 
 /**
- * remove className from an element
+ * remove className(s) from an or multiple element(s)
  * @public
  */
 $.removeClass = function($el, className) {
@@ -81,13 +69,13 @@ $.removeClass = function($el, className) {
     $el = [$el];
   }
   for (let i=0; i<$el.length; i++) {
-    let arr = $el[i].className.split(' ');
-    for (let j=0; j<arr.length; j++) {
-      if (arr[j] == className) {
-        arr[j] = '';
-      }
+    if (isArray(className)) {
+      className.forEach(name => $el[0].classList.remove(name));
+    }} else if (className.split(' ')[1]) {
+      className.split(' ').forEach(name => $el[0].classList.remove(name))
+    } else {
+      $el[0].classList.remove(className);
     }
-    $el[i].className = arr.join(' ').trim();
   }
 }
 
@@ -99,13 +87,7 @@ $.hasClass = function($el, className) {
   if (!$el) {
     return false;
   }
-  let arr = $el.className.split(' ');
-  for (let i=0; i<arr.length; i++) {
-    if (arr[i] == className) {
-      return true;
-    }
-  }
-  return false;
+  return $el.classList.contains(className)
 }
 
 /**
@@ -120,15 +102,10 @@ $.bind = function($el, eventType, fn, useCapture) {
   if (!$el) {
     return;
   }
-  if (useCapture === undefined) {
-    useCapture = false;
-  }
   if (!isArray($el)) {
     $el = [$el];
   }
-  for (let i=0; i<$el.length; i++) {
-    $el[i].addEventListener(eventType, fn, useCapture);
-  }
+  $el.forEach(el => el.addEventListener(eventType, fn, !!useCapture))
 }
 
 /**
