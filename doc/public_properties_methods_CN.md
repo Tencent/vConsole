@@ -1,3 +1,4 @@
+
 公共属性及方法
 ==============================
 
@@ -27,13 +28,14 @@ vConsole.version // => "3.1.0"
 - 可写
 - 类型：object
 
-键名                  | 类型      | 可选     | 默认值                                       | 描述
---------------------- | -------- | -------- | ------------------------------------------- | -------------------
-defaultPlugins        | Array    | true     | ['system', 'network', 'element', 'storage'] | 需要自动初始化并加载的内置插件。 
-onReady               | Function | true     |                                             | 回调方法，当 vConsole 完成初始化并加载完内置插件后触发。
-onClearLog            | Function | true     |                                             | 回调方法，点击 Log 或 System 面板的 "Clear" 按钮后出发。
-maxLogNumber          | Number   | true     | 1000                                        | 超出上限的日志会被自动清除。
-disableLogScrolling   | Boolean  | true     |                                             | 若为 `false`，有新日志时面板将不会自动滚动到底部。
+| 键名                  | 类型       | 可选   | 默认值                                      | 描述                                       |
+| ------------------- | -------- | ---- | ---------------------------------------- | ---------------------------------------- |
+| defaultPlugins      | Array    | true | ['system', 'network', 'element', 'storage'] | 需要自动初始化并加载的内置插件。                         |
+| onReady             | Function | true |                                          | 回调方法，当 vConsole 完成初始化并加载完内置插件后触发。        |
+| onClearLog          | Function | true |                                          | 回调方法，点击 Log 或 System 面板的 "Clear" 按钮后出发。  |
+| maxLogNumber        | Number   | true | 1000                                     | 超出上限的日志会被自动清除。                           |
+| disableLogScrolling | Boolean  | true |                                          | 若为 `false`，有新日志时面板将不会自动滚动到底部。            |
+| initAfterDOMReady   | Boolean  | true | false                                    | 若为`true`：`vConsole`在`DOMContentLoaded`后执行；若为`flase`,`vConsole`在`window.onLoad`后执行 |
 
 例子：
 

@@ -47,7 +47,8 @@ class VConsole {
 
     this.isInited = false;
     this.option = {
-      defaultPlugins: ['system', 'network', 'element', 'storage']
+      defaultPlugins: ['system', 'network', 'element', 'storage'],
+      initAfterDOMReady: false
     };
 
     this.activedTab = '';
@@ -91,7 +92,13 @@ class VConsole {
       if (document.readyState == 'complete') {
         _onload();
       } else {
-        $.bind(window, 'load', _onload);
+        if(this.option.initAfterDOMReady){
+          document.addEventListener("DOMContentLoaded", function() {
+            _onload();
+          })
+        }else{
+          $.bind(window, 'load', _onload);
+        }
       }
     } else {
       // if document does not exist, wait for it
