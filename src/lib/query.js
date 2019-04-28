@@ -48,11 +48,11 @@ $.addClass = function($el, className) {
   }
   for (let i=0; i<$el.length; i++) {
     if (isArray(className)) {
-      className.forEach(name => $el[0].classList.add(name));
+      className.forEach(name => $el[i].classList.add(name));
     } else if (className.split(' ')[1]) {
-      className.split(' ').forEach(name => $el[0].classList.add(name))
+      className.split(' ').forEach(name => $el[i].classList.add(name))
     } else {
-      $el[0].classList.add(className);
+      $el[i].classList.add(className);
     }
   }
 }
@@ -70,11 +70,11 @@ $.removeClass = function($el, className) {
   }
   for (let i=0; i<$el.length; i++) {
     if (isArray(className)) {
-      className.forEach(name => $el[0].classList.remove(name));
-    }} else if (className.split(' ')[1]) {
-      className.split(' ').forEach(name => $el[0].classList.remove(name))
+      className.forEach(name => $el[i].classList.remove(name));
+    } else if (className.split(' ')[1]) {
+      className.split(' ').forEach(name => $el[i].classList.remove(name))
     } else {
-      $el[0].classList.remove(className);
+      $el[i].classList.remove(className);
     }
   }
 }
