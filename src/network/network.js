@@ -369,7 +369,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
         query = query.split('&'); // => ['b=c', 'd=?e']
         for (let q of query) {
           q = q.split('=');
-          item.getData[ q[0] ] = q[1];
+          item.getData[ q[0] ] = decodeURIComponent(q[1]);
         }
       }
 
