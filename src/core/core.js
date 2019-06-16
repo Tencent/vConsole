@@ -273,8 +273,6 @@ class VConsole {
       that.switchPos.y = that.switchPos.endY;
       that.switchPos.startX = 0;
       that.switchPos.startY = 0;
-      that.switchPos.endX = 0;
-      that.switchPos.endY = 0;
       tool.setStorage('switch_x', that.switchPos.x);
       tool.setStorage('switch_y', that.switchPos.y);
     });
