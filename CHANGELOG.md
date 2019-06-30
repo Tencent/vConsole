@@ -1,5 +1,13 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### V3.3.1 (2019-06-30)
+
+- [FEATURE] Add TypeScript definition file. (by by @jas0ncn)
+- [FIX] Fix switch button position issue. (by @rexschuang)
+- [FIX] Avoid scrolling to bottom when away from bottom edge. (by @ele828)
+- [FIX] Fix a few minor issues. (by @stenders)
+
+
 #### V3.3.0 (2019-02-02)
 
 - [FEATURE] Add the ability to collapse the same log.

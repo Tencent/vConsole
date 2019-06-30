@@ -1,9 +1,10 @@
 {
   "name": "vconsole",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "A lightweight, extendable front-end developer tool for mobile web page.",
   "homepage": "https://github.com/Tencent/vConsole",
   "main": "dist/vconsole.min.js",
+  "typings": "./index.d.ts",
   "scripts": {
     "test": "mocha",
     "dist": "webpack"
@@ -27,6 +28,7 @@
     "babel-loader": "^8.0.4",
     "babel-plugin-add-module-exports": "^1.0.0",
     "chai": "^4.2.0",
+    "copy-webpack-plugin": "^5.0.3",
     "css-loader": "^2.1.0",
     "html-loader": "^0.5.5",
     "jsdom": "^13.2.0",

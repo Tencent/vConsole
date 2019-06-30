@@ -182,7 +182,7 @@ myPlugin.on('show', function() {
 ```
 
 
-## Hide
+## hide
 
 当插件的 tab 被隐藏时触发。只有绑定了 `renderTab` 事件的插件才会收到此事件。
 
