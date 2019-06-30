@@ -71,7 +71,7 @@ $.removeClass = function($el, className) {
   for (let i=0; i<$el.length; i++) {
     if (isArray(className)) {
       className.forEach(name => $el[0].classList.remove(name));
-    }} else if (className.split(' ')[1]) {
+    } else if (className.split(' ')[1]) {
       className.split(' ').forEach(name => $el[0].classList.remove(name))
     } else {
       $el[0].classList.remove(className);
