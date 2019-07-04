@@ -23,7 +23,11 @@ const $ = {};
  * @public
  */
 $.one = function(selector, contextElement) {
-  return (contextElement || document).querySelector(selector)
+  try {
+    return (contextElement || document).querySelector(selector) || undefined;
+  } catch (e) {
+    return undefined;
+  }
 }
 
 /**
@@ -31,8 +35,12 @@ $.one = function(selector, contextElement) {
  * @public
  */
 $.all = function(selector, contextElement) {
-  const nodeList = (contextElement || document).querySelectorAll(selector)
-  return Array.from(nodeList)
+  try {
+    const nodeList = (contextElement || document).querySelectorAll(selector);
+    return Array.from(nodeList);
+  } catch (e) {
+    return [];
+  }
 }
 
 /**
@@ -47,13 +55,13 @@ $.addClass = function($el, className) {
     $el = [$el];
   }
   for (let i=0; i<$el.length; i++) {
-    if (isArray(className)) {
-      className.forEach(name => $el[0].classList.add(name));
-    } else if (className.split(' ')[1]) {
-      className.split(' ').forEach(name => $el[0].classList.add(name))
-    } else {
-      $el[0].classList.add(className);
+    let name = $el[i].className || '',
+    arr = name.split(' ');
+    if (arr.indexOf(className) > -1) {
+      continue;
     }
+    arr.push(className);
+    $el[i].className = arr.join(' ');
   }
 }
 
@@ -69,13 +77,13 @@ $.removeClass = function($el, className) {
     $el = [$el];
   }
   for (let i=0; i<$el.length; i++) {
-    if (isArray(className)) {
-      className.forEach(name => $el[0].classList.remove(name));
-    } else if (className.split(' ')[1]) {
-      className.split(' ').forEach(name => $el[0].classList.remove(name))
-    } else {
-      $el[0].classList.remove(className);
+    let arr = $el[i].className.split(' ');
+    for (let j=0; j<arr.length; j++) {
+      if (arr[j] == className) {
+        arr[j] = '';
+      }
     }
+    $el[i].className = arr.join(' ').trim();
   }
 }
 
@@ -84,10 +92,10 @@ $.removeClass = function($el, className) {
  * @public
  */
 $.hasClass = function($el, className) {
-  if (!$el) {
+  if (!$el || !$el.classList) {
     return false;
   }
-  return $el.classList.contains(className)
+  return $el.classList.contains(className);
 }
 
 /**
@@ -105,7 +113,9 @@ $.bind = function($el, eventType, fn, useCapture) {
   if (!isArray($el)) {
     $el = [$el];
   }
-  $el.forEach(el => el.addEventListener(eventType, fn, !!useCapture))
+  $el.forEach((el) => {
+    el.addEventListener(eventType, fn, !!useCapture);
+  })
 }
 
 /**
