@@ -1,6 +1,6 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### V3.3.1 (2019-06-30)
+#### V3.3.2 (2019-07-04)
 
 - [FEATURE] Add TypeScript definition file. (by by @jas0ncn)
 - [FIX] Fix switch button position issue. (by @rexschuang)

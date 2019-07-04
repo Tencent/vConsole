@@ -1,6 +1,6 @@
 [English](./CHANGELOG.md) | 简体中文
 
-#### V3.3.1 (2019-06-30)
+#### V3.3.2 (2019-07-04)
 
 - 【特性】增加 TypeScript 声明文件。（by @jas0ncn）
 - 【修复】修复开关按钮拖动后位置不对的问题。（by @rexschuang）
