@@ -24,6 +24,16 @@
 </html>
 
 <script>
+window.vConsole = new window.VConsole({
+  maxLogNumber: 1000,
+  // disableLogScrolling: true,
+  onReady: function() {
+    console.log('vConsole is ready.');
+  },
+  onClearLog: function() {
+    console.log('on clearLog');
+  }
+});
 
 function newTab() {
   console.info('newTab() Start');
