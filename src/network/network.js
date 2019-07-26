@@ -130,7 +130,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
     // remove dom
     for (let id in this.domList) {
-      this.domList[id].remove();
+      this.domList[id].parentNode.removeChild(this.domList[id]);
       this.domList[id] = undefined;
     }
     this.domList = {};
