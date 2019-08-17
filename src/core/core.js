@@ -91,7 +91,7 @@ class VConsole {
       if (document.readyState == 'complete') {
         _onload();
       } else {
-        $.bind(window, 'load', _onload);
+        $.bind(window, 'DOMContentLoaded', _onload);
       }
     } else {
       // if document does not exist, wait for it
