@@ -1,13 +1,13 @@
 {
   "name": "vconsole",
-  "version": "3.3.2",
+  "version": "3.3.3",
   "description": "A lightweight, extendable front-end developer tool for mobile web page.",
   "homepage": "https://github.com/Tencent/vConsole",
   "main": "dist/vconsole.min.js",
   "typings": "dist/vconsole.min.d.ts",
   "scripts": {
     "test": "mocha",
-    "dist": "webpack"
+    "build": "webpack"
   },
   "keywords": [
     "console",
@@ -20,25 +20,25 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/plugin-proposal-class-properties": "^7.3.0",
-    "@babel/plugin-proposal-export-namespace-from": "^7.2.0",
-    "@babel/plugin-proposal-object-rest-spread": "^7.3.1",
-    "@babel/preset-env": "^7.3.1",
-    "babel-loader": "^8.0.4",
-    "babel-plugin-add-module-exports": "^1.0.0",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-export-namespace-from": "^7.5.2",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-add-module-exports": "^1.0.2",
     "chai": "^4.2.0",
-    "copy-webpack-plugin": "^5.0.3",
-    "css-loader": "^2.1.0",
+    "copy-webpack-plugin": "^5.0.4",
+    "css-loader": "^3.2.0",
     "html-loader": "^0.5.5",
-    "jsdom": "^13.2.0",
+    "jsdom": "^15.1.1",
     "json-loader": "^0.5.7",
-    "less": "^3.9.0",
-    "less-loader": "^4.1.0",
+    "less": "^3.10.0",
+    "less-loader": "^5.0.0",
     "mocha": "^5.2.0",
-    "style-loader": "^0.23.1",
-    "webpack": "^4.29.0",
-    "webpack-cli": "^3.2.1"
+    "style-loader": "^1.0.0",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.6"
   },
   "author": "Tencent",
   "license": "MIT"

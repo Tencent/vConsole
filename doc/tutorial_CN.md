@@ -119,6 +119,21 @@ var uid = 233;
 console.log('UserID:', uid); // 打印出 UserID: 233
 ```
 
+
+### 样式
+
+可使用 `%c` 来添加样式：
+
+```javascript
+console.log('%c blue %c red', 'color:blue', 'color:red'); // blue red
+console.log('%c FOO', 'font-weight:bold', 'bar'); // FOO bar
+console.log('%c Foo %c bar', 'color:red'); // Foo %c bar
+```
+
+只有第一个参数支持 `%c` 格式，一旦出现 `%c` 格式，后续的字符串参数将作为 HTML style 样式来替换 `%c`；未被替换的 `%c`、剩余的参数，将作为默认日志照常输出。
+
+
+
 ### 特殊格式
 
 支持使用 `[system]` 作为第一个参数，来将 log 输出到 System 面板：

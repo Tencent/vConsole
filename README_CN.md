@@ -38,6 +38,12 @@ npm install vconsole
 </script>
 ```
 
+对于 TypeScript，可引入 d.ts 文件：
+
+```javascript
+import 'path/to/vconsole.min.d.ts';
+```
+
 详细使用方法请参阅[使用教程](./doc/tutorial_CN.md)。
 
 

@@ -38,6 +38,12 @@ Import `dist/vconsole.min.js` to your project:
 </script>
 ```
 
+For TypeScript users:
+
+```javascript
+import 'path/to/vconsole.min.d.ts';
+```
+
 See [Tutorial](./doc/tutorial.md) for more details.
 
 

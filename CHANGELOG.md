@@ -1,5 +1,14 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### V3.3.3 (2019-08-18)
+
+- [FEATURE] Add `%c` log format to support custom log style, see [Tutorial](./doc/tutorial.md) for more details.
+- [FEATURE] Add `VConsole.VConsoleLogPlugin` (`VConsole.VConsole*` plugins etc.) to `VConsole` class.
+- [IMPROVE] Display vConsole on `window DOMContentLoaded` instead of `window load`.
+- [FIX] Fix remove cookie fail when it is set path=/ or top domain. (#264 by @qianxinfeng)
+- [FIX] Fix a few minor issues. (#267 by @Molunerfinn, #272 by @domom)
+
+
 #### V3.3.2 (2019-07-04)
 
 - [FEATURE] Add TypeScript definition file. (by by @jas0ncn)

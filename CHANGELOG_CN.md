@@ -1,5 +1,14 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### V3.3.3 (2019-08-18)
+
+- 【特性】增加 `%c` 以支持自定义日志样式，详情见 [使用教程](./doc/tutorial_CN.md)。
+- 【特性】增加 `VConsole.VConsoleLogPlugin` 等 `VConsole.VConsole*` 内置插件在 `VConsole` class 上的挂载。
+- 【优化】在 `window DOMContentLoaded` 而不是 `window load` 时显示 vConsole。
+- 【修复】修复当 cookie `path=/` 或设置了 `domain` 时删除失败的问题。(#264 by @qianxinfeng)
+- 【修复】修复若干小问题。(#267 by @Molunerfinn, #272 by @domom)
+
+
 #### V3.3.2 (2019-07-04)
 
 - 【特性】增加 TypeScript 声明文件。（by @jas0ncn）
