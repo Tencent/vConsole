@@ -217,10 +217,13 @@ class VConsoleStorageTab extends VConsolePlugin {
     if (!document.cookie || !navigator.cookieEnabled) {
       return;
     }
-
+    let hostname = window.location.hostname;
     let list = this.getCookieList();
     for (var i=0; i<list.length; i++) {
-      document.cookie = list[i].name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      let name=list[i].name;
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.${hostname.split('.').slice(-2).join('.')}`;
     }
     this.renderStorage();
   }
