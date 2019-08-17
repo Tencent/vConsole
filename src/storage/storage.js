@@ -220,7 +220,7 @@ class VConsoleStorageTab extends VConsolePlugin {
     let hostname = window.location.hostname;
     let list = this.getCookieList();
     for (var i=0; i<list.length; i++) {
-      let name=list[i].name;
+      let name = list[i].name;
       document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
       document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
       document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.${hostname.split('.').slice(-2).join('.')}`;
