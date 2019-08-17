@@ -466,6 +466,28 @@ class VConsoleLogTab extends VConsolePlugin {
       style: item.style || ''
     });
 
+    // find %c keyword in first log only
+    const patternC = /(\%c )|( \%c)/g;
+    let logStyle = [];
+    if (tool.isString(logs[0]) && patternC.test(logs[0])) {
+      // '%c aaa %c bbb'  =>  ['aaa', 'bbb']
+      const _logs = logs[0].split(patternC).filter((val) => {
+        return val !== undefined && val !== '' && !/ ?\%c ?/.test(val);
+      });
+      const matchC = logs[0].match(patternC);
+      // use the following string logs as style
+      for (let i = 0; i < matchC.length; i++) {
+        if (tool.isString(logs[i + 1])) {
+          logStyle.push(logs[i + 1]);
+        }
+      }
+      // add remain logs
+      for (let i = matchC.length + 1; i < logs.length; i++) {
+        _logs.push(logs[i]);
+      }
+      logs = _logs;
+    }
+
     let $content = $.one('.vc-item-content', $line);
     // generate content from item.logs
     for (let i = 0; i < logs.length; i++) {
@@ -482,7 +504,7 @@ class VConsoleLogTab extends VConsolePlugin {
           log = this.getFoldedLine(logs[i]);
         } else {
           // default
-          log = '<span> ' + tool.htmlEncode(logs[i]).replace(/\n/g, '<br/>') + '</span>';
+          log = (logStyle[i] ? `<span style="${logStyle[i]}"> ` : '<span> ') + tool.htmlEncode(logs[i]).replace(/\n/g, '<br/>') + '</span>';
         }
       } catch (e) {
         log = '<span> [' + (typeof logs[i]) + ']</span>';
