@@ -18,8 +18,6 @@ import './lib/symbol.js';
 
 // classes
 import VConsole from './core/core.js';
-import VConsolePlugin from './lib/plugin.js';
 
 // export
-VConsole.VConsolePlugin = VConsolePlugin;
 export default VConsole;

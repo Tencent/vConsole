@@ -25,6 +25,8 @@ import tplTopBarItem from './topbar_item.html';
 import tplToolItem from './tool_item.html';
 
 // built-in plugins
+import VConsolePlugin from '../lib/plugin.js';
+import VConsoleLogPlugin from '../log/log.js';
 import VConsoleDefaultPlugin from '../log/default.js';
 import VConsoleSystemPlugin from '../log/system.js';
 import VConsoleNetworkPlugin from '../network/network.js';
@@ -735,5 +737,14 @@ class VConsole {
   }
 
 } // END class
+
+// export static class
+VConsole.VConsolePlugin = VConsolePlugin;
+VConsole.VConsoleLogPlugin = VConsoleLogPlugin;
+VConsole.VConsoleDefaultPlugin = VConsoleDefaultPlugin;
+VConsole.VConsoleSystemPlugin = VConsoleSystemPlugin;
+VConsole.VConsoleNetworkPlugin = VConsoleNetworkPlugin;
+VConsole.VConsoleElementPlugin = VConsoleElementPlugin;
+VConsole.VConsoleStoragePlugin = VConsoleStoragePlugin;
 
 export default VConsole;
