@@ -4,7 +4,7 @@
   "description": "A lightweight, extendable front-end developer tool for mobile web page.",
   "homepage": "https://github.com/Tencent/vConsole",
   "main": "dist/vconsole.min.js",
-  "typings": "./index.d.ts",
+  "typings": "dist/vconsole.min.d.ts",
   "scripts": {
     "test": "mocha",
     "dist": "webpack"
