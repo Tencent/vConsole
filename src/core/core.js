@@ -90,22 +90,22 @@ class VConsole {
       that._autoRun();
     };
     if (document !== undefined) {
-      if (document.readyState == 'complete') {
-        _onload();
-      } else {
+      if (document.readyState === 'loading') {
         $.bind(window, 'DOMContentLoaded', _onload);
+      } else {
+        _onload();
       }
     } else {
       // if document does not exist, wait for it
       let _timer;
       let _pollingDocument = function() {
-          if (!!document && document.readyState == 'complete') {
-            _timer && clearTimeout(_timer);
-            _onload();
-          } else {
-            _timer = setTimeout(_pollingDocument, 1);
-          }
-        };
+        if (!!document && document.readyState == 'complete') {
+          _timer && clearTimeout(_timer);
+          _onload();
+        } else {
+          _timer = setTimeout(_pollingDocument, 1);
+        }
+      };
       _timer = setTimeout(_pollingDocument, 1);
     }
   }
