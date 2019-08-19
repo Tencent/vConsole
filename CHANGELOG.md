@@ -1,6 +1,6 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### V3.3.3 (2019-08-18)
+#### V3.3.4 (2019-08-19)
 
 - [FEATURE] Add `%c` log format to support custom log style, see [Tutorial](./doc/tutorial.md) for more details.
 - [FEATURE] Add `VConsole.VConsoleLogPlugin` (`VConsole.VConsole*` plugins etc.) to `VConsole` class.

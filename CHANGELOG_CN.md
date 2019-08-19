@@ -1,6 +1,6 @@
 [English](./CHANGELOG.md) | 简体中文
 
-#### V3.3.3 (2019-08-18)
+#### V3.3.4 (2019-08-19)
 
 - 【特性】增加 `%c` 以支持自定义日志样式，详情见 [使用教程](./doc/tutorial_CN.md)。
 - 【特性】增加 `VConsole.VConsoleLogPlugin` 等 `VConsole.VConsole*` 内置插件在 `VConsole` class 上的挂载。
