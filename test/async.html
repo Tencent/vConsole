@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Test: Async</title>
+  <!-- <script src="../dist/vconsole.min.js"></script> -->
+</head>
+<body ontouchstart>
+  <div class="page">
+    <a onclick="formattedLog()" href="javascript:;" class="weui_btn weui_btn_default">formattedLog</a>
+  </div>
+</body>
+</html>
+
+<script>
+console.log('document.readyState:', document.readyState);
+setTimeout(function() {
+  console.log('Start to load vconsole.min.js. document.readyState:', document.readyState);
+
+  var script = document.createElement('SCRIPT');
+  script.src = '../dist/vconsole.min.js';
+  script.onload = function() {
+    window.vConsole = new window.VConsole({
+      maxLogNumber: 1000,
+      // disableLogScrolling: true,
+      onReady: function() {
+        console.log('vConsole is ready.');
+      },
+      onClearLog: function() {
+        console.log('on clearLog');
+      }
+    });
+  };
+  document.documentElement.appendChild(script);
+}, 1000);
+
+function formattedLog() {
+  console.info('formattedLog() Start');
+  console.log('[default]', 'This log should be shown in Log tab.');
+  console.log('[default]', 'Switch to System tab to see next log.');
+  console.log('[system]', 'This log should be shown in System tab.');
+  console.log('[foobar]', 'This log should be shown in Log tab.');
+  console.info('formattedLog() End');
+}
+
+</script>
+
+<link href="../example/lib/weui.min.css" rel="stylesheet"/>
+<link href="../example/lib/demo.css" rel="stylesheet"/>
+
+<script src="../example/lib/zepto.min.js"></script>
+<script src="../example/lib/zepto.touch.min.js"></script>
