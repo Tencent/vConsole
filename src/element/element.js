@@ -101,7 +101,8 @@ class VConsoleElementsTab extends VConsolePlugin {
     let $rootView = this.renderView(this.node, $.one('.vc-log', this.$tabbox));
     // auto open first level
     let $node = $.one('.vcelm-node', $rootView);
-    $node && $node.click();
+    // Before Android WebView 4.4, click is only defined on buttons and inputs
+    $node && $node.click && $node.click();
 
     // start observing
     let config = {
