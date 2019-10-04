@@ -13,6 +13,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole core class
  */
 
+import 'transitionEnd'
 import pkg from '../../package.json';
 import * as tool from '../lib/tool.js';
 import $ from '../lib/query.js';
@@ -312,7 +313,19 @@ class VConsole {
     });
 
     // hide console panel when tap background mask
-    $.bind($.one('.vc-mask', that.$dom), 'click', function(e) {
+    let $mask = $.one('.vc-mask', this.$dom);
+    let $panel = $.one('.vc-panel', this.$dom);
+    const transitionEnd = window.transitionEnd($mask).whichTransitionEnd()
+    const onMaskTransitionEnd = function() {
+      $mask.style.display = 'none';
+      $panel.style.display = 'none';
+    };
+    if (transitionEnd) {
+      $.bind($mask, transitionEnd, onMaskTransitionEnd);
+    } else {
+      onMaskTransitionEnd();
+    }
+    $.bind($mask, 'click', function(e) {
       if (e.target != $.one('.vc-mask')) {
         return false;
       }
@@ -329,14 +342,21 @@ class VConsole {
     });
 
     // after console panel, trigger a transitionend event to make panel's property 'display' change from 'block' to 'none'
-    $.bind($.one('.vc-panel', that.$dom), 'transitionend webkitTransitionEnd oTransitionEnd otransitionend', function(e) {
-      if (e.target != $.one('.vc-panel')) {
-        return false;
-      }
+    const onPanelTransitionEnd = function(target) {
       if (!$.hasClass(that.$dom, 'vc-toggle')) {
-        e.target.style.display = 'none';
+        target.style.display = 'none';
       }
-    });
+    }
+    if (transitionEnd) {
+      $.bind($panel, transitionEnd, function(e) {
+        if (e.target != $panel) {
+          return false;
+        }
+        onPanelTransitionEnd(e.target);
+      });
+    } else {
+      onPanelTransitionEnd($panel);
+    }
 
     // disable background scrolling
     let $content = $.one('.vc-content', that.$dom);
@@ -634,13 +654,6 @@ class VConsole {
     }
     $.removeClass(this.$dom, 'vc-toggle');
     this._triggerPluginsEvent('hideConsole');
-
-    let $mask = $.one('.vc-mask', this.$dom),
-        $panel = $.one('.vc-panel', this.$dom);
-    $.bind($mask, 'transitionend', function(evnet) {
-      $mask.style.display = 'none';
-      $panel.style.display = 'none';
-    });
   }
 
   /**
