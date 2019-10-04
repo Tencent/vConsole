@@ -13,6 +13,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole Element Tab
  */
 
+import MutationObserver from 'mutation-observer'
 import './style.less';
 import VConsolePlugin from '../lib/plugin.js';
 import tplTabbox from './tabbox.html';
@@ -33,7 +34,6 @@ class VConsoleElementsTab extends VConsolePlugin {
     that.nodes = [];
     that.activedElem = {}; // actived by user
 
-    let MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
     that.observer = new MutationObserver(function(mutations) {
       for (let i=0; i<mutations.length; i++) {
         let mutation = mutations[i];
