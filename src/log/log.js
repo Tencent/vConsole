@@ -523,6 +523,7 @@ class VConsoleLogTab extends VConsolePlugin {
     }
 
     // render to panel
+    if(this.formatLine) $line = this.formatLine($line);
     $.one('.vc-log', this.$tabbox).insertAdjacentElement('beforeend', $line);
 
     // remove overflow logs
