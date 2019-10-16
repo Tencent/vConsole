@@ -171,7 +171,7 @@
     }
 
     .vc-log {
-      padding-bottom: 39em / @font;
+      padding-bottom: (39em / @font) * 2;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -223,7 +223,9 @@
     }
 
     .vc-item {
-
+      &.hide{
+        display: none;
+      }
       .vc-item-content {
         margin-right: 60em / @font;
         display: inline-block;
@@ -346,9 +348,12 @@
       height: 40em / @font;
       left: 0;
       right: 0;
-      bottom: 0;
+      bottom: 41px;
       border-top: 1px solid #D9D9D9;
       display: block!important;
+      &.vc-filter{
+        bottom: 0;
+      }
 
       .vc-cmd-input-wrap {
         display: block;

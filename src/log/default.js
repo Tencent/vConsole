@@ -18,12 +18,19 @@ import * as tool from '../lib/tool.js';
 import VConsoleLogTab from './log.js';
 import tplTabbox from './tabbox_default.html';
 import tplItemCode from './item_code.html';
-
+let filterText = "";
+const checkFilterInLine = (dom) =>{
+  return dom.innerHTML.toUpperCase().indexOf(filterText.toUpperCase()) === -1
+};
 class VConsoleDefaultTab extends VConsoleLogTab {
 
   constructor(...args) {
     super(...args);
     this.tplTabbox = tplTabbox;
+  }
+  formatLine ($line){
+    checkFilterInLine($line) ? $.addClass($line,'hide'):$.removeClass($line,'hide')
+    return $line
   }
 
   onReady() {
@@ -167,6 +174,18 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       if ($prompted) {
         $prompted.style.display = 'none';
       }
+    });
+    $.bind($.one('.vc-cmd.vc-filter', this.$tabbox), 'submit', function (e) {
+      e.preventDefault();
+      let $input = $.one('.vc-cmd.vc-filter .vc-cmd-input', e.target);
+      filterText = $input.value;
+      $.all(".vc-log>.vc-item").forEach(el=>{
+        if(checkFilterInLine(el)){
+          $.addClass(el,'hide')
+        }else{
+          $.removeClass(el,'hide')
+        }
+      })
     });
 
     // create a global letiable to save custom command's result
