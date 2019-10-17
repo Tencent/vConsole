@@ -295,7 +295,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
         item.costTime = item.endTime - (item.startTime || item.endTime);
         item.response = err;
         item.readyState = 4
-        item.status = 500
+        item.status = err.status || 500
         that.updateRequest(id, item);
         throw err
       })
