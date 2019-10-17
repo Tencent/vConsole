@@ -160,6 +160,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
    * @param object data
    */
   updateRequest(id, data) {
+    debugger
     // see whether add new item into list
     let preCount = Object.keys(this.reqList).length;
 
@@ -266,6 +267,40 @@ class VConsoleNetworkTab extends VConsolePlugin {
         _send = window.XMLHttpRequest.prototype.send;
     that._open = _open;
     that._send = _send;
+
+    let _fetch = window.fetch
+    that._fetch = _fetch
+
+    window.fetch = function(url,options={}) {
+      const {method='GET',body} = options
+      const id = that.getUniqueID()
+
+      let item = that.reqList[id] || {};
+      item.startTime = (+new Date());
+      item.requestID = id;
+      item.method = method;
+      item.url = url;
+      item.readyState = 0
+      that.updateRequest(id, item);
+
+      return _fetch(url,options).then(res=>{
+        item.endTime = +new Date(),
+        item.costTime = item.endTime - (item.startTime || item.endTime);
+        item.response = res;
+        item.readyState = 4
+        that.updateRequest(id, item);
+        return res
+      }).catch((err)=>{
+        item.endTime = +new Date(),
+        item.costTime = item.endTime - (item.startTime || item.endTime);
+        item.response = err;
+        item.readyState = 4
+        item.status = 500
+        that.updateRequest(id, item);
+        throw err
+      })
+
+    }
 
     // mock open()
     window.XMLHttpRequest.prototype.open = function() {
