@@ -18,13 +18,16 @@
     "type": "git",
     "url": "git+https://github.com/Tencent/vConsole.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "mutation-observer": "^1.0.3",
+    "transitionEnd": "^1.0.2"
+  },
   "devDependencies": {
-    "@babel/core": "^7.5.5",
+    "@babel/core": "^7.6.2",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-proposal-export-namespace-from": "^7.5.2",
-    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
     "babel-loader": "^8.0.6",
     "babel-plugin-add-module-exports": "^1.0.2",
     "chai": "^4.2.0",
@@ -33,12 +36,12 @@
     "html-loader": "^0.5.5",
     "jsdom": "^15.1.1",
     "json-loader": "^0.5.7",
-    "less": "^3.10.0",
+    "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "mocha": "^5.2.0",
     "style-loader": "^1.0.0",
-    "webpack": "^4.39.2",
-    "webpack-cli": "^3.3.6"
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.9"
   },
   "author": "Tencent",
   "license": "MIT"
