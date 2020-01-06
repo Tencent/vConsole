@@ -238,7 +238,7 @@ class VConsole {
         }
         if (needFocus) {
           targetElem.focus();
-        } else {
+        } else if (typeof window.getSelection !== 'function' || !getSelection().rangeCount) {
           e.preventDefault(); // prevent click 300ms later
         }
         let touch = e.changedTouches[0];
