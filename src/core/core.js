@@ -183,6 +183,11 @@ class VConsole {
 
     // remove from less to present transition effect
     $.one('.vc-mask', this.$dom).style.display = 'none';
+
+    // set theme
+    if (this.option.theme) {
+      this.$dom.setAttribute('data-theme', this.option.theme);
+    }
   };
 
   /**
