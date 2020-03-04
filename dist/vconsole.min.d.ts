@@ -11,6 +11,7 @@ declare module 'vconsole' {
     onClearLog?: () => void
     maxLogNumber?: number
     disableLogScrolling?: boolean
+    theme?: 'light' | 'dark'
   }
 
   /**

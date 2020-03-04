@@ -1,8 +1,49 @@
 #__vconsole {
+  --VC-BG-0: #ededed;
+  --VC-BG-1: #f7f7f7;
+  --VC-BG-2: #fff;
+  --VC-BG-3: #f7f7f7;
+  --VC-BG-4: #4c4c4c;
+  --VC-BG-5: #fff;
+  --VC-FG-0: rgba(0, 0, 0, 0.9);
+  --VC-FG-HALF: rgba(0, 0, 0, 0.9);
+  --VC-FG-1: rgba(0, 0, 0, 0.5);
+  --VC-FG-2: rgba(0, 0, 0, 0.3);
+  --VC-FG-3: rgba(0, 0, 0, 0.1);
+  --VC-RED: #fa5151;
+  --VC-ORANGE: #fa9d3b;
+  --VC-YELLOW: #ffc300;
+  --VC-GREEN: #91d300;
+  --VC-LIGHTGREEN: #95ec69;
+  --VC-BRAND: #07c160;
+  --VC-BLUE: #10aeff;
+  --VC-INDIGO: #1485ee;
+  --VC-PURPLE: #6467f0;
+  --VC-LINK: #576b95;
+  --VC-TEXTGREEN: #06ae56;
+  --VC-FG: black;
+  --VC-BG: white;
+  --VC-BG-COLOR-ACTIVE: #ececec;
+  --VC-WARN-BG: overlay(rgba(255, 255, 255, .8), #ffc300);
+  --VC-WARN-BORDER: overlay(rgba(255, 255, 255, .6), #ffc300);;
+  --VC-ERROR-BG: overlay(rgba(255, 255, 255, .8), #fa5151);
+  --VC-ERROR-BORDER: overlay(rgba(255, 255, 255, .6), #fa5151);
+
+  --VC-DOM-TAG-NAME-COLOR: #881280;
+  --VC-DOM-ATTRIBUTE-NAME-COLOR: #994500;
+  --VC-DOM-ATTRIBUTE-VALUE-COLOR: #1a1aa6;
+
+  --VC-CODE-KEY-FG: #881391;
+  --VC-CODE-PRIVATE-KEY-FG: overlay(rgba(255, 255, 255, .6), #881391);
+  --VC-CODE-FUNC-FG: #0d22aa;
+  --VC-CODE-NUMBER-FG: #1c00cf;
+  --VC-CODE-STR-FG: #c41a16;
+  --VC-CODE-NULL-FG: #808080;
+
   @font: 13;
   @fontSize: 13px;
 
-  color: #000;
+  color: var(--VC-FG-0);
   font-size: @fontSize;
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
   -webkit-user-select: auto;
@@ -32,7 +73,7 @@
     right: 10em / @font;
     bottom: 10em / @font;
     color: #FFF;
-    background-color: #04BE02;
+    background-color: var(--VC-BRAND);
     line-height: 1;
     font-size: 14em / @font;
     padding: 8em / @font 16em / @font;
@@ -64,7 +105,7 @@
     right: 0;
     bottom: 0;
     z-index: 10002;
-    background-color: #EFEFF4;
+    background-color: var(--VC-BG-0);
     -webkit-transition: -webkit-transform .3s;
     transition: -webkit-transform .3s;
     transition: transform .3s;
@@ -75,7 +116,7 @@
   }
 
   .vc-tabbar {
-    border-bottom: 1px solid #D9D9D9;
+    border-bottom: 1px solid var(--VC-FG-3);
     overflow-x: auto;
     height: 39em / @font;
     width: auto;
@@ -85,9 +126,9 @@
       display: inline-block;
       line-height: 39em / @font;
       padding: 0 15em / @font;
-      border-right: 1px solid #D9D9D9;
+      border-right: 1px solid var(--VC-FG-3);
       text-decoration: none;
-      color: #000;
+      color: var(--VC-FG-0);
       -webkit-tap-highlight-color: transparent;
       -webkit-touch-callout: none;
     }
@@ -95,12 +136,12 @@
       background-color: rgba(0,0,0,0.15);
     }
     .vc-tab.vc-actived {
-      background-color: #FFF;
+      background-color: var(--VC-BG-1);
     }
   }
 
   .vc-content {
-    background-color: #FFF;
+    background-color: var(--VC-BG-2);
     overflow-x: hidden;
     overflow-y: auto;
     position: absolute;
@@ -117,7 +158,7 @@
   }
 
   .vc-topbar {
-    background-color: #FBF9FE;
+    background-color: var(--VC-BG-1);
     display: -webkit-box;
     display: -webkit-flex;
     display: -moz-box;
@@ -144,10 +185,10 @@
       flex: 1;
       line-height: 30em / @font;
       padding: 0 15em / @font;
-      border-bottom: 1px solid #D9D9D9;
+      border-bottom: 1px solid var(--VC-FG-3);
       text-decoration: none;
       text-align: center;
-      color: #000;
+      color: var(--VC-FG-0);
       -webkit-tap-highlight-color: transparent;
       -webkit-touch-callout: none;
     }
@@ -158,7 +199,7 @@
       background-color: rgba(0,0,0,0.15);
     }
     .vc-toptab.vc-actived {
-      border-bottom: 1px solid #3e82f7;
+      border-bottom: 1px solid var(--VC-INDIGO);
     }
   }
 
@@ -178,7 +219,7 @@
 
     .vc-log:empty:before {
       content: "Empty";
-      color: #999;
+      color: var(--VC-FG-1);
       position: absolute;
       top: 45%;
       left: 0;
@@ -193,24 +234,24 @@
       padding: 6em / @font 8em / @font;
       overflow: hidden;
       line-height: 1.3;
-      border-bottom: 1px solid #EEE;
+      border-bottom: 1px solid var(--VC-FG-3);
       word-break: break-word;
     }
     .vc-item-info {
-      color: #6A5ACD;
+      color: var(--VC-PURPLE);
     }
     .vc-item-debug {
-      color: #DAA520;
+      color: var(--VC-YELLOW);
     }
     .vc-item-warn {
-      color: #FFA500;
-      border-color: #FFB930;
-      background-color: #FFFACD;
+      color: var(--VC-ORANGE);
+      border-color: var(--VC-WARN-BORDER);
+      background-color: var(--VC-WARN-BG);
     }
     .vc-item-error {
-      color: #DC143C;
-      border-color: #F4A0AB;
-      background-color: #FFE4E1;
+      color: var(--VC-RED);
+      border-color: var(--VC-ERROR-BORDER);
+      background-color: var(--VC-ERROR-BG);
     }
 
     .vc-log.vc-log-partly .vc-item {
@@ -244,7 +285,7 @@
 
     .vc-item.vc-item-error .vc-item-repeat {
       color: #901818;
-      background-color: #DC2727;
+      background-color: var(--VC-RED);
     }
     .vc-item.vc-item-warn .vc-item-repeat {
       color: #987D20;
@@ -286,7 +327,7 @@
         position: relative;
       }
       .vc-fold-outer:active {
-        background-color: #E6E6E6;
+        background-color: var(--VC-BG-COLOR-ACTIVE);
       }
 
       .vc-fold-outer:before {
@@ -297,12 +338,12 @@
         width: 0;
         height: 0;
         border: transparent solid 4em / @font;
-        border-left-color: #000;
+        border-left-color: var(--VC-FG-1);
       }
       .vc-fold-outer.vc-toggle:before {
         top: 6em / @font;
         left: 0;
-        border-top-color: #000;
+        border-top-color: var(--VC-FG-1);
         border-left-color: transparent;
       }
 
@@ -323,25 +364,25 @@
     }
 
     .vc-code-key {
-      color: #905;
+      color: var(--VC-CODE-KEY-FG);
     }
     .vc-code-private-key {
-      color: #D391B5;
+      color: var(--VC-CODE-PRIVATE-KEY-FG);
     }
     .vc-code-function {
-      color: #905;
+      color: var(--VC-CODE-FUNC-FG);
       font-style: italic;
     }
     .vc-code-number,
     .vc-code-boolean {
-      color: #0086B3;
+      color: var(--VC-CODE-NUMBER-FG);
     }
     .vc-code-string {
-      color: #183691;
+      color: var(--VC-CODE-STR-FG);
     }
     .vc-code-null,
     .vc-code-undefined {
-      color: #666;
+      color: var(--VC-CODE-NULL-FG);
     }
 
     .vc-cmd {
@@ -350,7 +391,7 @@
       left: 0;
       right: 0;
       bottom: 41px;
-      border-top: 1px solid #D9D9D9;
+      border-top: 1px solid var(--VC-FG-3);
       display: block!important;
       &.vc-filter{
         bottom: 0;
@@ -370,6 +411,8 @@
         outline: none;
         padding: 0;
         font-size: 12em / @font;
+        background-color: transparent;
+        color: var(--VC-FG-0);
       }
       .vc-cmd-input::-webkit-input-placeholder {
         line-height: 28em / @font;
@@ -382,7 +425,8 @@
         bottom: 0;
         width: 40em / @font;
         border: none;
-        background-color: #EFEFF4;
+        background-color: var(--VC-BG-0);
+        color: var(--VC-FG-0);
         outline: none;
         -webkit-touch-callout: none;
         font-size: 1em;
@@ -394,8 +438,8 @@
       .vc-cmd-prompted {
         position: fixed;
         width: 100%;
-        background-color: #FBF9FE;
-        border: 1px solid #D9D9D9;
+        background-color: var(--VC-BG-3);
+        border: 1px solid var(--VC-FG-3);
         overflow-x: scroll;
         display: none;
       }
@@ -403,7 +447,7 @@
         list-style: none;
         line-height: 30px;
         padding: 0 6em / @font;
-        border-bottom: 1px solid #D9D9D9;
+        border-bottom: 1px solid var(--VC-FG-3);
       }
     }
 
@@ -413,13 +457,13 @@
         -webkit-touch-callout: none;
       }
       .vc-group-preview:active {
-        background-color: #E6E6E6;
+        background-color: var(--VC-BG-COLOR-ACTIVE);
       }
 
       .vc-group-detail {
         display: none;
         padding: 0 0 10em / @font 20em / @font;
-        border-bottom: 1px solid #EEE;
+        border-bottom: 1px solid var(--VC-FG-3);
       }
 
     }
@@ -428,15 +472,15 @@
 
       .vc-group-detail {
         display: block;
-        background-color: #FBF9FE;
+        background-color: var(--VC-BG-1);
       }
 
       .vc-table-row {
-        background-color: #FFF;
+        background-color: var(--VC-BG-2);
       }
 
       .vc-group-preview {
-        background-color: #FBF9FE;
+        background-color: var(--VC-BG-1);
       }
     }
 
@@ -459,10 +503,10 @@
         -ms-flex-wrap: wrap;
         flex-wrap: wrap;
         overflow: hidden;
-        border-bottom: 1px solid #EEE;
+        border-bottom: 1px solid var(--VC-FG-3);
       }
       .vc-table-row.vc-left-border {
-        border-left: 1px solid #EEE;
+        border-left: 1px solid var(--VC-FG-3);
       }
 
       .vc-table-col {
@@ -472,7 +516,7 @@
         -ms-flex: 1;
         flex: 1;
         padding: 3em / @font 4em / @font;
-        border-left: 1px solid #EEE;
+        border-left: 1px solid var(--VC-FG-3);
         overflow: auto;
         white-space: pre-wrap;
         word-break: break-word;
@@ -526,12 +570,12 @@
       }
 
       .vc-table-row-error {
-        border-color: #F4A0AB;
-        background-color: #FFE4E1;
+        border-color: var(--VC-ERROR-BORDER);
+        background-color: var(--VC-ERROR-BG);
 
         .vc-table-col {
-          color: #DC143C;
-          border-color: #F4A0AB;
+          color: var(--VC-RED);
+          border-color: var(--VC-ERROR-BORDER);
         }
       }
 
@@ -547,7 +591,7 @@
   }
 
   .vc-toolbar {
-    border-top: 1px solid #D9D9D9;
+    border-top: 1px solid var(--VC-FG-3);
     line-height: 39em / @font;
     position: absolute;
     left: 0;
@@ -569,7 +613,7 @@
     .vc-tool {
       display: none;
       text-decoration: none;
-      color: #000;
+      color: var(--VC-FG-0);
       width: 50%;
       -webkit-box-flex: 1;
       -webkit-flex: 1;
@@ -594,7 +638,7 @@
       top: 7em / @font;
       bottom: 7em / @font;
       right: 0;
-      border-left: 1px solid #D9D9D9;
+      border-left: 1px solid var(--VC-FG-3);
     }
 
     .vc-tool-last:after {
@@ -626,4 +670,92 @@
     -webkit-transform: translate(0, 0);
     transform: translate(0, 0);
   }
+}
+
+@media (prefers-color-scheme: dark) {
+  #__vconsole:not([data-theme="light"]) {
+      --VC-BG-0: #191919;
+      --VC-BG-1: #1f1f1f;
+      --VC-BG-2: #232323;
+      --VC-BG-3: #2f2f2f;
+      --VC-BG-4: #606060;
+      --VC-BG-5: #2c2c2c;
+      --VC-FG-0: rgba(255, 255, 255, 0.8);
+      --VC-FG-HALF: rgba(255, 255, 255, 0.6);
+      --VC-FG-1: rgba(255, 255, 255, 0.5);
+      --VC-FG-2: rgba(255, 255, 255, 0.3);
+      --VC-FG-3: rgba(255, 255, 255, 0.05);
+      --VC-RED: #fa5151;
+      --VC-ORANGE: #c87d2f;
+      --VC-YELLOW: #cc9c00;
+      --VC-GREEN: #74a800;
+      --VC-LIGHTGREEN: #28b561;
+      --VC-BRAND: #07c160;
+      --VC-BLUE: #10aeff;
+      --VC-INDIGO: #1196ff;
+      --VC-PURPLE: #8183ff;
+      --VC-LINK: #7d90a9;
+      --VC-TEXTGREEN: #259c5c;
+      --VC-FG: white;
+      --VC-BG: black;
+      --VC-BG-COLOR-ACTIVE: #282828;
+      --VC-WARN-BG: overlay(rgba(0, 0, 0, .8), #ffc300);
+      --VC-WARN-BORDER: overlay(rgba(0, 0, 0, .6), #ffc300);
+      --VC-ERROR-BG: overlay(rgba(0, 0, 0, .8), #fa5151);
+      --VC-ERROR-BORDER: overlay(rgba(0, 0, 0, .6), #fa5151);
+
+      --VC-DOM-TAG-NAME-COLOR: #5DB0D7;
+      --VC-DOM-ATTRIBUTE-NAME-COLOR: #9BBBDC;
+      --VC-DOM-ATTRIBUTE-VALUE-COLOR: #f29766;
+
+      --VC-CODE-KEY-FG: #e36eec;
+      --VC-CODE-PRIVATE-KEY-FG: overlay(rgba(255, 255, 255, .6), #e36eec);
+      --VC-CODE-FUNC-FG: #556af2;
+      --VC-CODE-NUMBER-FG: #9980ff;
+      --VC-CODE-STR-FG: #e93f3b;
+      --VC-CODE-NULL-FG: #808080;
+  }
+}
+
+#__vconsole[data-theme="dark"] {
+  --VC-BG-0: #191919;
+  --VC-BG-1: #1f1f1f;
+  --VC-BG-2: #232323;
+  --VC-BG-3: #2f2f2f;
+  --VC-BG-4: #606060;
+  --VC-BG-5: #2c2c2c;
+  --VC-FG-0: rgba(255, 255, 255, 0.8);
+  --VC-FG-HALF: rgba(255, 255, 255, 0.6);
+  --VC-FG-1: rgba(255, 255, 255, 0.5);
+  --VC-FG-2: rgba(255, 255, 255, 0.3);
+  --VC-FG-3: rgba(255, 255, 255, 0.05);
+  --VC-RED: #fa5151;
+  --VC-ORANGE: #c87d2f;
+  --VC-YELLOW: #cc9c00;
+  --VC-GREEN: #74a800;
+  --VC-LIGHTGREEN: #28b561;
+  --VC-BRAND: #07c160;
+  --VC-BLUE: #10aeff;
+  --VC-INDIGO: #1196ff;
+  --VC-PURPLE: #8183ff;
+  --VC-LINK: #7d90a9;
+  --VC-TEXTGREEN: #259c5c;
+  --VC-FG: white;
+  --VC-BG: black;
+  --VC-BG-COLOR-ACTIVE: #282828;
+  --VC-WARN-BG: overlay(rgba(0, 0, 0, .8), #ffc300);
+  --VC-WARN-BORDER: overlay(rgba(0, 0, 0, .6), #ffc300);
+  --VC-ERROR-BG: overlay(rgba(0, 0, 0, .8), #fa5151);
+  --VC-ERROR-BORDER: overlay(rgba(0, 0, 0, .6), #fa5151);
+
+  --VC-DOM-TAG-NAME-COLOR: #5DB0D7;
+  --VC-DOM-ATTRIBUTE-NAME-COLOR: #9BBBDC;
+  --VC-DOM-ATTRIBUTE-VALUE-COLOR: #f29766;
+
+  --VC-CODE-KEY-FG: #e36eec;
+  --VC-CODE-PRIVATE-KEY-FG: overlay(rgba(255, 255, 255, .6), #e36eec);
+  --VC-CODE-FUNC-FG: #556af2;
+  --VC-CODE-NUMBER-FG: #9980ff;
+  --VC-CODE-STR-FG: #e93f3b;
+  --VC-CODE-NULL-FG: #808080;
 }
