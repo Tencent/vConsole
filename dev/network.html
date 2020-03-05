@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dev: Network</title>
+  <link href="../example/lib/weui.min.css" rel="stylesheet"/>
+  <link href="../example/lib/demo.css" rel="stylesheet"/>
+
+  <script src="../dist/vconsole.min.js"></script>
+</head>
+<body ontouchstart>
+  <div class="page">
+    <a onclick="getAjax()" href="javascript:;" class="weui_btn weui_btn_default">getAjax</a>
+    <a onclick="postAjax()" href="javascript:;" class="weui_btn weui_btn_default">postAjax</a>
+    <a onclick="getFetch()" href="javascript:;" class="weui_btn weui_btn_default">getFetch</a>
+    <a onclick="postFetch()" href="javascript:;" class="weui_btn weui_btn_default">postFetch</a>
+  </div>
+</body>
+</html>
+
+<script>
+// window.vConsole = new window.VConsole();
+
+function postAjax() {
+  console.info('postAjax() Start, response should be logged after End');
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', './data/success.json?type=xhr');
+  xhr.send({
+    foo: 'bar',
+    id: Math.random()
+  });
+  xhr.onload = () => {
+    console.log('postAjax Response:', JSON.parse(xhr.response));
+  };
+  xhr.onerror = () => {
+    console.log('postAjax Error');
+  };
+  console.info('postAjax() End');
+}
+
+function getAjax() {
+  console.info('getAjax() Start, response should be logged after End');
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', './data/success.json?type=xhr');
+  xhr.send();
+  xhr.onload = () => {
+    console.log('getAjax Response:', JSON.parse(xhr.response));
+  };
+  xhr.onerror = () => {
+    console.log('getAjax Error');
+  };
+  console.info('getAjax() End');
+}
+
+function getFetch() {
+  console.info('getFetch() Start, response should be logged after End');
+  window.fetch('./data/success.json?type=fetch', {
+    method: 'GET'
+  }).then((data) => {
+    return data.json();
+  }).then((data) => {
+    console.log('getFetch Response:', data);
+  });
+  console.info('getFetch() End');
+}
+
+function postFetch() {
+  console.info('postFetch() Start, response should be logged after End');
+  window.fetch('./data/success.json?type=fetch', {
+    method: 'POST',
+    body: { foo: 'bar' },
+    headers: {
+      'content-type': 'application/json'
+    },
+  }).then((data) => {
+    return data.json();
+  }).then((data) => {
+    console.log('postFetch Response:', data);
+  }).catch((error) => {
+    console.error('postFetch Error:', error);
+  });
+  console.info('postFetch() End');
+}
+
+</script>

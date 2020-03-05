@@ -1,26 +1,28 @@
-var webpack = require('webpack')
-var merge = require('webpack-merge')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
-var baseConfig = require('./webpack.config.js')
+const path = require('path');
+const webpack = require('webpack');
+const merge = require('webpack-merge');
+const baseConfig = require('./webpack.config.js');
 
 module.exports = merge(baseConfig, {
   mode: 'development',
-  entry: './dev/index.js',
   devServer: {
+    port: 9090,
+    contentBase: path.join(__dirname, '/'),
+    openPage: 'dev/',
     historyApiFallback: true,
     noInfo: true,
     overlay: true,
     open: true,
     hot: true,
-    inline: true
+    inline: true,
+    setup(app) {
+      app.post('*', (req, res) => {
+        res.redirect(req.originalUrl);
+      });
+    }
   },
   devtool: '#eval-source-map',
   plugins: [
-    new HtmlWebpackPlugin({
-      template: './dev/index.html',
-      filename: 'index.html',
-      inject: true
-    }),
     new webpack.HotModuleReplacementPlugin()
   ]
-})
+});
