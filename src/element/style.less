@@ -1,12 +1,12 @@
 /* color */
 .vcelm-node {
-  color: #183691;
+  color: var(--VC-DOM-TAG-NAME-COLOR);
 }
 .vcelm-k {
-  color: #0086B3;
+  color: var(--VC-DOM-ATTRIBUTE-NAME-COLOR);
 }
 .vcelm-v {
-  color: #905;
+  color: var(--VC-DOM-ATTRIBUTE-VALUE-COLOR);
 }
 
 /* layout */
@@ -23,7 +23,7 @@
   display: block;
 }
 .vcelm-l .vcelm-node:active {
-  background-color: rgba(0,0,0,0.15);
+  background-color: var(--VC-BG-COLOR-ACTIVE);
 }
 .vcelm-l.vcelm-noc .vcelm-node:active {
   background-color: transparent;
@@ -53,13 +53,13 @@
   width: 0;
   height: 0;
   border: transparent solid 3px;
-  border-left-color: #000;
+  border-left-color: var(--VC-FG-1);
 }
 .vcelm-l.vc-toggle:before {
   display: block;
   top: 6px;
   left: 0;
-  border-top-color: #000;
+  border-top-color: var(--VC-FG-1);
   border-left-color: transparent;
 }
 .vcelm-l.vcelm-noc:before {
