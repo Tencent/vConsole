@@ -2,7 +2,7 @@ English | [简体中文](./README_CN.md)
 
 vConsole
 ==============================
-[![npm version](https://badge.fury.io/js/vconsole.svg)](https://badge.fury.io/js/vconsole) 
+[![npm version](https://badge.fury.io/js/vconsole.svg)](https://badge.fury.io/js/vconsole)
 
 A lightweight, extendable front-end developer tool for mobile web page.
 
@@ -75,7 +75,7 @@ Plugin:
 
  - [vConsole-sources](https://github.com/WechatFE/vConsole-sources)
  - [vconsole-webpack-plugin](https://github.com/diamont1001/vconsole-webpack-plugin)
- 
+ - [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats)
 
 ## Changelog
 
