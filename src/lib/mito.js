@@ -64,9 +64,14 @@ export default function render(tpl, data, toString) {
   // run code, do NOT use `eval` or `new Function` to avoid `unsafe-eval` CSP rule
   let scriptList = document.getElementsByTagName('script');
   let nonce = '';
-  if (scriptList.length > 0) {
-    nonce = scriptList[0].nonce || ''; // get nonce to avoid `unsafe-inline`
+  // find the first script with nonce
+  for (let script of scriptList) {
+    if (script.nonce) {
+      nonce = script.nonce
+      break
+    }
   }
+  
   let script = document.createElement('SCRIPT');
   script.innerHTML = codeWrap;
   script.setAttribute('nonce', nonce);
