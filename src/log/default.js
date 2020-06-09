@@ -196,8 +196,12 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     code += '}';
     let scriptList = document.getElementsByTagName('script');
     let nonce = '';
-    if (scriptList.length > 0) {
-      nonce = scriptList[0].nonce || ''; // get nonce to avoid `unsafe-inline`
+    // find the first script with nonce
+    for (let script of scriptList) {
+      if (script.nonce) {
+        nonce = script.nonce
+        break
+      }
     }
     let script = document.createElement('SCRIPT');
     script.innerHTML = code;
