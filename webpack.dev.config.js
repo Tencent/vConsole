@@ -15,7 +15,7 @@ module.exports = merge(baseConfig, {
     open: true,
     hot: true,
     inline: true,
-    setup(app) {
+    before(app) {
       app.post('*', (req, res) => {
         res.redirect(req.originalUrl);
       });
