@@ -1,12 +1,25 @@
 <div>
-  <dl class="vc-table-row">
-    <dd class="vc-table-col">Name</dd>
-    <dd class="vc-table-col vc-table-col-2">Value</dd>
-  </dl>
-  {{for (var i = 0; i < list.length; i++)}}
-  <dl class="vc-table-row">
-    <dd class="vc-table-col">{{list[i].name}}</dd>
-    <dd class="vc-table-col vc-table-col-2">{{list[i].value}}</dd>
-  </dl>
-  {{/for}}
+  <div class="vc-table-rowlist">
+    {{if(list.length)}}
+    <dl class="vc-table-row vc-table-header">
+      <dd class="vc-table-col">Name</dd>
+      <dd class="vc-table-col vc-table-col-2">Value</dd>
+      <dd class="vc-bn">X</dd>
+    </dl>
+    {{for (var i = 0; i < list.length; i++)}}
+    <dl class="vc-table-row" data-name="{{list[i].name}}">
+      <dd class="vc-table-col">{{list[i].name}}</dd>
+      <dd class="vc-table-col vc-table-col-2 vc-value">{{list[i].value}}</dd>
+      <dd class="vc-del vc-bn">X</dd>
+    </dl>
+    {{/for}}
+    {{/if}}
+  </div>
+
+  <div class="vc-add"><button>+</button></div>
+
+  <div class="vc-edit vc-hide">
+    <textarea></textarea>
+    <div class="vc-back">Back to list</div>
+  </div>
 </div>
