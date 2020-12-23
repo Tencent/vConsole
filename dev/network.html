@@ -15,6 +15,7 @@
     <a onclick="postAjax()" href="javascript:;" class="weui_btn weui_btn_default">postAjax</a>
     <a onclick="getFetch()" href="javascript:;" class="weui_btn weui_btn_default">getFetch</a>
     <a onclick="postFetch()" href="javascript:;" class="weui_btn weui_btn_default">postFetch</a>
+    <a onclick="postFetchByRequest()" href="javascript:;" class="weui_btn weui_btn_default">postFetchByRequest</a>
   </div>
 </body>
 </html>
@@ -69,7 +70,8 @@ function postFetch() {
   console.info('postFetch() Start, response should be logged after End');
   window.fetch('./data/success.json?type=fetch', {
     method: 'POST',
-    body: { foo: 'bar' },
+    body: { foo: 'bar', id: Math.random() },
+    // body: new Blob([new ArrayBuffer(233)], { type: 'image/png' }),
     headers: {
       'content-type': 'application/json'
     },
@@ -81,6 +83,27 @@ function postFetch() {
     console.error('postFetch Error:', error);
   });
   console.info('postFetch() End');
+}
+
+function postFetchByRequest() {
+  console.info('postFetchByRequest() Start, response should be logged after End');
+  const req = new Request('./data/success.json?type=fetch', {
+    method: 'POST',
+    // body: { foo: 'bar', id: Math.random() },
+    body: new Blob([new ArrayBuffer(233)], { type: 'image/png' }),
+    headers: {
+      'content-type': 'application/json'
+      // 'content-type': 'application/x-www-form-urlencoded'
+    },
+  });
+  window.fetch(req).then((data) => {
+    return data.json();
+  }).then((data) => {
+    console.log('postFetchByRequest Response:', data);
+  }).catch((error) => {
+    console.error('postFetchByRequest Error:', error);
+  });
+  console.info('postFetchByRequest() End');
 }
 
 </script>
