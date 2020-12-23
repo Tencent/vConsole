@@ -2,7 +2,7 @@
 
 vConsole
 ==============================
-[![npm version](https://badge.fury.io/js/vconsole.svg)](https://badge.fury.io/js/vconsole) 
+[![npm version](https://badge.fury.io/js/vconsole.svg)](https://badge.fury.io/js/vconsole)
 
 一个轻量、可拓展、针对手机网页的前端开发者调试面板。
 
@@ -78,8 +78,7 @@ vConsole 本体：
 
  - [vConsole-sources](https://github.com/WechatFE/vConsole-sources)
  - [vconsole-webpack-plugin](https://github.com/diamont1001/vconsole-webpack-plugin)
-
-
+ - [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats)
 
 ## 更新记录
 
