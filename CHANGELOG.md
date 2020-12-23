@@ -1,5 +1,11 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### V3.4.0 (2020-03-xx)
+
+- [FEATURE] Add `fetch` log in Network tab. (by @weiqian93)
+- [FEATURE] Add darkmode theme. (by @progrape)
+
+
 #### V3.3.4 (2019-08-19)
 
 - [FEATURE] Add `%c` log format to support custom log style, see [Tutorial](./doc/tutorial.md) for more details.
@@ -11,7 +17,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### V3.3.2 (2019-07-04)
 
-- [FEATURE] Add TypeScript definition file. (by by @jas0ncn)
+- [FEATURE] Add TypeScript definition file. (by @jas0ncn)
 - [FIX] Fix switch button position issue. (by @rexschuang)
 - [FIX] Avoid scrolling to bottom when away from bottom edge. (by @ele828)
 - [FIX] Fix a few minor issues. (by @stenders)
