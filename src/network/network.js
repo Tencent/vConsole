@@ -386,6 +386,8 @@ class VConsoleNetworkTab extends VConsolePlugin {
           }
         } else if (tool.isPlainObject(data)) {
           item.postData = data;
+        } else {
+          item.postData = '[object Object]';
         }
 
       }
@@ -405,17 +407,31 @@ class VConsoleNetworkTab extends VConsolePlugin {
    */
   mockFetch() {
     let _fetch = window.fetch;
-    if(!_fetch){ return; }
+    if (!_fetch){ return; }
     let that = this;
 
-    let prevFetch = (url,init) => {
-      let id = that.getUniqueID()
-      that.reqList[id] = {}
+    let prevFetch = (input, init) => {
+      let id = that.getUniqueID();
+      that.reqList[id] = {};
       let item = that.reqList[id] || {};
-      let query = url.split('?'); 
+      let query = [],
+          url = '',
+          method = 'GET';
+      
+      // handle `input` content
+      if (tool.isString(input)) { // when `input` is a string
+        method = init.method || 'GET';
+        url = input;
+      } else { // when `input` is a `Request` object
+        method = input.method || 'GET';
+        url = input.url;
+      }
+      query = url.split('?');
+      url = query.shift();
+
       item.id = id;
-      item.method = init.method||'GET';
-      item.url = query.shift(); 
+      item.method = method;
+      item.url = url;
 
       if (query.length > 0) {
         item.getData = {};
@@ -427,43 +443,50 @@ class VConsoleNetworkTab extends VConsolePlugin {
         }
       }
 
-      if (item.method == 'POST') {
-        // save POST data
-        if (tool.isString(data)) {
-          let arr = data.split('&');
-          item.postData = {};
-          for (let q of arr) {
-            q = q.split('=');
-            item.postData[ q[0] ] = q[1];
+      if (item.method === 'POST') { // save POST data
+        if (tool.isString(input)) { // when `input` is a string
+          if (tool.isString(init.body)) {
+            let arr = init.body.split('&');
+            item.postData = {};
+            for (let q of arr) {
+              q = q.split('=');
+              item.postData[ q[0] ] = q[1];
+            }
+          } else if (tool.isPlainObject(init.body)) {
+            item.postData = init.body;
+          } else {
+            item.postData = '[object Object]';
           }
-        } else if (tool.isPlainObject(data)) {
-          item.postData = data;
+        } else { // when `input` is a `Request` object
+          // cannot get real type of request's body, so just display "[object Object]"
+          item.postData = '[object Object]';
         }
       }
+
       // UNSENT
       if (!item.startTime) {
         item.startTime = (+new Date());
       }
-      return _fetch(url,init).then(response => {
-        response.clone().json().then(json => {
+      return _fetch(url, init).then((response) => {
+        response.clone().json().then((json) => {
           item.endTime = +new Date(),
           item.costTime = item.endTime - (item.startTime || item.endTime);
           item.status = response.status;
-          item.header = {}
+          item.header = {};
           for (let pair of response.headers.entries()) {
-            item.header[pair[0]] = pair[1]
+            item.header[pair[0]] = pair[1];
           }
           item.response = json;
-          item.readyState = 4
-          const contentType = response.headers.get('content-type')
-          item.responseType  = contentType.includes('application/json')? 'json' : contentType.includes('text/html') ? 'text': ''
-          return json
+          item.readyState = 4;
+          const contentType = response.headers.get('content-type');
+          item.responseType  = contentType.includes('application/json') ? 'json' : contentType.includes('text/html') ? 'text' : '';
+          return json;
         })
-        that.updateRequest(id, item)
-        return response
+        that.updateRequest(id, item);
+        return response;
       })
     }
-    window.fetch = prevFetch
+    window.fetch = prevFetch;
   }
 
   /**

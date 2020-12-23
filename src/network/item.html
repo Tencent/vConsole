@@ -35,14 +35,20 @@
     {{if (postData !== null)}}
     <div>
       <dl class="vc-table-row vc-left-border">
-        <dt class="vc-table-col vc-table-col-title">Form Data</dt>
+        <dt class="vc-table-col vc-table-col-title">Request Payload</dt>
       </dl>
-      {{for (var key in postData)}}
-      <div class="vc-table-row vc-left-border vc-small">
-        <div class="vc-table-col vc-table-col-2">{{key}}</div>
-        <div class="vc-table-col vc-table-col-4 vc-max-height-line">{{postData[key]}}</div>
-      </div>
-      {{/for}}
+      {{if (typeof postData === 'string')}}
+        <div class="vc-table-row vc-left-border vc-small">
+          <pre class="vc-table-col">{{postData}}</pre>
+        </div>
+      {{else}}
+        {{for (var key in postData)}}
+        <div class="vc-table-row vc-left-border vc-small">
+          <div class="vc-table-col vc-table-col-2">{{key}}</div>
+          <div class="vc-table-col vc-table-col-4 vc-max-height-line">{{postData[key]}}</div>
+        </div>
+        {{/for}}
+      {{/if}}
     </div>
     {{/if}}
     <div>
