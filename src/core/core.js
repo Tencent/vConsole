@@ -160,8 +160,8 @@ class VConsole {
         switchX = document.documentElement.offsetWidth - $switch.offsetWidth;
       }
       let docHeight = Math.max(document.documentElement.offsetHeight, window.innerHeight);
-      if (y + $switch.offsetHeight > docHeight) {
-        y = docHeight - $switch.offsetHeight;
+      if (switchY + $switch.offsetHeight > docHeight) {
+        switchY = docHeight - $switch.offsetHeight;
       }
       if (switchX < 0) { switchX = 0; }
       if (switchY < 0) { switchY = 0; }
