@@ -156,11 +156,13 @@ class VConsole {
         switchY = tool.getStorage('switch_y') * 1;
     if (switchX || switchY) {
       // check edge
-      if (switchX + $switch.offsetWidth > document.documentElement.offsetWidth) {
-        switchX = document.documentElement.offsetWidth - $switch.offsetWidth;
+      let docWidth = Math.max(document.documentElement.offsetWidth, window.innerWidth);
+      if (switchX + $switch.offsetWidth > docWidth) {
+        switchX = docWidth - $switch.offsetWidth;
       }
-      if (switchY + $switch.offsetHeight > document.documentElement.offsetHeight) {
-        switchY = document.documentElement.offsetHeight - $switch.offsetHeight;
+      let docHeight = Math.max(document.documentElement.offsetHeight, window.innerHeight);
+      if (switchY + $switch.offsetHeight > docHeight) {
+        switchY = docHeight - $switch.offsetHeight;
       }
       if (switchX < 0) { switchX = 0; }
       if (switchY < 0) { switchY = 0; }
@@ -291,11 +293,13 @@ class VConsole {
         let x = that.switchPos.x - offsetX,
             y = that.switchPos.y - offsetY;
         // check edge
-        if (x + $switch.offsetWidth > document.documentElement.offsetWidth) {
-          x = document.documentElement.offsetWidth - $switch.offsetWidth;
+        let docWidth = Math.max(document.documentElement.offsetWidth, window.innerWidth);
+        if (x + $switch.offsetWidth > docWidth) {
+          x = docWidth - $switch.offsetWidth;
         }
-        if (y + $switch.offsetHeight > document.documentElement.offsetHeight) {
-          y = document.documentElement.offsetHeight - $switch.offsetHeight;
+        let docHeight = Math.max(document.documentElement.offsetHeight, window.innerHeight);
+        if (y + $switch.offsetHeight > docHeight) {
+          y = docHeight - $switch.offsetHeight;
         }
         if (x < 0) { x = 0; }
         if (y < 0) { y = 0; }
