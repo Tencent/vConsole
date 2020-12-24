@@ -5,6 +5,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - [FEATURE] Add `fetch` log in Network tab. (by @weiqian93)
 - [FEATURE] Add darkmode theme. (by @progrape)
 - [FEATURE] New plugin [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats). (by @smackgg)
+- [FIX] The position of the switch button will be reset by mistake when clicked.
 - [FIX] Fix `document.documentElement.offsetHeight|offsetWidth` is unreliable in newer browsers. (by @littlee)
 - [FIX] Prevent dispatchEvent for disabled or readOnly elements. (by @norux)
 - [FIX] Fix nonce searching problem. (by @sunderls)
