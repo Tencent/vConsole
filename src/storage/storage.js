@@ -161,7 +161,8 @@ class VConsoleStorageTab extends VConsolePlugin {
         name = decodeURIComponent(name);
         value = decodeURIComponent(value);
       } catch(e) {
-        console.log(e, name, value);
+        // do not print external input directly to prevent forgery (issue #345)
+        // console.log(e, name, value);
       }
       list.push({
         name: name,

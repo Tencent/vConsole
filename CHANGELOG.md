@@ -10,6 +10,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - [FIX] Fix `document.documentElement.offsetHeight|offsetWidth` is unreliable in newer browsers. (by @littlee)
 - [FIX] Prevent dispatchEvent for disabled or readOnly elements. (by @norux)
 - [FIX] Fix nonce searching problem. (by @sunderls)
+- [FIX] Fix security issues. (#345 by @QiAnXinCodeSafe)
 - [IMPROVE] Update Webpack DevServer option. (by @QinZhen001)
 
 #### V3.3.4 (2019-08-19)
