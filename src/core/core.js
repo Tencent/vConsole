@@ -59,8 +59,8 @@ class VConsole {
 
     this.switchPos = {
       hasMoved: false, // exclude click event
-      x: 10, // right
-      y: 10, // bottom
+      x: 0, // right
+      y: 0, // bottom
       startX: 0,
       startY: 0,
       endX: 0,
@@ -155,23 +155,11 @@ class VConsole {
     const $switch = $.one('.vc-switch', this.$dom);
     let switchX = tool.getStorage('switch_x') * 1,
         switchY = tool.getStorage('switch_y') * 1;
-    if (switchX || switchY) {
-      // check edge
-      const docWidth = Math.max(document.documentElement.offsetWidth, window.innerWidth);
-      const docHeight = Math.max(document.documentElement.offsetHeight, window.innerHeight);
-      if (switchX + $switch.offsetWidth > docWidth) {
-        switchX = docWidth - $switch.offsetWidth;
-      }
-      if (switchY + $switch.offsetHeight > docHeight) {
-        switchY = docHeight - $switch.offsetHeight;
-      }
-      if (switchX < 0) { switchX = 0; }
-      if (switchY < 0) { switchY = 0; }
-      this.switchPos.x = switchX;
-      this.switchPos.y = switchY;
-      $.one('.vc-switch').style.right = switchX + 'px';
-      $.one('.vc-switch').style.bottom = switchY + 'px';
-    }
+    [switchX, switchY] = this._getSwitchButtonSafeAreaXY($switch, switchX, switchY);
+    this.switchPos.x = switchX;
+    this.switchPos.y = switchY;
+    $.one('.vc-switch').style.right = switchX + 'px';
+    $.one('.vc-switch').style.bottom = switchY + 'px';
 
     // modify font-size
     const dpr = window.devicePixelRatio || 1;
@@ -192,6 +180,25 @@ class VConsole {
       this.$dom.setAttribute('data-theme', this.option.theme);
     }
   };
+
+  /**
+   * Get an safe [x, y] position for switch button
+   * @private
+   */
+  _getSwitchButtonSafeAreaXY($switch, x, y) {
+    const docWidth = Math.max(document.documentElement.offsetWidth, window.innerWidth);
+    const docHeight = Math.max(document.documentElement.offsetHeight, window.innerHeight);
+    // check edge
+    if (x + $switch.offsetWidth > docWidth) {
+      x = docWidth - $switch.offsetWidth;
+    }
+    if (y + $switch.offsetHeight > docHeight) {
+      y = docHeight - $switch.offsetHeight;
+    }
+    if (x < 0) { x = 0; }
+    if (y < 20) { y = 20; } // safe area for iOS Home indicator
+    return [x, y];
+  }
 
   /**
    * simulate tap event by touchstart & touchend
@@ -274,10 +281,10 @@ class VConsole {
    * @private
    */
   _bindEvent() {
-    let that = this;
+    const that = this;
 
     // drag & drop switch button
-    let $switch = $.one('.vc-switch', that.$dom);
+    const $switch = $.one('.vc-switch', that.$dom);
     $.bind($switch, 'touchstart', function(e) {
       that.switchPos.startX = e.touches[0].pageX;
       that.switchPos.startY = e.touches[0].pageY;
@@ -303,22 +310,13 @@ class VConsole {
             offsetY = e.touches[0].pageY - that.switchPos.startY;
       let x = Math.floor(that.switchPos.x - offsetX),
           y = Math.floor(that.switchPos.y - offsetY);
-      // check edge
-      const docWidth = Math.max(document.documentElement.offsetWidth, window.innerWidth);
-      const docHeight = Math.max(document.documentElement.offsetHeight, window.innerHeight);
-      if (x + $switch.offsetWidth > docWidth) {
-        x = docWidth - $switch.offsetWidth;
-      }
-      if (y + $switch.offsetHeight > docHeight) {
-        y = docHeight - $switch.offsetHeight;
-      }
-      if (x < 0) { x = 0; }
-      if (y < 0) { y = 0; }
+      [x, y] = that._getSwitchButtonSafeAreaXY($switch, x, y);
       $switch.style.right = x + 'px';
       $switch.style.bottom = y + 'px';
       that.switchPos.endX = x;
       that.switchPos.endY = y;
       that.switchPos.hasMoved = true;
+      console.log(x, y);
       e.preventDefault();
     });
 
