@@ -37,9 +37,15 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     const that = this;
     super.onReady();
 
+    // do not traverse these keys to prevent "Deprecation" warning
+    const keyBlackList = ['webkitStorageInfo'];
+
     window.winKeys = Object.getOwnPropertyNames(window).sort();
     window.keyTypes = {};
     for (let i = 0; i < winKeys.length; i++) {
+      if (keyBlackList.indexOf(winKeys[i]) > -1) {
+        continue;
+      }
       keyTypes[winKeys[i]] = typeof window[winKeys[i]];
     }
 
