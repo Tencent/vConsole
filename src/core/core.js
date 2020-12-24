@@ -58,6 +58,7 @@ class VConsole {
     this.pluginList = {};
 
     this.switchPos = {
+      hasMoved: false, // exclude click event
       x: 10, // right
       y: 10, // bottom
       startX: 0,
@@ -144,23 +145,23 @@ class VConsole {
    */
   _render() {
     if (! $.one(VCONSOLE_ID)) {
-      let e = document.createElement('div');
+      const e = document.createElement('div');
       e.innerHTML = tpl;
       document.documentElement.insertAdjacentElement('beforeend', e.children[0]);
     }
     this.$dom = $.one(VCONSOLE_ID);
 
     // reposition switch button
-    let $switch = $.one('.vc-switch', this.$dom);
+    const $switch = $.one('.vc-switch', this.$dom);
     let switchX = tool.getStorage('switch_x') * 1,
         switchY = tool.getStorage('switch_y') * 1;
     if (switchX || switchY) {
       // check edge
-      let docWidth = Math.max(document.documentElement.offsetWidth, window.innerWidth);
+      const docWidth = Math.max(document.documentElement.offsetWidth, window.innerWidth);
+      const docHeight = Math.max(document.documentElement.offsetHeight, window.innerHeight);
       if (switchX + $switch.offsetWidth > docWidth) {
         switchX = docWidth - $switch.offsetWidth;
       }
-      let docHeight = Math.max(document.documentElement.offsetHeight, window.innerHeight);
       if (switchY + $switch.offsetHeight > docHeight) {
         switchY = docHeight - $switch.offsetHeight;
       }
@@ -173,11 +174,11 @@ class VConsole {
     }
 
     // modify font-size
-    let dpr = window.devicePixelRatio || 1;
-    let viewportEl = document.querySelector('[name="viewport"]');
+    const dpr = window.devicePixelRatio || 1;
+    const viewportEl = document.querySelector('[name="viewport"]');
     if (viewportEl && viewportEl.content) {
-      let initialScale = viewportEl.content.match(/initial\-scale\=\d+(\.\d+)?/);
-      let scale = initialScale ? parseFloat(initialScale[0].split('=')[1]) : 1;
+      const initialScale = viewportEl.content.match(/initial\-scale\=\d+(\.\d+)?/);
+      const scale = initialScale ? parseFloat(initialScale[0].split('=')[1]) : 1;
       if (scale < 1) {
         this.$dom.style.fontSize = 13 * dpr + 'px';
       }
@@ -280,38 +281,45 @@ class VConsole {
     $.bind($switch, 'touchstart', function(e) {
       that.switchPos.startX = e.touches[0].pageX;
       that.switchPos.startY = e.touches[0].pageY;
+      that.switchPos.hasMoved = false;
     });
     $.bind($switch, 'touchend', function(e) {
+      if (!that.switchPos.hasMoved) {
+        return;
+      }
       that.switchPos.x = that.switchPos.endX;
       that.switchPos.y = that.switchPos.endY;
       that.switchPos.startX = 0;
       that.switchPos.startY = 0;
+      that.switchPos.hasMoved = false;
       tool.setStorage('switch_x', that.switchPos.x);
       tool.setStorage('switch_y', that.switchPos.y);
     });
     $.bind($switch, 'touchmove', function(e) {
-      if (e.touches.length > 0) {
-        let offsetX = e.touches[0].pageX - that.switchPos.startX,
-            offsetY = e.touches[0].pageY - that.switchPos.startY;
-        let x = that.switchPos.x - offsetX,
-            y = that.switchPos.y - offsetY;
-        // check edge
-        let docWidth = Math.max(document.documentElement.offsetWidth, window.innerWidth);
-        if (x + $switch.offsetWidth > docWidth) {
-          x = docWidth - $switch.offsetWidth;
-        }
-        let docHeight = Math.max(document.documentElement.offsetHeight, window.innerHeight);
-        if (y + $switch.offsetHeight > docHeight) {
-          y = docHeight - $switch.offsetHeight;
-        }
-        if (x < 0) { x = 0; }
-        if (y < 0) { y = 0; }
-        $switch.style.right = x + 'px';
-        $switch.style.bottom = y + 'px';
-        that.switchPos.endX = x;
-        that.switchPos.endY = y;
-        e.preventDefault();
+      if (e.touches.length <= 0) {
+        return;
       }
+      const offsetX = e.touches[0].pageX - that.switchPos.startX,
+            offsetY = e.touches[0].pageY - that.switchPos.startY;
+      let x = Math.floor(that.switchPos.x - offsetX),
+          y = Math.floor(that.switchPos.y - offsetY);
+      // check edge
+      const docWidth = Math.max(document.documentElement.offsetWidth, window.innerWidth);
+      const docHeight = Math.max(document.documentElement.offsetHeight, window.innerHeight);
+      if (x + $switch.offsetWidth > docWidth) {
+        x = docWidth - $switch.offsetWidth;
+      }
+      if (y + $switch.offsetHeight > docHeight) {
+        y = docHeight - $switch.offsetHeight;
+      }
+      if (x < 0) { x = 0; }
+      if (y < 0) { y = 0; }
+      $switch.style.right = x + 'px';
+      $switch.style.bottom = y + 'px';
+      that.switchPos.endX = x;
+      that.switchPos.endY = y;
+      that.switchPos.hasMoved = true;
+      e.preventDefault();
     });
 
     // show console panel
