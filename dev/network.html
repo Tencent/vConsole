@@ -43,7 +43,8 @@ function postAjax() {
 function getAjax() {
   console.info('getAjax() Start, response should be logged after End');
   const xhr = new XMLHttpRequest();
-  xhr.open('GET', './data/success.json?type=xhr');
+  xhr.open('GET', './data/success.json?type=xhr&id=' + Math.random());
+  xhr.setRequestHeader('custom-header', 'foobar');
   xhr.send();
   xhr.onload = () => {
     console.log('getAjax Response:', JSON.parse(xhr.response));
@@ -56,8 +57,12 @@ function getAjax() {
 
 function getFetch() {
   console.info('getFetch() Start, response should be logged after End');
-  window.fetch('./data/success.json?type=fetch', {
-    method: 'GET'
+  window.fetch('./data/success.json?type=fetch&id=' + Math.random(), {
+    method: 'GET',
+    headers: {
+      'custom-header': 'foobar',
+      'content-type': 'application/json'
+    },
   }).then((data) => {
     return data.json();
   }).then((data) => {
@@ -73,6 +78,7 @@ function postFetch() {
     body: { foo: 'bar', id: Math.random() },
     // body: new Blob([new ArrayBuffer(233)], { type: 'image/png' }),
     headers: {
+      'custom-header': 'foobar',
       'content-type': 'application/json'
     },
   }).then((data) => {
@@ -87,14 +93,15 @@ function postFetch() {
 
 function postFetchByRequest() {
   console.info('postFetchByRequest() Start, response should be logged after End');
-  const req = new Request('./data/success.json?type=fetch', {
+  const headers = new Headers();
+  headers.append('custom-header', 'foobar');
+  headers.append('content-type', 'application/json');
+  // headers.append('content-type', 'application/x-www-form-urlencoded');
+  const req = new Request('./data/success.json?type=fetch&id=' + Math.random(), {
     method: 'POST',
     // body: { foo: 'bar', id: Math.random() },
     body: new Blob([new ArrayBuffer(233)], { type: 'image/png' }),
-    headers: {
-      'content-type': 'application/json'
-      // 'content-type': 'application/x-www-form-urlencoded'
-    },
+    headers: headers,
   });
   window.fetch(req).then((data) => {
     return data.json();
