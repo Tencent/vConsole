@@ -2,14 +2,14 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### V3.4.0 (2020-12-xx)
 
-- [FEATURE] Add `fetch` log in Network tab. (by @weiqian93)
 - [FEATURE] Add darkmode theme. (by @progrape)
+- [FEATURE] Add `fetch` log in Network tab. (by @weiqian93)
+- [FEATURE] Add Request Headers to Network tab.
+- [FEATURE] Use short URL and display parameters in Network tab. (issue #291)
 - [FEATURE] New plugin [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats). (by @smackgg)
 - [FEATURE] Add safe area to switch button. (issue #353)
 - [FEATURE] Add `Location` info to System tab. (issue #343)
 - [FEATURE] Auto move input cursor to the bracket after autocomplete command. (issue #293)
-- [FEATURE] Add Request Headers to Network tab.
-- [FEATURE] Use short URL and display parameters in Network tab. (issue #291)
 - [FIX] The position of the switch button will be reset by mistake when clicked.
 - [FIX] Fix `document.documentElement.offsetHeight|offsetWidth` is unreliable in newer browsers. (by @littlee)
 - [FIX] Prevent dispatchEvent for disabled or readOnly elements. (by @norux)
