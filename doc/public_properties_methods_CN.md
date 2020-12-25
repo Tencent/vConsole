@@ -16,7 +16,7 @@ vConsole 提供一些公共属性字段、函数方法，以便开发插件。
 例子：
 
 ```javascript
-vConsole.version // => "3.1.0"
+vConsole.version // => "3.4.0"
 ```
 
 
@@ -34,6 +34,7 @@ onReady               | Function | true     |                                   
 onClearLog            | Function | true     |                                             | 回调方法，点击 Log 或 System 面板的 "Clear" 按钮后出发。
 maxLogNumber          | Number   | true     | 1000                                        | 超出上限的日志会被自动清除。
 disableLogScrolling   | Boolean  | true     |                                             | 若为 `false`，有新日志时面板将不会自动滚动到底部。
+theme                 | String   | true     | 'light'                                     | 主题颜色，可选值为 'light' | 'dark'。
 
 例子：
 
