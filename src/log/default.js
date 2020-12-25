@@ -49,6 +49,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       keyTypes[winKeys[i]] = typeof window[winKeys[i]];
     }
 
+
     const cacheObj = {};
     const ID_REGEX = /[a-zA-Z_0-9\$\-\u00A2-\uFFFF]/;
     const retrievePrecedingIdentifier = (text, pos, regex) => {
@@ -77,8 +78,15 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       }
       return buf.reverse().join('');
     };
+    const moveCursorToPos = ($dom, pos) => {
+      if ($dom.setSelectionRange) {
+        $dom.setSelectionRange(0, pos);
+      }
+    };
 
-    $.bind($.one('.vc-cmd-input'), 'keyup', function (e) {
+    const $input = $.one('.vc-cmd-input');
+
+    $.bind($input, 'keyup', function (e) {
       const isDeleteKeyCode = e.keyCode === 8 || e.keyCode === 46;
       const $prompted = $.one('.vc-cmd-prompted');
       $prompted.style.display = 'none';
@@ -87,15 +95,16 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       const value = retrievePrecedingIdentifier(this.value, this.value.length);
       if (value && value.length > 0) {
         if (/\(/.test(value) && !isDeleteKeyCode) {
-          $.one('.vc-cmd-input').value += ')';
+          $input.value += ')';
+          moveCursorToEnd($input, $input.value.length - 1);
           return;
         }
         if (/\[/.test(value) && !isDeleteKeyCode) {
-          $.one('.vc-cmd-input').value += ']';
+          $input.value += ']';
           return;
         }
         if (/\{/.test(value) && !isDeleteKeyCode) {
-          $.one('.vc-cmd-input').value += '}';
+          $input.value += '}';
           return;
         }
         if ('.' === value) {
@@ -113,8 +122,8 @@ class VConsoleDefaultTab extends VConsoleLogTab {
               const _key = cacheObj[key][i];
               $li.innerHTML = _key;
               $li.onclick = function () {
-                $.one('.vc-cmd-input').value = '';
-                $.one('.vc-cmd-input').value = tempValue + this.innerHTML;
+                $input.value = '';
+                $input.value = tempValue + this.innerHTML;
                 $prompted.style.display = 'none';
               };
               $prompted.appendChild($li);
@@ -128,10 +137,10 @@ class VConsoleDefaultTab extends VConsoleLogTab {
               const $li = document.createElement('li');
               $li.innerHTML = winKeys[i];
               $li.onclick = function () {
-                $.one('.vc-cmd-input').value = '';
-                $.one('.vc-cmd-input').value = this.innerHTML;
+                $input.value = '';
+                $input.value = this.innerHTML;
                 if (keyTypes[this.innerHTML] == 'function') {
-                  $.one('.vc-cmd-input').value += '()';
+                  $input.value += '()';
                 }
                 $prompted.style.display = 'none';
               };
@@ -148,8 +157,8 @@ class VConsoleDefaultTab extends VConsoleLogTab {
               if (_key.indexOf(arr[1]) >= 0) {
                 $li.innerHTML = _key;
                 $li.onclick = function () {
-                  $.one('.vc-cmd-input').value = '';
-                  $.one('.vc-cmd-input').value = tempValue + this.innerHTML;
+                  $input.value = '';
+                  $input.value = tempValue + this.innerHTML;
                   $prompted.style.display = 'none';
                 };
                 $prompted.appendChild($li);
