@@ -186,14 +186,19 @@ export function getObjAllKeys(obj) {
   if (!isObject(obj) && !isArray(obj)) {
     return [];
   }
-  if (isArray(obj)) {
-    const m = [];
-    obj.forEach((_, index) => {
-      m.push(index)
-    });
-    return m;
+  // if (isArray(obj)) {
+  //   const m = [];
+  //   obj.forEach((_, index) => {
+  //     m.push(index)
+  //   });
+  //   return m;
+  // }
+  // return Object.getOwnPropertyNames(obj).sort();
+  const keys = [];
+  for (let k in obj) {
+    keys.push(k);
   }
-  return Object.getOwnPropertyNames(obj).sort();
+  return keys.sort();
 }
 
 /**
