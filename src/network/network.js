@@ -34,6 +34,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
     this.isInBottom = true; // whether the panel is in the bottom
     this._open = undefined; // the origin function
     this._send = undefined;
+    this._setRequestHeader = undefined;
 
     this.mockAjax();
     this.mockFetch();
@@ -98,8 +99,10 @@ class VConsoleNetworkTab extends VConsolePlugin {
     if (window.XMLHttpRequest) {
       window.XMLHttpRequest.prototype.open = this._open;
       window.XMLHttpRequest.prototype.send = this._send;
+      window.XMLHttpRequest.prototype.setRequestHeader = this._setRequestHeader;
       this._open = undefined;
       this._send = undefined;
+      this._setRequestHeader = undefined
     }
   }
 
@@ -179,11 +182,13 @@ class VConsoleNetworkTab extends VConsolePlugin {
     // update dom
     let domData = {
       id: id,
+      name: item.name,
       url: item.url,
       status: item.status,
       method: item.method || '-',
       costTime: item.costTime>0 ? item.costTime+'ms' : '-',
       header: item.header || null,
+      requestHeader: item.requestHeader || null,
       getData: item.getData || null,
       postData: item.postData || null,
       response: null,
@@ -262,11 +267,13 @@ class VConsoleNetworkTab extends VConsolePlugin {
     let _XMLHttpRequest = window.XMLHttpRequest;
     if (!_XMLHttpRequest) { return; }
 
-    let that = this;
-    let _open = window.XMLHttpRequest.prototype.open,
-        _send = window.XMLHttpRequest.prototype.send;
+    const that = this;
+    const _open = window.XMLHttpRequest.prototype.open,
+          _send = window.XMLHttpRequest.prototype.send,
+          _setRequestHeader = window.XMLHttpRequest.prototype.setRequestHeader;
     that._open = _open;
     that._send = _send;
+    that._setRequestHeader = _setRequestHeader;
 
     // mock open()
     window.XMLHttpRequest.prototype.open = function() {
@@ -352,6 +359,19 @@ class VConsoleNetworkTab extends VConsolePlugin {
       return _open.apply(XMLReq, args);
     };
 
+    // mock setRequestHeader()
+    window.XMLHttpRequest.prototype.setRequestHeader = function() {
+      const XMLReq = this;
+      const args = [].slice.call(arguments);
+
+      const item = that.reqList[XMLReq._requestID];
+      if (item) {
+        if (!item.requestHeader) { item.requestHeader = {}; }
+        item.requestHeader[args[0]] = args[1];
+      }
+      return _setRequestHeader.apply(XMLReq, args);
+    };
+
     // mock send()
     window.XMLHttpRequest.prototype.send = function() {
       let XMLReq = this;
@@ -361,8 +381,11 @@ class VConsoleNetworkTab extends VConsolePlugin {
       let item = that.reqList[XMLReq._requestID] || {};
       item.method = XMLReq._method ? XMLReq._method.toUpperCase() : 'GET';
 
-      let query = XMLReq._url ? XMLReq._url.split('?') : []; // a.php?b=c&d=?e => ['a.php', 'b=c&d=', '?e']
-      item.url = query.shift(); // => ['b=c&d=', '?e']
+      let query = XMLReq._url ? XMLReq._url.split('?') : []; // a.php?b=c&d=?e => ['a.php', 'b=c&d=', 'e']
+      item.url = XMLReq._url || '';
+      item.name = query.shift() || ''; // => ['b=c&d=', 'e']
+      item.name = item.name.replace(new RegExp('[/]*$'), '').split('/').pop() || '';
+      item.name += '?' + query;
 
       if (query.length > 0) {
         item.getData = {};
@@ -416,22 +439,28 @@ class VConsoleNetworkTab extends VConsolePlugin {
       let item = that.reqList[id] || {};
       let query = [],
           url = '',
-          method = 'GET';
+          method = 'GET',
+          requestHeader = null;
       
       // handle `input` content
       if (tool.isString(input)) { // when `input` is a string
         method = init.method || 'GET';
         url = input;
+        requestHeader = init.headers;
       } else { // when `input` is a `Request` object
         method = input.method || 'GET';
         url = input.url;
+        requestHeader = input.headers;
       }
       query = url.split('?');
-      url = query.shift();
 
       item.id = id;
       item.method = method;
+      item.requestHeader = requestHeader;
       item.url = url;
+      item.name = query.shift() || '';
+      item.name = item.name.replace(new RegExp('[/]*$'), '').split('/').pop() || '';
+      item.name += '?' + query;
 
       if (query.length > 0) {
         item.getData = {};
