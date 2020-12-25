@@ -16,7 +16,7 @@ The current version of vConsole.
 Example:
 
 ```javascript
-vConsole.version // => "3.1.0"
+vConsole.version // => "3.4.0"
 ```
 
 
@@ -34,6 +34,7 @@ onReady               | Function | true     |                                   
 onClearLog            | Function | true     |                                             | Trigger after click "Clear" button in Log and System panel.
 maxLogNumber          | Number   | true     | 1000                                        | Overflow logs will be removed from log tabs.
 disableLogScrolling   | Boolean  | true     |                                             | If `false`, panel will not scroll to bottom while printing new logs.
+theme                 | String   | true     | 'light'                                     | Theme mode, 'light' | 'dark'.
 
 Example:
 
