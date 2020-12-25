@@ -14,6 +14,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - [FIX] Fix security issues. (#345 by @QiAnXinCodeSafe)
 - [FIX] Prevent "webkitStorageInfo deprecation" warning.
 - [FIX] Remove `Symbol`, `Array.from` polyfill. (issue #325, #275)
+- [FIX] Show all enumerable and unenumerable properties. (issue #327)
 - [IMPROVE] Update Webpack DevServer option. (by @QinZhen001)
 
 #### V3.3.4 (2019-08-19)

@@ -291,7 +291,6 @@ class VConsole {
       that.switchPos.hasMoved = false;
     });
     $.bind($switch, 'touchend', function(e) {
-      console.log(e);
       if (!that.switchPos.hasMoved) {
         return;
       }
