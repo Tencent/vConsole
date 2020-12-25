@@ -18,16 +18,14 @@ import render from '../lib/mito.js';
 
 const $ = {};
 
-if (!Array.from) {
-  Array.from = function(collection) {
-    const arr = [];
+const ArrayFrom = function(collection) {
+  const arr = [];
 
-    for (let i = 0; i < collection.length; i++) {
-      arr.push(collection[i]);
-    }
-
-    return arr;
+  for (let i = 0; i < collection.length; i++) {
+    arr.push(collection[i]);
   }
+
+  return arr;
 }
 
 /**
@@ -49,7 +47,7 @@ $.one = function(selector, contextElement) {
 $.all = function(selector, contextElement) {
   try {
     const nodeList = (contextElement || document).querySelectorAll(selector);
-    return Array.from(nodeList);
+    return ArrayFrom(nodeList);
   } catch (e) {
     return [];
   }

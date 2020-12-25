@@ -13,9 +13,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * A Front-End Console Panel for Mobile Webpage
  */
 
-// global
-import './lib/symbol.js';
-
 // classes
 import VConsole from './core/core.js';
 
