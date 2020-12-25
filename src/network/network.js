@@ -359,9 +359,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
           data = args[0];
 
       let item = that.reqList[XMLReq._requestID] || {};
-      item.method = XMLReq._method.toUpperCase();
+      item.method = XMLReq._method ? XMLReq._method.toUpperCase() : 'GET';
 
-      let query = XMLReq._url.split('?'); // a.php?b=c&d=?e => ['a.php', 'b=c&d=', '?e']
+      let query = XMLReq._url ? XMLReq._url.split('?') : []; // a.php?b=c&d=?e => ['a.php', 'b=c&d=', '?e']
       item.url = query.shift(); // => ['b=c&d=', '?e']
 
       if (query.length > 0) {
