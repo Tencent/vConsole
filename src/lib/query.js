@@ -18,16 +18,6 @@ import render from '../lib/mito.js';
 
 const $ = {};
 
-const ArrayFrom = function(collection) {
-  const arr = [];
-
-  for (let i = 0; i < collection.length; i++) {
-    arr.push(collection[i]);
-  }
-
-  return arr;
-}
-
 /**
  * get single element
  * @public
@@ -47,7 +37,7 @@ $.one = function(selector, contextElement) {
 $.all = function(selector, contextElement) {
   try {
     const nodeList = (contextElement || document).querySelectorAll(selector);
-    return ArrayFrom(nodeList);
+    return [].slice.call(nodeList);
   } catch (e) {
     return [];
   }
