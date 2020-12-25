@@ -33,6 +33,9 @@ class VConsoleSystemTab extends VConsoleLogTab {
   	// print system info
     let ua = navigator.userAgent,
       logMsg = '';
+    
+    // location
+    console.info('[system]', 'Location:', location.href);
 
     // device & system
     let ipod = ua.match(/(ipod).*\s([\d_]+)/i),
@@ -62,26 +65,13 @@ class VConsoleSystemTab extends VConsoleLogTab {
       console.info('[system]', 'System:', templogMsg);
     }
 
-    // HTTP protocol
-    logMsg = 'Unknown';
-    if (location.protocol == 'https:') {
-      logMsg = 'HTTPS';
-    } else if (location.protocol == 'http:') {
-      logMsg = 'HTTP';
-    } else {
-      logMsg = location.protocol.replace(':', '');
-    }
-    templogMsg = logMsg;
     // network type
     let network = ua.toLowerCase().match(/ nettype\/([^ ]+)/g);
     logMsg = 'Unknown';
     if (network && network[0]) {
       network = network[0].split('/');
       logMsg = network[1];
-      templogMsg += (', ' + logMsg);
-      console.info('[system]', 'Network:', templogMsg);
-    } else {
-      console.info('[system]', 'Protocol:', templogMsg);
+      console.info('[system]', 'Network:', logMsg);
     }
 
     // User Agent
