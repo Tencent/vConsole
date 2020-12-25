@@ -7,6 +7,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - [FEATURE] New plugin [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats). (by @smackgg)
 - [FEATURE] Add safe area to switch button. (issue #353)
 - [FEATURE] Add `Location` info to System tab. (issue #343)
+- [FEATURE] Auto move input cursor to the bracket after autocomplete command. (issue #293)
 - [FIX] The position of the switch button will be reset by mistake when clicked.
 - [FIX] Fix `document.documentElement.offsetHeight|offsetWidth` is unreliable in newer browsers. (by @littlee)
 - [FIX] Prevent dispatchEvent for disabled or readOnly elements. (by @norux)
