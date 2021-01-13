@@ -1,0 +1,70 @@
+<!--
+// 这个demo示例如何动态加载vConsole
+// (1)访问 demo2.html 时（一般情况），不加载vConsole
+// (2)访问 demo2.html?dev_mode=1 时（调试模式），加载vConsole
+--><!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>vConsole/Demo2</title>
+  <link href="./lib/weui.min.css" rel="stylesheet"/>
+  <link href="./lib/demo.css" rel="stylesheet"/>
+</head>
+
+<body ontouchstart>
+  <div class="page">
+    <h1 class="page_title">Demo 2</h1>
+    <a href="javascript:;" class="weui_btn weui_btn_primary js_btn_log">打印日志</a>
+    <a href="javascript:;" class="weui_btn weui_btn_default js_btn_dev">打开调试模式</a>
+  </div>
+  <div class="weui_toptips weui_notice" id="js_tips">已打印log</div>
+</body>
+
+<script>
+// 判断url参数
+const isDevMode = window.location.search.includes('dev_mode=1');
+const $devBtn = document.querySelector('.js_btn_dev');
+
+if (isDevMode) {
+  $devBtn.innerHTML = '关闭调试模式';
+  // 动态引入vConsole
+  const elm = document.createElement('SCRIPT');
+  elm.src = '../dist/vconsole.min.js';
+  elm.onload = () => {
+    window.vConsole = new window.VConsole();
+  };
+  document.body.append(elm);
+} else {
+  $devBtn.innerHTML = '打开调试模式';
+}
+
+$devBtn.addEventListener('touchend', (e) => {
+  let search = window.location.search;
+  if (isDevMode) {
+    search = search.replace('dev_mode=1', '');
+  } else {
+    search += '&dev_mode=1';
+  }
+  window.location.search = search;
+});
+
+document.querySelector('.js_btn_log').addEventListener('touchend', (e) => {
+  // 打印log时无须判断是否为dev_mode，
+  // 未加载vConsole时，console.log()不会显示到前台
+  console.log('Hello World');
+  showTips();
+});
+
+// 用于页面内展示顶部tips
+let tipsTimer;
+const showTips = () => {
+  tipsTimer && clearTimeout(tipsTimer);
+  const $tips = document.querySelector('#js_tips');
+  $tips.style.display = 'block';
+  tipsTimer = setTimeout(() => {
+    $tips.style.display = 'none';
+  }, 1500);
+};
+</script>
+</html>

@@ -7,9 +7,6 @@
   <link href="./lib/weui.min.css" rel="stylesheet"/>
   <link href="./lib/demo.css" rel="stylesheet"/>
 
-  <script src="./lib/zepto.min.js"></script>
-  <script src="./lib/zepto.touch.min.js"></script>
-
   <!-- 引入vConsole的JS库 -->
   <script src="../dist/vconsole.min.js"></script>
 
@@ -29,8 +26,8 @@
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_log_obj">打印Object</a>
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_trigger_error">触发JS Error</a>
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_log_sys">打印到系统面板</a>
-    <a href="javascript:;" class="weui_btn weui_btn_default js_btn_ajax_get">发起AJAX(GET)</a>
-    <a href="javascript:;" class="weui_btn weui_btn_default js_btn_ajax_post">发起AJAX(POST)</a>
+    <a href="javascript:;" class="weui_btn weui_btn_default js_btn_ajax_get">发起GET Request</a>
+    <a href="javascript:;" class="weui_btn weui_btn_default js_btn_ajax_post">发起POST Request</a>
 
     <a href="javascript:;" class="weui_btn weui_btn_default js_btn_clear">清除日志</a>
     <a href="javascript:;" class="weui_btn weui_btn_warn js_btn_hideswitch">隐藏按钮</a>
@@ -45,23 +42,44 @@ window.vConsole = new window.VConsole({
   defaultPlugins: ['system', 'network', 'element', 'storage'], // 可以在此设定要默认加载的面板
   maxLogNumber: 1000,
   // disableLogScrolling: true,
-  onReady: function() {
+  onReady: () => {
     console.log('vConsole is ready.');
   },
-  onClearLog: function() {
+  onClearLog: () => {
     console.log('on clearLog');
   }
 });
 
-console.info('欢迎使用 vConsole。vConsole 是一个由微信公众平台前端团队研发的 Web 前端开发者面板，可用于展示 console 日志，方便开发、调试。');
+console.info('欢迎使用 vConsole。vConsole 是一个由微信前端团队研发的 Web 前端开发者面板，可用于展示 console 日志，方便开发、调试。');
 
-$('.js_btn_log').on('tap', function(e) {
-  var type = $(this).data('type');
-  console[type](type); // 例如，console.log(type)
-  showTips();
+// 定义一些快捷方法
+const DOM = document.querySelector.bind(document);
+const DOMs = document.querySelectorAll.bind(document);
+const BindTap = (selector, fn) => {
+  const $elm = typeof selector === 'string' ? DOM(selector) : selector;
+  $elm.addEventListener('touchend', fn);
+};
+const Ajax = (method, url, data, callback) => {
+  const xhr = new XMLHttpRequest();
+  xhr.open(method, url);
+  xhr.send(data);
+  xhr.onload = () => {
+    callback(xhr.response);
+  };
+  xhr.onerror = () => {
+    console.log('XHR Error');
+  };
+};
+
+DOMs('.js_btn_log').forEach(($elm) => {
+  BindTap($elm, (e) => {
+    const type = e.target.dataset.type;
+    console[type](type); // 例如，console.log(type)
+    showTips();
+  });
 });
-$('.js_btn_log_obj').on('tap', function(e) {
-  var obj = {
+BindTap('.js_btn_log_obj', (e) => {
+  const obj = {
     'foo': 'bar',
     'obj': {'bool': true},
     'arr': [9, 8, 7],
@@ -70,71 +88,74 @@ $('.js_btn_log_obj').on('tap', function(e) {
   console.log(obj);
   showTips();
 });
-$('.js_btn_trigger_error').on('tap', function(e) {
+BindTap('.js_btn_trigger_error', (e) => {
   showTips();
-  var err = undefined;
+  const err = undefined;
   err.a = 1;
 });
-$('.js_btn_log_sys').on('tap', function(e) {
+BindTap('.js_btn_log_sys', (e) => {
   // 输出到系统面板
   console.log('[system]', '当前时间戳:', (+new Date()));
   showTips();
 });
-$('.js_btn_ajax_get').on('tap', function(e) {
+BindTap('.js_btn_ajax_get', (e) => {
   // 发起一个AJAX
-  $.get('ajax.php',  { id: Math.random(), action: 'Get' }, function(resp) {
+  Ajax('GET', 'ajax.php',  { id: Math.random(), action: 'Get' }, (resp) => {
     console.log(resp);
   });
   showTips();
 });
-$('.js_btn_ajax_post').on('tap', function(e) {
+BindTap('.js_btn_ajax_post', (e) => {
   // 发起一个AJAX
-  $.post('ajax.php',  { id: Math.random(), action: 'Post' }, function(resp) {
+  Ajax('POST', 'ajax.php',  { id: Math.random(), action: 'Post' }, (resp) => {
     console.log(resp);
   });
   showTips();
 });
-$('.js_btn_clear').on('tap', function(e) {
+BindTap('.js_btn_clear', (e) => {
   console.clear();
 });
-$('.js_btn_hideswitch').on('tap', function(e) {
-  var that = this;
-  if ($(this).hasClass('weui_btn_disabled')) {
+BindTap('.js_btn_hideswitch', (e) => {
+  const $elm = e.target;
+  if ($elm.classList.contains('weui_btn_disabled')) {
     return false;
   }
-  $(this).addClass('weui_btn_disabled');
+  $elm.classList.add('weui_btn_disabled');
   window.vConsole.hideSwitch();
-  var count = 6;
-  var cb = function() {
+  let count = 6;
+  const cb = () => {
     count--;
     if (count == 0) {
       window.vConsole.showSwitch();
-      $(that).removeClass('weui_btn_disabled');
-      $(that).html('隐藏按钮');
+      $elm.classList.remove('weui_btn_disabled');
+      $elm.innerHTML = '隐藏按钮';
       clearInterval(timer);
       return;
     }
-    $(that).html('隐藏按钮(' + count + ')');
+    $elm.innerHTML = '隐藏按钮(' + count + ')';
   }
   cb();
-  var timer = setInterval(cb, 1000);
+  let timer = setInterval(cb, 1000);
 });
-$('.js_btn_destroy').on('tap', function(e) {
-  if ($(this).hasClass('weui_btn_disabled')) {
+BindTap('.js_btn_destroy', (e) => {
+  const $elm = e.target;
+  if ($elm.classList.contains('weui_btn_disabled')) {
     return false;
   }
-  $('.weui_btn').addClass('weui_btn_disabled');
+  DOMs('.weui_btn').forEach(($elm) => {
+    $elm.classList.add('weui_btn_disabled');
+  });
   window.vConsole.destroy();
-  $(this).html('刷新页面以重载vConsole');
+  $elm.innerHTML = '刷新页面以重载vConsole';
 });
 
 // 用于页面内展示顶部tips
-var tipsTimer;
-function showTips() {
+let tipsTimer;
+const showTips = () => {
   tipsTimer && clearTimeout(tipsTimer);
-  $('#js_tips').show();
-  tipsTimer = setTimeout(function() {
-    $('#js_tips').hide();
+  DOM('#js_tips').style.display = 'block';
+  tipsTimer = setTimeout(() => {
+    DOM('#js_tips').style.display = 'none';
   }, 1500);
 }
 

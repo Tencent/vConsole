@@ -10,9 +10,6 @@ header("Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval'
   <title>vConsole/Demo3</title>
   <link href="./lib/weui.min.css" rel="stylesheet"/>
   <link href="./lib/demo.css" rel="stylesheet"/>
-  
-  <!-- <script src="./lib/zepto.min.js" nonce="<?php echo $nonce; ?>"></script>
-  <script src="./lib/zepto.touch.min.js" nonce="<?php echo $nonce; ?>"></script> -->
 
   <!-- 引入vConsole的JS库 -->
   <script src="../dist/vconsole.min.js" nonce="<?php echo $nonce; ?>"></script>
@@ -31,7 +28,7 @@ header("Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval'
 </body>
 
 <script nonce="<?php echo $nonce; ?>">
-$('.js_btn_log').on('tap', function(e) {
+document.querySelector('.js_btn_log').addEventListener('touchend', function(e) {
   // 打印log时无须判断是否为dev_mode，
   // 未加载vConsole时，console.log()不会显示到前台
   console.log('Hello World');
@@ -39,13 +36,14 @@ $('.js_btn_log').on('tap', function(e) {
 });
 
 // 用于页面内展示顶部tips
-var tipsTimer;
-function showTips() {
+let tipsTimer;
+const showTips = () => {
   tipsTimer && clearTimeout(tipsTimer);
-  $('#js_tips').show();
-  tipsTimer = setTimeout(function() {
-    $('#js_tips').hide();
+  const $tips = document.querySelector('#js_tips');
+  $tips.style.display = 'block';
+  tipsTimer = setTimeout(() => {
+    $tips.style.display = 'none';
   }, 1500);
-}
+};
 </script>
 </html>

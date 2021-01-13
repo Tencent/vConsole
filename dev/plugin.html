@@ -34,7 +34,7 @@ window.vConsole = new window.VConsole({
 
 function newTab() {
   console.info('newTab() Start');
-  var tab = new vConsole.VConsolePlugin('tab1', 'Tab1');
+  var tab = new window.VConsole.VConsolePlugin('tab1', 'Tab1');
   tab
   .on('init', function() { console.log(this.id, 'init'); })
   .on('renderTab', function(cb) {
