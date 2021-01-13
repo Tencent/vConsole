@@ -385,9 +385,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
       item.url = XMLReq._url || '';
       item.name = query.shift() || ''; // => ['b=c&d=', 'e']
       item.name = item.name.replace(new RegExp('[/]*$'), '').split('/').pop() || '';
-      item.name += '?' + query;
-
+      
       if (query.length > 0) {
+        item.name += '?' + query;
         item.getData = {};
         query = query.join('?'); // => 'b=c&d=?e'
         query = query.split('&'); // => ['b=c', 'd=?e']
@@ -460,9 +460,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
       item.url = url;
       item.name = query.shift() || '';
       item.name = item.name.replace(new RegExp('[/]*$'), '').split('/').pop() || '';
-      item.name += '?' + query;
 
       if (query.length > 0) {
+        item.name += '?' + query;
         item.getData = {};
         query = query.join('?'); // => 'b=c&d=?e'
         query = query.split('&'); // => ['b=c', 'd=?e']
