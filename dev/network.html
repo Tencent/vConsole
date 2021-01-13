@@ -26,10 +26,11 @@ window.vConsole = new window.VConsole();
 function postAjax() {
   console.info('postAjax() Start, response should be logged after End');
   const xhr = new XMLHttpRequest();
-  xhr.open('POST', './data/success.json?type=xhr');
+  xhr.open('POST', './data/success.json');
   xhr.send({
     foo: 'bar',
-    id: Math.random()
+    id: Math.random(),
+    type: 'xhr'
   });
   xhr.onload = () => {
     console.log('postAjax Response:', JSON.parse(xhr.response));
@@ -73,9 +74,9 @@ function getFetch() {
 
 function postFetch() {
   console.info('postFetch() Start, response should be logged after End');
-  window.fetch('./data/success.json?type=fetch', {
+  window.fetch('./data/success.json', {
     method: 'POST',
-    body: { foo: 'bar', id: Math.random() },
+    body: { foo: 'bar', id: Math.random(), type: 'fetch' },
     // body: new Blob([new ArrayBuffer(233)], { type: 'image/png' }),
     headers: {
       'custom-header': 'foobar',
