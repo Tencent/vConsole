@@ -53,7 +53,7 @@ import 'path/to/vconsole.min.d.ts';
 
 [http://wechatfe.github.io/vconsole/demo.html](http://wechatfe.github.io/vconsole/demo.html)
 
-![](./example/snapshot/log_panel.png)
+![](./example/snapshot/panel_log.jpg) ![](./example/snapshot/panel_network.jpg) ![](./example/snapshot/panel_element.jpg)
 
 
 
