@@ -61,6 +61,13 @@ const BindTap = (selector, fn) => {
 };
 const Ajax = (method, url, data, callback) => {
   const xhr = new XMLHttpRequest();
+  if (method === 'GET') {
+    const params = [];
+    for (let k in data) {
+      params.push(k + '=' + data[k]);
+    }
+    url += '?' + params.join('&');
+  }
   xhr.open(method, url);
   xhr.send(data);
   xhr.onload = () => {
@@ -100,14 +107,14 @@ BindTap('.js_btn_log_sys', (e) => {
 });
 BindTap('.js_btn_ajax_get', (e) => {
   // 发起一个AJAX
-  Ajax('GET', 'ajax.php',  { id: Math.random(), action: 'Get' }, (resp) => {
+  Ajax('GET', 'ajax.json',  { id: Math.ceil(Math.random() * 10000), action: 'Get' }, (resp) => {
     console.log(resp);
   });
   showTips();
 });
 BindTap('.js_btn_ajax_post', (e) => {
   // 发起一个AJAX
-  Ajax('POST', 'ajax.php',  { id: Math.random(), action: 'Post' }, (resp) => {
+  Ajax('POST', 'ajax.json',  { id: Math.ceil(Math.random() * 10000), action: 'Post' }, (resp) => {
     console.log(resp);
   });
   showTips();
