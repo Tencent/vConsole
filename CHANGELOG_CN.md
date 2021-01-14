@@ -1,5 +1,26 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### V3.4.0 (2021-01-14)
+
+- 【特性】支持暗黑模式，配置项 `vConsole.option.theme` 见 [Public Properties & Methods](./doc/public_properties_methods_CN.md)。(by @progrape)
+- 【特性】Network 面板支持 `fetch` 网络记录。(by @weiqian93)
+- 【特性】Network 面板支持显示 Request Headers。
+- 【特性】Network 面板仅显示简短网址，URL 参数将显示在详细信息中。(issue #291)
+- 【特性】System 面板增加显示 `Location` 信息。(issue #343)
+- 【特性】开关按钮加入拖拽安全区，避免遮挡全面屏手机底部操作区。(issue #353)
+- 【特性】指令输入框键入括号且自动补全括号后，光标将自动移动到括号内部。(issue #293)
+- 【特性】新第三方插件 [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats)。(by @smackgg)
+- 【修复】修复点击开关按钮后位置会被重置的问题。
+- 【修复】修复 `document.documentElement.offsetHeight|offsetWidth` 在新浏览器中不够准确的问题。(by @littlee)
+- 【修复】阻止用户事件派发到 readOnly 或 disabled 的 element 上。(by @norux)
+- 【修复】修复 nonce 查找不准确的问题。(by @sunderls)
+- 【修复】修复一个安全问题。(#345 by @QiAnXinCodeSafe)
+- 【修复】屏蔽 "webkitStorageInfo deprecation" 告警。
+- 【修复】删除 `Symbol`、`Array.from` polyfill。(issue #325, #275)
+- 【修复】日志中显示对象内所有的 enumerable 和 unenumerable 属性。 (issue #327)
+- 【优化】更新 Webpack DevServer 的配置项。(by @QinZhen001)
+
+
 #### V3.3.4 (2019-08-19)
 
 - 【特性】增加 `%c` 以支持自定义日志样式，详情见 [使用教程](./doc/tutorial_CN.md)。
