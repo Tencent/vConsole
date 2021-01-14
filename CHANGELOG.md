@@ -1,15 +1,15 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### V3.4.0 (2020-12-xx)
+#### V3.4.0 (2021-01-14)
 
-- [FEATURE] Add darkmode theme. (by @progrape)
+- [FEATURE] Add darkmode theme, see `vConsole.option.theme` in [Public Properties & Methods](./doc/public_properties_methods.md). (by @progrape)
 - [FEATURE] Add `fetch` log in Network tab. (by @weiqian93)
 - [FEATURE] Add Request Headers to Network tab.
 - [FEATURE] Use short URL and display parameters in Network tab. (issue #291)
-- [FEATURE] New plugin [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats). (by @smackgg)
-- [FEATURE] Add safe area to switch button. (issue #353)
 - [FEATURE] Add `Location` info to System tab. (issue #343)
+- [FEATURE] Add safe area to switch button. (issue #353)
 - [FEATURE] Auto move input cursor to the bracket after autocomplete command. (issue #293)
+- [FEATURE] New plugin [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats). (by @smackgg)
 - [FIX] The position of the switch button will be reset by mistake when clicked.
 - [FIX] Fix `document.documentElement.offsetHeight|offsetWidth` is unreliable in newer browsers. (by @littlee)
 - [FIX] Prevent dispatchEvent for disabled or readOnly elements. (by @norux)
@@ -19,6 +19,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - [FIX] Remove `Symbol`, `Array.from` polyfill. (issue #325, #275)
 - [FIX] Show all enumerable and unenumerable properties. (issue #327)
 - [IMPROVE] Update Webpack DevServer option. (by @QinZhen001)
+
 
 #### V3.3.4 (2019-08-19)
 
