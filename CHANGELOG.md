@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### V3.4.1 (2021-xx-xx)
+
+- [FIX] Remove `transitionEnd` to prevent compatibility issues. (issue #364)
+- [FIX] Fix `fetch` optional parameter `init`. (issue #363, #365)
+
 #### V3.4.0 (2021-01-14)
 
 - [FEATURE] Add darkmode theme, see `vConsole.option.theme` in [Public Properties & Methods](./doc/public_properties_methods.md). (by @progrape)

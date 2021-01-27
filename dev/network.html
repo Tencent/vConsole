@@ -14,6 +14,7 @@
     <a onclick="getAjax()" href="javascript:;" class="weui_btn weui_btn_default">getAjax</a>
     <a onclick="postAjax()" href="javascript:;" class="weui_btn weui_btn_default">postAjax</a>
     <a onclick="getFetch()" href="javascript:;" class="weui_btn weui_btn_default">getFetch</a>
+    <a onclick="getFetchSimple()" href="javascript:;" class="weui_btn weui_btn_default">getFetch(simple)</a>
     <a onclick="postFetch()" href="javascript:;" class="weui_btn weui_btn_default">postFetch</a>
     <a onclick="postFetchByRequest()" href="javascript:;" class="weui_btn weui_btn_default">postFetchByRequest</a>
   </div>
@@ -70,6 +71,16 @@ function getFetch() {
     console.log('getFetch Response:', data);
   });
   console.info('getFetch() End');
+}
+
+function getFetchSimple() {
+  console.info('getFetchSimple() Start, response should be logged after End');
+  window.fetch('./data/success.json?type=fetch&id=' + Math.random()).then((data) => {
+    return data.json();
+  }).then((data) => {
+    console.log('getFetchSimple Response:', data);
+  });
+  console.info('getFetchSimple() End');
 }
 
 function postFetch() {
