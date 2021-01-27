@@ -13,7 +13,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole core class
  */
 
-import 'transitionEnd'
 import pkg from '../../package.json';
 import * as tool from '../lib/tool.js';
 import $ from '../lib/query.js';
@@ -316,7 +315,6 @@ class VConsole {
       that.switchPos.endX = x;
       that.switchPos.endY = y;
       that.switchPos.hasMoved = true;
-      console.log(x, y);
       e.preventDefault();
     });
 
@@ -331,19 +329,7 @@ class VConsole {
     });
 
     // hide console panel when tap background mask
-    let $mask = $.one('.vc-mask', this.$dom);
-    let $panel = $.one('.vc-panel', this.$dom);
-    const transitionEnd = window.transitionEnd($mask).whichTransitionEnd()
-    const onMaskTransitionEnd = function() {
-      $mask.style.display = 'none';
-      $panel.style.display = 'none';
-    };
-    if (transitionEnd) {
-      $.bind($mask, transitionEnd, onMaskTransitionEnd);
-    } else {
-      onMaskTransitionEnd();
-    }
-    $.bind($mask, 'click', function(e) {
+    $.bind($.one('.vc-mask', that.$dom), 'click', function(e) {
       if (e.target != $.one('.vc-mask')) {
         return false;
       }
@@ -358,23 +344,6 @@ class VConsole {
       }
       that.showTab(tabName);
     });
-
-    // after console panel, trigger a transitionend event to make panel's property 'display' change from 'block' to 'none'
-    const onPanelTransitionEnd = function(target) {
-      if (!$.hasClass(that.$dom, 'vc-toggle')) {
-        target.style.display = 'none';
-      }
-    }
-    if (transitionEnd) {
-      $.bind($panel, transitionEnd, function(e) {
-        if (e.target != $panel) {
-          return false;
-        }
-        onPanelTransitionEnd(e.target);
-      });
-    } else {
-      onPanelTransitionEnd($panel);
-    }
 
     // disable background scrolling
     let $content = $.one('.vc-content', that.$dom);
@@ -671,6 +640,11 @@ class VConsole {
       return;
     }
     $.removeClass(this.$dom, 'vc-toggle');
+    setTimeout(() => {
+      // panel will be hidden by CSS transition in 0.3s
+      $.one('.vc-mask', this.$dom).style.display = 'none';
+      $.one('.vc-panel', this.$dom).style.display = 'none';
+    }, 330);
     this._triggerPluginsEvent('hideConsole');
   }
 
