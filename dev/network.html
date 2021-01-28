@@ -91,7 +91,9 @@ function postFetch() {
     // body: new Blob([new ArrayBuffer(233)], { type: 'image/png' }),
     headers: {
       'custom-header': 'foobar',
-      'content-type': 'application/json'
+      // 'content-type': 'application/json'
+      // 'content-type': 'application/x-www-form-urlencoded'
+      'content-type': 'multipart/form-data'
     },
   }).then((data) => {
     return data.json();

@@ -175,10 +175,17 @@ class VConsole {
     $.one('.vc-mask', this.$dom).style.display = 'none';
 
     // set theme
-    if (this.option.theme) {
-      this.$dom.setAttribute('data-theme', this.option.theme);
-    }
-  };
+    this._updateTheme();
+  }
+
+  /**
+   * Update theme
+   * @private 
+   */
+  _updateTheme() {
+    const theme = this.option.theme || 'light';
+    this.$dom.setAttribute('data-theme', theme);
+  }
 
   /**
    * Get an safe [x, y] position for switch button
@@ -711,11 +718,13 @@ class VConsole {
     if (tool.isString(keyOrObj)) {
       this.option[keyOrObj] = value;
       this._triggerPluginsEvent('updateOption');
+      this._updateTheme();
     } else if (tool.isObject(keyOrObj)) {
       for (let k in keyOrObj) {
         this.option[k] = keyOrObj[k];
       }
       this._triggerPluginsEvent('updateOption');
+      this._updateTheme();
     } else {
       console.debug('The first parameter of vConsole.setOption() must be a string or an object.');
     }
