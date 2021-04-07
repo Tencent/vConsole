@@ -154,11 +154,7 @@ class VConsole {
     const $switch = $.one('.vc-switch', this.$dom);
     let switchX = tool.getStorage('switch_x') * 1,
         switchY = tool.getStorage('switch_y') * 1;
-    [switchX, switchY] = this._getSwitchButtonSafeAreaXY($switch, switchX, switchY);
-    this.switchPos.x = switchX;
-    this.switchPos.y = switchY;
-    $.one('.vc-switch').style.right = switchX + 'px';
-    $.one('.vc-switch').style.bottom = switchY + 'px';
+    this.setSwitchPosition(switchX, switchY);
 
     // modify font-size
     const dpr = window.devicePixelRatio || 1;
@@ -185,6 +181,17 @@ class VConsole {
   _updateTheme() {
     const theme = this.option.theme || 'light';
     this.$dom.setAttribute('data-theme', theme);
+  }
+
+  setSwitchPosition(switchX, switchY) {
+    const $switch = $.one('.vc-switch', this.$dom);
+    [switchX, switchY] = this._getSwitchButtonSafeAreaXY($switch, switchX, switchY);
+    this.switchPos.x = switchX;
+    this.switchPos.y = switchY;
+    $switch.style.right = switchX + 'px';
+    $switch.style.bottom = switchY + 'px';
+    tool.setStorage('switch_x', switchX);
+    tool.setStorage('switch_y', switchY);
   }
 
   /**
@@ -300,13 +307,10 @@ class VConsole {
       if (!that.switchPos.hasMoved) {
         return;
       }
-      that.switchPos.x = that.switchPos.endX;
-      that.switchPos.y = that.switchPos.endY;
       that.switchPos.startX = 0;
       that.switchPos.startY = 0;
       that.switchPos.hasMoved = false;
-      tool.setStorage('switch_x', that.switchPos.x);
-      tool.setStorage('switch_y', that.switchPos.y);
+      that.setSwitchPosition(that.switchPos.endX, that.switchPos.endY);
     });
     $.bind($switch, 'touchmove', function(e) {
       if (e.touches.length <= 0) {

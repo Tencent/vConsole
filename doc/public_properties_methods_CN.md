@@ -108,6 +108,24 @@ vConsole.setOption({maxLogNumber: 5000});
 ```
 
 
+### vConsole.setSwitchPosition(x, y)
+
+设置开关按钮的位置。
+
+##### 参数：
+- (required) x: X 坐标，坐标原点位于屏幕右下角。
+- (required) y: Y 坐标，坐标原点位于屏幕右下角。
+
+##### 返回：
+- 无
+
+##### 例子：
+
+```javascript
+vConsole.setSwitchPosition(20, 20);
+```
+
+
 ### vConsole.destroy()
 
 析构一个 vConsole 对象实例，并将 vConsole 面板从页面中移除。
