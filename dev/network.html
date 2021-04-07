@@ -31,7 +31,8 @@ function postAjax() {
   xhr.send({
     foo: 'bar',
     id: Math.random(),
-    type: 'xhr'
+    type: 'xhr',
+    '<xss0>': '<xss1> XSS Attack!'
   });
   xhr.onload = () => {
     console.log('postAjax Response:', JSON.parse(xhr.response));
@@ -44,8 +45,9 @@ function postAjax() {
 
 function getAjax() {
   console.info('getAjax() Start, response should be logged after End');
+  const url = './data/success.json?type=xhr&id=' + Math.random() + '&<xss0>';
   const xhr = new XMLHttpRequest();
-  xhr.open('GET', './data/success.json?type=xhr&id=' + Math.random());
+  xhr.open('GET', url);
   xhr.setRequestHeader('custom-header', 'foobar');
   xhr.send();
   xhr.onload = () => {
@@ -93,7 +95,8 @@ function postFetch() {
       'custom-header': 'foobar',
       // 'content-type': 'application/json'
       // 'content-type': 'application/x-www-form-urlencoded'
-      'content-type': 'multipart/form-data'
+      'content-type': 'multipart/form-data',
+      'xss': '<xss1> XSS Attack!'
     },
   }).then((data) => {
     return data.json();
