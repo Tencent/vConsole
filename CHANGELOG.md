@@ -69,7 +69,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 #### V3.2.0 (2018-04-10)
 
 - `Feature` Support `console.time()` and `console.timeEnd()`.
-- [FEATRUE] Add `disableLogScrolling` (in `vConsole.option`).
+- `Feature` Add `disableLogScrolling` (in `vConsole.option`).
 - `Fix` Fix `setOption()` error.
 - `Fix` Fix cookies' value wrong display.
 - `Fix` Fix "Uncaught InvalidStateError". (by @fireyy)
@@ -88,8 +88,8 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 Basic:
 
-- [FEATRUE] Require manual init vConsole `var vConsole = new VConsole(option)`.
-- [FEATRUE] Add configuaration `vConsole.option`, which can be set when `new VConsole` or `setOption(key, value)`.
+- `Feature` Require manual init vConsole `var vConsole = new VConsole(option)`.
+- `Feature` Add configuaration `vConsole.option`, which can be set when `new VConsole` or `setOption(key, value)`.
 - `Feature` Support for custom loading of default built-in plugins by using `defaultPlugins` in the above option.
 - `Feature` Add `setOption(key, value)` method.
 - `Perf` Support CSP rule `unsafe-eval` and `unsafe-inline`.
@@ -164,7 +164,7 @@ Plugins:
 #### V2.2.1 (2016-08-08)
 
 - `Perf` Add complete performance timing log to System tab.
-- [ADD] Add third-party plugin list to README.
+- `Feature` Add third-party plugin list to README.
 
 
 #### V2.2.0 (2016-07-13)
@@ -207,7 +207,7 @@ Plugins:
 
 #### v1.3.0 (2016-05-20)
 
-- [ADD] Support Drag and Drop switch button.
+- `Feature` Support Drag and Drop switch button.
 - `Fix` Fix initialization failure when loaded asynchronously.
 
 
@@ -218,8 +218,8 @@ Plugins:
 
 #### v1.2.0 (2016-05-11)
 
-- [ADD] Add network panel.
-- [DELELE] Deprecate `vConsole.ready()` method.
+- `Feature` Add network panel.
+- `Feature` Deprecate `vConsole.ready()` method.
 - `Perf` Display formatted Object & Array variable.
 - `Perf` Add English README and CHANGELOG.
 - `Perf` Improve UI.
@@ -227,8 +227,8 @@ Plugins:
 
 #### v1.1.0 (2016-05-06)
 
-- [ADD] Support `window.onerror()` to catch exceptions and errors.
-- [ADD] Support `[default|system|...]` string to print logs to specific panel.
+- `Feature` Support `window.onerror()` to catch exceptions and errors.
+- `Feature` Support `[default|system|...]` string to print logs to specific panel.
 
 
 #### v1.0.5 (2016-04-29)
