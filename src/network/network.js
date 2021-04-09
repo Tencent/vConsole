@@ -429,11 +429,11 @@ class VConsoleNetworkTab extends VConsolePlugin {
    * @private
    */
   mockFetch() {
-    let _fetch = window.fetch;
-    if (!_fetch){ return; }
-    let that = this;
+    const _fetch = window.fetch;
+    if (!_fetch) { return; }
+    const that = this;
 
-    let prevFetch = (input, init) => {
+    const prevFetch = (input, init) => {
       let id = that.getUniqueID();
       that.reqList[id] = {};
       let item = that.reqList[id] || {};
@@ -444,9 +444,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
       
       // handle `input` content
       if (tool.isString(input)) { // when `input` is a string
-        method = init.method || 'GET';
+        method = init?.method || 'GET';
         url = input;
-        requestHeader = init.headers;
+        requestHeader = init?.headers || null;
       } else { // when `input` is a `Request` object
         method = input.method || 'GET';
         url = input.url;
@@ -461,6 +461,15 @@ class VConsoleNetworkTab extends VConsolePlugin {
       item.name = query.shift() || '';
       item.name = item.name.replace(new RegExp('[/]*$'), '').split('/').pop() || '';
 
+      if (Object.prototype.toString.call(requestHeader) === '[object Headers]') {
+        item.requestHeader = {};
+        for (let pair of requestHeader.entries()) {
+          item.requestHeader[pair[0]] = pair[1];
+        }
+      } else {
+        item.requestHeader = requestHeader;
+      }
+
       if (query.length > 0) {
         item.name += '?' + query;
         item.getData = {};
@@ -474,15 +483,15 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
       if (item.method === 'POST') { // save POST data
         if (tool.isString(input)) { // when `input` is a string
-          if (tool.isString(init.body)) {
+          if (tool.isString(init?.body)) {
             let arr = init.body.split('&');
             item.postData = {};
             for (let q of arr) {
               q = q.split('=');
               item.postData[ q[0] ] = q[1];
             }
-          } else if (tool.isPlainObject(init.body)) {
-            item.postData = init.body;
+          } else if (tool.isPlainObject(init?.body)) {
+            item.postData = init?.body;
           } else {
             item.postData = '[object Object]';
           }

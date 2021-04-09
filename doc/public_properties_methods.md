@@ -16,7 +16,7 @@ The current version of vConsole.
 Example:
 
 ```javascript
-vConsole.version // => "3.4.0"
+vConsole.version // => "3.4.1"
 ```
 
 
@@ -105,6 +105,24 @@ Update `vConsole.option`.
 vConsole.setOption('maxLogNumber', 5000);
 // or:
 vConsole.setOption({maxLogNumber: 5000});
+```
+
+
+### vConsole.setSwitchPosition(x, y)
+
+Update the position of switch button.
+
+##### Parameters:
+- (required) x: X coordinate, the origin of the coordinate is at the bottom right corner of the screen.
+- (required) y: Y coordinate, the origin of the coordinate is at the bottom right corner of the screen.
+
+##### Return:
+- None
+
+##### Example:
+
+```javascript
+vConsole.setSwitchPosition(20, 20);
 ```
 
 

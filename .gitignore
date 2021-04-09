@@ -1,4 +1,18 @@
-node_modules
-*.DS_Store
+# Logs
+logs
 *.log
-.idea/
+
+# Dependency directory
+node_modules
+
+# npm cache directory
+.npm
+
+### OSX ###
+*.DS_Store
+
+# IDE IDEA
+.idea
+
+# Thumbnails
+._*

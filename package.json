@@ -1,6 +1,6 @@
 {
   "name": "vconsole",
-  "version": "3.4.0",
+  "version": "3.4.1",
   "description": "A lightweight, extendable front-end developer tool for mobile web page.",
   "homepage": "https://github.com/Tencent/vConsole",
   "main": "dist/vconsole.min.js",
@@ -20,8 +20,8 @@
     "url": "git+https://github.com/Tencent/vConsole.git"
   },
   "dependencies": {
-    "mutation-observer": "^1.0.3",
-    "transitionEnd": "^1.0.2"
+    "core-js": "^3.8.3",
+    "mutation-observer": "^1.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",

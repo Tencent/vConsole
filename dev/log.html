@@ -20,6 +20,7 @@
     <a onclick="smallArray()" href="javascript:;" class="weui_btn weui_btn_default">smallArray</a>
     <a onclick="repeatLog()" href="javascript:;" class="weui_btn weui_btn_default">repeatLog</a>
     <a onclick="windowError()" href="javascript:;" class="weui_btn weui_btn_default">window.error</a>
+    <a onclick="changeTheme()" href="javascript:;" class="weui_btn weui_btn_default">changeTheme</a>
   </div>
 </body>
 </html>
@@ -121,6 +122,15 @@ function windowError() {
   console.info('windowError() Start');
   a.b = 1;
   console.info('windowError() End');
+}
+
+let theme = 'light';
+function changeTheme() {
+  console.info('changeTheme() Start');
+  theme = theme === 'light' ? 'dark' : 'light';
+  window.vConsole.setOption('theme', theme);
+  console.log('Current Theme:', theme);
+  console.info('changeTheme() End');
 }
 
 </script>

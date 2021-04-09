@@ -155,11 +155,7 @@ class VConsole {
     const $switch = $.one('.vc-switch', this.$dom);
     let switchX = tool.getStorage('switch_x') * 1,
         switchY = tool.getStorage('switch_y') * 1;
-    [switchX, switchY] = this._getSwitchButtonSafeAreaXY($switch, switchX, switchY);
-    this.switchPos.x = switchX;
-    this.switchPos.y = switchY;
-    $.one('.vc-switch').style.right = switchX + 'px';
-    $.one('.vc-switch').style.bottom = switchY + 'px';
+    this.setSwitchPosition(switchX, switchY);
 
     // modify font-size
     const dpr = window.devicePixelRatio || 1;
@@ -176,10 +172,47 @@ class VConsole {
     $.one('.vc-mask', this.$dom).style.display = 'none';
 
     // set theme
-    if (this.option.theme) {
-      this.$dom.setAttribute('data-theme', this.option.theme);
+    this._updateTheme();
+  }
+
+  /**
+   * Update theme
+   * @private 
+   */
+  _updateTheme() {
+    const theme = this.option.theme || 'light';
+    this.$dom.setAttribute('data-theme', theme);
+  }
+
+  setSwitchPosition(switchX, switchY) {
+    const $switch = $.one('.vc-switch', this.$dom);
+    [switchX, switchY] = this._getSwitchButtonSafeAreaXY($switch, switchX, switchY);
+    this.switchPos.x = switchX;
+    this.switchPos.y = switchY;
+    $switch.style.right = switchX + 'px';
+    $switch.style.bottom = switchY + 'px';
+    tool.setStorage('switch_x', switchX);
+    tool.setStorage('switch_y', switchY);
+  }
+
+  /**
+   * Get an safe [x, y] position for switch button
+   * @private
+   */
+  _getSwitchButtonSafeAreaXY($switch, x, y) {
+    const docWidth = Math.max(document.documentElement.offsetWidth, window.innerWidth);
+    const docHeight = Math.max(document.documentElement.offsetHeight, window.innerHeight);
+    // check edge
+    if (x + $switch.offsetWidth > docWidth) {
+      x = docWidth - $switch.offsetWidth;
     }
-  };
+    if (y + $switch.offsetHeight > docHeight) {
+      y = docHeight - $switch.offsetHeight;
+    }
+    if (x < 0) { x = 0; }
+    if (y < 20) { y = 20; } // safe area for iOS Home indicator
+    return [x, y];
+  }
 
   /**
    * Get an safe [x, y] position for switch button
@@ -294,13 +327,10 @@ class VConsole {
       if (!that.switchPos.hasMoved) {
         return;
       }
-      that.switchPos.x = that.switchPos.endX;
-      that.switchPos.y = that.switchPos.endY;
       that.switchPos.startX = 0;
       that.switchPos.startY = 0;
       that.switchPos.hasMoved = false;
-      tool.setStorage('switch_x', that.switchPos.x);
-      tool.setStorage('switch_y', that.switchPos.y);
+      that.setSwitchPosition(that.switchPos.endX, that.switchPos.endY);
     });
     $.bind($switch, 'touchmove', function(e) {
       if (e.touches.length <= 0) {
@@ -316,7 +346,6 @@ class VConsole {
       that.switchPos.endX = x;
       that.switchPos.endY = y;
       that.switchPos.hasMoved = true;
-      console.log(x, y);
       e.preventDefault();
     });
 
@@ -358,23 +387,6 @@ class VConsole {
       }
       that.showTab(tabName);
     });
-
-    // after console panel, trigger a transitionend event to make panel's property 'display' change from 'block' to 'none'
-    const onPanelTransitionEnd = function(target) {
-      if (!$.hasClass(that.$dom, 'vc-toggle')) {
-        target.style.display = 'none';
-      }
-    }
-    if (transitionEnd) {
-      $.bind($panel, transitionEnd, function(e) {
-        if (e.target != $panel) {
-          return false;
-        }
-        onPanelTransitionEnd(e.target);
-      });
-    } else {
-      onPanelTransitionEnd($panel);
-    }
 
     // disable background scrolling
     let $content = $.one('.vc-content', that.$dom);
@@ -671,6 +683,11 @@ class VConsole {
       return;
     }
     $.removeClass(this.$dom, 'vc-toggle');
+    setTimeout(() => {
+      // panel will be hidden by CSS transition in 0.3s
+      $.one('.vc-mask', this.$dom).style.display = 'none';
+      $.one('.vc-panel', this.$dom).style.display = 'none';
+    }, 330);
     this._triggerPluginsEvent('hideConsole');
   }
 
@@ -737,11 +754,13 @@ class VConsole {
     if (tool.isString(keyOrObj)) {
       this.option[keyOrObj] = value;
       this._triggerPluginsEvent('updateOption');
+      this._updateTheme();
     } else if (tool.isObject(keyOrObj)) {
       for (let k in keyOrObj) {
         this.option[k] = keyOrObj[k];
       }
       this._triggerPluginsEvent('updateOption');
+      this._updateTheme();
     } else {
       console.debug('The first parameter of vConsole.setOption() must be a string or an object.');
     }
