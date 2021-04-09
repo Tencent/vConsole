@@ -2,7 +2,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### V3.4.1 (2021-04-09)
 
-- `Feature(General)` Add `setSwitchPosition(x, y)` method to update the position of switch button, see [Tutorial](./doc/public_properties_methods.md) for more details.
+- `Feature(General)` Add `setSwitchPosition(x, y)` method to update the position of switch button, see [Public Properties & Methods](./doc/public_properties_methods.md) for more details.
 - `Perf(General)` Add `Symbol` polyfill. (issue #361)
 - `Fix(General)` Update theme style after `setOption()`.
 - `Fix(General)` Remove `transitionEnd` to prevent compatibility issues. (issue #364)
