@@ -461,6 +461,15 @@ class VConsoleNetworkTab extends VConsolePlugin {
       item.name = query.shift() || '';
       item.name = item.name.replace(new RegExp('[/]*$'), '').split('/').pop() || '';
 
+      if (Object.prototype.toString.call(requestHeader) === '[object Headers]') {
+        item.requestHeader = {};
+        for (let pair of requestHeader.entries()) {
+          item.requestHeader[pair[0]] = pair[1];
+        }
+      } else {
+        item.requestHeader = requestHeader;
+      }
+
       if (query.length > 0) {
         item.name += '?' + query;
         item.getData = {};

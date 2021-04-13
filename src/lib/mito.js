@@ -11,7 +11,16 @@ export default function render(tpl, data, toString) {
     codeWrap = '',
     pointer = 0,
     match = [];
-  let addCode = function(line, isJS) {
+  const RenderFunction = {
+    // escape HTML to text
+    text: (str) => {
+      if (typeof str !== 'string' && typeof str !== 'number') { return str; }
+      return String(str).replace(/[<>&" ]/g, (c) => {
+        return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', ' ': '&nbsp;' }[c];
+      });
+    },
+  };
+  const addCode = (line, isJS) => {
     if (line === '') { return; }
     // console.log(line)
     if (isJS) {
@@ -50,6 +59,10 @@ export default function render(tpl, data, toString) {
   // init code
   codeWrap = '(function(){\n';
   code = 'var arr = [];\n';
+  // renderFunctions
+  for (let fn in RenderFunction) {
+    code += `var ${fn} = ${RenderFunction[fn].toString()};\n`;
+  }
   while (match = pattern.exec(tpl)) {
     addCode( tpl.slice(pointer, match.index), false );
     addCode( match[1], true );
