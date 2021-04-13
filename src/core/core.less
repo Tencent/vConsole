@@ -283,6 +283,27 @@
       }
     }
 
+    .vc-item-copy {
+      float: right;
+
+      .vc-icon-clippy {
+        display: block;
+        fill: var(--VC-FG-2);
+      }
+      .vc-icon-check {
+        display: none;
+        fill: var(--VC-TEXTGREEN);
+      }
+    }
+    .vc-item-copy-success {
+      .vc-icon-clippy {
+        display: none;
+      }
+      .vc-icon-check {
+        display: block;
+      }
+    }
+
     .vc-item.vc-item-error .vc-item-repeat {
       color: #901818;
       background-color: var(--VC-RED);
