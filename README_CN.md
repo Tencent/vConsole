@@ -74,7 +74,7 @@ vConsole 本体：
 
 
 
-## 插件列表
+## 第三方插件列表
 
  - [vConsole-sources](https://github.com/WechatFE/vConsole-sources)
  - [vconsole-webpack-plugin](https://github.com/diamont1001/vconsole-webpack-plugin)

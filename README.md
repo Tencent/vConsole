@@ -71,7 +71,7 @@ Plugin:
  - [Plugin: Event List](./doc/plugin_event_list.md)
 
 
-## Plugins
+## Third-party Plugins
 
  - [vConsole-sources](https://github.com/WechatFE/vConsole-sources)
  - [vconsole-webpack-plugin](https://github.com/diamont1001/vconsole-webpack-plugin)
