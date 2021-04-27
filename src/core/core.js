@@ -13,7 +13,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole core class
  */
 
-import 'transitionEnd'
 import pkg from '../../package.json';
 import * as tool from '../lib/tool.js';
 import $ from '../lib/query.js';
