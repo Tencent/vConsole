@@ -13,6 +13,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole core class
  */
 
+import 'transitionEnd'
 import pkg from '../../package.json';
 import * as tool from '../lib/tool.js';
 import $ from '../lib/query.js';
@@ -214,6 +215,25 @@ class VConsole {
   }
 
   /**
+   * Get an safe [x, y] position for switch button
+   * @private
+   */
+  _getSwitchButtonSafeAreaXY($switch, x, y) {
+    const docWidth = Math.max(document.documentElement.offsetWidth, window.innerWidth);
+    const docHeight = Math.max(document.documentElement.offsetHeight, window.innerHeight);
+    // check edge
+    if (x + $switch.offsetWidth > docWidth) {
+      x = docWidth - $switch.offsetWidth;
+    }
+    if (y + $switch.offsetHeight > docHeight) {
+      y = docHeight - $switch.offsetHeight;
+    }
+    if (x < 0) { x = 0; }
+    if (y < 20) { y = 20; } // safe area for iOS Home indicator
+    return [x, y];
+  }
+
+  /**
    * simulate tap event by touchstart & touchend
    * @private
    */
@@ -340,7 +360,19 @@ class VConsole {
     });
 
     // hide console panel when tap background mask
-    $.bind($.one('.vc-mask', that.$dom), 'click', function(e) {
+    let $mask = $.one('.vc-mask', this.$dom);
+    let $panel = $.one('.vc-panel', this.$dom);
+    const transitionEnd = window.transitionEnd($mask).whichTransitionEnd()
+    const onMaskTransitionEnd = function() {
+      $mask.style.display = 'none';
+      $panel.style.display = 'none';
+    };
+    if (transitionEnd) {
+      $.bind($mask, transitionEnd, onMaskTransitionEnd);
+    } else {
+      onMaskTransitionEnd();
+    }
+    $.bind($mask, 'click', function(e) {
       if (e.target != $.one('.vc-mask')) {
         return false;
       }
