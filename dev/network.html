@@ -17,6 +17,8 @@
     <a onclick="getFetchSimple()" href="javascript:;" class="weui_btn weui_btn_default">getFetch(simple)</a>
     <a onclick="postFetch()" href="javascript:;" class="weui_btn weui_btn_default">postFetch</a>
     <a onclick="postFetchByRequest()" href="javascript:;" class="weui_btn weui_btn_default">postFetchByRequest</a>
+    <a onclick="getFetchText()" href="javascript:;" class="weui_btn weui_btn_default">getFetchText</a>
+    <a onclick="getAjaxText()" href="javascript:;" class="weui_btn weui_btn_default">getAjaxText</a>
   </div>
 </body>
 </html>
@@ -130,4 +132,35 @@ function postFetchByRequest() {
   console.info('postFetchByRequest() End');
 }
 
+
+function getFetchText() {
+  console.info('getFetchText() Start, response should be logged after End');
+  window.fetch('./data/success.txt?type=fetch&id=' + Math.random(), {
+    method: 'GET',
+    headers: {
+      'custom-header': 'foobar',
+      'content-type': 'application/json'
+    },
+  }).then((data) => {
+    return data.text();
+  }).then((data) => {
+    console.log('getFetchText Response:', data);
+  });
+  console.info('getFetchText() End');
+}
+
+function getAjaxText() {
+  console.info('getAjaxText() Start, response should be logged after End');
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', './data/success.txt?type=xhr&id=' + Math.random());
+  xhr.setRequestHeader('custom-header', 'foobar');
+  xhr.send();
+  xhr.onload = () => {
+    console.log('getAjaxText Response:', xhr.response);
+  };
+  xhr.onerror = () => {
+    console.log('getAjaxText Error');
+  };
+  console.info('getAjaxText() End');
+}
 </script>
