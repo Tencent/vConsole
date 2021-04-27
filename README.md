@@ -76,6 +76,7 @@ Plugin:
  - [vConsole-sources](https://github.com/WechatFE/vConsole-sources)
  - [vconsole-webpack-plugin](https://github.com/diamont1001/vconsole-webpack-plugin)
  - [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats)
+ - [vconsole-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsole-devtools)
 
 ## Changelog
 
