@@ -1,5 +1,13 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+
+#### 3.5.0 (2021-MM-DD)
+
+- `Feature(Log)` Add button to copy logs. (by @akai)
+- `Feature(Plugin)` New third-party plugin [vconsole-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsole-devtools). (by @Zippowxk)
+- `Fix(Network)` Fix error when `contentType` is `text/html`. (by @zimv)
+
+
 #### V3.4.1 (2021-04-09)
 
 - `Feature(General)` Add `setSwitchPosition(x, y)` method to update the position of switch button, see [Public Properties & Methods](./doc/public_properties_methods.md) for more details.
@@ -19,7 +27,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Feature(Network)` Add `fetch` log in Network tab. (by @weiqian93)
 - `Feature(Network)` Add Request Headers to Network tab.
 - `Feature(Network)` Use short URL and display parameters in Network tab. (issue #291)
-- `Feature(Plugin)` New plugin [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats). (by @smackgg)
+- `Feature(Plugin)` New third-party plugin [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats). (by @smackgg)
 - `Fix(General)` The position of the switch button will be reset by mistake when clicked.
 - `Fix(General)` Fix `document.documentElement.offsetHeight|offsetWidth` is unreliable in newer browsers. (by @littlee)
 - `Fix(General)` Prevent dispatchEvent for disabled or readOnly elements. (by @norux)
