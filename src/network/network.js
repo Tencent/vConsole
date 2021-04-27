@@ -510,20 +510,20 @@ class VConsoleNetworkTab extends VConsolePlugin {
           .clone()
           .text()
           .then((text) => {
-            const contentType = response.headers.get("content-type");
-            // 避免响应头为json，但是返回数据并非json，因此itemResponse默认赋值text
-            let itemResponse = text,
-              itemResponseType = "";
-            if (contentType.includes("application/json")) {
+            const contentType = response.headers.get('content-type');
+            // use 'text' as default type in case of contentType is json but response is not real JSON
+            let itemResponse = text;
+            let itemResponseType = '';
+            if (contentType.includes('application/json')) {
               try {
                 itemResponse = JSON.parse(text);
-                itemResponseType = "json";
+                itemResponseType = 'json';
               } catch (e) {}
-            } else if (contentType.includes("text/html")) {
-              itemResponseType = "text";
+            } else if (contentType.includes('text/html')) {
+              itemResponseType = 'text';
             }
-            (item.endTime = +new Date()),
-              (item.costTime = item.endTime - (item.startTime || item.endTime));
+            item.endTime = +new Date();
+            item.costTime = item.endTime - (item.startTime || item.endTime);
             item.status = response.status;
             item.header = {};
             for (let pair of response.headers.entries()) {
@@ -534,7 +534,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
             item.responseType = itemResponseType;
             return itemResponse;
-          }).finally(()=>{
+          }).finally(() => {
             that.updateRequest(id, item);
           });
         return response;

@@ -80,6 +80,7 @@ vConsole 本体：
  - [vconsole-webpack-plugin](https://github.com/diamont1001/vconsole-webpack-plugin)
  - [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats)
  - [vconsole-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsole-devtools)
+ - [vconsole-outputlog-plugin](https://github.com/sunlanda/vconsole-outputlog-plugin)
 
 ## 更新记录
 
