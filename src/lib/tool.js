@@ -211,7 +211,7 @@ export function getObjAllKeys(obj) {
   for (let k in obj) {
     keys.push(k);
   }
-  return keys.sort();
+  return isArray(obj) ? keys : keys.sort();
 }
 
 /**

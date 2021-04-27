@@ -5,6 +5,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 - `Feature(Log)` Add button to copy logs. (by @akai)
 - `Feature(Plugin)` New third-party plugin [vconsole-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsole-devtools). (by @Zippowxk)
+- `Fix(Log)` Do not sort array's keys. (issue #372)
 - `Fix(Network)` Fix error when `contentType` is `text/html`. (by @zimv)
 
 
