@@ -13,6 +13,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole Basic Log Tab
  */
 
+import copy from 'copy-text-to-clipboard';
 import * as tool from '../lib/tool.js';
 import $ from '../lib/query.js';
 import VConsolePlugin from '../lib/plugin.js';
@@ -27,6 +28,7 @@ let preLog = {
   // logType: string
   // logText: string
 };
+let cachedLogs = {}; // for copy
 
 class VConsoleLogTab extends VConsolePlugin {
   static AddedLogID = [];
@@ -153,6 +155,21 @@ class VConsoleLogTab extends VConsolePlugin {
       that.printLog(that.logList[i]);
     }
     that.logList = [];
+
+    // copy
+    $.delegate(that.$tabbox, 'click', '.vc-item-copy', (e) => {
+      const btn = e.target.closest('.vc-item-copy');
+      const { id } = btn.closest('.vc-item');
+      const text = cachedLogs[id];
+
+      if (text != null && copy(text)) {
+        btn.classList.add('vc-item-copy-success');
+
+        setTimeout(() => {
+          btn.classList.remove('vc-item-copy-success');
+        }, 600);
+      };
+    });
   }
 
   /**
@@ -174,6 +191,7 @@ class VConsoleLogTab extends VConsolePlugin {
     if (idx > -1) {
       ADDED_LOG_TAB_ID.splice(idx, 1);
     }
+    cachedLogs = {};
   }
 
   onShow() {
@@ -298,6 +316,7 @@ class VConsoleLogTab extends VConsolePlugin {
     $.one('.vc-log', this.$tabbox).innerHTML = '';
     this.logNumber = 0;
     preLog = {};
+    cachedLogs = {};
   }
 
   /**
@@ -489,33 +508,46 @@ class VConsoleLogTab extends VConsolePlugin {
     }
 
     let $content = $.one('.vc-item-content', $line);
+    const rawLogs = [];
+
     // generate content from item.logs
     for (let i = 0; i < logs.length; i++) {
+      const curLog = logs[i];
+      let rawLog;
       let log;
       try {
-        if (logs[i] === '') {
+        if (curLog === '') {
           // ignore empty string
           continue;
-        } else if (tool.isFunction(logs[i])) {
+        } else if (tool.isFunction(curLog)) {
           // convert function to string
-          log = '<span> ' + logs[i].toString() + '</span>';
-        } else if (tool.isObject(logs[i]) || tool.isArray(logs[i])) {
+          rawLog = curLog.toString();
+          log = `<span> ${rawLog}</span>`;
+        } else if (tool.isObject(curLog) || tool.isArray(curLog)) {
           // object or array
-          log = this.getFoldedLine(logs[i]);
+          rawLog = JSON.stringify(curLog, tool.circularReplacer(), 2)
+          log = this.getFoldedLine(curLog);
         } else {
           // default
-          log = (logStyle[i] ? `<span style="${logStyle[i]}"> ` : '<span> ') + tool.htmlEncode(logs[i]).replace(/\n/g, '<br/>') + '</span>';
+          rawLog = curLog;
+          log = (logStyle[i] ? `<span style="${logStyle[i]}"> ` : '<span> ') + tool.htmlEncode(curLog).replace(/\n/g, '<br/>') + '</span>';
         }
       } catch (e) {
-        log = '<span> [' + (typeof logs[i]) + ']</span>';
+        rawLog = typeof curLog;
+        log = `<span> [${rawLog}]</span>`;
       }
       if (log) {
+        rawLogs.push(rawLog);
+
         if (typeof log === 'string')
           $content.insertAdjacentHTML('beforeend', log);
         else
           $content.insertAdjacentElement('beforeend', log);
       }
     }
+
+    // for copy
+    cachedLogs[item._id] = rawLogs.join(' ');
 
     // generate content from item.content
     if (tool.isObject(item.content)) {
