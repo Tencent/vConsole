@@ -205,4 +205,10 @@ function axiosRequest(method) {
   });
   console.info('axiosRequest() End');
 }
+
+function sendBeacon() {
+  console.info('sendBeacon() Start, response should be logged after End');
+  window.navigator.sendBeacon('./data/success.json', JSON.stringify({ foo: 'bar', id: Math.random(), type: 'fetch' }));
+  console.info('sendBeacon() End');
+}
 </script>
