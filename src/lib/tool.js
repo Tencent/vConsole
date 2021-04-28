@@ -211,7 +211,9 @@ export function getObjAllKeys(obj) {
   for (let k in obj) {
     keys.push(k);
   }
-  return isArray(obj) ? keys : keys.sort();
+  return keys.sort((a, b) => {
+    return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+  });
 }
 
 /**
