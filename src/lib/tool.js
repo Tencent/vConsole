@@ -179,6 +179,19 @@ export function JSONStringify(stringObject) {
   return str;
 }
 
+export function circularReplacer() {
+  const seen = [];
+  return (key, value) => {
+    if (typeof(value) === 'object' && value !== null) {
+      if (seen.indexOf(value) >= 0) {
+        return '[Circular]';
+      }
+      seen.push(value);
+    }
+    return value;
+  };
+};
+
 /**
  * get an object's all keys ignore whether they are not enumerable
  */
@@ -198,7 +211,9 @@ export function getObjAllKeys(obj) {
   for (let k in obj) {
     keys.push(k);
   }
-  return keys.sort();
+  return keys.sort((a, b) => {
+    return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+  });
 }
 
 /**

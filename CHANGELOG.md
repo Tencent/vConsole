@@ -1,5 +1,15 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### 3.5.0 (2021-04-28)
+
+- `Feature(Log)` Add ability to copy a single line of logs. (by @akai)
+- `Feature(Plugin)` New third-party plugin [vconsole-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsole-devtools). (by @Zippowxk)
+- `Perf(System)` Rename "System" field to "Client", and add `MacOS` version.
+- `Fix(Log)` Use natural sorting to sort object and array's keys. (issue #372)
+- `Fix(Network)` Fix JSON parse error when `contentType` is `text/html`. (by @zimv)
+- `Fix(Network)` Fix `disableLogScrolling` not working in Network panel. (issue #282, #379)
+
+
 #### V3.4.1 (2021-04-09)
 
 - `Feature(General)` Add `setSwitchPosition(x, y)` method to update the position of switch button, see [Public Properties & Methods](./doc/public_properties_methods.md) for more details.
@@ -19,7 +29,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Feature(Network)` Add `fetch` log in Network tab. (by @weiqian93)
 - `Feature(Network)` Add Request Headers to Network tab.
 - `Feature(Network)` Use short URL and display parameters in Network tab. (issue #291)
-- `Feature(Plugin)` New plugin [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats). (by @smackgg)
+- `Feature(Plugin)` New third-party plugin [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats). (by @smackgg)
 - `Fix(General)` The position of the switch button will be reset by mistake when clicked.
 - `Fix(General)` Fix `document.documentElement.offsetHeight|offsetWidth` is unreliable in newer browsers. (by @littlee)
 - `Fix(General)` Prevent dispatchEvent for disabled or readOnly elements. (by @norux)

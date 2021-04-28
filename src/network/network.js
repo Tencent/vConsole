@@ -109,7 +109,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
   onShow() {
     this.isShow = true;
     if (this.isInBottom == true) {
-      this.scrollToBottom();
+      this.autoScrollToBottom();
     }
   }
 
@@ -119,6 +119,12 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
   onShowConsole() {
     if (this.isInBottom == true) {
+      this.autoScrollToBottom();
+    }
+  }
+
+  autoScrollToBottom() {
+    if (!this.vConsole.option.disableLogScrolling) {
       this.scrollToBottom();
     }
   }
@@ -254,8 +260,8 @@ class VConsoleNetworkTab extends VConsolePlugin {
     }
 
     // scroll to bottom
-    if (this.isInBottom) {
-      this.scrollToBottom();
+    if (this.isInBottom && this.isShow) {
+      this.autoScrollToBottom();
     }
   }
 
@@ -506,21 +512,37 @@ class VConsoleNetworkTab extends VConsolePlugin {
         item.startTime = (+new Date());
       }
       return _fetch(url, init).then((response) => {
-        response.clone().json().then((json) => {
-          item.endTime = +new Date(),
-          item.costTime = item.endTime - (item.startTime || item.endTime);
-          item.status = response.status;
-          item.header = {};
-          for (let pair of response.headers.entries()) {
-            item.header[pair[0]] = pair[1];
-          }
-          item.response = json;
-          item.readyState = 4;
-          const contentType = response.headers.get('content-type');
-          item.responseType  = contentType.includes('application/json') ? 'json' : contentType.includes('text/html') ? 'text' : '';
-          return json;
-        })
-        that.updateRequest(id, item);
+        response
+          .clone()
+          .text()
+          .then((text) => {
+            const contentType = response.headers.get('content-type');
+            // use 'text' as default type in case of contentType is json but response is not real JSON
+            let itemResponse = text;
+            let itemResponseType = '';
+            if (contentType.includes('application/json')) {
+              try {
+                itemResponse = JSON.parse(text);
+                itemResponseType = 'json';
+              } catch (e) {}
+            } else if (contentType.includes('text/html')) {
+              itemResponseType = 'text';
+            }
+            item.endTime = +new Date();
+            item.costTime = item.endTime - (item.startTime || item.endTime);
+            item.status = response.status;
+            item.header = {};
+            for (let pair of response.headers.entries()) {
+              item.header[pair[0]] = pair[1];
+            }
+            item.response = itemResponse;
+            item.readyState = 4;
+
+            item.responseType = itemResponseType;
+            return itemResponse;
+          }).finally(() => {
+            that.updateRequest(id, item);
+          });
         return response;
       })
     }

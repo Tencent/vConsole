@@ -1,5 +1,15 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### 3.5.0 (2021-04-28)
+
+- `Feature(Log)` 新增复制单行日志的能力。 (by @akai)
+- `Feature(Plugin)` 新第三方插件 [vconsole-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsole-devtools)。 (by @Zippowxk)
+- `Perf(System)` 将 "System" 字段改名为 "Client"，并新增 `MacOS` 系统版本号。
+- `Fix(Log)` 使用自然排序来排序 object 和 array 的键值。 (issue #372)
+- `Fix(Network)` 修复当 `contentType` 为 `text/html` 时潜在的 JSON 错误。 (by @zimv)
+- `Fix(Network)` 修复 `disableLogScrolling` 参数在 Network 面板中不生效的问题。 (issue #282, #379)
+
+
 #### V3.4.1 (2021-04-09)
 
 - `Feature(General)` 新增 `setSwitchPosition(x, y)` 方法以更新开关按钮的位置，见 [Public Properties & Methods](./doc/public_properties_methods_CN.md)。

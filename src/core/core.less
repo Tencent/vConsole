@@ -270,16 +270,38 @@
       }
       .vc-item-content {
         margin-right: 60em / @font;
-        display: inline-block;
+        // display: inline-block;
       }
 
       .vc-item-repeat {
-        display: inline-block;
+        // display: inline-block;
+        float: left;
         margin-right: 4em / @font;
         padding: 0 @fontSize / 2;
         color: #D7E0EF;
         background-color: #42597F;
         border-radius: @fontSize / 1.5;
+      }
+
+      .vc-item-copy {
+        float: right;
+  
+        .vc-icon-clippy {
+          display: block;
+          fill: var(--VC-FG-2);
+        }
+        .vc-icon-check {
+          display: none;
+          fill: var(--VC-TEXTGREEN);
+        }
+      }
+      .vc-item-copy-success {
+        .vc-icon-clippy {
+          display: none;
+        }
+        .vc-icon-check {
+          display: block;
+        }
       }
     }
 

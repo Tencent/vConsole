@@ -31,47 +31,49 @@ class VConsoleSystemTab extends VConsoleLogTab {
 
   printSystemInfo() {
   	// print system info
-    let ua = navigator.userAgent,
-      logMsg = '';
+    const ua = navigator.userAgent;
+    let logMsg = [];
     
+    // wechat client version
+    let wxVersion = ua.match(/MicroMessenger\/([\d\.]+)/i);
+    wxVersion = wxVersion && wxVersion[1] ? wxVersion[1] : null;
+    const isMiniprogram = location.host === 'servicewechat.com';
+
     // location
-    console.info('[system]', 'Location:', location.href);
+    if (!isMiniprogram) {
+      console.info('[system]', 'Location:', location.href);
+    }
 
     // device & system
-    let ipod = ua.match(/(ipod).*\s([\d_]+)/i),
+    const ipod = ua.match(/(ipod).*\s([\d_]+)/i),
       ipad = ua.match(/(ipad).*\s([\d_]+)/i),
       iphone = ua.match(/(iphone)\sos\s([\d_]+)/i),
-      android = ua.match(/(android)\s([\d\.]+)/i);
+      android = ua.match(/(android)\s([\d\.]+)/i),
+      mac = ua.match(/(Mac OS X)\s([\d_]+)/i);
     
-    logMsg = 'Unknown';
+    logMsg = [];
     if (android) {
-      logMsg = 'Android ' + android[2];
+      logMsg.push('Android ' + android[2]);
     } else if (iphone) {
-      logMsg = 'iPhone, iOS ' + iphone[2].replace(/_/g,'.');
+      logMsg.push('iPhone, iOS ' + iphone[2].replace(/_/g,'.'));
     } else if (ipad) {
-      logMsg = 'iPad, iOS ' + ipad[2].replace(/_/g, '.');
+      logMsg.push('iPad, iOS ' + ipad[2].replace(/_/g, '.'));
     } else if (ipod) {
-      logMsg = 'iPod, iOS ' + ipod[2].replace(/_/g, '.');
+      logMsg.push('iPod, iOS ' + ipod[2].replace(/_/g, '.'));
+    } else if (mac) {
+      logMsg.push('Mac, MacOS ' + mac[2].replace(/_/g, '.'));
     }
-    let templogMsg = logMsg;
-    // wechat client version
-    let version = ua.match(/MicroMessenger\/([\d\.]+)/i);
-    logMsg = 'Unknown';
-    if (version && version[1]) {
-      logMsg = version[1];
-      templogMsg += (', WeChat ' + logMsg);
-      console.info('[system]', 'System:', templogMsg);
-    } else {
-      console.info('[system]', 'System:', templogMsg);
+    if (wxVersion) {
+      logMsg.push('WeChat ' + wxVersion);
     }
+    console.info('[system]', 'Client:', logMsg.length ? logMsg.join(', ') : 'Unknown');
 
     // network type
-    let network = ua.toLowerCase().match(/ nettype\/([^ ]+)/g);
-    logMsg = 'Unknown';
+    const network = ua.toLowerCase().match(/ nettype\/([^ ]+)/g);
     if (network && network[0]) {
       network = network[0].split('/');
-      logMsg = network[1];
-      console.info('[system]', 'Network:', logMsg);
+      logMsg = [network[1]];
+      console.info('[system]', 'Network:', logMsg.length ? logMsg.join(', ') : 'Unknown');
     }
 
     // User Agent
