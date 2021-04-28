@@ -109,7 +109,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
   onShow() {
     this.isShow = true;
     if (this.isInBottom == true) {
-      this.scrollToBottom();
+      this.autoScrollToBottom();
     }
   }
 
@@ -119,6 +119,12 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
   onShowConsole() {
     if (this.isInBottom == true) {
+      this.autoScrollToBottom();
+    }
+  }
+
+  autoScrollToBottom() {
+    if (!this.vConsole.option.disableLogScrolling) {
       this.scrollToBottom();
     }
   }
@@ -254,8 +260,8 @@ class VConsoleNetworkTab extends VConsolePlugin {
     }
 
     // scroll to bottom
-    if (this.isInBottom) {
-      this.scrollToBottom();
+    if (this.isInBottom && this.isShow) {
+      this.autoScrollToBottom();
     }
   }
 

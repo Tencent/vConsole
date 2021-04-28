@@ -24,7 +24,17 @@
 </html>
 
 <script>
-window.vConsole = new window.VConsole();
+window.vConsole = new window.VConsole({
+  maxLogNumber: 1000,
+  // disableLogScrolling: true,
+  onReady: function() {
+    console.log('vConsole is ready.');
+  }
+});
+
+// setInterval(() => {
+//   postAjax();
+// }, 300);
 
 function postAjax() {
   console.info('postAjax() Start, response should be logged after End');
