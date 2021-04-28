@@ -3,10 +3,11 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### 3.5.0 (2021-04-28)
 
-- `Feature(Log)` Add button to copy logs. (by @akai)
+- `Feature(Log)` Add ability to copy a single line of logs. (by @akai)
 - `Feature(Plugin)` New third-party plugin [vconsole-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsole-devtools). (by @Zippowxk)
-- `Fix(Log)` Do not sort array's keys. (issue #372)
-- `Fix(Network)` Fix error when `contentType` is `text/html`. (by @zimv)
+- `Perf(System)` Rename "System" field to "Client", and add `MacOS` version.
+- `Fix(Log)` Disable sorting of array keys. (issue #372)
+- `Fix(Network)` Fix JSON parse error when `contentType` is `text/html`. (by @zimv)
 - `Fix(Network)` Fix `disableLogScrolling` not working in Network panel. (issue #282, #379)
 
 
