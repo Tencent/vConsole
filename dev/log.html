@@ -21,6 +21,7 @@
     <a onclick="repeatLog()" href="javascript:;" class="weui_btn weui_btn_default">repeatLog</a>
     <a onclick="windowError()" href="javascript:;" class="weui_btn weui_btn_default">window.error</a>
     <a onclick="changeTheme()" href="javascript:;" class="weui_btn weui_btn_default">changeTheme</a>
+    <a onclick="promiseReject()" href="javascript:;" class="weui_btn weui_btn_default">promiseReject</a>
   </div>
 </body>
 </html>
@@ -137,5 +138,14 @@ function changeTheme() {
   console.log('Current Theme:', theme);
   console.info('changeTheme() End');
 }
-
+function promiseReject() {
+  console.info('promiseReject() Start');
+  Promise.reject('reject string');
+  Promise.reject(new Error('reject a Error'));
+  Promise.reject({message: 'reject a object'});
+  Promise.reject(666);
+  setTimeout(()=>{
+    console.info('promiseReject() End');
+  }, 0)
+}
 </script>
