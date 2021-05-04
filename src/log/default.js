@@ -273,7 +273,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     const that = this;
     window.addEventListener('unhandledrejection', function (e) {
       let error = e && e.reason;
-      const errorName = 'unhandledrejection: ';
+      const errorName = 'Uncaught (in promise) ';
       let args = [errorName, error];
       if(error instanceof Error){
         args = [
