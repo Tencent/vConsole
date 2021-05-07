@@ -5,20 +5,20 @@
       {
         "modules": "umd",
         "targets": {
-          "ie": "9",
-        },
-      },
-    ],
+          "ie": "9"
+        }
+      }
+    ]
   ],
   "plugins": [
     [
       "@babel/plugin-proposal-class-properties",
       {
-        "loose": true,
-      },
+        "loose": true
+      }
     ],
     "@babel/plugin-proposal-export-namespace-from",
     "@babel/plugin-proposal-object-rest-spread",
     "add-module-exports"
-  ],
+  ]
 }
