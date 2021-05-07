@@ -1,5 +1,11 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### 3.5.1 (2021-05-07)
+
+- `Chore(Babel)` 修复由 `catch` 写法引起的 babel-loader 构建问题。 (PR #392 by @myl0204)
+- `Fix(Network)` 修复语法笔误。 (PR #388 by @xovel)
+
+
 #### 3.5.0 (2021-04-28)
 
 - `Feature(Log)` 新增复制单行日志的能力。 (by @akai)
