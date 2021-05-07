@@ -69,7 +69,7 @@ class VConsoleSystemTab extends VConsoleLogTab {
     console.info('[system]', 'Client:', logMsg.length ? logMsg.join(', ') : 'Unknown');
 
     // network type
-    const network = ua.toLowerCase().match(/ nettype\/([^ ]+)/g);
+    let network = ua.toLowerCase().match(/ nettype\/([^ ]+)/g);
     if (network && network[0]) {
       network = network[0].split('/');
       logMsg = [network[1]];
