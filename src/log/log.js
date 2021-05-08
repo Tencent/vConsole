@@ -28,7 +28,6 @@ let preLog = {
   // logType: string
   // logText: string
 };
-let cachedLogs = {}; // for copy
 
 class VConsoleLogTab extends VConsolePlugin {
   static AddedLogID = [];
@@ -45,6 +44,7 @@ class VConsoleLogTab extends VConsolePlugin {
     this.$tabbox = null;
     this.console = {};
     this.logList = []; // save logs before ready
+    this.cachedLogs = {}; // for copy
     this.isInBottom = true; // whether the panel is in the bottom
     this.maxLogNumber = DEFAULT_MAX_LOG_NUMBER;
     this.logNumber = 0;
@@ -160,7 +160,7 @@ class VConsoleLogTab extends VConsolePlugin {
     $.delegate(that.$tabbox, 'click', '.vc-item-copy', (e) => {
       const btn = e.target.closest('.vc-item-copy');
       const { id } = btn.closest('.vc-item');
-      const text = cachedLogs[id];
+      const text = that.cachedLogs[id];
 
       if (text != null && copy(text)) {
         btn.classList.add('vc-item-copy-success');
@@ -191,7 +191,7 @@ class VConsoleLogTab extends VConsolePlugin {
     if (idx > -1) {
       ADDED_LOG_TAB_ID.splice(idx, 1);
     }
-    cachedLogs = {};
+    this.cachedLogs = {};
   }
 
   onShow() {
@@ -228,9 +228,12 @@ class VConsoleLogTab extends VConsolePlugin {
       return;
     }
     while (this.logNumber > this.maxLogNumber) {
-      let $firstItem = $.one('.vc-item', this.$tabbox);
+      const $firstItem = $.one('.vc-item', this.$tabbox);
       if (!$firstItem) {
         break;
+      }
+      if (this.cachedLogs[$firstItem.id] !== undefined) {
+        delete this.cachedLogs[$firstItem.id];
       }
       $firstItem.parentNode.removeChild($firstItem);
       this.logNumber--;
@@ -316,7 +319,7 @@ class VConsoleLogTab extends VConsolePlugin {
     $.one('.vc-log', this.$tabbox).innerHTML = '';
     this.logNumber = 0;
     preLog = {};
-    cachedLogs = {};
+    this.cachedLogs = {};
   }
 
   /**
@@ -547,7 +550,7 @@ class VConsoleLogTab extends VConsolePlugin {
     }
 
     // for copy
-    cachedLogs[item._id] = rawLogs.join(' ');
+    this.cachedLogs[item._id] = rawLogs.join(' ');
 
     // generate content from item.content
     if (tool.isObject(item.content)) {

@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### 3.x.x (2021-MM-DD)
+
+- `Fix(Log)` Delete `cachedLogs` when reached `maxLogNumber` limit.
+
+
 #### 3.5.1 (2021-05-07)
 
 - `Chore(Babel)` Fix incorrect `catch` built by babel-loader. (PR #392 by @myl0204)
