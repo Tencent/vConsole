@@ -23,11 +23,6 @@ import tplFoldCode from './item_fold_code.html';
 
 const DEFAULT_MAX_LOG_NUMBER = 1000;
 const ADDED_LOG_TAB_ID = [];
-let preLog = {
-  // _id: string
-  // logType: string
-  // logText: string
-};
 
 class VConsoleLogTab extends VConsolePlugin {
   static AddedLogID = [];
@@ -45,6 +40,7 @@ class VConsoleLogTab extends VConsolePlugin {
     this.console = {};
     this.logList = []; // save logs before ready
     this.cachedLogs = {}; // for copy
+    this.previousLog = {}; // { _id: string, logType: string, logText: string }
     this.isInBottom = true; // whether the panel is in the bottom
     this.maxLogNumber = DEFAULT_MAX_LOG_NUMBER;
     this.logNumber = 0;
@@ -318,7 +314,7 @@ class VConsoleLogTab extends VConsolePlugin {
   clearLog() {
     $.one('.vc-log', this.$tabbox).innerHTML = '';
     this.logNumber = 0;
-    preLog = {};
+    this.previousLog = {};
     this.cachedLogs = {};
   }
 
@@ -435,12 +431,12 @@ class VConsoleLogTab extends VConsolePlugin {
     curLog.logText = curLog.logText.join(' ');
 
     // check repeat
-    if (!curLog.hasContent && preLog.logType === curLog.logType && preLog.logText === curLog.logText) {
+    if (!curLog.hasContent && this.previousLog.logType === curLog.logType && this.previousLog.logText === curLog.logText) {
       this.printRepeatLog();
     } else {
       this.printNewLog(item, logs);
       // save previous log
-      preLog = curLog;
+      this.previousLog = curLog;
     }
 
 
@@ -460,18 +456,18 @@ class VConsoleLogTab extends VConsolePlugin {
    * @protected
    */
   printRepeatLog() {
-    const $item = $.one('#' + preLog._id);
+    const $item = $.one('#' + this.previousLog._id);
     let $repeat = $.one('.vc-item-repeat', $item);
     if (!$repeat) {
       $repeat = document.createElement('i');
       $repeat.className = 'vc-item-repeat';
       $item.insertBefore($repeat, $item.lastChild);
     }
-    if (!preLog.count) {
-      // preLog.count = 1;
-    }
-    preLog.count++;
-    $repeat.innerHTML = preLog.count;
+    // if (!this.previousLog.count) {
+      // this.previousLog.count = 1;
+    // }
+    this.previousLog.count++;
+    $repeat.innerHTML = this.previousLog.count;
     return;
   }
 
