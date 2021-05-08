@@ -1,5 +1,11 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### 3.5.1 (2021-05-07)
+
+- `Chore(Babel)` Fix incorrect `catch` built by babel-loader. (PR #392 by @myl0204)
+- `Fix(Network)` Fix typing error. (PR #388 by @xovel)
+
+
 #### 3.5.0 (2021-04-28)
 
 - `Feature(Log)` Add ability to copy a single line of logs. (by @akai)
@@ -22,7 +28,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### V3.4.0 (2021-01-14)
 
-- `Feature(General)` Add darkmode theme, see `vConsole.option.theme` in [Public Properties & Methods](./doc/public_properties_methods.md). (by @progrape)
+- `Feature(General)` Add darkmode theme, see `vConsole.option.theme` in [Public Properties & Methods](./doc/public_properties_methods.md). (PR #307 by @progrape)
 - `Feature(General)` Add safe area to switch button. (issue #353)
 - `Feature(Log)` Auto move input cursor to the bracket after autocomplete command. (issue #293)
 - `Feature(System)` Add `Location` info to System tab. (issue #343)
@@ -31,8 +37,8 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Feature(Network)` Use short URL and display parameters in Network tab. (issue #291)
 - `Feature(Plugin)` New third-party plugin [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats). (by @smackgg)
 - `Fix(General)` The position of the switch button will be reset by mistake when clicked.
-- `Fix(General)` Fix `document.documentElement.offsetHeight|offsetWidth` is unreliable in newer browsers. (by @littlee)
-- `Fix(General)` Prevent dispatchEvent for disabled or readOnly elements. (by @norux)
+- `Fix(General)` Fix `document.documentElement.offsetHeight|offsetWidth` is unreliable in newer browsers. (PR #314 by @littlee)
+- `Fix(General)` Prevent dispatchEvent for disabled or readOnly elements. (PR #314 by @norux)
 - `Fix(General)` Fix nonce searching problem. (by @sunderls)
 - `Fix(General)` Fix security issues. (#345 by @QiAnXinCodeSafe)
 - `Fix(General)` Prevent "webkitStorageInfo deprecation" warning.
