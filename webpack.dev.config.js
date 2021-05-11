@@ -9,7 +9,9 @@ const contentBase = path.join(__dirname, '/');
 module.exports = merge(baseConfig, {
   mode: 'development',
   devServer: {
-    port: 9090,
+    host: '0.0.0.0',
+    port: 9191,
+    disableHostCheck: true,
     contentBase: contentBase,
     openPage: 'dev/',
     historyApiFallback: true,

@@ -1,7 +1,8 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### 3.x.x (2021-MM-DD)
+#### 3.5.2 (2021-MM-DD)
 
+- `Fix(General)` Fix invalid click caused by wrong `selection`.
 - `Fix(Log)` Delete `cachedLogs` when reached `maxLogNumber` limit.
 
 

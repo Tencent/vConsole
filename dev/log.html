@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>Test: Log</title>
   <link href="../example/lib/weui.min.css" rel="stylesheet"/>
   <link href="../example/lib/demo.css" rel="stylesheet"/>
@@ -27,7 +28,7 @@
 
 <script>
 window.vConsole = new window.VConsole({
-  maxLogNumber: 10,
+  maxLogNumber: 1000,
   // disableLogScrolling: true,
   onReady: function() {
     console.log('vConsole is ready.');
@@ -37,10 +38,10 @@ window.vConsole = new window.VConsole({
   }
 });
 
-setInterval(() => {
-  // console.log(Math.random());
-  // console.log('[system]', Math.random());
-}, 300);
+// setInterval(() => {
+//   console.log(Math.random());
+//   console.log('[system]', Math.random());
+// }, 300);
 
 function formattedLog() {
   console.info('formattedLog() Start');

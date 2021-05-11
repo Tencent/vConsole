@@ -158,7 +158,7 @@ class VConsoleLogTab extends VConsolePlugin {
       const { id } = btn.closest('.vc-item');
       const text = that.cachedLogs[id];
 
-      if (text != null && copy(text)) {
+      if (text != null && copy(text, { target: document.documentElement })) {
         btn.classList.add('vc-item-copy-success');
 
         setTimeout(() => {
@@ -581,9 +581,16 @@ class VConsoleLogTab extends VConsolePlugin {
       outer: outer,
       lineType: 'obj'
     });
+    // $.bind($.one('.vc-fold-outer', $line), 'touchstart', function (e) {
+    //   console.log('touchstart .vc-fold-outer');
+    // });
+    // $.bind($.one('.vc-fold-outer', $line), 'touchend', function (e) {
+    //   console.log('touchend .vc-fold-outer');
+    // });
     $.bind($.one('.vc-fold-outer', $line), 'click', function (e) {
       e.preventDefault();
       e.stopPropagation();
+      // console.log('CLICK .vc-fold-outer');
       if ($.hasClass($line, 'vc-toggle')) {
         $.removeClass($line, 'vc-toggle');
         $.removeClass($.one('.vc-fold-inner', $line), 'vc-toggle');
