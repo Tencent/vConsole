@@ -1,1 +1,4 @@
-{"ret":0,"msg":"suc","xss":"<xss0>XSS"}
+{
+  "key": "foo\nbar\tyoo",
+  "-->\tyo\n'\"/><iframe>": "-->\n'\"/></pre><iframe>"
+}

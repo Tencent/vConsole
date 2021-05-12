@@ -177,7 +177,7 @@ export function JSONStringify(stringObject) {
 
       // value
       if (isArray(value)) {
-        str += 'Array[' + value.length + ']';
+        str += 'Array(' + value.length + ')';
       } else if (isObject(value) || isSymbol(value) || isFunction(value)) {
         str += Object.prototype.toString.call(value);
       } else {

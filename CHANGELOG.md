@@ -4,6 +4,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 - `Fix(General)` Fix invalid click caused by wrong `selection`.
 - `Fix(Log)` Delete `cachedLogs` when reached `maxLogNumber` limit.
+- `Fix(log)` Fix XSS risk.
 
 
 #### 3.5.1 (2021-05-07)

@@ -643,7 +643,7 @@ class VConsoleLogTab extends VConsolePlugin {
             // render
             let $sub;
             if (tool.isArray(val)) {
-              let name = tool.getObjName(val) + '[' + val.length + ']';
+              let name = tool.getObjName(val) + '(' + val.length + ')';
               $sub = that.getFoldedLine(val, $.render(tplFoldCode, {
                 key: keys[i],
                 keyType: keyType,
