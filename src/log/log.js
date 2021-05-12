@@ -524,7 +524,7 @@ class VConsoleLogTab extends VConsolePlugin {
           rawLog = curLog.toString();
           // log = `<span> ${rawLog}</span>`;
           log = $.render(tplLineLog, {
-            log: ' ' + rawLog,
+            log: rawLog,
             logStyle: '',
           });
         } else if (tool.isObject(curLog) || tool.isArray(curLog)) {
@@ -536,7 +536,7 @@ class VConsoleLogTab extends VConsolePlugin {
           rawLog = curLog;
           // log = (logStyle[i] ? `<span style="${logStyle[i]}"> ` : '<span> ') + tool.htmlEncode(curLog).replace(/\n/g, '<br/>') + '</span>';
           log = $.render(tplLineLog, {
-            log: ' ' + curLog,
+            log: curLog,
             logStyle: logStyle[i],
           });
         }
