@@ -12,11 +12,18 @@ export default function render(tpl, data, toString) {
     pointer = 0,
     match = [];
   const RenderFunction = {
-    // escape HTML to text
-    text: (str) => {
-      if (typeof str !== 'string' && typeof str !== 'number') { return str; }
-      return String(str).replace(/[<>&" ]/g, (c) => {
+    // Escape HTML to XSS-safe text
+    text: (text) => {
+      if (typeof text !== 'string' && typeof text !== 'number') { return text; }
+      return String(text).replace(/[<>&" ]/g, (c) => {
         return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', ' ': '&nbsp;' }[c];
+      });
+    },
+    // Change invisible characters to visible characters
+    visibleText: (text) => {
+      if (typeof text !== 'string') { return text; }
+      return String(text).replace(/[\n\t]/g, (c) => {
+        return { '\n': '\\n', '\t': '\\t' }[c];
       });
     },
   };

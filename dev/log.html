@@ -21,6 +21,7 @@
     <a onclick="smallArray()" href="javascript:;" class="weui_btn weui_btn_default">smallArray</a>
     <a onclick="repeatLog()" href="javascript:;" class="weui_btn weui_btn_default">repeatLog</a>
     <a onclick="windowError()" href="javascript:;" class="weui_btn weui_btn_default">window.error</a>
+    <a onclick="xss()" href="javascript:;" class="weui_btn weui_btn_default">XSS</a>
     <a onclick="changeTheme()" href="javascript:;" class="weui_btn weui_btn_default">changeTheme</a>
   </div>
 </body>
@@ -128,6 +129,19 @@ function windowError() {
   console.info('windowError() Start');
   a.b = 1;
   console.info('windowError() End');
+}
+
+function xss() {
+  console.info('xss() Start');
+  const arr = ["-->\tyo\n'\"/><iframe>"];
+  const obj = {
+    'key': 'foo\nbar\tyoo',
+    "-->\tyo\n'\"/><iframe>": "-->\n'\"/><iframe>"
+  };
+  console.log('XSS str:', "-->\tyo\n'\"/><iframe>");
+  console.log(arr);
+  console.log(obj);
+  console.info('xss() End');
 }
 
 let theme = 'light';

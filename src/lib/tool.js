@@ -121,15 +121,30 @@ export function isPlainObject(obj) {
 }
 
 
-
 /**
  * HTML encode a string
  * @param string text
  * @return string
  */
 export function htmlEncode(text) {
-  return document.createElement('a').appendChild( document.createTextNode(text) ).parentNode.innerHTML;
+  // return document.createElement('a').appendChild( document.createTextNode(text) ).parentNode.innerHTML;
+  return String(text).replace(/[<>&" ]/g, (c) => {
+    return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', ' ': '&nbsp;' }[c];
+  });
 }
+
+
+/**
+ * Change invisible characters to visible characters
+ * @param {*} text 
+ * @returns 
+ */
+export function invisibleTextEncode(text) {
+  return String(text).replace(/[\n\t]/g, (c) => {
+    return { '\n': '\\n', '\t': '\\t' }[c];
+  });
+}
+
 
 /**
  * Simple JSON stringify, stringify top level key-value

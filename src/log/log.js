@@ -18,6 +18,7 @@ import * as tool from '../lib/tool.js';
 import $ from '../lib/query.js';
 import VConsolePlugin from '../lib/plugin.js';
 import tplItem from './item.html';
+import tplLineLog from './item_line_log.html';
 import tplFold from './item_fold.html';
 import tplFoldCode from './item_fold_code.html';
 
@@ -521,7 +522,11 @@ class VConsoleLogTab extends VConsolePlugin {
         } else if (tool.isFunction(curLog)) {
           // convert function to string
           rawLog = curLog.toString();
-          log = `<span> ${rawLog}</span>`;
+          // log = `<span> ${rawLog}</span>`;
+          log = $.render(tplLineLog, {
+            log: ' ' + rawLog,
+            logStyle: '',
+          });
         } else if (tool.isObject(curLog) || tool.isArray(curLog)) {
           // object or array
           rawLog = JSON.stringify(curLog, tool.circularReplacer(), 2)
@@ -529,11 +534,19 @@ class VConsoleLogTab extends VConsolePlugin {
         } else {
           // default
           rawLog = curLog;
-          log = (logStyle[i] ? `<span style="${logStyle[i]}"> ` : '<span> ') + tool.htmlEncode(curLog).replace(/\n/g, '<br/>') + '</span>';
+          // log = (logStyle[i] ? `<span style="${logStyle[i]}"> ` : '<span> ') + tool.htmlEncode(curLog).replace(/\n/g, '<br/>') + '</span>';
+          log = $.render(tplLineLog, {
+            log: ' ' + curLog,
+            logStyle: logStyle[i],
+          });
         }
       } catch (e) {
         rawLog = typeof curLog;
-        log = `<span> [${rawLog}]</span>`;
+        // log = `<span> [${rawLog}]</span>`;
+        log = $.render(tplLineLog, {
+          log: ` [${rawLog}]`,
+          logStyle: ''
+        });
       }
       if (log) {
         rawLogs.push(rawLog);
@@ -575,22 +588,15 @@ class VConsoleLogTab extends VConsolePlugin {
       if (json.length > 36) {
         preview += '...';
       }
-      outer += ' ' + preview;
+      outer = tool.invisibleTextEncode(tool.htmlEncode(outer + ' ' + preview));
     }
     let $line = $.render(tplFold, {
       outer: outer,
       lineType: 'obj'
     });
-    // $.bind($.one('.vc-fold-outer', $line), 'touchstart', function (e) {
-    //   console.log('touchstart .vc-fold-outer');
-    // });
-    // $.bind($.one('.vc-fold-outer', $line), 'touchend', function (e) {
-    //   console.log('touchend .vc-fold-outer');
-    // });
     $.bind($.one('.vc-fold-outer', $line), 'click', function (e) {
       e.preventDefault();
       e.stopPropagation();
-      // console.log('CLICK .vc-fold-outer');
       if ($.hasClass($line, 'vc-toggle')) {
         $.removeClass($line, 'vc-toggle');
         $.removeClass($.one('.vc-fold-inner', $line), 'vc-toggle');
@@ -617,7 +623,7 @@ class VConsoleLogTab extends VConsolePlugin {
             // handle value
             if (tool.isString(val)) {
               valueType = 'string';
-              val = '"' + val + '"';
+              val = '"' + tool.invisibleTextEncode(val) + '"';
             } else if (tool.isNumber(val)) {
               valueType = 'number';
             } else if (tool.isBoolean(val)) {
@@ -647,7 +653,8 @@ class VConsoleLogTab extends VConsolePlugin {
             } else if (tool.isObject(val)) {
               let name = tool.getObjName(val);
               $sub = that.getFoldedLine(val, $.render(tplFoldCode, {
-                key: tool.htmlEncode(keys[i]),
+                // key: tool.htmlEncode(keys[i]),
+                key: keys[i],
                 keyType: keyType,
                 value: name,
                 valueType: 'object'
@@ -658,9 +665,11 @@ class VConsoleLogTab extends VConsolePlugin {
               }
               let renderData = {
                 lineType: 'kv',
-                key: tool.htmlEncode(keys[i]),
+                // key: tool.htmlEncode(keys[i]),
+                key: keys[i],
                 keyType: keyType,
-                value: tool.htmlEncode(val),
+                // value: tool.htmlEncode(val),
+                value: val,
                 valueType: valueType
               };
               $sub = $.render(tplFold, renderData);
