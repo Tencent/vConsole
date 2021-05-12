@@ -7,7 +7,7 @@
   "typings": "dist/vconsole.min.d.ts",
   "scripts": {
     "build": "webpack",
-    "dev": "webpack-dev-server --config webpack.dev.config"
+    "dev": "webpack serve --config webpack.dev.config"
   },
   "keywords": [
     "console",
