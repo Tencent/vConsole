@@ -6,7 +6,8 @@
         "modules": "umd",
         "targets": {
           "ie": "9"
-        }
+        },
+        "loose": true
       }
     ]
   ],
@@ -18,7 +19,6 @@
       }
     ],
     "@babel/plugin-proposal-export-namespace-from",
-    "@babel/plugin-proposal-object-rest-spread",
-    "add-module-exports"
+    "@babel/plugin-proposal-object-rest-spread"
   ]
 }
