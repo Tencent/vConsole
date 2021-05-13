@@ -19,6 +19,7 @@
     <a onclick="postFetchByRequest()" href="javascript:;" class="weui_btn weui_btn_default">postFetchByRequest</a>
     <a onclick="getFetchText()" href="javascript:;" class="weui_btn weui_btn_default">getFetchText</a>
     <a onclick="getAjaxText()" href="javascript:;" class="weui_btn weui_btn_default">getAjaxText</a>
+    <a onclick="sendBeacon()" href="javascript:;" class="weui_btn weui_btn_default">sendBeacon</a>
   </div>
 </body>
 </html>
@@ -172,5 +173,11 @@ function getAjaxText() {
     console.log('getAjaxText Error');
   };
   console.info('getAjaxText() End');
+}
+
+function sendBeacon() {
+  console.info('sendBeacon() Start, response should be logged after End');
+  window.navigator.sendBeacon('./data/success.json', JSON.stringify({ foo: 'bar', id: Math.random(), type: 'fetch' }));
+  console.info('sendBeacon() End');
 }
 </script>
