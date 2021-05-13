@@ -38,6 +38,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
     this.mockAjax();
     this.mockFetch();
+    this.mockSendBeacon();
   }
 
   onRenderTab(callback) {
@@ -391,7 +392,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
       item.url = XMLReq._url || '';
       item.name = query.shift() || ''; // => ['b=c&d=', 'e']
       item.name = item.name.replace(new RegExp('[/]*$'), '').split('/').pop() || '';
-      
+
       if (query.length > 0) {
         item.name += '?' + query;
         item.getData = {};
@@ -429,7 +430,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
     };
 
   };
-  
+
   /**
    * mock fetch request
    * @private
@@ -447,7 +448,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
           url = '',
           method = 'GET',
           requestHeader = null;
-      
+
       // handle `input` content
       if (tool.isString(input)) { // when `input` is a string
         method = init?.method || 'GET';
@@ -547,6 +548,73 @@ class VConsoleNetworkTab extends VConsolePlugin {
       })
     }
     window.fetch = prevFetch;
+  }
+
+  /**
+   * mock navigator.sendBeacon
+   * @private
+   */
+  mockSendBeacon() {
+    // https://fetch.spec.whatwg.org/#concept-bodyinit-extract
+    const getContentType = (data) => {
+      if(data instanceof Blob) return data.type;
+      if(data instanceof FormData) return 'multipart/form-data';
+      if(data instanceof URLSearchParams) return 'application/x-www-form-urlencoded;charset=UTF-8';
+      return 'text/plain;charset=UTF-8';
+    }
+
+    const _sendBeacon = window.navigator.sendBeacon;
+    if (!_sendBeacon) { return; }
+    const that = this;
+
+    window.navigator.sendBeacon = (url, data) => {
+      const id = that.getUniqueID();
+      that.reqList[id] = {};
+      const item = that.reqList[id] || {};
+      const query = url.split('?');
+      item.id = id;
+      item.method = 'POST';
+      item.url = url;
+      item.name = query.shift() || '';
+      item.name = item.name.replace(new RegExp('[/]*$'), '').split('/').pop() || '';
+      item.requestHeader = { 'Content-Type': getContentType(data) };
+
+      if (query.length > 0) {
+        item.name += '?' + query;
+        item.getData = {};
+        query = query.join('?'); // => 'b=c&d=?e'
+        query = query.split('&'); // => ['b=c', 'd=?e']
+        for (let q of query) {
+          q = q.split('=');
+          item.getData[ q[0] ] = q[1];
+        }
+      }
+
+      if (tool.isString(data)) {
+        let arr = data.split('&');
+        item.postData = {};
+        for (let q of arr) {
+          q = q.split('=');
+          item.postData[ q[0] ] = q[1];
+        }
+      } else {
+        item.postData = '[object Object]';
+      }
+
+      if (!item.startTime) {
+        item.startTime = (+new Date());
+      }
+
+      const isSuccess = _sendBeacon.call(window.navigator, url, data);
+      if (isSuccess) {
+        item.endTime = +new Date();
+        item.costTime = item.endTime - (item.startTime || item.endTime);
+        item.status = 200;
+        item.readyState = 4;
+      }
+      that.updateRequest(id, item);
+      return isSuccess;
+    }
   }
 
   /**

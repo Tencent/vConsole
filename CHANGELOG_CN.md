@@ -1,7 +1,8 @@
 [English](./CHANGELOG.md) | 简体中文
 
-#### 3.5.2 (2021-05-12)
+#### 3.5.2 (2021-05-13)
 
+- `Chore` 升级到 Webpack5，并升级所有 NPM packages 到最新版本。
 - `Fix(General)` 修复因 `selection` 选区引起的点击事件无效问题。
 - `Fix(Log)` 当日志数量达到 `maxLogNumber` 上限时清空对应的 `cachedLogs`。
 - `Fix(Log)` 修复 XSS 漏洞。

@@ -1,7 +1,8 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### 3.5.2 (2021-05-12)
+#### 3.5.2 (2021-05-13)
 
+- `Chore` Update to Webpack5 and update all NPM packages to the latest version.
 - `Fix(General)` Fix invalid click caused by wrong `selection`.
 - `Fix(Log)` Delete `cachedLogs` when reached `maxLogNumber` limit.
 - `Fix(Log)` Fix XSS risk.

@@ -8,7 +8,7 @@
   <link href="../example/lib/weui.min.css" rel="stylesheet"/>
   <link href="../example/lib/demo.css" rel="stylesheet"/>
 
-  <script src="../dist/vconsole.min.js"></script>
+  <script type="module" src="../dist/vconsole.min.js"></script>
 </head>
 <body ontouchstart>
   <div class="page">
@@ -29,7 +29,9 @@
 </body>
 </html>
 
-<script>
+<script type="module">
+import '../dist/vconsole.min.js';
+
 window.vConsole = new window.VConsole({
   maxLogNumber: 1000,
   // disableLogScrolling: true,
@@ -40,7 +42,9 @@ window.vConsole = new window.VConsole({
     console.log('on clearLog');
   }
 });
+</script>
 
+<script>
 // setInterval(() => {
 //   console.log(Math.random());
 //   console.log('[system]', Math.random());

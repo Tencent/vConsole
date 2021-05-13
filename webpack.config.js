@@ -20,12 +20,7 @@ module.exports = {
       umdNamedDefine: true,
       export: 'default'
     },
-    // libraryTarget: 'umd',
-    // umdNamedDefine: true
   },
-  // experiments: {
-  //   outputModule: true,
-  // },
   module: {
     rules: [
       {
@@ -41,12 +36,7 @@ module.exports = {
       {
         test: /\.js$/,
         use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              ...JSON.parse(fs.readFileSync(Path.resolve(__dirname, '.babelrc'))),
-            }
-          }
+          { loader: 'babel-loader' }
         ]
       },
       {
@@ -69,7 +59,7 @@ module.exports = {
     colors: true,
   },
   optimization: {
-    minimize: false,
+    minimize: true,
     minimizer: [
       new TerserPlugin({
         extractComments: false
