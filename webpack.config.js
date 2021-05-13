@@ -20,12 +20,7 @@ module.exports = {
       umdNamedDefine: true,
       export: 'default'
     },
-    // libraryTarget: 'umd',
-    // umdNamedDefine: true
   },
-  // experiments: {
-  //   outputModule: true,
-  // },
   module: {
     rules: [
       {
@@ -69,7 +64,7 @@ module.exports = {
     colors: true,
   },
   optimization: {
-    minimize: false,
+    minimize: true,
     minimizer: [
       new TerserPlugin({
         extractComments: false

@@ -3,7 +3,7 @@
     [
       "@babel/preset-env",
       {
-        "modules": "umd",
+        "modules": false,
         "targets": {
           "ie": "9"
         },
