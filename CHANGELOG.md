@@ -1,5 +1,11 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### 3.6.0 (2021-MM-DD)
+
+- `Feat(Log)` print `unhandledrejection` log. (PR #389 by @zimv)
+- `Feat(Network)` Support `navigator.sendBeacon()` in Network panel. (PR #383 by @cola119)
+
+
 #### 3.5.2 (2021-05-13)
 
 - `Chore` Update to Webpack5 and update all NPM packages to the latest version.

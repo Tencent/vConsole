@@ -233,7 +233,17 @@ class VConsoleDefaultTab extends VConsoleLogTab {
    */
   mockConsole() {
     super.mockConsole();
-    let that = this;
+    this.cacheWindowOnError();
+    this.catchUnhandledRejection();
+  }
+
+
+  /**
+   * Cache window.onerror
+   * @private
+   */
+  cacheWindowOnError() {
+    const that = this;
     if (tool.isFunction(window.onerror)) {
       this.windowOnError = window.onerror;
     }
@@ -257,7 +267,6 @@ class VConsoleDefaultTab extends VConsoleLogTab {
         that.windowOnError.call(window, message, source, lineNo, colNo, error);
       }
     };
-    this.unhandledrejection();
   }
 
   /**
@@ -265,10 +274,9 @@ class VConsoleDefaultTab extends VConsoleLogTab {
    * about https://developer.mozilla.org/en-US/docs/Web/API/Window/unhandledrejection_event
    * @private
    */
-  unhandledrejection() {
-    // 确保兼容性
+  catchUnhandledRejection() {
     if ( !(tool.isWindow(window) && tool.isFunction(window.addEventListener)) ) {
-      return
+      return;
     }
     const that = this;
     window.addEventListener('unhandledrejection', function (e) {
