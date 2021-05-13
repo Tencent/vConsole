@@ -18,17 +18,12 @@ import * as tool from '../lib/tool.js';
 import $ from '../lib/query.js';
 import VConsolePlugin from '../lib/plugin.js';
 import tplItem from './item.html';
+import tplLineLog from './item_line_log.html';
 import tplFold from './item_fold.html';
 import tplFoldCode from './item_fold_code.html';
 
 const DEFAULT_MAX_LOG_NUMBER = 1000;
 const ADDED_LOG_TAB_ID = [];
-let preLog = {
-  // _id: string
-  // logType: string
-  // logText: string
-};
-let cachedLogs = {}; // for copy
 
 class VConsoleLogTab extends VConsolePlugin {
   static AddedLogID = [];
@@ -45,6 +40,8 @@ class VConsoleLogTab extends VConsolePlugin {
     this.$tabbox = null;
     this.console = {};
     this.logList = []; // save logs before ready
+    this.cachedLogs = {}; // for copy
+    this.previousLog = {}; // { _id: string, logType: string, logText: string }
     this.isInBottom = true; // whether the panel is in the bottom
     this.maxLogNumber = DEFAULT_MAX_LOG_NUMBER;
     this.logNumber = 0;
@@ -160,9 +157,9 @@ class VConsoleLogTab extends VConsolePlugin {
     $.delegate(that.$tabbox, 'click', '.vc-item-copy', (e) => {
       const btn = e.target.closest('.vc-item-copy');
       const { id } = btn.closest('.vc-item');
-      const text = cachedLogs[id];
+      const text = that.cachedLogs[id];
 
-      if (text != null && copy(text)) {
+      if (text != null && copy(text, { target: document.documentElement })) {
         btn.classList.add('vc-item-copy-success');
 
         setTimeout(() => {
@@ -191,7 +188,7 @@ class VConsoleLogTab extends VConsolePlugin {
     if (idx > -1) {
       ADDED_LOG_TAB_ID.splice(idx, 1);
     }
-    cachedLogs = {};
+    this.cachedLogs = {};
   }
 
   onShow() {
@@ -228,9 +225,12 @@ class VConsoleLogTab extends VConsolePlugin {
       return;
     }
     while (this.logNumber > this.maxLogNumber) {
-      let $firstItem = $.one('.vc-item', this.$tabbox);
+      const $firstItem = $.one('.vc-item', this.$tabbox);
       if (!$firstItem) {
         break;
+      }
+      if (this.cachedLogs[$firstItem.id] !== undefined) {
+        delete this.cachedLogs[$firstItem.id];
       }
       $firstItem.parentNode.removeChild($firstItem);
       this.logNumber--;
@@ -315,8 +315,8 @@ class VConsoleLogTab extends VConsolePlugin {
   clearLog() {
     $.one('.vc-log', this.$tabbox).innerHTML = '';
     this.logNumber = 0;
-    preLog = {};
-    cachedLogs = {};
+    this.previousLog = {};
+    this.cachedLogs = {};
   }
 
   /**
@@ -432,12 +432,12 @@ class VConsoleLogTab extends VConsolePlugin {
     curLog.logText = curLog.logText.join(' ');
 
     // check repeat
-    if (!curLog.hasContent && preLog.logType === curLog.logType && preLog.logText === curLog.logText) {
+    if (!curLog.hasContent && this.previousLog.logType === curLog.logType && this.previousLog.logText === curLog.logText) {
       this.printRepeatLog();
     } else {
       this.printNewLog(item, logs);
       // save previous log
-      preLog = curLog;
+      this.previousLog = curLog;
     }
 
 
@@ -457,18 +457,18 @@ class VConsoleLogTab extends VConsolePlugin {
    * @protected
    */
   printRepeatLog() {
-    const $item = $.one('#' + preLog._id);
+    const $item = $.one('#' + this.previousLog._id);
     let $repeat = $.one('.vc-item-repeat', $item);
     if (!$repeat) {
       $repeat = document.createElement('i');
       $repeat.className = 'vc-item-repeat';
       $item.insertBefore($repeat, $item.lastChild);
     }
-    if (!preLog.count) {
-      // preLog.count = 1;
-    }
-    preLog.count++;
-    $repeat.innerHTML = preLog.count;
+    // if (!this.previousLog.count) {
+      // this.previousLog.count = 1;
+    // }
+    this.previousLog.count++;
+    $repeat.innerHTML = this.previousLog.count;
     return;
   }
 
@@ -522,7 +522,11 @@ class VConsoleLogTab extends VConsolePlugin {
         } else if (tool.isFunction(curLog)) {
           // convert function to string
           rawLog = curLog.toString();
-          log = `<span> ${rawLog}</span>`;
+          // log = `<span> ${rawLog}</span>`;
+          log = $.render(tplLineLog, {
+            log: rawLog,
+            logStyle: '',
+          });
         } else if (tool.isObject(curLog) || tool.isArray(curLog)) {
           // object or array
           rawLog = JSON.stringify(curLog, tool.circularReplacer(), 2)
@@ -530,11 +534,19 @@ class VConsoleLogTab extends VConsolePlugin {
         } else {
           // default
           rawLog = curLog;
-          log = (logStyle[i] ? `<span style="${logStyle[i]}"> ` : '<span> ') + tool.htmlEncode(curLog).replace(/\n/g, '<br/>') + '</span>';
+          // log = (logStyle[i] ? `<span style="${logStyle[i]}"> ` : '<span> ') + tool.htmlEncode(curLog).replace(/\n/g, '<br/>') + '</span>';
+          log = $.render(tplLineLog, {
+            log: curLog,
+            logStyle: logStyle[i],
+          });
         }
       } catch (e) {
         rawLog = typeof curLog;
-        log = `<span> [${rawLog}]</span>`;
+        // log = `<span> [${rawLog}]</span>`;
+        log = $.render(tplLineLog, {
+          log: ` [${rawLog}]`,
+          logStyle: ''
+        });
       }
       if (log) {
         rawLogs.push(rawLog);
@@ -547,7 +559,7 @@ class VConsoleLogTab extends VConsolePlugin {
     }
 
     // for copy
-    cachedLogs[item._id] = rawLogs.join(' ');
+    this.cachedLogs[item._id] = rawLogs.join(' ');
 
     // generate content from item.content
     if (tool.isObject(item.content)) {
@@ -576,7 +588,7 @@ class VConsoleLogTab extends VConsolePlugin {
       if (json.length > 36) {
         preview += '...';
       }
-      outer += ' ' + preview;
+      outer = tool.invisibleTextEncode(tool.htmlEncode(outer + ' ' + preview));
     }
     let $line = $.render(tplFold, {
       outer: outer,
@@ -611,7 +623,7 @@ class VConsoleLogTab extends VConsolePlugin {
             // handle value
             if (tool.isString(val)) {
               valueType = 'string';
-              val = '"' + val + '"';
+              val = '"' + tool.invisibleTextEncode(val) + '"';
             } else if (tool.isNumber(val)) {
               valueType = 'number';
             } else if (tool.isBoolean(val)) {
@@ -631,7 +643,7 @@ class VConsoleLogTab extends VConsolePlugin {
             // render
             let $sub;
             if (tool.isArray(val)) {
-              let name = tool.getObjName(val) + '[' + val.length + ']';
+              let name = tool.getObjName(val) + '(' + val.length + ')';
               $sub = that.getFoldedLine(val, $.render(tplFoldCode, {
                 key: keys[i],
                 keyType: keyType,
@@ -641,7 +653,8 @@ class VConsoleLogTab extends VConsolePlugin {
             } else if (tool.isObject(val)) {
               let name = tool.getObjName(val);
               $sub = that.getFoldedLine(val, $.render(tplFoldCode, {
-                key: tool.htmlEncode(keys[i]),
+                // key: tool.htmlEncode(keys[i]),
+                key: keys[i],
                 keyType: keyType,
                 value: name,
                 valueType: 'object'
@@ -652,9 +665,11 @@ class VConsoleLogTab extends VConsolePlugin {
               }
               let renderData = {
                 lineType: 'kv',
-                key: tool.htmlEncode(keys[i]),
+                // key: tool.htmlEncode(keys[i]),
+                key: keys[i],
                 keyType: keyType,
-                value: tool.htmlEncode(val),
+                // value: tool.htmlEncode(val),
+                value: val,
                 valueType: valueType
               };
               $sub = $.render(tplFold, renderData);

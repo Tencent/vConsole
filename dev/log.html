@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>Test: Log</title>
   <link href="../example/lib/weui.min.css" rel="stylesheet"/>
   <link href="../example/lib/demo.css" rel="stylesheet"/>
@@ -20,6 +21,8 @@
     <a onclick="smallArray()" href="javascript:;" class="weui_btn weui_btn_default">smallArray</a>
     <a onclick="repeatLog()" href="javascript:;" class="weui_btn weui_btn_default">repeatLog</a>
     <a onclick="windowError()" href="javascript:;" class="weui_btn weui_btn_default">window.error</a>
+    <a onclick="xssLog()" href="javascript:;" class="weui_btn weui_btn_default">XSS: Log</a>
+    <a onclick="xssStorage()" href="javascript:;" class="weui_btn weui_btn_default">XSS: Storage</a>
     <a onclick="changeTheme()" href="javascript:;" class="weui_btn weui_btn_default">changeTheme</a>
     <a onclick="promiseReject()" href="javascript:;" class="weui_btn weui_btn_default">promiseReject</a>
   </div>
@@ -128,6 +131,30 @@ function windowError() {
   console.info('windowError() Start');
   a.b = 1;
   console.info('windowError() End');
+}
+
+function xssLog() {
+  console.info('xssLog() Start');
+  const arr = [
+    "-->\tyo\n'\"/><iframe>",
+    ["-->\tyo\n'\"/><iframe>"]
+  ];
+  const obj = {
+    'key': 'foo\nbar\tyoo',
+    "-->\tyo\n'\"/><iframe>": "-->\n'\"/><iframe>"
+  };
+  console.log('XSS str:', "-->\tyo\n'\"/><iframe>");
+  console.log(arr);
+  console.log(obj);
+  console.info('xssLog() End');
+}
+
+function xssStorage() {
+  console.info('xssStorage() Start');
+  localStorage.setItem("-->\tyo\n'\"/><iframe>", "-->\tyo\n'\"/><iframe>");
+  sessionStorage.setItem("-->\tyo\n'\"/><iframe>", "-->\tyo\n'\"/><iframe>");
+  document.cookie = "foo=-->\tyo";
+  console.info('xssStorage() End');
 }
 
 let theme = 'light';

@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const baseConfig = require('./webpack.config.js');
 
 const contentBase = path.join(__dirname, '/');
@@ -9,7 +9,9 @@ const contentBase = path.join(__dirname, '/');
 module.exports = merge(baseConfig, {
   mode: 'development',
   devServer: {
-    port: 9090,
+    host: '0.0.0.0',
+    port: 9191,
+    disableHostCheck: true,
     contentBase: contentBase,
     openPage: 'dev/',
     historyApiFallback: true,
@@ -26,7 +28,7 @@ module.exports = merge(baseConfig, {
       });
     }
   },
-  devtool: '#eval-source-map',
+  devtool: 'eval-source-map',
   plugins: [
     new webpack.HotModuleReplacementPlugin()
   ]

@@ -139,8 +139,8 @@ class VConsoleStorageTab extends VConsolePlugin {
     } else {
       // html encode for rendering
       for (let i=0; i<list.length; i++) {
-        list[i].name = tool.htmlEncode(list[i].name);
-        list[i].value = tool.htmlEncode(list[i].value);
+        list[i].name = list[i].name;
+        list[i].value = list[i].value;
       }
       $log.innerHTML = $.render(tplList, {list: list}, true);
     }

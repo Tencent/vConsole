@@ -208,10 +208,10 @@ class VConsoleNetworkTab extends VConsolePlugin {
           try {
             domData.response = JSON.parse(item.response);
             domData.response = JSON.stringify(domData.response, null, 1);
-            domData.response = tool.htmlEncode(domData.response);
+            domData.response = domData.response;
           } catch (e) {
             // not a JSON string
-            domData.response = tool.htmlEncode(item.response);
+            domData.response = item.response;
           }
         } else if (typeof item.response != 'undefined') {
           domData.response = Object.prototype.toString.call(item.response);
@@ -220,7 +220,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
       case 'json':
         if (typeof item.response != 'undefined') {
           domData.response = JSON.stringify(item.response, null, 1);
-          domData.response = tool.htmlEncode(domData.response);
+          domData.response = domData.response;
         }
         break;
       case 'blob':
