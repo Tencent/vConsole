@@ -257,6 +257,40 @@ class VConsoleDefaultTab extends VConsoleLogTab {
         that.windowOnError.call(window, message, source, lineNo, colNo, error);
       }
     };
+    this.unhandledrejection();
+  }
+
+  /**
+   * Promise.reject has no rejection handler
+   * about https://developer.mozilla.org/en-US/docs/Web/API/Window/unhandledrejection_event
+   * @private
+   */
+  unhandledrejection() {
+    // 确保兼容性
+    if ( !(tool.isWindow(window) && tool.isFunction(window.addEventListener)) ) {
+      return
+    }
+    const that = this;
+    window.addEventListener('unhandledrejection', function (e) {
+      let error = e && e.reason;
+      const errorName = 'Uncaught (in promise) ';
+      let args = [errorName, error];
+      if(error instanceof Error){
+        args = [
+          errorName, 
+          {
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+          }
+        ]
+      }
+      that.printLog({
+        logType: 'error',
+        logs: args,
+        noOrigin: true
+      });
+    });
   }
 
   /**
