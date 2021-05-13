@@ -36,12 +36,7 @@ module.exports = {
       {
         test: /\.js$/,
         use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              ...JSON.parse(fs.readFileSync(Path.resolve(__dirname, '.babelrc'))),
-            }
-          }
+          { loader: 'babel-loader' }
         ]
       },
       {
