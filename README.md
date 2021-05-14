@@ -17,17 +17,6 @@ A lightweight, extendable front-end developer tool for mobile web page.
 - Custom plugin
 
 
-## Installing
-
-
-
-Using unpkg CDN:
-
-```html
-<script src="https://unpkg.com/vconsole/dist/vconsole.min.js"></script>
-```
-
-
 ## Usage
 
 Method 1: Using npm (Recommanded)
