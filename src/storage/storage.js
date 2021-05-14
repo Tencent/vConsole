@@ -72,7 +72,7 @@ class VConsoleStorageTab extends VConsolePlugin {
         that.renderStorage();
       }
     }, {
-      name: 'Clear',
+      name: 'ClearAll',
       global: false,
       onClick: function(e) {
         that.clearLog();
@@ -218,13 +218,18 @@ class VConsoleStorageTab extends VConsolePlugin {
     if (!document.cookie || !navigator.cookieEnabled) {
       return;
     }
-    let hostname = window.location.hostname;
+    const uris = window.location.hostname.split('.');
     let list = this.getCookieList();
     for (var i=0; i<list.length; i++) {
       let name = list[i].name;
       document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
       document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
-      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.${hostname.split('.').slice(-2).join('.')}`;
+      let uri = '.' + uris[uris.length - 1];
+      for (let j = uris.length - 2; j >= 0; j--) {
+        uri = '.' + uris[j] + uri;
+        console.log(name, uri);
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${uri};`;
+      }
     }
     this.renderStorage();
   }

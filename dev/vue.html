@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <title>Test: Vue</title>
+  <link href="../example/lib/weui.min.css" rel="stylesheet"/>
+  <link href="../example/lib/demo.css" rel="stylesheet"/>
+
+  <script src="https://unpkg.com/vue@next"></script>
+  <script src="../dist/vconsole.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body ontouchstart>
+  <div class="page">
+    <div id="app">
+      <input v-model="title" placeholder="Edit me" />
+      <div>
+        <a @click="axios('POST')" href="javascript:;" class="weui_btn weui_btn_default">Axios POST</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
+<script>
+// import '../dist/vconsole.min.js';
+
+window.vConsole = new window.VConsole({
+  maxLogNumber: 1000,
+  // disableLogScrolling: true,
+  onReady: function() {
+    console.log('vConsole is ready.');
+  },
+  onClearLog: function() {
+    console.log('on clearLog');
+  }
+});
+</script>
+
+<script>
+const appOptions = {
+  data() {
+    return {
+      title: 'vConsole with Vue',
+    };
+  },
+  mounted() {
+    // console.log('mounted', this);
+    // setInterval(() => {
+    //   this.title = Math.random();
+    //   this.axios('POST');
+    // }, 300);
+  },
+  methods: {
+    axios(method) {
+      axios({
+        method,
+        url: './data/success.json?r=' + Math.random(),
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        data: {
+          foo: 'bar'
+        }
+      })
+      .then(function(response) {
+        console.log('Axios Get response:', response);
+      })
+      .catch(function(error) {
+        console.log('Axios Get error:', error);
+      });
+    }
+  }
+};
+const app = Vue.createApp(appOptions);
+const vm = app.mount('#app');
+
+</script>

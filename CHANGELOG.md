@@ -4,6 +4,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 - `Feat(Log)` print `unhandledrejection` log. (PR #389 by @zimv)
 - `Feat(Network)` Support `navigator.sendBeacon()` in Network panel. (PR #383 by @cola119)
+- `Fix(Storage)` Fix the issue that the cookie of the non-first-level domain cannot be deleted. (issue #398)
 
 
 #### 3.5.2 (2021-05-13)
