@@ -244,29 +244,23 @@ class VConsoleDefaultTab extends VConsoleLogTab {
    */
   cacheWindowOnError() {
     const that = this;
-    if (tool.isFunction(window.onerror)) {
-      this.windowOnError = window.onerror;
-    }
-    window.onerror = function (message, source, lineNo, colNo, error) {
-      let msg = message;
-      if (source) {
-        msg += "\n" + source.replace(location.origin, '');
+    window.addEventListener('error', function(event) {
+      let msg = event.message;
+      if (event.filename) {
+        msg += "\n" + event.filename.replace(location.origin, '');
       }
-      if (lineNo || colNo) {
-        msg += ':' + lineNo + ':' + colNo;
+      if (event.lineno || event.colno) {
+        msg += ':' + event.lineno + ':' + event.colno;
       }
-      //print error stack info
-      let stack = !!error && !!error.stack;
-      let statckInfo = (stack && error.stack.toString()) || '';
+      // print error stack info
+      const hasStack = !!event.error && !!event.error.stack;
+      const statckInfo = (hasStack && event.error.stack.toString()) || '';
       that.printLog({
         logType: 'error',
         logs: [msg, statckInfo],
         noOrigin: true
       });
-      if (tool.isFunction(that.windowOnError)) {
-        that.windowOnError.call(window, message, source, lineNo, colNo, error);
-      }
-    };
+    });
   }
 
   /**
