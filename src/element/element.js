@@ -212,7 +212,12 @@ class VConsoleElementsTab extends VConsolePlugin {
     node = this.getNode(mutation.target);
     // update view
     if (node.view) {
-      this.renderView(node, node.view, true);
+      if(node.nodeName == 'BODY'){
+        this.renderView(node, node.view, 'replace');
+      }else{
+        this.renderView(node, node.view);
+
+      }
     }
   }
 
@@ -297,7 +302,7 @@ class VConsoleElementsTab extends VConsolePlugin {
     node.tagName = elem.tagName || '';
     node.textContent = '';
     if (
-      node.nodeType == elem.TEXT_NODE || 
+      node.nodeType == elem.TEXT_NODE ||
       node.nodeType == elem.DOCUMENT_TYPE_NODE
       ) {
       node.textContent = elem.textContent;
