@@ -208,7 +208,30 @@ function axiosRequest(method) {
 
 function sendBeacon() {
   console.info('sendBeacon() Start, response should be logged after End');
-  window.navigator.sendBeacon('./data/success.json', JSON.stringify({ foo: 'bar', id: Math.random(), type: 'fetch' }));
+  window.navigator.sendBeacon('./data/success.json', JSON.stringify({
+    foo: 'bar',
+    id: Math.random(),
+    type: 'sendBeacon'
+  }));
   console.info('sendBeacon() End');
+}
+
+function axiosRequest(method) {
+  console.info('axiosRequest() Start');
+  axios({
+    method,
+    url: './data/success.json?r=' + Math.random(),
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    data: {
+      foo: 'bar'
+    }
+  })
+  .then(function(response) {
+    console.log('axiosRequest response:', response);
+  })
+  .catch(function(error) {
+    console.log('axiosRequest error:', error);
+  });
+  console.info('axiosRequest() End');
 }
 </script>
