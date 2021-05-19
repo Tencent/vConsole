@@ -21,6 +21,9 @@ module.exports = {
       export: 'default'
     },
   },
+  resolve: {
+    extensions: [ '.ts', '.js', '.html', '.less' ]
+  },
   module: {
     rules: [
       {
@@ -34,7 +37,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.js$/,
+        test: /\.(js|ts)$/,
         use: [
           { loader: 'babel-loader' }
         ]

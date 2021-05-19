@@ -14,9 +14,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
  */
 
 import copy from 'copy-text-to-clipboard';
-import * as tool from '../lib/tool.js';
-import $ from '../lib/query.js';
-import VConsolePlugin from '../lib/plugin.js';
+import * as tool from '../lib/tool.ts';
+import $ from '../lib/query.ts';
+import VConsolePlugin from '../lib/plugin.ts';
 import tplItem from './item.html';
 import tplLineLog from './item_line_log.html';
 import tplFold from './item_fold.html';

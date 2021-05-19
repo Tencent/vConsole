@@ -13,12 +13,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole Storage Plugin
  */
 
-import VConsolePlugin from '../lib/plugin.js';
+import VConsolePlugin from '../lib/plugin.ts';
 import tplTabbox from './tabbox.html';
 import tplList from './list.html';
 
-import * as tool from '../lib/tool.js';
-import $ from '../lib/query.js';
+// import * as tool from '../lib/tool.ts';
+import $ from '../lib/query.ts';
 
 class VConsoleStorageTab extends VConsolePlugin {
 

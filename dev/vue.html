@@ -15,7 +15,7 @@
 <body ontouchstart>
   <div class="page">
     <div id="app">
-      <input v-model="title" placeholder="Edit me" />
+      <input v-model="book.title" placeholder="Edit me" />
       <div>
         <a @click="axios('POST')" href="javascript:;" class="weui_btn weui_btn_default">Axios POST</a>
       </div>
@@ -43,15 +43,20 @@ window.vConsole = new window.VConsole({
 const appOptions = {
   data() {
     return {
-      title: 'vConsole with Vue',
+      book: {
+        title: 'vConsole with Vue',
+        that: this,
+      }
     };
   },
   mounted() {
-    // console.log('mounted', this);
-    // setInterval(() => {
-    //   this.title = Math.random();
-    //   this.axios('POST');
-    // }, 300);
+    console.log('mounted', this);
+    // console.log('Vue', this);
+    setInterval(() => {
+      this.book.title = Math.random();
+      console.log(this.book);
+      // this.axios('POST');
+    }, 300);
   },
   methods: {
     axios(method) {

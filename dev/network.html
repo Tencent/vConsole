@@ -8,6 +8,7 @@
   <link href="../example/lib/demo.css" rel="stylesheet"/>
 
   <script src="../dist/vconsole.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body ontouchstart>
   <div class="page">
@@ -20,6 +21,7 @@
     <a onclick="getFetchText()" href="javascript:;" class="weui_btn weui_btn_default">getFetchText</a>
     <a onclick="getAjaxText()" href="javascript:;" class="weui_btn weui_btn_default">getAjaxText</a>
     <a onclick="sendBeacon()" href="javascript:;" class="weui_btn weui_btn_default">sendBeacon</a>
+    <a onclick="axiosRequest('GET')" href="javascript:;" class="weui_btn weui_btn_default">getAxios</a>
   </div>
 </body>
 </html>
@@ -40,6 +42,15 @@ window.vConsole = new window.VConsole({
 function postAjax() {
   console.info('postAjax() Start, response should be logged after End');
   const xhr = new XMLHttpRequest();
+  xhr.onload = () => {
+    console.log('postAjax Response:', JSON.parse(xhr.response));
+  };
+  xhr.onerror = () => {
+    console.log('postAjax Error');
+  };
+  xhr.onreadystatechange = () => {
+    console.log('onreadystatechange', `readyState=${xhr.readyState}`, `status=${xhr.status}`);
+  };
   xhr.open('POST', './data/success.json');
   xhr.send({
     foo: 'bar',
@@ -47,12 +58,6 @@ function postAjax() {
     type: 'xhr',
     '<xss0>': '<xss1> XSS Attack!'
   });
-  xhr.onload = () => {
-    console.log('postAjax Response:', JSON.parse(xhr.response));
-  };
-  xhr.onerror = () => {
-    console.log('postAjax Error');
-  };
   console.info('postAjax() End');
 }
 
@@ -177,7 +182,30 @@ function getAjaxText() {
 
 function sendBeacon() {
   console.info('sendBeacon() Start, response should be logged after End');
-  window.navigator.sendBeacon('./data/success.json', JSON.stringify({ foo: 'bar', id: Math.random(), type: 'fetch' }));
+  window.navigator.sendBeacon('./data/success.json', JSON.stringify({
+    foo: 'bar',
+    id: Math.random(),
+    type: 'sendBeacon'
+  }));
   console.info('sendBeacon() End');
+}
+
+function axiosRequest(method) {
+  console.info('axiosRequest() Start');
+  axios({
+    method,
+    url: './data/success.json?r=' + Math.random(),
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    data: {
+      foo: 'bar'
+    }
+  })
+  .then(function(response) {
+    console.log('axiosRequest response:', response);
+  })
+  .catch(function(error) {
+    console.log('axiosRequest error:', error);
+  });
+  console.info('axiosRequest() End');
 }
 </script>

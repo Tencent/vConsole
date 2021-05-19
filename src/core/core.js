@@ -14,8 +14,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
  */
 
 import pkg from '../../package.json';
-import * as tool from '../lib/tool.js';
-import $ from '../lib/query.js';
+import * as tool from '../lib/tool.ts';
+import $ from '../lib/query.ts';
 
 import './core.less';
 import tpl from './core.html';
@@ -25,11 +25,11 @@ import tplTopBarItem from './topbar_item.html';
 import tplToolItem from './tool_item.html';
 
 // built-in plugins
-import VConsolePlugin from '../lib/plugin.js';
+import VConsolePlugin from '../lib/plugin.ts';
 import VConsoleLogPlugin from '../log/log.js';
 import VConsoleDefaultPlugin from '../log/default.js';
 import VConsoleSystemPlugin from '../log/system.js';
-import VConsoleNetworkPlugin from '../network/network.js';
+import VConsoleNetworkPlugin from '../network/network.ts';
 import VConsoleElementPlugin from '../element/element.js';
 import VConsoleStoragePlugin from '../storage/storage.js';
 

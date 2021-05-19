@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "noImplicitAny": false,
+    "module": "UMD",
+    "target": "ES5",
+    "allowJs": true,
+    "moduleResolution": "node",
+  }
+}

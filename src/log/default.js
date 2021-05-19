@@ -13,8 +13,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole Default Tab
  */
 
-import $ from '../lib/query.js';
-import * as tool from '../lib/tool.js';
+import $ from '../lib/query.ts';
+import * as tool from '../lib/tool.ts';
 import VConsoleLogTab from './log.js';
 import tplTabbox from './tabbox_default.html';
 import tplItemCode from './item_code.html';
