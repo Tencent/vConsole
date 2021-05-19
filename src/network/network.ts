@@ -29,6 +29,7 @@ class VConsoleNetworkRequestItem {
   statusText: string        = '';
   readyState: XMLHttpRequest['readyState'] = 0;
   header: { [key: string]: string };
+  requestType: 'xhr' | 'fetch' | 'ping';
   requestHeader: HeadersInit;
   responseType: XMLHttpRequest['responseType'];
   response: any;
@@ -323,6 +324,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
         // update status
         item.readyState = XMLReq.readyState;
         item.responseType = XMLReq.responseType;
+        item.requestType = 'xhr';
 
         // update data by readyState
         switch (XMLReq.readyState) {
@@ -532,6 +534,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
       item.id = id;
       item.method = method;
+      item.requestType = 'fetch';
       item.requestHeader = requestHeader;
       item.url = url;
       item.name = query.shift() || '';
@@ -656,6 +659,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
       item.url = url;
       item.name = query.shift() || '';
       item.name = item.name.replace(new RegExp('[/]*$'), '').split('/').pop() || '';
+      item.requestType = 'ping';
       item.requestHeader = { 'Content-Type': getContentType(data) };
       item.status = 0;
       item.statusText = 'Pending';
