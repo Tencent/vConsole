@@ -4,6 +4,8 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 - `Feat(Log)` print `unhandledrejection` log. (PR #389 by @zimv)
 - `Feat(Network)` Support `navigator.sendBeacon()` in Network panel. (PR #383 by @cola119)
+- `Feat(Network)` Display "Type" (Request Type) in "General", including `xhr|fetch|ping`.
+- `Chore` Use TypeScript. Now Network panel is conveted to `.ts` file.
 - `Fix(Storage)` Fix the issue that the cookie of the non-first-level domain cannot be deleted. (issue #398)
 
 
