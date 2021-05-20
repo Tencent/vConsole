@@ -49,19 +49,6 @@
       {{/for}}
     </div>
     {{/if}}
-    {{if (requestHeader !== null)}}
-    <div>
-      <dl class="vc-table-row vc-left-border">
-        <dt class="vc-table-col vc-table-col-title">Request Headers</dt>
-      </dl>
-      {{for (var key in requestHeader)}}
-      <div class="vc-table-row vc-left-border vc-small">
-        <div class="vc-table-col vc-table-col-2">{{key}}</div>
-        <div class="vc-table-col vc-table-col-4 vc-max-height-line">{{requestHeader[key]}}</div>
-      </div>
-      {{/for}}
-    </div>
-    {{/if}}
     {{if (getData !== null)}}
     <div>
       <dl class="vc-table-row vc-left-border">

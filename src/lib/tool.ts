@@ -96,6 +96,13 @@ export function isWindow(value) {
 }
 
 /**
+ * Get the prototype name of an object
+ */
+export function getPrototypeName(value) {
+  return <string>Object.prototype.toString.call(value).replace(/\[object (.*)\]/, '$1');
+}
+
+/**
  * check whether an object is plain (using {})
  * @param object obj
  * @return boolean
