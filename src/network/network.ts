@@ -515,30 +515,27 @@ class VConsoleNetworkTab extends VConsolePlugin {
       const id = that.getUniqueID();
       const item = new VConsoleNetworkRequestItem(id);
       that.reqList[id] = item;
-      let query = [],
-          url = '',
+      let url: URL,
           method = 'GET',
           requestHeader: HeadersInit = null;
 
       // handle `input` content
       if (tool.isString(input)) { // when `input` is a string
         method = init?.method || 'GET';
-        url = <string>input;
+        url = that.getURL(<string>input);
         requestHeader = init?.headers || null;
       } else { // when `input` is a `Request` object
         method = (<Request>input).method || 'GET';
-        url = (<Request>input).url;
+        url = that.getURL((<Request>input).url);
         requestHeader = (<Request>input).headers;
       }
-      query = url.split('?');
 
       item.id = id;
       item.method = method;
       item.requestType = 'fetch';
       item.requestHeader = requestHeader;
-      item.url = url;
-      item.name = query.shift() || '';
-      item.name = item.name.replace(new RegExp('[/]*$'), '').split('/').pop() || '';
+      item.url = url.toString();
+      item.name = (url.pathname.split('/').pop() || '') + url.search;
       item.status = 0;
       item.statusText = 'Pending';
 
@@ -553,31 +550,17 @@ class VConsoleNetworkTab extends VConsolePlugin {
       }
 
       // save GET data
-      if (query.length > 0) {
-        item.name += '?' + query;
+      if (url.search) {
         item.getData = {};
-        query = query.join('?').split('&'); // join() => 'b=c&d=?e', split() => ['b=c', 'd=?e']
-        for (let q of query) {
-          q = q.split('=');
-          item.getData[ q[0] ] = q[1];
-        }
+        url.searchParams.forEach((value, key) => {
+          item.getData[key] = value;
+        });
       }
 
       // save POST data
       if (item.method === 'POST') {
         if (tool.isString(input)) { // when `input` is a string
-          if (tool.isString(init?.body)) {
-            const arr = (<string>init.body).split('&');
-            item.postData = {};
-            for (let q of arr) {
-              const kv = q.split('=');
-              item.postData[ kv[0] ] = kv[1];
-            }
-          } else if (tool.isPlainObject(init?.body)) {
-            item.postData = (<{}>init?.body);
-          } else {
-            item.postData = '[object Object]';
-          }
+          item.postData = that.getFormattedBody(init.body);
         } else { // when `input` is a `Request` object
           // cannot get real type of request's body, so just display "[object Object]"
           item.postData = '[object Object]';
@@ -588,18 +571,21 @@ class VConsoleNetworkTab extends VConsolePlugin {
       if (!item.startTime) {
         item.startTime = (+new Date());
       }
-      return _fetch(url, init).then((response) => {
+      return _fetch(url.toString(), init).then((response) => {
         response
           .clone()
           .text()
           .then((text) => {
             const contentType = response.headers.get('content-type');
+            console.log('response:::', contentType);
             // use 'text' as default type in case of contentType is json but response is not real JSON
             let itemResponse = text;
-            let itemResponseType: XMLHttpRequest['responseType'] = ''; // use XHR responseType
+            // use XHR's responseType as fetch's responseType
+            let itemResponseType: XMLHttpRequest['responseType'] = '';
             if (contentType.includes('application/json')) {
               try {
                 itemResponse = JSON.parse(text);
+                itemResponse = JSON.stringify(itemResponse, null, 1);
                 itemResponseType = 'json';
               } catch (e) {}
             } else if (contentType.includes('text/html')) {
