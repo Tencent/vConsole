@@ -518,6 +518,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
       let url: URL,
           method = 'GET',
           requestHeader: HeadersInit = null;
+      let _fetchReponse: Response;
 
       // handle `input` content
       if (tool.isString(input)) { // when `input` is a string
@@ -538,6 +539,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
       item.name = (url.pathname.split('/').pop() || '') + url.search;
       item.status = 0;
       item.statusText = 'Pending';
+      if (!item.startTime) { // UNSENT
+        item.startTime = (+new Date());
+      }
 
       if (Object.prototype.toString.call(requestHeader) === '[object Headers]') {
         item.requestHeader = {};
@@ -567,52 +571,60 @@ class VConsoleNetworkTab extends VConsolePlugin {
         }
       }
 
-      // UNSENT
-      if (!item.startTime) {
-        item.startTime = (+new Date());
-      }
       return _fetch(url.toString(), init).then((response) => {
-        response
-          .clone()
-          .text()
-          .then((text) => {
-            const contentType = response.headers.get('content-type');
-            console.log('response:::', contentType);
-            // use 'text' as default type in case of contentType is json but response is not real JSON
-            let itemResponse = text;
-            // use XHR's responseType as fetch's responseType
-            let itemResponseType: XMLHttpRequest['responseType'] = '';
-            if (contentType.includes('application/json')) {
-              try {
-                itemResponse = JSON.parse(text);
-                itemResponse = JSON.stringify(itemResponse, null, 1);
-                itemResponseType = 'json';
-              } catch (e) {}
-            } else if (contentType.includes('text/html')) {
-              itemResponseType = 'text';
+        _fetchReponse = response;
+
+        item.endTime = +new Date();
+        item.costTime = item.endTime - (item.startTime || item.endTime);
+        item.status = response.status;
+        item.statusText = String(response.status);
+
+        item.header = {};
+        // @ts-ignore
+        for (let pair of response.headers.entries()) {
+          item.header[pair[0]] = pair[1];
+        }
+        item.readyState = 4;
+
+        // parse response body by Content-Type
+        const contentType = response.headers.get('content-type');
+        if (contentType.includes('application/json')) {
+          item.responseType = 'json';
+          return response.clone().text();
+        } else if (contentType.includes('text/html')) {
+          item.responseType = 'text';
+          return response.clone().text();
+        } else {
+          item.responseType = '';
+          return '[object Object]';
+        }
+
+      }).then((responseBody) => {
+        // save response body
+        switch (item.responseType) {
+          case 'json':
+            try {
+              // try to parse response as JSON
+              item.response = JSON.parse(responseBody);
+              item.response = JSON.stringify(item.response, null, 1);
+            } catch (e) {
+              // not real JSON, use 'text' as default type
+              item.response = responseBody;
+              item.responseType = 'text';
             }
-            item.response = itemResponse;
-            item.responseType = itemResponseType;
+            break;
 
-            item.endTime = +new Date();
-            item.costTime = item.endTime - (item.startTime || item.endTime);
-            
-            item.status = response.status;
-            item.statusText = String(response.status);
+          case 'text':
+          default:
+            item.response = responseBody;
+            break;
+        }
 
-            item.header = {};
-            // @ts-ignore
-            for (let pair of response.headers.entries()) {
-              item.header[pair[0]] = pair[1];
-            }
-            item.readyState = 4;
-
-            return itemResponse;
-          }).finally(() => {
-            that.updateRequest(id, item);
-          });
-        return response;
-      })
+        return _fetchReponse;
+      }).finally(() => {
+        _fetchReponse = undefined;
+        that.updateRequest(id, item);
+      });
     }
     window.fetch = prevFetch;
   }

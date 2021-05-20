@@ -208,7 +208,7 @@ function axiosRequest(method) {
 
 function sendBeacon() {
   console.info('sendBeacon() Start, response should be logged after End');
-  window.navigator.sendBeacon('./data/success.json', JSON.stringify({
+  window.navigator.sendBeacon('./data/success.json?method=beacon', JSON.stringify({
     foo: 'bar',
     id: Math.random(),
     type: 'sendBeacon'
@@ -220,7 +220,7 @@ function axiosRequest(method) {
   console.info('axiosRequest() Start');
   axios({
     method,
-    url: './data/success.json?r=' + Math.random(),
+    url: './data/success.json?method=axios&r=' + Math.random(),
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
     data: {
       foo: 'bar'
