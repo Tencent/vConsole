@@ -28,16 +28,16 @@ class VConsoleNetworkRequestItem {
   status: number | string   = 0;
   statusText: string        = '';
   readyState: XMLHttpRequest['readyState'] = 0;
-  header: { [key: string]: string };
-  requestType: 'xhr' | 'fetch' | 'ping';
-  requestHeader: HeadersInit;
+  header: { [key: string]: string } = null; // response header
   responseType: XMLHttpRequest['responseType'];
+  requestType: 'xhr' | 'fetch' | 'ping';
+  requestHeader: HeadersInit = null;
   response: any;
   startTime: number         = 0;
   endTime: number           = 0;
   costTime: number          = 0;
-  getData: { [key: string]: string };
-  postData: { [key: string]: string } | '[object Object]';
+  getData: { [key: string]: string } = null;
+  postData: { [key: string]: string } | string = null;
   actived: boolean = false;
 
   constructor(id: string) {
@@ -171,7 +171,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
     this.renderHeader();
   }
 
-  renderHeader() {
+  private renderHeader() {
     const count = Object.keys(this.reqList).length,
         $header = $.render(tplHeader, {count: count}),
         $logbox = $.one('.vc-log', this.$tabbox);
@@ -189,7 +189,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
    * add or update a request item by request ID
    * @private
    */
-  updateRequest(id: string, data: VConsoleNetworkRequestItem | Object) {
+  private updateRequest(id: string, data: VConsoleNetworkRequestItem | Object) {
     // see whether add new item into list
     const preCount = Object.keys(this.reqList).length;
 
@@ -289,7 +289,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
    * mock XMLHttpRequest
    * @private
    */
-  mockXHR() {
+  private mockXHR() {
     const _XMLHttpRequest = window.XMLHttpRequest;
     if (!_XMLHttpRequest) { return; }
 
@@ -506,7 +506,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
    * mock fetch request
    * @private
    */
-  mockFetch() {
+  private mockFetch() {
     const _fetch = window.fetch;
     if (!_fetch) { return; }
     const that = this;
@@ -635,9 +635,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
    * mock navigator.sendBeacon
    * @private
    */
-  mockSendBeacon() {
+  private mockSendBeacon() {
     // https://fetch.spec.whatwg.org/#concept-bodyinit-extract
-    const getContentType = (data) => {
+    const getContentType = (data?: BodyInit) => {
       if (data instanceof Blob) { return data.type; }
       if (data instanceof FormData) { return 'multipart/form-data'; }
       if (data instanceof URLSearchParams) { return 'application/x-www-form-urlencoded;charset=UTF-8'; }
@@ -648,58 +648,80 @@ class VConsoleNetworkTab extends VConsolePlugin {
     if (!_sendBeacon) { return; }
     const that = this;
 
-    window.navigator.sendBeacon = (url, data) => {
+    window.navigator.sendBeacon = (urlString: string, data?: BodyInit) => {
       const id = that.getUniqueID();
       const item = new VConsoleNetworkRequestItem(id);
       that.reqList[id] = item;
 
-      let query = url.split('?');
+      const url = that.getURL(urlString);
       item.id = id;
       item.method = 'POST';
-      item.url = url;
-      item.name = query.shift() || '';
-      item.name = item.name.replace(new RegExp('[/]*$'), '').split('/').pop() || '';
+      item.url = urlString;
+      item.name = (url.pathname.split('/').pop() || '') + url.search;
       item.requestType = 'ping';
       item.requestHeader = { 'Content-Type': getContentType(data) };
       item.status = 0;
       item.statusText = 'Pending';
-
-      if (query.length > 0) {
-        item.name += '?' + query;
+      
+      if (url.search) {
         item.getData = {};
-        query = query.join('?').split('&'); // join() => 'b=c&d=?e', split() => ['b=c', 'd=?e']
-        for (const q of query) {
-          const kv = q.split('=');
-          item.getData[ kv[0] ] = kv[1];
-        }
+        url.searchParams.forEach((value, key) => {
+          item.getData[key] = value;
+        });
       }
-
-      if (tool.isString(data)) {
-        let arr = (<string>data).split('&');
-        item.postData = {};
-        for (let q of arr) {
-          const kv = q.split('=');
-          item.postData[ kv[0] ] = kv[1];
-        }
-      } else {
-        item.postData = '[object Object]';
-      }
+      item.postData = that.getFormattedBody(data);
 
       if (!item.startTime) {
         item.startTime = (+new Date());
       }
 
-      const isSuccess = _sendBeacon.call(window.navigator, url, data);
+      const isSuccess = _sendBeacon.call(window.navigator, urlString, data);
       if (isSuccess) {
         item.endTime = +new Date();
         item.costTime = item.endTime - (item.startTime || item.endTime);
-        item.status = 200;
-        item.statusText = '200';
+        item.status = 0;
+        item.statusText = 'Sent';
         item.readyState = 4;
+      } else {
+        item.status = 500;
+        item.statusText = 'Unknown';
       }
       that.updateRequest(id, item);
       return isSuccess;
     }
+  }
+
+  private getFormattedBody(body?: BodyInit) {
+    if (!body) { return null; }
+    let ret: string | { [key: string]: string } = null;
+    const type = tool.getPrototypeName(body);
+    switch (type) {
+      case 'String':
+        try {
+          // try to parse as JSON
+          ret = JSON.parse(<string>body);
+        } catch (e) {
+          // not a json, return original string
+          ret = <string>body;
+        }
+        break;
+
+      case 'URLSearchParams':
+        ret = {};
+        (<URLSearchParams>body).forEach((value, key) => {
+          ret[key] = value;
+        });
+        break;
+
+      default:
+        ret = `[object ${type}]`;
+        break;
+    }
+    return ret;
+  }
+
+  private getURL(urlString: string) {
+    return new URL(urlString, urlString.includes('http') ? '' : window.location.href);
   }
 
   /**
@@ -707,7 +729,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
    * @private
    * @return string
    */
-  getUniqueID() {
+  private getUniqueID() {
     const id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
       const r = Math.random() * 16 | 0;
       const v = c == 'x' ? r : (r & 0x3 | 0x8);
