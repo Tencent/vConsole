@@ -19,7 +19,7 @@
     <a onclick="postFetch()" href="javascript:;" class="weui_btn weui_btn_default">postFetch</a>
     <a onclick="postFetchByRequest()" href="javascript:;" class="weui_btn weui_btn_default">postFetchByRequest</a>
     <a onclick="getFetchText()" href="javascript:;" class="weui_btn weui_btn_default">getFetchText</a>
-    <a onclick="getAjaxText()" href="javascript:;" class="weui_btn weui_btn_default">getAjaxText</a>
+    <a onclick="postImage()" href="javascript:;" class="weui_btn weui_btn_default">postImage</a>
     <a onclick="sendBeacon()" href="javascript:;" class="weui_btn weui_btn_default">sendBeacon</a>
     <a onclick="axiosRequest('GET')" href="javascript:;" class="weui_btn weui_btn_default">getAxios</a>
   </div>
@@ -51,7 +51,7 @@ function postAjax() {
   xhr.onreadystatechange = () => {
     console.log('onreadystatechange', `readyState=${xhr.readyState}`, `status=${xhr.status}`);
   };
-  xhr.open('POST', './data/success.json');
+  xhr.open('POST', './data/success.json?method=fetchPost');
   xhr.send({
     foo: 'bar',
     id: Math.random(),
@@ -63,7 +63,7 @@ function postAjax() {
 
 function getAjax() {
   console.info('getAjax() Start, response should be logged after End');
-  const url = './data/success.json?type=xhr&id=' + Math.random() + '&<xss0>';
+  const url = './data/success.json?method=xhrGet&id=' + Math.random() + '&<xss0>';
   const xhr = new XMLHttpRequest();
   xhr.open('GET', url);
   xhr.setRequestHeader('custom-header', 'foobar');
@@ -79,7 +79,7 @@ function getAjax() {
 
 function getFetch() {
   console.info('getFetch() Start, response should be logged after End');
-  window.fetch('./data/success.json?type=fetch&id=' + Math.random(), {
+  window.fetch('./data/success.json?method=fetchGet&id=' + Math.random(), {
     method: 'GET',
     headers: {
       'custom-header': 'foobar',
@@ -95,7 +95,7 @@ function getFetch() {
 
 function getFetchSimple() {
   console.info('getFetchSimple() Start, response should be logged after End');
-  window.fetch('./data/success.json?type=fetch&id=' + Math.random()).then((data) => {
+  window.fetch('./data/success.json?type=fetchGet&id=' + Math.random()).then((data) => {
     return data.json();
   }).then((data) => {
     console.log('getFetchSimple Response:', data);
@@ -105,7 +105,7 @@ function getFetchSimple() {
 
 function postFetch() {
   console.info('postFetch() Start, response should be logged after End');
-  window.fetch('./data/success.json', {
+  window.fetch('./data/success.json?method=fetchPost', {
     method: 'POST',
     body: { foo: 'bar', id: Math.random(), type: 'fetch' },
     // body: new Blob([new ArrayBuffer(233)], { type: 'image/png' }),
@@ -132,7 +132,7 @@ function postFetchByRequest() {
   headers.append('custom-header', 'foobar');
   // headers.append('content-type', 'application/json');
   headers.append('content-type', 'application/x-www-form-urlencoded');
-  const req = new Request('./data/success.json?type=fetch&id=' + Math.random(), {
+  const req = new Request('./data/success.json?method=fetchPost&id=' + Math.random(), {
     method: 'POST',
     body: { foo: 'bar', id: Math.random() },
     // body: new Blob([new ArrayBuffer(233)], { type: 'image/png' }),
@@ -151,7 +151,7 @@ function postFetchByRequest() {
 
 function getFetchText() {
   console.info('getFetchText() Start, response should be logged after End');
-  window.fetch('./data/success.txt?type=fetch&id=' + Math.random(), {
+  window.fetch('./data/success.txt?type=fetchGet&id=' + Math.random(), {
     method: 'GET',
     headers: {
       'custom-header': 'foobar',
@@ -165,24 +165,21 @@ function getFetchText() {
   console.info('getFetchText() End');
 }
 
-function getAjaxText() {
-  console.info('getAjaxText() Start, response should be logged after End');
+function postImage() {
+  console.info('postImage() Start, response should be logged after End');
   const xhr = new XMLHttpRequest();
-  xhr.open('GET', './data/success.txt?type=xhr&id=' + Math.random());
-  xhr.setRequestHeader('custom-header', 'foobar');
+  xhr.open('POST', '../example/snapshot/panel_log.jpg?method=xhrPost&id=' + Math.random());
   xhr.send();
-  xhr.onload = () => {
-    console.log('getAjaxText Response:', xhr.response);
-  };
-  xhr.onerror = () => {
-    console.log('getAjaxText Error');
-  };
-  console.info('getAjaxText() End');
+
+  window.fetch('../example/snapshot/qrcode.png?method=fetchPost&id=' + Math.random(), {
+    method: 'POST',
+  });
+  console.info('postImage() End');
 }
 
 function sendBeacon() {
   console.info('sendBeacon() Start, response should be logged after End');
-  window.navigator.sendBeacon('./data/success.json', JSON.stringify({
+  window.navigator.sendBeacon('./data/success.json?method=beacon', JSON.stringify({
     foo: 'bar',
     id: Math.random(),
     type: 'sendBeacon'
@@ -194,7 +191,7 @@ function axiosRequest(method) {
   console.info('axiosRequest() Start');
   axios({
     method,
-    url: './data/success.json?r=' + Math.random(),
+    url: './data/success.json?method=axios&r=' + Math.random(),
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
     data: {
       foo: 'bar'
