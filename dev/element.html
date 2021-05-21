@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <title>Test: Element</title>
+  <link href="../example/lib/weui.min.css" rel="stylesheet"/>
+  <link href="../example/lib/demo.css" rel="stylesheet"/>
+
+  <script type="module" src="../dist/vconsole.min.js"></script>
+</head>
+<body ontouchstart>
+  <div id="page" class="page">
+    <h1 id="title" class="page_title">Element</h1>
+    <div id="text" class="weui_text_area">
+      Hello World!
+    </div>
+    <a onclick="changeAttr()" href="javascript:;" class="weui_btn weui_btn_default">changeAttr</a>
+    <a onclick="changeCharacterData()" href="javascript:;" class="weui_btn weui_btn_default">changeCharacterData</a>
+  </div>
+</body>
+</html>
+
+<script type="module">
+import '../dist/vconsole.min.js';
+
+window.vConsole = new window.VConsole({
+  maxLogNumber: 1000,
+  // disableLogScrolling: true,
+  onReady: function() {
+    console.log('vConsole is ready.');
+  },
+  onClearLog: function() {
+    console.log('on clearLog');
+  }
+});
+</script>
+
+<script>
+let handleMethod;
+function changeAttr() {
+  handleMethod = () => {
+    console.log('changeAttr');
+    document.body.style.background = `hsl(${(Math.random() * 255) | 0}, 92%, 67%)`;
+    document.getElementById('page').style.background = `hsl(${(Math.random() * 255) | 0}, 92%, 67%)`;
+  };
+}
+function changeCharacterData() {
+  handleMethod = () => {
+    console.log('changeCharacterData');
+    const node = document.getElementById('title').firstChild;
+    node.textContent = Math.random();
+  };
+}
+
+  document.addEventListener("click", () => {
+    if (handleMethod) {
+      handleMethod();
+    }
+  });
+</script>
