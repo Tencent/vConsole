@@ -7,7 +7,8 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Feat(Network)` Display "Type" (Request Type) in "General", including `xhr|fetch|ping`.
 - `Chore(Global)` Use TypeScript. Now Network panel is conveted to `.ts` file.
 - `Fix(Network)` Recover original `window.fetch()` method when remove Network panel.
-- `Fix(Storage)` Fix the issue that the cookie of the non-first-level domain cannot be deleted. (issue #398)
+- `Fix(Storage)` Fix issue that the cookie of the non-first-level domain cannot be deleted. (issue #398)
+- `Fix(Element)` Fix issue that elements are rendered as nested when `attributes` or `characterData` changed. (issue #399)
 
 
 #### 3.5.2 (2021-05-13)

@@ -212,7 +212,7 @@ class VConsoleElementsTab extends VConsolePlugin {
     node = this.getNode(mutation.target);
     // update view
     if (node.view) {
-      this.renderView(node, node.view, true);
+      this.renderView(node, node.view, 'replace');
     }
   }
 
@@ -225,7 +225,7 @@ class VConsoleElementsTab extends VConsolePlugin {
     node = this.getNode(mutation.target);
     // update view
     if (node.view) {
-      this.renderView(node, node.view, true);
+      this.renderView(node, node.view, 'replace');
     }
   }
 
