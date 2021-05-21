@@ -2,17 +2,18 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### 3.6.0 (2021-MM-DD)
 
-- `Feat(Log)` print `unhandledrejection` log. (PR #389 by @zimv)
+- `Feat(Log)` Print `unhandledrejection` log. (PR #389 by @zimv)
 - `Feat(Network)` Support `navigator.sendBeacon()` in Network panel. (PR #383 by @cola119)
 - `Feat(Network)` Display "Type" (Request Type) in "General", including `xhr|fetch|ping`.
-- `Chore` Use TypeScript. Now Network panel is conveted to `.ts` file.
+- `Chore(Global)` Use TypeScript. Now Network panel is conveted to `.ts` file.
+- `Fix(Network)` Recover original `window.fetch()` method when remove Network panel.
 - `Fix(Storage)` Fix the issue that the cookie of the non-first-level domain cannot be deleted. (issue #398)
 
 
 #### 3.5.2 (2021-05-13)
 
-- `Chore` Update to Webpack5 and update all NPM packages to the latest version.
-- `Fix(General)` Fix invalid click caused by wrong `selection`.
+- `Chore(Global)` Update to Webpack5 and update all NPM packages to the latest version.
+- `Fix(Global)` Fix invalid click caused by wrong `selection`.
 - `Fix(Log)` Delete `cachedLogs` when reached `maxLogNumber` limit.
 - `Fix(Log)` Fix XSS risk.
 
@@ -35,32 +36,32 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### V3.4.1 (2021-04-09)
 
-- `Feature(General)` Add `setSwitchPosition(x, y)` method to update the position of switch button, see [Public Properties & Methods](./doc/public_properties_methods.md) for more details.
-- `Perf(General)` Add `Symbol` polyfill. (issue #361)
-- `Fix(General)` Update theme style after `setOption()`.
-- `Fix(General)` Remove `transitionEnd` to prevent compatibility issues. (issue #364)
+- `Feature(Global)` Add `setSwitchPosition(x, y)` method to update the position of switch button, see [Public Properties & Methods](./doc/public_properties_methods.md) for more details.
+- `Perf(Global)` Add `Symbol` polyfill. (issue #361)
+- `Fix(Global)` Update theme style after `setOption()`.
+- `Fix(Global)` Remove `transitionEnd` to prevent compatibility issues. (issue #364)
 - `Fix(Network)` Fix `fetch` optional parameter `init`. (issue #363, #365)
 - `Fix(Network)` Fix XSS risks.
 
 
 #### V3.4.0 (2021-01-14)
 
-- `Feature(General)` Add darkmode theme, see `vConsole.option.theme` in [Public Properties & Methods](./doc/public_properties_methods.md). (PR #307 by @progrape)
-- `Feature(General)` Add safe area to switch button. (issue #353)
+- `Feature(Global)` Add darkmode theme, see `vConsole.option.theme` in [Public Properties & Methods](./doc/public_properties_methods.md). (PR #307 by @progrape)
+- `Feature(Global)` Add safe area to switch button. (issue #353)
 - `Feature(Log)` Auto move input cursor to the bracket after autocomplete command. (issue #293)
 - `Feature(System)` Add `Location` info to System tab. (issue #343)
 - `Feature(Network)` Add `fetch` log in Network tab. (by @weiqian93)
 - `Feature(Network)` Add Request Headers to Network tab.
 - `Feature(Network)` Use short URL and display parameters in Network tab. (issue #291)
 - `Feature(Plugin)` New third-party plugin [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats). (by @smackgg)
-- `Fix(General)` The position of the switch button will be reset by mistake when clicked.
-- `Fix(General)` Fix `document.documentElement.offsetHeight|offsetWidth` is unreliable in newer browsers. (PR #314 by @littlee)
-- `Fix(General)` Prevent dispatchEvent for disabled or readOnly elements. (PR #314 by @norux)
-- `Fix(General)` Fix nonce searching problem. (by @sunderls)
-- `Fix(General)` Fix security issues. (#345 by @QiAnXinCodeSafe)
-- `Fix(General)` Prevent "webkitStorageInfo deprecation" warning.
-- `Perf(General)` Remove `Symbol`, `Array.from` polyfill. (issue #325, #275)
-- `Perf(General)` Show all enumerable and unenumerable properties. (issue #327)
+- `Fix(Global)` The position of the switch button will be reset by mistake when clicked.
+- `Fix(Global)` Fix `document.documentElement.offsetHeight|offsetWidth` is unreliable in newer browsers. (PR #314 by @littlee)
+- `Fix(Global)` Prevent dispatchEvent for disabled or readOnly elements. (PR #314 by @norux)
+- `Fix(Global)` Fix nonce searching problem. (by @sunderls)
+- `Fix(Global)` Fix security issues. (#345 by @QiAnXinCodeSafe)
+- `Fix(Global)` Prevent "webkitStorageInfo deprecation" warning.
+- `Perf(Global)` Remove `Symbol`, `Array.from` polyfill. (issue #325, #275)
+- `Perf(Global)` Show all enumerable and unenumerable properties. (issue #327)
 - `Chore` Update Webpack DevServer option. (by @QinZhen001)
 
 
@@ -68,17 +69,17 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 - `Feature(Log)` Add `%c` log format to support custom log style, see [Tutorial](./doc/tutorial.md) for more details.
 - `Feature(Plugin)` Add `VConsole.VConsoleLogPlugin` (`VConsole.VConsole*` plugins etc.) to `VConsole` class.
-- `Fix(General)` Fix a few minor issues. (#267 by @Molunerfinn, #272 by @domom)
+- `Fix(Global)` Fix a few minor issues. (#267 by @Molunerfinn, #272 by @domom)
 - `Fix(Storage)` Fix remove cookie fail when it is set path=/ or top domain. (#264 by @qianxinfeng)
-- `Perf(General)` Display vConsole on `window DOMContentLoaded` instead of `window load`.
+- `Perf(Global)` Display vConsole on `window DOMContentLoaded` instead of `window load`.
 
 
 #### V3.3.2 (2019-07-04)
 
-- `Feature(General)` Add TypeScript definition file. (by @jas0ncn)
+- `Feature(Global)` Add TypeScript definition file. (by @jas0ncn)
 - `Fix(Log)` Avoid scrolling to bottom when away from bottom edge. (by @ele828)
-- `Fix(General)` Fix switch button position issue. (by @rexschuang)
-- `Fix(General)` Fix a few minor issues. (by @stenders)
+- `Fix(Global)` Fix switch button position issue. (by @rexschuang)
+- `Fix(Global)` Fix a few minor issues. (by @stenders)
 
 
 #### V3.3.0 (2019-02-02)

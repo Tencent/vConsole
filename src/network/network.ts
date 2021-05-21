@@ -52,9 +52,11 @@ class VConsoleNetworkTab extends VConsolePlugin {
   private domList: { [id: string]: Element } = {};
   private isShow: boolean = false;
   private isInBottom: boolean = true; // whether the panel is in the bottom
-  private _open: any = undefined; // the origin function
-  private _send: any = undefined;
-  private _setRequestHeader: any = undefined;
+  private _xhrOpen: XMLHttpRequest['open'] = undefined; // the origin function
+  private _xhrSend: XMLHttpRequest['send'] = undefined;
+  private _xhrSetRequestHeader: XMLHttpRequest['setRequestHeader'] = undefined;
+  private _fetch: WindowOrWorkerGlobalScope['fetch'] = undefined;
+  private _sendBeacon: Navigator['sendBeacon'] = undefined;
 
   constructor(...args) {
     super(...args);
@@ -119,12 +121,20 @@ class VConsoleNetworkTab extends VConsolePlugin {
   onRemove() {
     // recover original functions
     if (window.XMLHttpRequest) {
-      window.XMLHttpRequest.prototype.open = this._open;
-      window.XMLHttpRequest.prototype.send = this._send;
-      window.XMLHttpRequest.prototype.setRequestHeader = this._setRequestHeader;
-      this._open = undefined;
-      this._send = undefined;
-      this._setRequestHeader = undefined
+      window.XMLHttpRequest.prototype.open = this._xhrOpen;
+      window.XMLHttpRequest.prototype.send = this._xhrSend;
+      window.XMLHttpRequest.prototype.setRequestHeader = this._xhrSetRequestHeader;
+      this._xhrOpen = undefined;
+      this._xhrSend = undefined;
+      this._xhrSetRequestHeader = undefined;
+    }
+    if (window.fetch) {
+      window.fetch = this._fetch;
+      this._fetch = undefined;
+    }
+    if (window.navigator.sendBeacon) {
+      window.navigator.sendBeacon = this._sendBeacon;
+      this._sendBeacon = undefined;
     }
   }
 
@@ -204,63 +214,6 @@ class VConsoleNetworkTab extends VConsolePlugin {
     if (!this.isReady) {
       return;
     }
-
-    // update dom
-    // let domData = {
-    //   id: id,
-    //   name: item.name,
-    //   url: item.url,
-    //   status: item.status,
-    //   method: item.method || '-',
-    //   costTime: item.costTime>0 ? item.costTime+'ms' : '-',
-    //   header: item.header || null,
-    //   requestHeader: item.requestHeader || null,
-    //   getData: item.getData || null,
-    //   postData: item.postData || null,
-    //   response: null,
-    //   actived: !!item.actived
-    // };
-    // switch (item.responseType) {
-    //   case '':
-    //   case 'text':
-    //     // try to parse JSON
-    //     if (tool.isString(item.response)) {
-    //       try {
-    //         domData.response = JSON.parse(item.response);
-    //         domData.response = JSON.stringify(domData.response, null, 1);
-    //         domData.response = domData.response;
-    //       } catch (e) {
-    //         // not a JSON string
-    //         domData.response = item.response;
-    //       }
-    //     } else if (typeof item.response != 'undefined') {
-    //       domData.response = Object.prototype.toString.call(item.response);
-    //     }
-    //     break;
-    //   case 'json':
-    //     if (typeof item.response != 'undefined') {
-    //       domData.response = JSON.stringify(item.response, null, 1);
-    //       domData.response = domData.response;
-    //     }
-    //     break;
-    //   case 'blob':
-    //   case 'document':
-    //   case 'arraybuffer':
-    //   default:
-    //     if (typeof item.response != 'undefined') {
-    //       domData.response = Object.prototype.toString.call(item.response);
-    //     }
-    //     break;
-    // }
-    // if (item.readyState == 0 || item.readyState == 1) {
-    //   domData.status = 'Pending';
-    // } else if (item.readyState == 2 || item.readyState == 3) {
-    //   domData.status = 'Loading';
-    // } else if (item.readyState == 4) {
-    //   // do nothing
-    // } else {
-    //   domData.status = 'Unknown';
-    // }
     const $new = $.render(tplItem, item),
           $old = this.domList[id];
     if (item.status >= 400) {
@@ -297,9 +250,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
     const _open = window.XMLHttpRequest.prototype.open,
           _send = window.XMLHttpRequest.prototype.send,
           _setRequestHeader = window.XMLHttpRequest.prototype.setRequestHeader;
-    that._open = _open;
-    that._send = _send;
-    that._setRequestHeader = _setRequestHeader;
+    that._xhrOpen = _open;
+    that._xhrSend = _send;
+    that._xhrSetRequestHeader = _setRequestHeader;
 
     // mock open()
     window.XMLHttpRequest.prototype.open = function() {
@@ -510,8 +463,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
     const _fetch = window.fetch;
     if (!_fetch) { return; }
     const that = this;
+    this._fetch = _fetch;
 
-    const prevFetch = (input: RequestInfo, init?: RequestInit) => {
+    window.fetch = (input: RequestInfo, init?: RequestInit) => {
       const id = that.getUniqueID();
       const item = new VConsoleNetworkRequestItem(id);
       that.reqList[id] = item;
@@ -625,8 +579,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
         _fetchReponse = undefined;
         that.updateRequest(id, item);
       });
-    }
-    window.fetch = prevFetch;
+    };
   }
 
   /**
@@ -634,17 +587,18 @@ class VConsoleNetworkTab extends VConsolePlugin {
    * @private
    */
   private mockSendBeacon() {
+    const _sendBeacon = window.navigator.sendBeacon;
+    if (!_sendBeacon) { return; }
+    const that = this;
+    this._sendBeacon = _sendBeacon;
+
     // https://fetch.spec.whatwg.org/#concept-bodyinit-extract
     const getContentType = (data?: BodyInit) => {
       if (data instanceof Blob) { return data.type; }
       if (data instanceof FormData) { return 'multipart/form-data'; }
       if (data instanceof URLSearchParams) { return 'application/x-www-form-urlencoded;charset=UTF-8'; }
       return 'text/plain;charset=UTF-8';
-    }
-
-    const _sendBeacon = window.navigator.sendBeacon;
-    if (!_sendBeacon) { return; }
-    const that = this;
+    };
 
     window.navigator.sendBeacon = (urlString: string, data?: BodyInit) => {
       const id = that.getUniqueID();
@@ -686,7 +640,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
       }
       that.updateRequest(id, item);
       return isSuccess;
-    }
+    };
   }
 
   private getFormattedBody(body?: BodyInit) {
