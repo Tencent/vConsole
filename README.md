@@ -19,11 +19,7 @@ A lightweight, extendable front-end developer tool for mobile web page.
 
 ## Installing
 
-Using npm:
 
-```bash
-$ npm install vconsole
-```
 
 Using unpkg CDN:
 
@@ -34,22 +30,34 @@ Using unpkg CDN:
 
 ## Usage
 
-By default, vConsole will be exported to `window.VConsole`.
+Method 1: Using npm (Recommanded)
 
-After imported, initialize it and then everything is done.
+```bash
+$ npm install vconsole
+```
 
 ```javascript
-import 'vconsole';
+import VConsole from 'vconsole';
 
 const vConsole = new VConsole();
 // or init with options
 const vConsole = new VConsole({ maxLogNumber: 1000 });
 
-// use `console` methods as usual
+// call `console` methods as usual
 console.log('Hello world');
 
 // remove it when you finish debugging
 vConsole.destroy();
+```
+
+Method 2: Using unpkg CDN in HTML:
+
+```html
+<script src="https://unpkg.com/vconsole/dist/vconsole.min.js"></script>
+<script>
+  // VConsole will be exported to `window.VConsole` by default.
+  var vConsole = new window.VConsole();
+</script>
 ```
 
 See [Tutorial](./doc/tutorial.md) for more usage details.
