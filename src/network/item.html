@@ -2,7 +2,7 @@
   <dl class="vc-table-row vc-group-preview" data-reqid="{{id}}">
     <dd class="vc-table-col vc-table-col-4">{{text(name)}}</dd>
     <dd class="vc-table-col">{{method}}</dd>
-    <dd class="vc-table-col">{{status}}</dd>
+    <dd class="vc-table-col">{{statusText}}</dd>
     <dd class="vc-table-col">{{costTime}}</dd>
   </dl>
   <div class="vc-group-detail">
@@ -17,6 +17,10 @@
       <div class="vc-table-row vc-left-border vc-small">
         <div class="vc-table-col vc-table-col-2">Method</div>
         <div class="vc-table-col vc-table-col-4 vc-max-height-line">{{method}}</div>
+      </div>
+      <div class="vc-table-row vc-left-border vc-small">
+        <div class="vc-table-col vc-table-col-2">Type</div>
+        <div class="vc-table-col vc-table-col-4 vc-max-height-line">{{requestType}}</div>
       </div>
     </div>
     {{if (header !== null)}}
@@ -41,19 +45,6 @@
       <div class="vc-table-row vc-left-border vc-small">
         <div class="vc-table-col vc-table-col-2">{{text(key)}}</div>
         <div class="vc-table-col vc-table-col-4 vc-max-height-line">{{text(requestHeader[key])}}</div>
-      </div>
-      {{/for}}
-    </div>
-    {{/if}}
-    {{if (requestHeader !== null)}}
-    <div>
-      <dl class="vc-table-row vc-left-border">
-        <dt class="vc-table-col vc-table-col-title">Request Headers</dt>
-      </dl>
-      {{for (var key in requestHeader)}}
-      <div class="vc-table-row vc-left-border vc-small">
-        <div class="vc-table-col vc-table-col-2">{{key}}</div>
-        <div class="vc-table-col vc-table-col-4 vc-max-height-line">{{requestHeader[key]}}</div>
       </div>
       {{/for}}
     </div>

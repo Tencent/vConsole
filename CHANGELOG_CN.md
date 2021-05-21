@@ -1,9 +1,20 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### 3.6.0 (2021-05-21)
+
+- `Feat(Log)` 新增输出 `unhandledrejection` 类型日志。 (PR #389 by @zimv)
+- `Feat(Network)` 新增支持展示 `navigator.sendBeacon()` 的网络请求。 (PR #383 by @cola119)
+- `Feat(Network)` 新增在 "General" 栏目展示 "Type" (Request Type) 字段，取值包括 `xhr|fetch|ping`。
+- `Chore(Global)` 开始使用 TypeScript 重构代码。现在 Network 面板首先转成了 `.ts` 文件。
+- `Fix(Network)` 修复移除 Network 面板后没有恢复原生 `window.fetch()` 方法的问题。
+- `Fix(Storage)` 修复清除所有 cookie 时无法完全删除非顶级域名下的 cookie 的问题。 (issue #398)
+- `Fix(Element)` 修复当 element 的 `attributes` 或 `characterData` 变化时 element 被嵌套渲染的问题。 (issue #399)
+
+
 #### 3.5.2 (2021-05-13)
 
 - `Chore` 升级到 Webpack5，并升级所有 NPM packages 到最新版本。
-- `Fix(General)` 修复因 `selection` 选区引起的点击事件无效问题。
+- `Fix(Global)` 修复因 `selection` 选区引起的点击事件无效问题。
 - `Fix(Log)` 当日志数量达到 `maxLogNumber` 上限时清空对应的 `cachedLogs`。
 - `Fix(Log)` 修复 XSS 漏洞。
 
@@ -26,32 +37,32 @@
 
 #### V3.4.1 (2021-04-09)
 
-- `Feature(General)` 新增 `setSwitchPosition(x, y)` 方法以更新开关按钮的位置，见 [Public Properties & Methods](./doc/public_properties_methods_CN.md)。
-- `Perf(General)` 添加 `Symbol` polyfill。(issue #361)
-- `Fix(General)` 修复 `setOption()` 后主题样式未及时更新的问题。
-- `Fix(General)` 删除 `transitionEnd` 以避免一些兼容性问题。(issue #364)
+- `Feature(Global)` 新增 `setSwitchPosition(x, y)` 方法以更新开关按钮的位置，见 [Public Properties & Methods](./doc/public_properties_methods_CN.md)。
+- `Perf(Global)` 添加 `Symbol` polyfill。(issue #361)
+- `Fix(Global)` 修复 `setOption()` 后主题样式未及时更新的问题。
+- `Fix(Global)` 删除 `transitionEnd` 以避免一些兼容性问题。(issue #364)
 - `Fix(Network)` 修复 `fetch` 的 `init` 未考虑为可选参数的问题。(issue #363, #365)
 - `Fix(Network)` 修复 XSS 漏洞。
 
 
 #### V3.4.0 (2021-01-14)
 
-- `Feature(General)` 支持暗黑模式，配置项 `vConsole.option.theme` 见 [Public Properties & Methods](./doc/public_properties_methods_CN.md)。(by @progrape)
-- `Feature(General)` 开关按钮加入拖拽安全区，避免遮挡全面屏手机底部操作区。(issue #353)
+- `Feature(Global)` 支持暗黑模式，配置项 `vConsole.option.theme` 见 [Public Properties & Methods](./doc/public_properties_methods_CN.md)。(by @progrape)
+- `Feature(Global)` 开关按钮加入拖拽安全区，避免遮挡全面屏手机底部操作区。(issue #353)
 - `Feature(Log)` 指令输入框键入括号且自动补全括号后，光标将自动移动到括号内部。(issue #293)
 - `Feature(System)` 增加显示 `Location` 信息。(issue #343)
 - `Feature(Network)`支持 `fetch` 网络记录。(by @weiqian93)
 - `Feature(Network)` 支持显示 Request Headers。
 - `Feature(Network)` 仅显示简短网址，URL 参数将显示在详细信息中。(issue #291)
 - `Feature(Plugin)` 新第三方插件 [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats)。(by @smackgg)
-- `Fix(General)` 修复点击开关按钮后位置会被重置的问题。
-- `Fix(General)` 修复 `document.documentElement.offsetHeight|offsetWidth` 在新浏览器中不够准确的问题。(by @littlee)
-- `Fix(General)` 阻止用户事件派发到 readOnly 或 disabled 的 element 上。(by @norux)
-- `Fix(General)` 修复 nonce 查找不准确的问题。(by @sunderls)
-- `Fix(General)` 修复一个安全问题。(#345 by @QiAnXinCodeSafe)
-- `Fix(General)` 屏蔽 "webkitStorageInfo deprecation" 告警。
-- `Perf(General)` 删除 `Symbol`、`Array.from` polyfill。(issue #325, #275)
-- `Perf(General)` 日志中显示对象内所有的 enumerable 和 unenumerable 属性。 (issue #327)
+- `Fix(Global)` 修复点击开关按钮后位置会被重置的问题。
+- `Fix(Global)` 修复 `document.documentElement.offsetHeight|offsetWidth` 在新浏览器中不够准确的问题。(by @littlee)
+- `Fix(Global)` 阻止用户事件派发到 readOnly 或 disabled 的 element 上。(by @norux)
+- `Fix(Global)` 修复 nonce 查找不准确的问题。(by @sunderls)
+- `Fix(Global)` 修复一个安全问题。(#345 by @QiAnXinCodeSafe)
+- `Fix(Global)` 屏蔽 "webkitStorageInfo deprecation" 告警。
+- `Perf(Global)` 删除 `Symbol`、`Array.from` polyfill。(issue #325, #275)
+- `Perf(Global)` 日志中显示对象内所有的 enumerable 和 unenumerable 属性。 (issue #327)
 - `Chore` 更新 Webpack DevServer 的配置项。(by @QinZhen001)
 
 
@@ -59,16 +70,16 @@
 
 - `Feature(Log)` 增加 `%c` 以支持自定义日志样式，详情见 [使用教程](./doc/tutorial_CN.md)。
 - `Feature(Plugin)` 增加 `VConsole.VConsoleLogPlugin` 等 `VConsole.VConsole*` 内置插件在 `VConsole` class 上的挂载。
-- `Fix(General)` 修复若干小问题。(#267 by @Molunerfinn, #272 by @domom)
+- `Fix(Global)` 修复若干小问题。(#267 by @Molunerfinn, #272 by @domom)
 - `Fix(Storage)` 修复当 cookie `path=/` 或设置了 `domain` 时删除失败的问题。(#264 by @qianxinfeng)
-- `Perf(General)` 在 `window DOMContentLoaded` 而不是 `window load` 时显示 vConsole。
+- `Perf(Global)` 在 `window DOMContentLoaded` 而不是 `window load` 时显示 vConsole。
 
 
 #### V3.3.2 (2019-07-04)
 
-- `Feature(General)` 增加 TypeScript 声明文件。（by @jas0ncn）
-- `Fix(General)` 修复开关按钮拖动后位置不对的问题。（by @rexschuang）
-- `Fix(General)` 修复若干小问题。（by @stenders）
+- `Feature(Global)` 增加 TypeScript 声明文件。（by @jas0ncn）
+- `Fix(Global)` 修复开关按钮拖动后位置不对的问题。（by @rexschuang）
+- `Fix(Global)` 修复若干小问题。（by @stenders）
 - `Fix(Log)` 不在列表底部时避免自动滚动。（by @ele828）
 
 

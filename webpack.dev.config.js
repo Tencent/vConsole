@@ -23,7 +23,19 @@ module.exports = merge(baseConfig, {
     before(app) {
       app.post('*', (req, res) => {
         // res.redirect(req.originalUrl);
-        res.setHeader('content-type', 'application/json')
+        let contentType = '';
+        if (req.path.includes('.json')) {
+          contentType = 'application/json';
+        } else if (req.path.includes('.txt')) {
+          contentType = 'text/html';
+        } else if (req.path.includes('.png')) {
+          contentType = 'image/png';
+        } else if (req.path.includes('.blob')) {
+          contentType = 'application/octet-stream';
+        }
+        if (contentType) {
+          res.setHeader('content-type', contentType);
+        }
         res.send(fs.readFileSync(path.join(contentBase, req.path)));
       });
     }

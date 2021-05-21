@@ -16,8 +16,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 import tplNodeHead from './tpl_node_head.html';
 import tplNodeFoot from './tpl_node_foot.html';
 
-import * as tool from '../lib/tool.js';
-import $ from '../lib/query.js';
+// import * as tool from '../lib/tool.ts';
+import $ from '../lib/query.ts';
 
 class NodeView {
   

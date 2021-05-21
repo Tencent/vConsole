@@ -13,8 +13,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole Default Tab
  */
 
-import $ from '../lib/query.js';
-import * as tool from '../lib/tool.js';
+import $ from '../lib/query.ts';
+import * as tool from '../lib/tool.ts';
 import VConsoleLogTab from './log.js';
 import tplTabbox from './tabbox_default.html';
 import tplItemCode from './item_code.html';
@@ -233,30 +233,66 @@ class VConsoleDefaultTab extends VConsoleLogTab {
    */
   mockConsole() {
     super.mockConsole();
-    let that = this;
-    if (tool.isFunction(window.onerror)) {
-      this.windowOnError = window.onerror;
-    }
-    window.onerror = function (message, source, lineNo, colNo, error) {
-      let msg = message;
-      if (source) {
-        msg += "\n" + source.replace(location.origin, '');
+    this.cacheWindowOnError();
+    this.catchUnhandledRejection();
+  }
+
+
+  /**
+   * Cache window.onerror
+   * @private
+   */
+  cacheWindowOnError() {
+    const that = this;
+    window.addEventListener('error', function(event) {
+      let msg = event.message;
+      if (event.filename) {
+        msg += "\n" + event.filename.replace(location.origin, '');
       }
-      if (lineNo || colNo) {
-        msg += ':' + lineNo + ':' + colNo;
+      if (event.lineno || event.colno) {
+        msg += ':' + event.lineno + ':' + event.colno;
       }
-      //print error stack info
-      let stack = !!error && !!error.stack;
-      let statckInfo = (stack && error.stack.toString()) || '';
+      // print error stack info
+      const hasStack = !!event.error && !!event.error.stack;
+      const statckInfo = (hasStack && event.error.stack.toString()) || '';
       that.printLog({
         logType: 'error',
         logs: [msg, statckInfo],
         noOrigin: true
       });
-      if (tool.isFunction(that.windowOnError)) {
-        that.windowOnError.call(window, message, source, lineNo, colNo, error);
+    });
+  }
+
+  /**
+   * Promise.reject has no rejection handler
+   * about https://developer.mozilla.org/en-US/docs/Web/API/Window/unhandledrejection_event
+   * @private
+   */
+  catchUnhandledRejection() {
+    if ( !(tool.isWindow(window) && tool.isFunction(window.addEventListener)) ) {
+      return;
+    }
+    const that = this;
+    window.addEventListener('unhandledrejection', function (e) {
+      let error = e && e.reason;
+      const errorName = 'Uncaught (in promise) ';
+      let args = [errorName, error];
+      if(error instanceof Error){
+        args = [
+          errorName, 
+          {
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+          }
+        ]
       }
-    };
+      that.printLog({
+        logType: 'error',
+        logs: args,
+        noOrigin: true
+      });
+    });
   }
 
   /**

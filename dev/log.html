@@ -11,7 +11,7 @@
   <script type="module" src="../dist/vconsole.min.js"></script>
 </head>
 <body ontouchstart>
-  <div class="page">
+  <div id="page" class="page">
     <a onclick="formattedLog()" href="javascript:;" class="weui_btn weui_btn_default">formattedLog</a>
     <a onclick="styledLog()" href="javascript:;" class="weui_btn weui_btn_default">styledLog</a>
     <a onclick="normalObject()" href="javascript:;" class="weui_btn weui_btn_default">normalObject</a>
@@ -21,6 +21,7 @@
     <a onclick="smallArray()" href="javascript:;" class="weui_btn weui_btn_default">smallArray</a>
     <a onclick="repeatLog()" href="javascript:;" class="weui_btn weui_btn_default">repeatLog</a>
     <a onclick="windowError()" href="javascript:;" class="weui_btn weui_btn_default">window.error</a>
+    <a onclick="promiseReject()" href="javascript:;" class="weui_btn weui_btn_default">promiseReject</a>
     <a onclick="xssLog()" href="javascript:;" class="weui_btn weui_btn_default">XSS: Log</a>
     <a onclick="xssStorage()" href="javascript:;" class="weui_btn weui_btn_default">XSS: Storage</a>
     <a onclick="changeTheme()" href="javascript:;" class="weui_btn weui_btn_default">changeTheme</a>
@@ -136,6 +137,21 @@ function windowError() {
   console.info('windowError() End');
 }
 
+function promiseReject() {
+  console.info('promiseReject() Start');
+  Promise.reject('reject string');
+  Promise.reject(new Error('reject an Error'));
+  Promise.reject({message: 'reject an object'});
+  Promise.reject(666).then((result) => {
+    console.log('resolved', result);
+  }, (result) => {
+    console.log('rejected', result);
+  });
+  setTimeout(() => {
+    console.info('promiseReject() End');
+  }, 0)
+}
+
 function xssLog() {
   console.info('xssLog() Start');
   const arr = [
@@ -168,5 +184,4 @@ function changeTheme() {
   console.log('Current Theme:', theme);
   console.info('changeTheme() End');
 }
-
 </script>

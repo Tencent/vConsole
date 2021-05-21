@@ -9,13 +9,21 @@ http://opensource.org/licenses/MIT
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 */
 
+declare type VConsolePluginEvent = (data?: any) => void;
+
 /**
  * vConsole Plugin Class
  */
 
 class VConsolePlugin {
+  public isReady: boolean = false;
+  public eventList: { [eventName: string]: VConsolePluginEvent };
+  protected _id: string;
+  protected _name: string;
+  protected _vConsole: any;
   
-  constructor(id, name = 'newPlugin') {
+  constructor(...args);
+  constructor(id: string, name = 'newPlugin') {
     this.id = id;
     this.name = name;
     this.isReady = false;
@@ -59,24 +67,21 @@ class VConsolePlugin {
    * @param string
    * @param function
    */
-  on(eventName, callback) {
+  on(eventName: string, callback: VConsolePluginEvent) {
     this.eventList[eventName] = callback;
     return this;
   }
 
   /**
    * trigger an event
-   * @public
-   * @param string
-   * @param mixed
    */
-  trigger(eventName, data) {
+  trigger(eventName: string, data: any) {
     if (typeof this.eventList[eventName] === 'function') {
       // registered by `.on()` method
       this.eventList[eventName].call(this, data);
     } else {
       // registered by `.onXxx()` method
-      let method = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1);
+      const method = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1);
       if (typeof this[method] === 'function') {
         this[method].call(this, data);
       }

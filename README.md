@@ -17,34 +17,50 @@ A lightweight, extendable front-end developer tool for mobile web page.
 - Custom plugin
 
 
-## Usage
+## Installing
 
-Download the [latest release](https://github.com/Tencent/vConsole/releases/latest). (DO NOT copy `dist/vconsole.min.js` in the dev branch)
 
-Or, install via npm:
 
-```
-npm install vconsole
-```
-
-Import `dist/vconsole.min.js` to your project:
+Using unpkg CDN:
 
 ```html
-<script src="path/to/vconsole.min.js"></script>
+<script src="https://unpkg.com/vconsole/dist/vconsole.min.js"></script>
+```
+
+
+## Usage
+
+Method 1: Using npm (Recommanded)
+
+```bash
+$ npm install vconsole
+```
+
+```javascript
+import VConsole from 'vconsole';
+
+const vConsole = new VConsole();
+// or init with options
+const vConsole = new VConsole({ maxLogNumber: 1000 });
+
+// call `console` methods as usual
+console.log('Hello world');
+
+// remove it when you finish debugging
+vConsole.destroy();
+```
+
+Method 2: Using unpkg CDN in HTML:
+
+```html
+<script src="https://unpkg.com/vconsole/dist/vconsole.min.js"></script>
 <script>
-  // init vConsole
-  var vConsole = new VConsole();
-  console.log('Hello world');
+  // VConsole will be exported to `window.VConsole` by default.
+  var vConsole = new window.VConsole();
 </script>
 ```
 
-For TypeScript users:
-
-```javascript
-import 'path/to/vconsole.min.d.ts';
-```
-
-See [Tutorial](./doc/tutorial.md) for more details.
+See [Tutorial](./doc/tutorial.md) for more usage details.
 
 
 ## Preview

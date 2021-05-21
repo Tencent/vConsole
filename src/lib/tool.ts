@@ -15,10 +15,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 /**
  * get formatted date by timestamp
- * @param  int    time
- * @return  object
  */
-export function getDate(time) {
+export function getDate(time: number) {
   let d = time>0 ? new Date(time) : new Date();
   let day = d.getDate()<10 ? '0'+d.getDate() : d.getDate(),
     month = d.getMonth()<9 ? '0'+(d.getMonth()+1) : (d.getMonth()+1),
@@ -42,7 +40,7 @@ export function getDate(time) {
 
 /**
  * determines whether the passed value is a specific type
- * @param mixed value
+ * @param any value
  * @return boolean
  */
 export function isNumber(value) {
@@ -98,6 +96,13 @@ export function isWindow(value) {
 }
 
 /**
+ * Get the prototype name of an object
+ */
+export function getPrototypeName(value) {
+  return <string>Object.prototype.toString.call(value).replace(/\[object (.*)\]/, '$1');
+}
+
+/**
  * check whether an object is plain (using {})
  * @param object obj
  * @return boolean
@@ -117,7 +122,7 @@ export function isPlainObject(obj) {
   }
   let key;
   for (key in obj) {}
-  return key === undefined || hasOwn.call(obj, key);
+  return key === undefined || <boolean>hasOwn.call(obj, key);
 }
 
 
@@ -126,7 +131,7 @@ export function isPlainObject(obj) {
  * @param string text
  * @return string
  */
-export function htmlEncode(text) {
+export function htmlEncode(text: string) {
   // return document.createElement('a').appendChild( document.createTextNode(text) ).parentNode.innerHTML;
   return String(text).replace(/[<>&" ]/g, (c) => {
     return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', ' ': '&nbsp;' }[c];
@@ -136,10 +141,8 @@ export function htmlEncode(text) {
 
 /**
  * Change invisible characters to visible characters
- * @param {*} text 
- * @returns 
  */
-export function invisibleTextEncode(text) {
+export function invisibleTextEncode(text: string) {
   return String(text).replace(/[\n\t]/g, (c) => {
     return { '\n': '\\n', '\t': '\\t' }[c];
   });
@@ -226,7 +229,7 @@ export function getObjAllKeys(obj) {
   for (let k in obj) {
     keys.push(k);
   }
-  return keys.sort((a, b) => {
+  return <string[]>keys.sort((a, b) => {
     return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
   });
 }
@@ -235,20 +238,20 @@ export function getObjAllKeys(obj) {
  * get an object's prototype name
  */
 export function getObjName(obj) {
-  return Object.prototype.toString.call(obj).replace('[object ', '').replace(']', '');
+  return <string>Object.prototype.toString.call(obj).replace('[object ', '').replace(']', '');
 }
 
 /**
  * localStorage methods
  */
-export function setStorage(key, value) {
+export function setStorage(key: string, value: string) {
   if (!window.localStorage) {
     return;
   }
   key = 'vConsole_' + key;
   localStorage.setItem(key, value);
 }
-export function getStorage(key) {
+export function getStorage(key: string) {
   if (!window.localStorage) {
     return;
   }

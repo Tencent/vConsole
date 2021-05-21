@@ -15,12 +15,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 import MutationObserver from 'mutation-observer'
 import './style.less';
-import VConsolePlugin from '../lib/plugin.js';
+import VConsolePlugin from '../lib/plugin.ts';
 import tplTabbox from './tabbox.html';
 import NodeView from './node_view.js';
 
-import * as tool from '../lib/tool.js';
-import $ from '../lib/query.js';
+// import * as tool from '../lib/tool.ts';
+import $ from '../lib/query.ts';
 
 class VConsoleElementsTab extends VConsolePlugin {
 
@@ -212,7 +212,7 @@ class VConsoleElementsTab extends VConsolePlugin {
     node = this.getNode(mutation.target);
     // update view
     if (node.view) {
-      this.renderView(node, node.view, true);
+      this.renderView(node, node.view, 'replace');
     }
   }
 
@@ -225,7 +225,7 @@ class VConsoleElementsTab extends VConsolePlugin {
     node = this.getNode(mutation.target);
     // update view
     if (node.view) {
-      this.renderView(node, node.view, true);
+      this.renderView(node, node.view, 'replace');
     }
   }
 

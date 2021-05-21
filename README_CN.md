@@ -19,29 +19,36 @@ vConsole
 
 ## 上手
 
-下载 vConsole 的[最新版本](https://github.com/Tencent/vConsole/releases/latest)。（不要直接下载 dev 分支下的 `dist/vconsole.min.js`）
+方法一：使用 npm（推荐）
 
-或者使用 npm 安装：
-
-```
-npm install vconsole
+```bash
+$ npm install vconsole
 ```
 
-引入 `dist/vconsole.min.js` 到项目中：
-
-```html
-<script src="path/to/vconsole.min.js"></script>
-<script>
-  // 初始化
-  var vConsole = new VConsole();
-  console.log('Hello world');
-</script>
-```
-
-对于 TypeScript，可引入 d.ts 文件：
+Import 并初始化后，即可使用 `console.log` 功能，如 Chrome devtools 上一样。
 
 ```javascript
-import 'path/to/vconsole.min.d.ts';
+import VConsole from 'vconsole';
+
+const vConsole = new VConsole();
+// 或者使用 options 选项初始化
+const vConsole = new VConsole({ maxLogNumber: 1000 });
+
+// 接下来即可照常使用 `console` 等方法
+console.log('Hello world');
+
+// 结束调试后，可移除掉
+vConsole.destroy();
+```
+
+方法二：使用 unpkg 的 CDN 直接插入到 HTML
+
+```html
+<script src="https://unpkg.com/vconsole/dist/vconsole.min.js"></script>
+<script>
+  // VConsole 默认会挂载到 `window.VConsole` 上
+  var vConsole = new window.VConsole();
+</script>
 ```
 
 详细使用方法请参阅[使用教程](./doc/tutorial_CN.md)。
