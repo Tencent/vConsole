@@ -227,7 +227,6 @@ class VConsoleStorageTab extends VConsolePlugin {
       let uri = '.' + uris[uris.length - 1];
       for (let j = uris.length - 2; j >= 0; j--) {
         uri = '.' + uris[j] + uri;
-        console.log(name, uri);
         document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${uri};`;
       }
     }
