@@ -1,6 +1,6 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### 3.6.0 (2021-05-241)
+#### 3.6.1 (2021-05-24)
 
 - `Fix(Network)` Fix "Invalid base URL" error. (PR #402)
 
