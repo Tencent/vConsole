@@ -1,5 +1,10 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### 3.6.1 (2021-05-24)
+
+- `Fix(Network)` 修复 "Invalid base URL" 错误。 (PR #402)
+
+
 #### 3.6.0 (2021-05-21)
 
 - `Feat(Log)` 新增输出 `unhandledrejection` 类型日志。 (PR #389 by @zimv)

@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### 3.6.0 (2021-05-241)
+
+- `Fix(Network)` Fix "Invalid base URL" error. (PR #402)
+
+
 #### 3.6.0 (2021-05-21)
 
 - `Feat(Log)` Print `unhandledrejection` log. (PR #389 by @zimv)
