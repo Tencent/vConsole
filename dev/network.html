@@ -63,7 +63,7 @@ function postAjax() {
 
 function getAjax() {
   console.info('getAjax() Start, response should be logged after End');
-  const url = './data/success.json?method=xhrGet&id=' + Math.random() + '&<xss0>';
+  const url = window.location.origin + '/dev/data/success.json?method=xhrGet&id=' + Math.random() + '&<xss0>';
   const xhr = new XMLHttpRequest();
   xhr.open('GET', url);
   xhr.setRequestHeader('custom-header', 'foobar');
