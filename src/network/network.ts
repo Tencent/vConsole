@@ -499,10 +499,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
       if (Object.prototype.toString.call(requestHeader) === '[object Headers]') {
         item.requestHeader = {};
-        // @ts-ignore
-        for (let pair of requestHeader.entries()) {
-          item.requestHeader[pair[0]] = pair[1];
-        }
+        (<Headers>requestHeader).forEach((value, key) => {
+          item.requestHeader[key] = value;
+        });
       } else {
         item.requestHeader = requestHeader;
       }
@@ -534,10 +533,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
         item.statusText = String(response.status);
 
         item.header = {};
-        // @ts-ignore
-        for (let pair of response.headers.entries()) {
-          item.header[pair[0]] = pair[1];
-        }
+        response.headers.forEach((value, key) => {
+          item.header[key] = value;
+        });
         item.readyState = 4;
 
         // parse response body by Content-Type
