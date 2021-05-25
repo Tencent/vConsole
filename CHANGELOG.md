@@ -3,6 +3,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 #### 3.6.2 (2021-MM-DD)
 
 - `Fix(Network)` Use `forEach` instead of `.entries()` when traversing headers. (issue #404)
+- `Chore(Storage)` Convert Storage panel to `.ts` file.
 
 
 #### 3.6.1 (2021-05-24)

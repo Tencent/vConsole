@@ -13,6 +13,7 @@
 <body ontouchstart>
   <div class="page">
     <a onclick="setCookie()" href="javascript:;" class="weui_btn weui_btn_default">setCookie</a>
+    <a onclick="largeStorage()" href="javascript:;" class="weui_btn weui_btn_default">largeStorage</a>
   </div>
 </body>
 </html>
@@ -91,5 +92,16 @@ function getCookieList() {
     });
   }
   return list;
+}
+
+function largeStorage() {
+  console.info('largeStorage() Start');
+  let value = '';
+  for (let i = 0; i <= 200000; i++) {
+    value += Math.random().toString(36).replace(/[^a-z]+/g, '');
+  }
+  console.log('large value:', value);
+  localStorage.setItem('largeItem', value);
+  console.info('largeStorage() End');
 }
 </script>

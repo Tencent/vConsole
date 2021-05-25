@@ -31,7 +31,7 @@ import VConsoleDefaultPlugin from '../log/default.js';
 import VConsoleSystemPlugin from '../log/system.js';
 import VConsoleNetworkPlugin from '../network/network.ts';
 import VConsoleElementPlugin from '../element/element.js';
-import VConsoleStoragePlugin from '../storage/storage.js';
+import VConsoleStoragePlugin from '../storage/storage.ts';
 
 const VCONSOLE_ID = '#__vconsole';
 

@@ -9,7 +9,7 @@ export default class Mito {
   /**
    * Render `tpl` with `data` into a HTML string.
    */
-  public render<T extends true>(tpl: string, data: any, toString: T): String;
+  public render<T extends true>(tpl: string, data: any, toString: T): string;
   /**
    * Render `tpl` with `data` into a HTML element.
    */

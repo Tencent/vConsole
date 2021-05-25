@@ -13,35 +13,31 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole Storage Plugin
  */
 
-import VConsolePlugin from '../lib/plugin.ts';
+import VConsolePlugin from '../lib/plugin';
 import tplTabbox from './tabbox.html';
 import tplList from './list.html';
 
-// import * as tool from '../lib/tool.ts';
-import $ from '../lib/query.ts';
+// import * as tool from '../lib/tool';
+import $ from '../lib/query';
 
 class VConsoleStorageTab extends VConsolePlugin {
+  $tabbox: Element = $.render(tplTabbox, {});
+  currentType: '' | 'cookies' | 'localstorage' | 'sessionstorage' = '';
+  typeNameMap = {
+    'cookies': 'Cookies',
+    'localstorage': 'LocalStorage',
+    'sessionstorage': 'SessionStorage'
+  };
 
-  constructor(...args) {
-    super(...args);
-
-    this.$tabbox = $.render(tplTabbox, {});
-    this.currentType = ''; // cookies, localstorage, ...
-    this.typeNameMap = {
-      'cookies': 'Cookies',
-      'localstorage': 'LocalStorage',
-      'sessionstorage': 'SessionStorage'
-    }
-  }
 
   onRenderTab(callback) {
     callback(this.$tabbox);
   }
 
   onAddTopBar(callback) {
-    let that = this;
-    let types = ['Cookies', 'LocalStorage', 'SessionStorage'];
-    let btnList = [];
+    const that = this;
+    const types = Object.values(this.typeNameMap); // ['Cookies', 'LocalStorage', 'SessionStorage'];
+    const btnList: Array<{name: string, data: {}, className: string, onClick: Function}> = [];
     for (let i = 0; i < types.length; i++) {
       btnList.push({
         name: types[i],
