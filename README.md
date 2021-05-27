@@ -21,6 +21,9 @@ A lightweight, extendable front-end developer tool for mobile web page.
 
 Method 1: Using npm (Recommanded)
 
+```bash
+$ npm install vconsole
+```
 
 ```javascript
 import VConsole from 'vconsole';

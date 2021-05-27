@@ -236,4 +236,32 @@ function axiosRequest(method) {
   });
   console.info('axiosRequest() End');
 }
+
+function optionsXHR() {
+  console.info('optionsXHR() Start');
+  const url = window.location.origin + '/dev/data/500.json?method=optionsXHR&id=' + Math.random() + '&<xss0>';
+  const xhr = new XMLHttpRequest();
+  xhr.open('OPTIONS', url);
+  xhr.setRequestHeader('custom-header', 'foobar');
+  xhr.send();
+  xhr.onload = () => {
+    console.log('optionsXHR Response:', xhr.response);
+  };
+  xhr.onerror = () => {
+    console.log('optionsXHR Error');
+  };
+  console.info('optionsXHR() End');
+}
+
+function optionsFetch() {
+  console.info('optionsFetch() Start');
+  window.fetch('./data/403.json?method=optionsFetch', {
+    method: 'OPTIONS',
+  }).then((data) => {
+    console.log('optionsFetch Response:', data);
+  }).catch((error) => {
+    console.error('optionsFetch Error:', error);
+  });
+  console.info('optionsFetch() End');
+}
 </script>
