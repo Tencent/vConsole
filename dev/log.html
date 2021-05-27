@@ -24,7 +24,9 @@
     <a onclick="promiseReject()" href="javascript:;" class="weui_btn weui_btn_default">promiseReject</a>
     <a onclick="xssLog()" href="javascript:;" class="weui_btn weui_btn_default">XSS: Log</a>
     <a onclick="xssStorage()" href="javascript:;" class="weui_btn weui_btn_default">XSS: Storage</a>
-    <a onclick="changeTheme()" href="javascript:;" class="weui_btn weui_btn_default">changeTheme</a>
+    <a onclick="changeTheme('dark')" href="javascript:;" class="weui_btn weui_btn_default">Theme:dark</a>
+    <a onclick="changeTheme('light')" href="javascript:;" class="weui_btn weui_btn_default">Theme:light</a>
+    <a onclick="changeTheme('')" href="javascript:;" class="weui_btn weui_btn_default">Theme:auto</a>
   </div>
 </body>
 </html>
@@ -35,6 +37,7 @@ import '../dist/vconsole.min.js';
 window.vConsole = new window.VConsole({
   maxLogNumber: 1000,
   // disableLogScrolling: true,
+  // theme: 'dark',
   onReady: function() {
     console.log('vConsole is ready.');
   },
@@ -176,12 +179,10 @@ function xssStorage() {
   console.info('xssStorage() End');
 }
 
-let theme = 'light';
-function changeTheme() {
+function changeTheme(theme) {
   console.info('changeTheme() Start');
-  theme = theme === 'light' ? 'dark' : 'light';
   window.vConsole.setOption('theme', theme);
-  console.log('Current Theme:', theme);
+  console.log('Current Theme:', theme || 'auto');
   console.info('changeTheme() End');
 }
 </script>

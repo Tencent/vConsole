@@ -179,7 +179,10 @@ class VConsole {
   * @private 
   */
   _updateTheme() {
-    const theme = this.option.theme || 'light';
+    let theme = this.option.theme;
+    if (theme !== 'light' && theme !== 'dark') {
+      theme = ''; // use system theme
+    }
     this.$dom.setAttribute('data-theme', theme);
   }
 
