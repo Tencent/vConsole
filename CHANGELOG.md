@@ -1,9 +1,11 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### 3.6.2 (2021-MM-DD)
+#### 3.7.0 (2021-MM-DD)
 
-- `Fix(Network)` Use `forEach` instead of `.entries()` when traversing headers. (issue #404)
+- `Feat(Storage)` Show preview value to prevent large raw value blocking rendering.
+- `Feat(Storage)` Add copy button and delete button.
 - `Chore(Storage)` Convert Storage panel to `.ts` file.
+- `Fix(Network)` Use `forEach` instead of `.entries()` when traversing headers. (issue #404)
 
 
 #### 3.6.1 (2021-05-24)

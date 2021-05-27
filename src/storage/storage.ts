@@ -109,6 +109,28 @@ class VConsoleStorageTab extends VConsolePlugin {
       return text;
     });
 
+    // delete
+    $.delegate(this.$tabbox, 'click', '.vc-item-delete', (e) => {
+      const { id } = (<Element>e.target).closest('.vc-item-id');
+      const item = this.getListItem(id);
+      if (!item || !window.confirm) { return; }
+      if (!window.confirm(`Delete this record?`)) { return; }
+
+      const result = this.deleteItem(item.name);
+      if (!result) { return; }
+
+      const $dom = this.$domList[id];
+      $dom.parentElement.removeChild($dom);
+      delete this.$domList[id];
+
+      for (let i = 0; i < this.list.length; i++) {
+        if (this.list[i].id === id) {
+          this.list.splice(i, 1);
+          break;
+        }
+      }
+    });
+
     // show more
     $.delegate(this.$tabbox, 'click', '.vc-item-showmore', (e) => {
       const { id } = (<Element>e.target).closest('.vc-item-id');
@@ -143,7 +165,7 @@ class VConsoleStorageTab extends VConsolePlugin {
 
   clearLog() {
     if (this.currentType && window.confirm) {
-      const result = window.confirm(`Remove all ${this.typeNameMap[this.currentType]}?`);
+      const result = window.confirm(`Delete all ${this.typeNameMap[this.currentType]}?`);
       if (!result) {
         return false;
       }
@@ -239,6 +261,33 @@ class VConsoleStorageTab extends VConsolePlugin {
     }
   }
 
+  private deleteItem(key: string) {
+    switch (this.currentType) {
+      case 'cookies':
+        return this.deleteCookie(key);
+      case 'localstorage':
+        return this.deleteLocalStorage(key);
+      case 'sessionstorage':
+        return this.deleteSessionStorage(key);
+    }
+    return false;
+  }
+
+  deleteCookie(key: string) {
+    if (!document.cookie || !navigator.cookieEnabled) {
+      return false;
+    }
+    const uris = window.location.hostname.split('.');
+    document.cookie = `${key}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    document.cookie = `${key}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+    let uri = '.' + uris[uris.length - 1];
+    for (let j = uris.length - 2; j >= 0; j--) {
+      uri = '.' + uris[j] + uri;
+      document.cookie = `${key}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${uri};`;
+    }
+    return true;
+  }
+
   getCookieValue(key: string) {
     if (!document.cookie || !navigator.cookieEnabled) {
       return '';
@@ -288,6 +337,16 @@ class VConsoleStorageTab extends VConsolePlugin {
     return list;
   }
 
+  deleteLocalStorage(key: string) {
+    if (!window.localStorage) { return false; }
+    try {
+      localStorage.removeItem(key);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   getLocalStorageValue(key: string) {
     if (!window.localStorage) {
       return '';
@@ -317,6 +376,16 @@ class VConsoleStorageTab extends VConsolePlugin {
       return list;
     } catch (e) {
       return [];
+    }
+  }
+
+  deleteSessionStorage(key: string) {
+    if (!window.sessionStorage) { return false; }
+    try {
+      sessionStorage.removeItem(key);
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 
@@ -390,6 +459,15 @@ class VConsoleStorageTab extends VConsolePlugin {
         alert('sessionStorage.clear() fail.');
       }
     }
+  }
+
+  private getListItem(id: string) {
+    for (let i = 0; i < this.list.length; i++) {
+      if (this.list[i].id === id) {
+        return this.list[i];
+      }
+    }
+    return null;
   }
 
 } // END Class
