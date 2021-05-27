@@ -13,7 +13,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole Basic Log Tab
  */
 
-import copy from 'copy-text-to-clipboard';
 import * as tool from '../lib/tool.ts';
 import $ from '../lib/query.ts';
 import VConsolePlugin from '../lib/plugin.ts';
@@ -21,6 +20,7 @@ import tplItem from './item.html';
 import tplLineLog from './item_line_log.html';
 import tplFold from './item_fold.html';
 import tplFoldCode from './item_fold_code.html';
+import VConsoleItemCopy from '../component/item_copy';
 
 const DEFAULT_MAX_LOG_NUMBER = 1000;
 const ADDED_LOG_TAB_ID = [];
@@ -154,18 +154,8 @@ class VConsoleLogTab extends VConsolePlugin {
     that.logList = [];
 
     // copy
-    $.delegate(that.$tabbox, 'click', '.vc-item-copy', (e) => {
-      const btn = e.target.closest('.vc-item-copy');
-      const { id } = btn.closest('.vc-item');
-      const text = that.cachedLogs[id];
-
-      if (text != null && copy(text, { target: document.documentElement })) {
-        btn.classList.add('vc-item-copy-success');
-
-        setTimeout(() => {
-          btn.classList.remove('vc-item-copy-success');
-        }, 600);
-      };
+    VConsoleItemCopy.delegate(this.$tabbox, (id) => {
+      return that.cachedLogs[id];
     });
   }
 
@@ -482,7 +472,8 @@ class VConsoleLogTab extends VConsolePlugin {
     let $line = $.render(tplItem, {
       _id: item._id,
       logType: item.logType,
-      style: item.style || ''
+      style: item.style || '',
+      btnCopy: VConsoleItemCopy.html,
     });
 
     // find %c keyword in first log only
