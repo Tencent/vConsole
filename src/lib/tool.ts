@@ -197,6 +197,45 @@ export function JSONStringify(stringObject) {
   return str;
 }
 
+export function getStringBytes(str: string) {
+  try {
+    return encodeURI(str).split(/%(?:u[0-9A-F]{2})?[0-9A-F]{2}|./).length - 1;
+  } catch (e) {
+    return 0;
+  }
+}
+
+export function getBytesText(bytes: number) {
+  if (bytes <= 0) {
+    return '';
+  }
+  if (bytes >= 1024 * 1024) {
+    return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+  }
+  if (bytes >= 1024 * 1) {
+    return (bytes / 1024).toFixed(1) + ' KB';
+  }
+  return bytes + ' B';
+}
+
+export function subString(str: string, len: number) {    
+  const r = /[^\x00-\xff]/g; 
+  let m: number;  
+
+  if (str.replace(r, '**').length > len) {
+    m = Math.floor(len / 2);  
+
+    for (let i = m, l = str.length; i < l; i++) {    
+      const sub = str.substr(0, i);
+      if (sub.replace(r, '**').length >= len) {    
+        return sub; 
+      }    
+    } 
+  }
+
+  return str;
+}
+
 export function circularReplacer() {
   const seen = [];
   return (key, value) => {
@@ -208,7 +247,7 @@ export function circularReplacer() {
     }
     return value;
   };
-};
+}
 
 /**
  * get an object's all keys ignore whether they are not enumerable

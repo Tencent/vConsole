@@ -89,6 +89,10 @@ class VConsolePlugin {
     return this;
   }
 
+  protected getUniqueID(prefix: string = '') {
+    return '__vc_' + prefix + Math.random().toString(36).substring(2, 8);
+  }
+
 } // END class
 
 export default VConsolePlugin;

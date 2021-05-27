@@ -390,7 +390,7 @@ class VConsoleLogTab extends VConsolePlugin {
 
     // add id
     if (!item._id) {
-      item._id = '__vc_' + Math.random().toString(36).substring(2, 8);
+      item._id = this.getUniqueID();
     }
 
     // save log date

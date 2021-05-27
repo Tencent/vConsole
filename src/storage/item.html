@@ -1,0 +1,12 @@
+<dl id="{{item.id}}" class="vc-table-row vc-item-id">
+  <dd class="vc-table-col"><i class="vc-table-col-value">{{visibleText(text(item.name))}}</i></dd>
+  <dd class="vc-table-col vc-table-col-2">
+    {{if (item.showPreview)}}
+      <i class="vc-table-col-value">{{text(item.previewValue)}}</i>
+      <i class="vc-item-tips vc-item-showmore">Show more ({{item.bytesText}})</i>
+    {{else}}
+      <i class="vc-table-col-value">{{text(item.value)}}</i>
+    {{/if}}
+    {{btnCopy}}
+  </dd>
+</dl>

@@ -16,14 +16,33 @@ Unless required by applicable law or agreed to in writing, software distributed 
 import VConsolePlugin from '../lib/plugin';
 import tplTabbox from './tabbox.html';
 import tplList from './list.html';
+import tplItem from './item.html';
 
-// import * as tool from '../lib/tool';
+import VConsoleItemCopy from '../component/item_copy';
+import * as tool from '../lib/tool';
 import $ from '../lib/query';
 
+declare type VConsoleStorageType = 'cookies' | 'localstorage' | 'sessionstorage';
+
+declare interface VConsoleStorageRawItem {
+  name: string;
+  value: string;
+}
+
+declare interface VConsoleStorageItem extends VConsoleStorageRawItem {
+  id: string;
+  previewValue: string;
+  showPreview: boolean;
+  bytes: number;
+  bytesText: string;
+}
+
 class VConsoleStorageTab extends VConsolePlugin {
-  $tabbox: Element = $.render(tplTabbox, {});
-  currentType: '' | 'cookies' | 'localstorage' | 'sessionstorage' = '';
-  typeNameMap = {
+  protected list: VConsoleStorageItem[] = [];
+  protected $domList: { [id: string]: Element } = {};
+  private $tabbox: Element = $.render(tplTabbox, {});
+  private currentType: '' | VConsoleStorageType = '';
+  private typeNameMap = {
     'cookies': 'Cookies',
     'localstorage': 'LocalStorage',
     'sessionstorage': 'SessionStorage'
@@ -60,8 +79,8 @@ class VConsoleStorageTab extends VConsolePlugin {
   }
 
   onAddTool(callback) {
-    let that = this;
-    let toolList = [{
+    const that = this;
+    const toolList = [{
       name: 'Refresh',
       global: false,
       onClick: function(e) {
@@ -78,12 +97,45 @@ class VConsoleStorageTab extends VConsolePlugin {
   }
 
   onReady() {
-    // do nothing
+    // copy
+    VConsoleItemCopy.delegate(this.$tabbox, (id: string) => {
+      let text = null;
+      for (let i = 0; i < this.list.length; i++) {
+        if (this.list[i].id === id) {
+          text = this.list[i].name + '=' + this.list[i].value;
+          break;
+        }
+      }
+      return text;
+    });
+
+    // show more
+    $.delegate(this.$tabbox, 'click', '.vc-item-showmore', (e) => {
+      const { id } = (<Element>e.target).closest('.vc-item-id');
+      let item: VConsoleStorageItem;
+      for (let i = 0; i < this.list.length; i++) {
+        if (this.list[i].id === id) {
+          item = this.list[i];
+          break;
+        }
+      }
+      if (!item) { return; }
+
+      item.showPreview = false;
+      item.value = this.getItemValue(item.name);
+
+      const $dom = $.render(tplItem, {
+        item: item,
+        btnCopy: VConsoleItemCopy.html,
+      });
+      this.$domList[id].replaceWith($dom);
+      this.$domList[id] = $dom;
+    });
   }
 
   onShow() {
     // show default panel
-    if (this.currentType == '') {
+    if (this.currentType === '') {
       this.currentType = 'cookies';
       this.renderStorage();
     }
@@ -91,7 +143,7 @@ class VConsoleStorageTab extends VConsolePlugin {
 
   clearLog() {
     if (this.currentType && window.confirm) {
-      let result = window.confirm('Remove all ' + this.typeNameMap[this.currentType] + '?');
+      const result = window.confirm(`Remove all ${this.typeNameMap[this.currentType]}?`);
       if (!result) {
         return false;
       }
@@ -113,7 +165,13 @@ class VConsoleStorageTab extends VConsolePlugin {
   }
 
   renderStorage() {
-    let list = [];
+    const PREVIEW_LIMIT = 1024 * 1; // KB
+    let list: VConsoleStorageRawItem[] = [];
+
+    const $log = $.one('.vc-log', this.$tabbox);
+    $.removeChildren($log);
+    this.list = [];
+    this.$domList = {};
 
     switch (this.currentType) {
       case 'cookies':
@@ -129,17 +187,79 @@ class VConsoleStorageTab extends VConsolePlugin {
         return false;
     }
 
-    let $log = $.one('.vc-log', this.$tabbox);
-    if (list.length == 0) {
-      $log.innerHTML = '';
-    } else {
-      // html encode for rendering
-      for (let i=0; i<list.length; i++) {
-        list[i].name = list[i].name;
-        list[i].value = list[i].value;
+    if (list.length > 0) {
+      const $table = $.render(tplList, {});
+      const $list = $.one('.vc-storage-list', $table);
+
+      for (let i = 0; i < list.length; i++) {
+        const bytes = tool.getStringBytes(list[i].value);
+        const id = this.getUniqueID();
+        const item: VConsoleStorageItem = {
+          id: id,
+          name: list[i].name,
+          value: '', // do not keep raw value to save memory
+          previewValue: '',
+          showPreview: false,
+          bytes: bytes,
+          bytesText: tool.getBytesText(bytes),
+        };
+        if (item.bytes > PREVIEW_LIMIT) {
+          item.previewValue = tool.subString(list[i].value, PREVIEW_LIMIT);
+          item.showPreview = true;
+        } else {
+          item.value = list[i].value;
+        }
+        this.list.push(item);
+
+        const $dom = $.render(tplItem, {
+          item: item,
+          btnCopy: VConsoleItemCopy.html,
+        });
+        this.$domList[id] = $dom;
+        $list.appendChild($dom);
       }
-      $log.innerHTML = $.render(tplList, {list: list}, true);
+      
+      $log.appendChild($table);
     }
+  }
+
+  getItemValue(key: string) {
+    switch (this.currentType) {
+      case 'cookies':
+        return this.getCookieValue(key);
+        break;
+      case 'localstorage':
+        return this.getLocalStorageValue(key);
+        break;
+      case 'sessionstorage':
+        return this.getSessionStorageValue(key);
+        break;
+      default:
+        return '';
+    }
+  }
+
+  getCookieValue(key: string) {
+    if (!document.cookie || !navigator.cookieEnabled) {
+      return '';
+    }
+
+    const items = document.cookie.split(';');
+    for (let i=0; i<items.length; i++) {
+      let item = items[i].split('=');
+      let name = item.shift().replace(/^ /, ''),
+          value = item.join('=');
+      try {
+        name = decodeURIComponent(name);
+        value = decodeURIComponent(value);
+      } catch(e) {
+        
+      }
+      if (name === key) {
+        return value;
+      }
+    }
+    return '';
   }
 
   getCookieList() {
@@ -147,7 +267,7 @@ class VConsoleStorageTab extends VConsolePlugin {
       return [];
     }
 
-    let list = [];
+    let list: VConsoleStorageRawItem[] = [];
     let items = document.cookie.split(';');
     for (let i=0; i<items.length; i++) {
       let item = items[i].split('=');
@@ -168,13 +288,24 @@ class VConsoleStorageTab extends VConsolePlugin {
     return list;
   }
 
+  getLocalStorageValue(key: string) {
+    if (!window.localStorage) {
+      return '';
+    }
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      return '';
+    }
+  }
+
   getLocalStorageList() {
     if (!window.localStorage) {
       return [];
     }
 
     try {
-      let list = []
+      let list: VConsoleStorageRawItem[] = []
       for (var i = 0; i < localStorage.length; i++) {
         let name = localStorage.key(i),
             value = localStorage.getItem(name);
@@ -189,13 +320,24 @@ class VConsoleStorageTab extends VConsolePlugin {
     }
   }
 
+  getSessionStorageValue(key: string) {
+    if (!window.sessionStorage) {
+      return '';
+    }
+    try {
+      return sessionStorage.getItem(key);
+    } catch (e) {
+      return '';
+    }
+  }
+
   getSessionStorageList() {
     if (!window.sessionStorage) {
       return [];
     }
 
     try {
-      let list = []
+      let list: VConsoleStorageRawItem[] = []
       for (var i = 0; i < sessionStorage.length; i++) {
         let name = sessionStorage.key(i),
             value = sessionStorage.getItem(name);

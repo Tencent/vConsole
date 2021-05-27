@@ -285,27 +285,6 @@
         background-color: #42597F;
         border-radius: @fontSize / 1.5;
       }
-
-      .vc-item-copy {
-        float: right;
-  
-        .vc-icon-clippy {
-          display: block;
-          fill: var(--VC-FG-2);
-        }
-        .vc-icon-check {
-          display: none;
-          fill: var(--VC-TEXTGREEN);
-        }
-      }
-      .vc-item-copy-success {
-        .vc-icon-clippy {
-          display: none;
-        }
-        .vc-icon-check {
-          display: block;
-        }
-      }
     }
 
     .vc-item.vc-item-error .vc-item-repeat {
@@ -386,6 +365,37 @@
       .vc-fold-outer .vc-code-key {
         margin-left: 0;
       }
+    }
+
+    .vc-item-copy {
+      float: right;
+      word-break: normal;
+      white-space: normal;
+
+      .vc-icon-clippy {
+        display: block;
+        fill: var(--VC-FG-2);
+      }
+      .vc-icon-check {
+        display: none;
+        fill: var(--VC-TEXTGREEN);
+      }
+    }
+    .vc-item-copy-success {
+      .vc-icon-clippy {
+        display: none;
+      }
+      .vc-icon-check {
+        display: block;
+      }
+    }
+
+    .vc-item-tips {
+      background-color: var(--VC-FG-3);
+      color: var(--VC-FG);
+      font-size: 11em / @font;
+      padding: 2px 4px;
+      border-radius: 4px;
     }
 
     .vc-code-key {
@@ -544,11 +554,14 @@
         padding: 3em / @font 4em / @font;
         border-left: 1px solid var(--VC-FG-3);
         overflow: auto;
-        white-space: pre-wrap;
-        word-break: break-word;
-        /*white-space: nowrap;
-        text-overflow: ellipsis;*/
-        -webkit-overflow-scrolling: touch;
+
+        .vc-table-col-value {
+          white-space: pre-wrap;
+          word-break: break-word;
+          /*white-space: nowrap;
+          text-overflow: ellipsis;*/
+          -webkit-overflow-scrolling: touch;
+        }
       }
       .vc-table-col:first-child {
         border: none;

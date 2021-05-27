@@ -13,6 +13,7 @@
 <body ontouchstart>
   <div class="page">
     <a onclick="setCookie()" href="javascript:;" class="weui_btn weui_btn_default">setCookie</a>
+    <a onclick="setDomainCookie()" href="javascript:;" class="weui_btn weui_btn_default">setDomainCookie</a>
     <a onclick="largeStorage()" href="javascript:;" class="weui_btn weui_btn_default">largeStorage</a>
   </div>
 </body>
@@ -38,14 +39,24 @@ window.vConsole = new window.VConsole({
 function setCookie() {
   console.info('setCookie() Start');
   const expires = (new Date('2030-12-17T03:24:00')).toUTCString();
+  document.cookie = `foo1=bar1; expires=${expires}; path=/;`
+  console.info('setCookie() End');
+}
+
+function setDomainCookie() {
+  console.info('setDomainCookie() Start');
+  const expires = (new Date('2030-12-17T03:24:00')).toUTCString();
   document.cookie = `foo1=bar1; expires=${expires}; path=/; domain=b.com;`
   document.cookie = `foo2=bar2; expires=${expires}; path=/; domain=.b.com;`
   document.cookie = `foo3=bar3; expires=${expires}; path=/; domain=a.b.com;`
   document.cookie = `foo4=bar4; expires=${expires}; path=/; domain=.a.b.com;`
+
+  document.cookie = `foo1=bar1; expires=${expires}; path=/; domain=a.b.com;`
+
   setTimeout(() => {
     // clearCookieList();
   }, 10);
-  console.info('setCookie() End');
+  console.info('setDomainCookie() End');
 }
 
 function clearCookieList() {
@@ -96,12 +107,13 @@ function getCookieList() {
 
 function largeStorage() {
   console.info('largeStorage() Start');
+  const txt = ['NN\n', '的', '中', '英', '日', '非', '你好', '大海', '世界', '地球村', '宇宙中心', '黑洞', '星际'];
   let value = '';
-  for (let i = 0; i <= 200000; i++) {
-    value += Math.random().toString(36).replace(/[^a-z]+/g, '');
+  for (let i = 0; i <= 100000; i++) {
+    value += Math.random().toString(36).replace(/[^a-z]+/g, '') + txt[Math.floor(Math.random() * txt.length)];
   }
   console.log('large value:', value);
-  localStorage.setItem('largeItem', value);
+  localStorage.setItem('MassiveHugeLargeBigItem', value);
   console.info('largeStorage() End');
 }
 </script>
