@@ -7,6 +7,7 @@
 - `Feat(Global)` 当初始参数 `theme` 为空时，跟随系统默认主题色。
 - `Chore(Storage)` 转换 Storage 面板为 `.ts` 文件。
 - `Fix(Network)` 使用 `forEach` 而非 `.entries()` 来遍历 `headers` 以避免一些兼容性问题。 (issue #404)
+- `Fix(Network)` 修复 `Content-Type` 为空时导致的报错。
 
 
 #### 3.6.1 (2021-05-24)

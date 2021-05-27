@@ -540,10 +540,10 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
         // parse response body by Content-Type
         const contentType = response.headers.get('content-type');
-        if (contentType.includes('application/json')) {
+        if (contentType && contentType.includes('application/json')) {
           item.responseType = 'json';
           return response.clone().text();
-        } else if (contentType.includes('text/html')) {
+        } else if (contentType && contentType.includes('text/html')) {
           item.responseType = 'text';
           return response.clone().text();
         } else {
@@ -670,23 +670,21 @@ class VConsoleNetworkTab extends VConsolePlugin {
     return ret;
   }
 
-  private getURL(urlString: string) {
+  private getURL(urlString: string = '') {
     return new URL(urlString, urlString.includes('http') ? undefined : window.location.href);
   }
 
   /**
    * generate an unique id string (32)
-   * @private
-   * @return string
    */
-  private getUniqueID() {
-    const id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      const r = Math.random() * 16 | 0;
-      const v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-    return id;
-  }
+  // protected getUniqueID() {
+  //   const id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  //     const r = Math.random() * 16 | 0;
+  //     const v = c == 'x' ? r : (r & 0x3 | 0x8);
+  //     return v.toString(16);
+  //   });
+  //   return id;
+  // }
 
 } // END class
 

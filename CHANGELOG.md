@@ -7,6 +7,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Feat(Global)` Use system theme color by default when init option `theme` is empty.
 - `Chore(Storage)` Convert Storage panel to `.ts` file.
 - `Fix(Network)` Use `forEach` instead of `.entries()` when traversing `headers`. (issue #404)
+- `Fix(Network)` Fix error when `Content-Type` is empty.
 
 
 #### 3.6.1 (2021-05-24)

@@ -33,10 +33,20 @@ module.exports = merge(baseConfig, {
         } else if (req.path.includes('.blob')) {
           contentType = 'application/octet-stream';
         }
+
         if (contentType) {
           res.setHeader('content-type', contentType);
         }
         res.send(fs.readFileSync(path.join(contentBase, req.path)));
+      });
+
+      app.options('*', (req, res) => {
+        let status = 200;
+        let match = req.path.match(/\/([0-9]{3})\./);
+        if (match) {
+          status = match[1];
+        }
+        res.status(status).end();
       });
     }
   },
