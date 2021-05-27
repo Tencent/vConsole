@@ -1,6 +1,6 @@
 {
   "name": "vconsole",
-  "version": "3.6.2-alpha",
+  "version": "3.7.0",
   "description": "A lightweight, extendable front-end developer tool for mobile web page.",
   "homepage": "https://github.com/Tencent/vConsole",
   "main": "dist/vconsole.min.js",

@@ -1,5 +1,14 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### 3.7.0 (2021-05-27)
+
+- `Feat(Storage)` 对于大体积 value 先展示预览值，以避免堵塞渲染。 (issue #300)
+- `Feat(Storage)` 新增复制按钮、删除按钮。
+- `Feat(Global)` 当初始参数 `theme` 为空时，跟随系统默认主题色。
+- `Chore(Storage)` 转换 Storage 面板为 `.ts` 文件。
+- `Fix(Network)` 使用 `forEach` 而非 `.entries()` 来遍历 `headers` 以避免一些兼容性问题。 (issue #404)
+
+
 #### 3.6.1 (2021-05-24)
 
 - `Fix(Network)` 修复 "Invalid base URL" 错误。 (PR #402)

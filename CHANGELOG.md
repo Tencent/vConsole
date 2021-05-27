@@ -1,12 +1,12 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### 3.7.0 (2021-MM-DD)
+#### 3.7.0 (2021-05-27)
 
 - `Feat(Storage)` Show preview value to prevent large raw value blocking rendering. (issue #300)
 - `Feat(Storage)` Add copy button and delete button.
 - `Feat(Global)` Use system theme color by default when init option `theme` is empty.
 - `Chore(Storage)` Convert Storage panel to `.ts` file.
-- `Fix(Network)` Use `forEach` instead of `.entries()` when traversing headers. (issue #404)
+- `Fix(Network)` Use `forEach` instead of `.entries()` when traversing `headers`. (issue #404)
 
 
 #### 3.6.1 (2021-05-24)
