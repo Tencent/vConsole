@@ -235,6 +235,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     super.mockConsole();
     this.cacheWindowOnError();
     this.catchUnhandledRejection();
+    this.cacheResourceError();
   }
 
 
@@ -293,6 +294,31 @@ class VConsoleDefaultTab extends VConsoleLogTab {
         noOrigin: true
       });
     });
+  }
+
+  /**
+   * Cache Resource Error:img video link script......
+   * @private
+   */
+  cacheResourceError() {
+    const that = this;
+    window.addEventListener('error', function (e) {
+      //仅收集资源错误
+      if (e.target != window){
+        that.printLog({
+          logType: 'error',
+          logs: [{
+            error: e.target.localName + ' load error',
+            type: e.type,
+            // video: currentSrc||src
+            src: e.target.href || e.target.src || e.target.currentSrc,
+          }],
+          noOrigin: true
+        });
+      }
+    },
+    true
+    );
   }
 
   /**
