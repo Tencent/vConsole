@@ -27,6 +27,10 @@
     <a onclick="changeTheme('dark')" href="javascript:;" class="weui_btn weui_btn_default">Theme:dark</a>
     <a onclick="changeTheme('light')" href="javascript:;" class="weui_btn weui_btn_default">Theme:light</a>
     <a onclick="changeTheme('')" href="javascript:;" class="weui_btn weui_btn_default">Theme:auto</a>
+    <a onclick="loadImgError()" href="javascript:;" class="weui_btn weui_btn_default">load Img Error</a>
+    <a onclick="loadScriptError()" href="javascript:;" class="weui_btn weui_btn_default">load Script Error</a>
+    <a onclick="loadVideoError()" href="javascript:;" class="weui_btn weui_btn_default">load Video Error</a>
+    <a onclick="loadLinkError()" href="javascript:;" class="weui_btn weui_btn_default">load Link Error</a>
   </div>
 </body>
 </html>
@@ -184,5 +188,47 @@ function changeTheme(theme) {
   window.vConsole.setOption('theme', theme);
   console.log('Current Theme:', theme || 'auto');
   console.info('changeTheme() End');
+}
+
+function loadImgError() {
+  console.info('loadImgError() Start');
+  const img = new Image();
+  img.src = 'http://xxxx.jpg';
+  document.body.appendChild(img);
+  img.onerror = () => {
+    console.info('loadImgError() End');
+  }
+}
+
+function loadScriptError() {
+  console.info('loadScriptError() Start');
+  const scri = document.createElement("script");
+  scri.src = 'http://xxxx.js';
+  document.body.appendChild(scri);
+  scri.onerror = () => {
+    console.info('loadScriptError() End');
+  }
+}
+
+function loadVideoError() {
+  console.info('loadVideoError() Start');
+  const vid = document.createElement("video");
+  vid.src = 'http://xxxx.mp4';
+  document.body.appendChild(vid);
+  vid.onerror = () => {
+    console.info('loadVideoError() End');
+  }
+}
+
+function loadLinkError() {
+  console.info('loadLinkError() Start');
+  const link = document.createElement("link");
+  link.rel = 'stylesheet';
+  link.type = 'text/css';
+  link.href = 'http://xxxx.css';
+  document.body.appendChild(link);
+  link.onerror = () => {
+    console.info('loadLinkError() End');
+  }
 }
 </script>
