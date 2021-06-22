@@ -671,7 +671,11 @@ class VConsoleNetworkTab extends VConsolePlugin {
   }
 
   private getURL(urlString: string = '') {
-    return new URL(urlString, urlString.includes('http') ? undefined : window.location.href);
+    if (urlString.includes('http')) {
+      return new URL(urlString);
+    } else {
+      return new URL(urlString, window.location.href);
+    }
   }
 
   /**
