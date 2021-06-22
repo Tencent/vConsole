@@ -368,18 +368,23 @@
       }
     }
 
-    .vc-item-copy {
+    .vc-item-edit.editing .vc-icon-edit{
+      fill: var(--VC-TEXTGREEN);
+    }
+    
+    .vc-item-copy, .vc-item-edit {
       float: right;
       word-break: normal;
       white-space: normal;
       width: 16px;
       height: 16px;
 
-      .vc-icon-clippy {
+      .vc-icon-clippy, .vc-icon-edit {
         display: block;
         fill: var(--VC-FG-2);
         width: 16px;
         height: 16px;
+
       }
       .vc-icon-check {
         display: none;
@@ -388,7 +393,7 @@
         height: 16px;
       }
     }
-    .vc-item-copy-success {
+    .vc-item-copy-success, .vc-item-edit-success {
       .vc-icon-clippy {
         display: none;
       }
