@@ -27,10 +27,10 @@
     <a onclick="changeTheme('dark')" href="javascript:;" class="weui_btn weui_btn_default">Theme:dark</a>
     <a onclick="changeTheme('light')" href="javascript:;" class="weui_btn weui_btn_default">Theme:light</a>
     <a onclick="changeTheme('')" href="javascript:;" class="weui_btn weui_btn_default">Theme:auto</a>
-    <a onclick="loadImgError()" href="javascript:;" class="weui_btn weui_btn_default">load Img Error</a>
-    <a onclick="loadScriptError()" href="javascript:;" class="weui_btn weui_btn_default">load Script Error</a>
-    <a onclick="loadVideoError()" href="javascript:;" class="weui_btn weui_btn_default">load Video Error</a>
-    <a onclick="loadLinkError()" href="javascript:;" class="weui_btn weui_btn_default">load Link Error</a>
+    <a onclick="loadImgError()" href="javascript:;" class="weui_btn weui_btn_default">loadImgError</a>
+    <a onclick="loadScriptError()" href="javascript:;" class="weui_btn weui_btn_default">loadScriptError</a>
+    <a onclick="loadVideoError()" href="javascript:;" class="weui_btn weui_btn_default">loadVideoError</a>
+    <a onclick="loadLinkError()" href="javascript:;" class="weui_btn weui_btn_default">loadLinkError</a>
   </div>
 </body>
 </html>
@@ -225,7 +225,7 @@ function loadLinkError() {
   const link = document.createElement("link");
   link.rel = 'stylesheet';
   link.type = 'text/css';
-  link.href = 'http://xxxx.css';
+  link.href = './data/a.css?s=404';
   document.body.appendChild(link);
   link.onerror = () => {
     console.info('loadLinkError() End');

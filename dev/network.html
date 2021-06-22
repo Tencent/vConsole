@@ -239,7 +239,7 @@ function axiosRequest(method) {
 
 function optionsXHR() {
   console.info('optionsXHR() Start');
-  const url = window.location.origin + '/dev/data/500.json?method=optionsXHR&id=' + Math.random() + '&<xss0>';
+  const url = window.location.origin + '/dev/data/a.json?method=optionsXHR&s=500&id=' + Math.random() + '&<xss0>';
   const xhr = new XMLHttpRequest();
   xhr.open('OPTIONS', url);
   xhr.setRequestHeader('custom-header', 'foobar');
@@ -255,7 +255,7 @@ function optionsXHR() {
 
 function optionsFetch() {
   console.info('optionsFetch() Start');
-  window.fetch('./data/403.json?method=optionsFetch', {
+  window.fetch('./data/a.json?method=optionsFetch&s=403&t=300', {
     method: 'OPTIONS',
   }).then((data) => {
     console.log('optionsFetch Response:', data);
