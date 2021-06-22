@@ -233,17 +233,17 @@ class VConsoleDefaultTab extends VConsoleLogTab {
    */
   mockConsole() {
     super.mockConsole();
-    this.cacheWindowOnError();
+    this.catchWindowOnError();
+    this.catchResourceError();
     this.catchUnhandledRejection();
-    this.cacheResourceError();
   }
 
 
   /**
-   * Cache window.onerror
+   * Catch window.onerror
    * @private
    */
-  cacheWindowOnError() {
+  catchWindowOnError() {
     const that = this;
     window.addEventListener('error', function(event) {
       let msg = event.message;
@@ -274,11 +274,11 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       return;
     }
     const that = this;
-    window.addEventListener('unhandledrejection', function (e) {
+    window.addEventListener('unhandledrejection', function(e) {
       let error = e && e.reason;
       const errorName = 'Uncaught (in promise) ';
       let args = [errorName, error];
-      if(error instanceof Error){
+      if (error instanceof Error) {
         args = [
           errorName, 
           {
@@ -297,28 +297,22 @@ class VConsoleDefaultTab extends VConsoleLogTab {
   }
 
   /**
-   * Cache Resource Error:img video link script......
+   * Catch resource loading error: image, video, link, script
    * @private
    */
-  cacheResourceError() {
+   catchResourceError() {
     const that = this;
-    window.addEventListener('error', function (e) {
-      //仅收集资源错误
-      if (e.target != window){
+    window.addEventListener('error', function(e) {
+      // only catch resources error
+      if (['link', 'video', 'script', 'img'].indexOf(e.target.localName) > -1) {
+        const src = e.target.href || e.target.src || e.target.currentSrc;
         that.printLog({
           logType: 'error',
-          logs: [{
-            error: e.target.localName + ' load error',
-            type: e.type,
-            // video: currentSrc||src
-            src: e.target.href || e.target.src || e.target.currentSrc,
-          }],
+          logs: [`GET <${e.target.localName}> error: ${src}`],
           noOrigin: true
         });
       }
-    },
-    true
-    );
+    }, true);
   }
 
   /**
