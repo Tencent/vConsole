@@ -17,7 +17,9 @@
     <div id="app">
       <input v-model="book.title" placeholder="Edit me" />
       <div>
-        <a @click="axios('POST')" href="javascript:;" class="weui_btn weui_btn_default">Axios POST</a>
+        <a @click="changeMethod" href="javascript:;" class="weui_btn weui_btn_default">changeMethod</a>
+        <a v-if="method=='post'" @click="axios('POST')" href="javascript:;" class="weui_btn weui_btn_default">Axios POST</a>
+        <a v-else @click="axios('GET')" href="javascript:;" class="weui_btn weui_btn_default">Axios GET</a>
       </div>
     </div>
   </div>
@@ -46,7 +48,8 @@ const appOptions = {
       book: {
         title: 'vConsole with Vue',
         that: this,
-      }
+      },
+      method: 'post',
     };
   },
   mounted() {
@@ -54,7 +57,7 @@ const appOptions = {
     // console.log('Vue', this);
     setInterval(() => {
       this.book.title = Math.random();
-      console.log(this.book);
+      // console.log(this.book);
       // this.axios('POST');
     }, 300);
   },
@@ -74,7 +77,10 @@ const appOptions = {
       .catch(function(error) {
         console.log('Axios Get error:', error);
       });
-    }
+    },
+    changeMethod() {
+      this.method = this.method == 'post' ? 'get' : 'post';
+    },
   }
 };
 const app = Vue.createApp(appOptions);

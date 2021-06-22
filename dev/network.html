@@ -53,7 +53,7 @@ function postAjax() {
   xhr.onreadystatechange = () => {
     console.log('onreadystatechange', `readyState=${xhr.readyState}`, `status=${xhr.status}`);
   };
-  xhr.open('POST', './data/success.json?method=fetchPost');
+  xhr.open('POST', './data/large.json?method=fetchPost&c=中文');
   xhr.send({
     foo: 'bar',
     id: Math.random(),
