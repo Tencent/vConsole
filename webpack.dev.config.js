@@ -13,7 +13,7 @@ module.exports = merge(baseConfig, {
     port: 9191,
     disableHostCheck: true,
     contentBase: contentBase,
-    openPage: 'dev/',
+    openPage: 'dev/index.html',
     historyApiFallback: true,
     noInfo: true,
     overlay: true,
@@ -21,32 +21,20 @@ module.exports = merge(baseConfig, {
     hot: true,
     inline: true,
     before(app) {
-      app.post('*', (req, res) => {
-        // res.redirect(req.originalUrl);
-        let contentType = '';
-        if (req.path.includes('.json')) {
-          contentType = 'application/json';
-        } else if (req.path.includes('.txt')) {
-          contentType = 'text/html';
-        } else if (req.path.includes('.png')) {
-          contentType = 'image/png';
-        } else if (req.path.includes('.blob')) {
-          contentType = 'application/octet-stream';
-        }
-
-        if (contentType) {
-          res.setHeader('content-type', contentType);
-        }
-        res.send(fs.readFileSync(path.join(contentBase, req.path)));
-      });
-
-      app.options('*', (req, res) => {
-        let status = 200;
-        let match = req.path.match(/\/([0-9]{3})\./);
-        if (match) {
-          status = match[1];
-        }
-        res.status(status).end();
+      app.all('*', (req, res) => {
+        const delay = req.query.t || Math.ceil(Math.random() * 100);
+        setTimeout(() => {
+          res.status(req.query.s || 200);
+          const filePath = path.join(contentBase, req.path);
+          try {
+            fs.accessSync(filePath, fs.constants.F_OK);
+            // res.send(fs.readFileSync(filePath));
+            res.sendFile(filePath);
+          } catch (e) {
+            res.end();
+          }
+          // console.log(req.query);
+        }, delay);
       });
     }
   },
