@@ -1,5 +1,11 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### 3.8.0 (2021-06-xx)
+
+- `Feat(Log)` Show resource loading error log. (PR #411 by @zimv)
+- `Fix(Network)` Fix error when `new URL('x', undefined)`. (PR #409 by @moonkop)
+
+
 #### 3.7.0 (2021-05-27)
 
 - `Feat(Storage)` Show preview value to prevent large raw value blocking rendering. (issue #300)
