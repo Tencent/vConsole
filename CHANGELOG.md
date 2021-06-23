@@ -1,8 +1,8 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### 3.8.0 (2021-06-xx)
+#### 3.8.0 (2021-06-23)
 
-- `Feat(Log)` Show resource loading error log. (PR #411 by @zimv)
+- `Feat(Log)` Show resource (image/video/link/script) loading error log. (PR #411 by @zimv)
 - `Fix(Network)` Fix error when `new URL('x', undefined)`. (PR #409 by @moonkop)
 
 
