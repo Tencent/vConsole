@@ -1,5 +1,11 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### 3.8.0 (2021-06-23)
+
+- `Feat(Log)` 增加显示资源（image/video/link/script）加载失败报错。 (PR #411 by @zimv)
+- `Fix(Network)` 修复 `new URL('x', undefined)` 第二参数为 `undefined` 时的报错。 (PR #409 by @moonkop)
+
+
 #### 3.7.0 (2021-05-27)
 
 - `Feat(Storage)` 对于大体积 value 先展示预览值，以避免堵塞渲染。 (issue #300)
