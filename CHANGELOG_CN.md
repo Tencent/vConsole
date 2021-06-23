@@ -2,7 +2,8 @@
 
 #### 3.8.0 (2021-06-23)
 
-- `Feat(Log)` 增加显示资源（image/video/link/script）加载失败报错。 (PR #411 by @zimv)
+- `Feat(Log)` 新增显示资源（image/video/link/script）加载失败报错。 (PR #411 by @zimv)
+- `Chore` 新增 Webpack 配置 `target: ['web', 'es5']` 以避免兼容性问题。 (issue #404)
 - `Fix(Network)` 修复 `new URL('x', undefined)` 第二参数为 `undefined` 时的报错。 (PR #409 by @moonkop)
 
 

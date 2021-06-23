@@ -3,16 +3,16 @@ const Webpack = require('webpack');
 const Path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const fs = require('fs');
 
 module.exports = (env, argv) => {
   const isDev = argv.mode === 'development';
   return {
     mode: argv.mode,
-    devtool: isDev ? 'source-map' : false,
+    devtool: false,
     entry: {
       vconsole: Path.resolve(__dirname, './src/vconsole.js')
     },
+    target: ['web', 'es5'],
     output: {
       path: Path.resolve(__dirname, './dist'),
       filename: '[name].min.js',

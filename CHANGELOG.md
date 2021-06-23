@@ -3,6 +3,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 #### 3.8.0 (2021-06-23)
 
 - `Feat(Log)` Show resource (image/video/link/script) loading error log. (PR #411 by @zimv)
+- `Chore` Add `target: ['web', 'es5']` to Webpack to avoid compatibility issues. (issue #404)
 - `Fix(Network)` Fix error when `new URL('x', undefined)`. (PR #409 by @moonkop)
 
 
@@ -11,7 +12,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Feat(Storage)` Show preview value to prevent large raw value blocking rendering. (issue #300)
 - `Feat(Storage)` Add copy button and delete button.
 - `Feat(Global)` Use system theme color by default when init option `theme` is empty.
-- `Chore(Storage)` Convert Storage panel to `.ts` file.
+- `Refactor(Storage)` Convert Storage panel to `.ts` file.
 - `Fix(Network)` Use `forEach` instead of `.entries()` when traversing `headers`. (issue #404)
 - `Fix(Network)` Fix error when `Content-Type` is empty.
 
@@ -26,7 +27,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Feat(Log)` Print `unhandledrejection` log. (PR #389 by @zimv)
 - `Feat(Network)` Support `navigator.sendBeacon()` in Network panel. (PR #383 by @cola119)
 - `Feat(Network)` Display "Type" (Request Type) in "General", including `xhr|fetch|ping`.
-- `Chore(Global)` Use TypeScript. Now Network panel is conveted to `.ts` file.
+- `Refactor(Global)` Use TypeScript. Now Network panel is conveted to `.ts` file.
 - `Fix(Network)` Recover original `window.fetch()` method when remove Network panel.
 - `Fix(Storage)` Fix issue that the cookie of the non-first-level domain cannot be deleted. (issue #398)
 - `Fix(Element)` Fix issue that elements are rendered as nested when `attributes` or `characterData` changed. (issue #399)
