@@ -12,7 +12,7 @@
 - `Feat(Storage)` 对于大体积 value 先展示预览值，以避免堵塞渲染。 (issue #300)
 - `Feat(Storage)` 新增复制按钮、删除按钮。
 - `Feat(Global)` 当初始参数 `theme` 为空时，跟随系统默认主题色。
-- `Chore(Storage)` 转换 Storage 面板为 `.ts` 文件。
+- `Refactpr(Storage)` 转换 Storage 面板为 `.ts` 文件。
 - `Fix(Network)` 使用 `forEach` 而非 `.entries()` 来遍历 `headers` 以避免一些兼容性问题。 (issue #404)
 - `Fix(Network)` 修复 `Content-Type` 为空时导致的报错。
 
@@ -27,7 +27,7 @@
 - `Feat(Log)` 新增输出 `unhandledrejection` 类型日志。 (PR #389 by @zimv)
 - `Feat(Network)` 新增支持展示 `navigator.sendBeacon()` 的网络请求。 (PR #383 by @cola119)
 - `Feat(Network)` 新增在 "General" 栏目展示 "Type" (Request Type) 字段，取值包括 `xhr|fetch|ping`。
-- `Chore(Global)` 开始使用 TypeScript 重构代码。现在 Network 面板首先转成了 `.ts` 文件。
+- `Refactpr(Global)` 开始使用 TypeScript 重构代码。现在 Network 面板首先转成了 `.ts` 文件。
 - `Fix(Network)` 修复移除 Network 面板后没有恢复原生 `window.fetch()` 方法的问题。
 - `Fix(Storage)` 修复清除所有 cookie 时无法完全删除非顶级域名下的 cookie 的问题。 (issue #398)
 - `Fix(Element)` 修复当 element 的 `attributes` 或 `characterData` 变化时 element 被嵌套渲染的问题。 (issue #399)
