@@ -4,6 +4,7 @@
 
 - `Fix(Log)` 不再合并包含 object 或 array 的重复日志，以避免合并结构相同但取值不同的对象。
 - `Fix(Log)` 修复日志过滤器（Filter）在点选日志类型 tab 后不生效的问题。
+- `Fix(Network)` 修复 url 以 `//` 开头时产生的错误。 (PR #414 by @kooritea)
 - `Chore` 移除 babel-loader 的 `exclude: node_modules` 选项以避免第三方库的兼容性问题。 (issue #404, #407)
 - `Refactor(Log)` 转换 Log 和 System 面板为 `.ts` 文件。
 
