@@ -1,5 +1,13 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### 3.8.1 (2021-06-24)
+
+- `Fix(Log)` 不再合并包含 object 或 array 的重复日志，以避免合并结构相同但取值不同的对象。
+- `Fix(Log)` 修复日志过滤器（Filter）在点选日志类型 tab 后不生效的问题。
+- `Chore` 移除 babel-loader 的 `exclude: node_modules` 选项以避免第三方库的兼容性问题。 (issue #404, #407)
+- `Refactor(Log)` 转换 Log 和 System 面板为 `.ts` 文件。
+
+
 #### 3.8.0 (2021-06-23)
 
 - `Feat(Log)` 新增显示资源（image/video/link/script）加载失败报错。 (PR #411 by @zimv)

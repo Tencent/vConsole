@@ -1,6 +1,6 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### 3.8.1 (2021-06-xx)
+#### 3.8.1 (2021-06-24)
 
 - `Fix(Log)` Do not merge repeated logs with object(s) or array(s) into one line to avoid merging objects with the same structure but different values.
 - `Fix(Log)` Fix the issue that log filter does not take effect after selecting the log type.
