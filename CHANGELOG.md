@@ -2,8 +2,9 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### 3.8.1 (2021-06-xx)
 
-- `Chore` Remove `exclude: node_modules` option in babel-loader to be compatible with ES5. (issue #404, #407)
 - `Fix(Log)` Do not merge repeated logs with object(s) or array(s) into one line to avoid merging objects with the same structure but different values.
+- `Fix(Log)` Fix the issue that log filter does not take effect after selecting the log type.
+- `Chore` Remove `exclude: node_modules` option in babel-loader to be compatible with ES5. (issue #404, #407)
 - `Refactor(Log)` Convert Log & System panel to `.ts` file.
 
 

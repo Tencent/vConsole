@@ -247,7 +247,7 @@ class VConsoleLogTab extends VConsolePlugin {
     }
   }
 
-  showLogType(logType) {
+  showLogType(logType: string) {
     const $log = $.one('.vc-log', this.$tabbox);
     $.removeClass($log, 'vc-log-partly-log');
     $.removeClass($log, 'vc-log-partly-info');
