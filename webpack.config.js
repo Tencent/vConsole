@@ -40,7 +40,6 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.(js|ts)$/,
-          exclude: /node_modules/,
           use: [
             { loader: 'babel-loader' }
           ]

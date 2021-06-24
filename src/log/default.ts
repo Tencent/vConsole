@@ -13,24 +13,18 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole Default Tab
  */
 
-import $ from '../lib/query.ts';
-import * as tool from '../lib/tool.ts';
-import VConsoleLogTab from './log.js';
+import $ from '../lib/query';
+import * as tool from '../lib/tool';
+import VConsoleLogTab from './log';
 import tplTabbox from './tabbox_default.html';
 import tplItemCode from './item_code.html';
-let filterText = "";
-const checkFilterInLine = (dom) =>{
-  return dom.innerHTML.toUpperCase().indexOf(filterText.toUpperCase()) === -1
-};
+
 class VConsoleDefaultTab extends VConsoleLogTab {
+  private filterText = '';
 
   constructor(...args) {
     super(...args);
     this.tplTabbox = tplTabbox;
-  }
-  formatLine ($line){
-    checkFilterInLine($line) ? $.addClass($line,'hide'):$.removeClass($line,'hide')
-    return $line
   }
 
   onReady() {
@@ -40,8 +34,9 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     // do not traverse these keys to prevent "Deprecation" warning
     const keyBlackList = ['webkitStorageInfo'];
 
-    window.winKeys = Object.getOwnPropertyNames(window).sort();
-    window.keyTypes = {};
+    (<any>window).winKeys = Object.getOwnPropertyNames(window).sort();
+    (<any>window).keyTypes = {};
+    const {winKeys, keyTypes} = <any>window;
     for (let i = 0; i < winKeys.length; i++) {
       if (keyBlackList.indexOf(winKeys[i]) > -1) {
         continue;
@@ -52,9 +47,8 @@ class VConsoleDefaultTab extends VConsoleLogTab {
 
     const cacheObj = {};
     const ID_REGEX = /[a-zA-Z_0-9\$\-\u00A2-\uFFFF]/;
-    const retrievePrecedingIdentifier = (text, pos, regex) => {
-      regex = regex || ID_REGEX;
-      const buf = [];
+    const retrievePrecedingIdentifier = (text: string, pos: number, regex: RegExp = ID_REGEX) => {
+      const buf: string[] = [];
       for (let i = pos - 1; i >= 0; i--) {
         if (regex.test(text[i])) {
           buf.push(text[i]);
@@ -84,8 +78,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       }
     };
 
-    const $input = $.one('.vc-cmd-input');
-
+    const $input = <HTMLInputElement>$.one('.vc-cmd-input');
     $.bind($input, 'keyup', function (e) {
       const isDeleteKeyCode = e.keyCode === 8 || e.keyCode === 46;
       const $prompted = $.one('.vc-cmd-prompted');
@@ -125,7 +118,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
               $li.innerHTML = _key;
               $li.onclick = function () {
                 $input.value = '';
-                $input.value = tempValue + this.innerHTML;
+                $input.value = tempValue + (<any>this).innerHTML;
                 $prompted.style.display = 'none';
               };
               $prompted.appendChild($li);
@@ -140,8 +133,8 @@ class VConsoleDefaultTab extends VConsoleLogTab {
               $li.innerHTML = winKeys[i];
               $li.onclick = function () {
                 $input.value = '';
-                $input.value = this.innerHTML;
-                if (keyTypes[this.innerHTML] == 'function') {
+                $input.value = (<any>this).innerHTML;
+                if (keyTypes[(<any>this).innerHTML] == 'function') {
                   $input.value += '()';
                 }
                 $prompted.style.display = 'none';
@@ -160,7 +153,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
                 $li.innerHTML = _key;
                 $li.onclick = function () {
                   $input.value = '';
-                  $input.value = tempValue + this.innerHTML;
+                  $input.value = tempValue + (<any>this).innerHTML;
                   $prompted.style.display = 'none';
                 };
                 $prompted.appendChild($li);
@@ -181,7 +174,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
 
     $.bind($.one('.vc-cmd', this.$tabbox), 'submit', function (e) {
       e.preventDefault();
-      let $cmdInput = $.one('.vc-cmd-input', e.target),
+      let $cmdInput = <HTMLInputElement>$.one('.vc-cmd-input', e.target),
         cmd = $cmdInput.value;
       $cmdInput.value = '';
       if (cmd !== '') {
@@ -194,10 +187,10 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     });
     $.bind($.one('.vc-cmd.vc-filter', this.$tabbox), 'submit', function (e) {
       e.preventDefault();
-      let $cmdInput = $.one('.vc-cmd.vc-filter .vc-cmd-input', e.target);
-      filterText = $cmdInput.value;
+      let $cmdInput = <HTMLInputElement>$.one('.vc-cmd.vc-filter .vc-cmd-input', e.target);
+      that.filterText = $cmdInput.value;
       $.all(".vc-log>.vc-item").forEach(el=>{
-        if(checkFilterInLine(el)){
+        if(that.checkFilterInLine(el)){
           $.addClass(el,'hide')
         }else{
           $.removeClass(el,'hide')
@@ -211,27 +204,30 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     code += 'window.__vConsole_cmd_result = undefined;';
     code += 'window.__vConsole_cmd_error = false;';
     code += '}';
-    let scriptList = document.getElementsByTagName('script');
+    const $scriptList = document.getElementsByTagName('script');
     let nonce = '';
     // find the first script with nonce
-    for (let script of scriptList) {
-      if (script.nonce) {
-        nonce = script.nonce
+    for (let i = 0; i < $scriptList.length; i++) {
+      if ($scriptList[i].nonce) {
+        nonce = $scriptList[i].nonce
         break
       }
     }
-    let script = document.createElement('SCRIPT');
-    script.innerHTML = code;
-    script.setAttribute('nonce', nonce);
-    document.documentElement.appendChild(script);
-    document.documentElement.removeChild(script);
+    const $script = document.createElement('SCRIPT');
+    $script.innerHTML = code;
+    $script.setAttribute('nonce', nonce);
+    document.documentElement.appendChild($script);
+    document.documentElement.removeChild($script);
+  }
+
+  beforeRenderLog($line: Element) {
+    this.checkFilterInLine($line) ? $.addClass($line,'hide') : $.removeClass($line,'hide');
   }
 
   /**
    * replace window.console & window.onerror with vConsole method
-   * @private
    */
-  mockConsole() {
+  protected mockConsole() {
     super.mockConsole();
     this.catchWindowOnError();
     this.catchResourceError();
@@ -241,9 +237,8 @@ class VConsoleDefaultTab extends VConsoleLogTab {
 
   /**
    * Catch window.onerror
-   * @private
    */
-  catchWindowOnError() {
+  private catchWindowOnError() {
     const that = this;
     window.addEventListener('error', function(event) {
       let msg = event.message;
@@ -267,9 +262,8 @@ class VConsoleDefaultTab extends VConsoleLogTab {
   /**
    * Promise.reject has no rejection handler
    * about https://developer.mozilla.org/en-US/docs/Web/API/Window/unhandledrejection_event
-   * @private
    */
-  catchUnhandledRejection() {
+  private catchUnhandledRejection() {
     if ( !(tool.isWindow(window) && tool.isFunction(window.addEventListener)) ) {
       return;
     }
@@ -298,17 +292,17 @@ class VConsoleDefaultTab extends VConsoleLogTab {
 
   /**
    * Catch resource loading error: image, video, link, script
-   * @private
    */
-   catchResourceError() {
+   private catchResourceError() {
     const that = this;
     window.addEventListener('error', function(e) {
+      const target = <any>e.target;
       // only catch resources error
-      if (['link', 'video', 'script', 'img'].indexOf(e.target.localName) > -1) {
-        const src = e.target.href || e.target.src || e.target.currentSrc;
+      if (['link', 'video', 'script', 'img'].indexOf(target.localName) > -1) {
+        const src = target.href || target.src || target.currentSrc;
         that.printLog({
           logType: 'error',
-          logs: [`GET <${e.target.localName}> error: ${src}`],
+          logs: [`GET <${target.localName}> error: ${src}`],
           noOrigin: true
         });
       }
@@ -316,10 +310,9 @@ class VConsoleDefaultTab extends VConsoleLogTab {
   }
 
   /**
-   *
-   * @private
+   * Run a command
    */
-  evalCommand(cmd) {
+  private evalCommand(cmd: string) {
     // print command to console
     this.printLog({
       logType: 'log',
@@ -390,7 +383,11 @@ class VConsoleDefaultTab extends VConsoleLogTab {
       content: $content,
       style: ''
     });
-    window.winKeys = Object.getOwnPropertyNames(window).sort();
+    (<any>window).winKeys = Object.getOwnPropertyNames(window).sort();
+  }
+
+  private checkFilterInLine($dom: Element) {
+    return $dom.innerHTML.toUpperCase().indexOf(this.filterText.toUpperCase()) === -1;
   }
 
 } // END class

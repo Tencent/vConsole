@@ -123,12 +123,16 @@ function smallArray() {
 
 function repeatLog() {
   console.log('repeatLog() Start');
+  var a = {a: {b: 1}};
   var count = 0;
   var timer = setInterval(() => {
     count ++;
-    console.log('repeat', 'foo bar');
-    if (count >= 100) {
+    console.log('repeat', 'foo bar', function(){});
+    if (count >= 10) {
       clearInterval(timer);
+
+      console.log('repeat', a);
+      console.log('repeat', a);
       console.log('repeatLog() End');
     }
   }, 50);
