@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### 3.8.1 (2021-06-xx)
+
+- `Chore` Remove `exclude: node_modules` option in babel-loader to be compatible with ES5. (issue #404, #407)
+
+
 #### 3.8.0 (2021-06-23)
 
 - `Feat(Log)` Show resource (image/video/link/script) loading error log. (PR #411 by @zimv)
