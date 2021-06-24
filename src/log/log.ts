@@ -13,9 +13,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole Basic Log Tab
  */
 
-import * as tool from '../lib/tool.ts';
-import $ from '../lib/query.ts';
-import VConsolePlugin from '../lib/plugin.ts';
+import * as tool from '../lib/tool';
+import $ from '../lib/query';
+import VConsolePlugin from '../lib/plugin';
 import tplItem from './item.html';
 import tplLineLog from './item_line_log.html';
 import tplFold from './item_fold.html';
@@ -25,27 +25,47 @@ import VConsoleItemCopy from '../component/item_copy';
 const DEFAULT_MAX_LOG_NUMBER = 1000;
 const ADDED_LOG_TAB_ID = [];
 
+type VConsoleLogArgs = any[];
+type VConsoleLogType = 'log' | 'info' | 'warn' | 'debug' | 'error';
+interface VConsoleLogItem {
+  _id?: string; // random unique id
+  tabName?: 'default' | 'system';
+  logType: VConsoleLogType;
+  logs?: VConsoleLogArgs; // the params of console.log(); `logs` or `content` can't be empty
+  content?: Element; // `logs` or `content` can't be empty
+  noOrigin?: boolean;
+  date?: number;
+  style?: string;
+}
+interface VConsoleLogView {
+  _id: string;
+  logType: VConsoleLogType;
+  logText: string; // plain string
+  hasContent: boolean;
+  hasFold: boolean;
+  count: number; // repeated count
+}
+
 class VConsoleLogTab extends VConsolePlugin {
   static AddedLogID = [];
+  tplTabbox: string = ''; // MUST be overwrite in child class
+  allowUnformattedLog: boolean = true; // `[xxx]` format log
+  isReady: boolean = false;
+  isShow: boolean = false;
+  $tabbox: Element = null;
+
+  console: { [method: string]: any } = {}; // window.console
+  logList: VConsoleLogItem[] = []; // save logs before ready
+  cachedLogs: { [id: string]: string } = {}; // for copy text
+  previousLog: VConsoleLogView = null;
+
+  isInBottom: boolean = true; // whether the panel is in the bottom
+  maxLogNumber: number = DEFAULT_MAX_LOG_NUMBER;
+  logNumber: number = 0;
 
   constructor(...args) {
     super(...args);
     ADDED_LOG_TAB_ID.push(this.id);
-
-    this.tplTabbox = ''; // MUST be overwrite in child class
-    this.allowUnformattedLog = true; // `[xxx]` format log
-
-    this.isReady = false;
-    this.isShow = false;
-    this.$tabbox = null;
-    this.console = {};
-    this.logList = []; // save logs before ready
-    this.cachedLogs = {}; // for copy
-    this.previousLog = {}; // { _id: string, logType: string, logText: string, hasFold: boolean }
-    this.isInBottom = true; // whether the panel is in the bottom
-    this.maxLogNumber = DEFAULT_MAX_LOG_NUMBER;
-    this.logNumber = 0;
-
     this.mockConsole();
   }
 
@@ -63,14 +83,14 @@ class VConsoleLogTab extends VConsolePlugin {
    * this event will make this plugin be registered as a tab
    * @public
    */
-  onRenderTab(callback) {
+  onRenderTab(callback: Function) {
     callback(this.$tabbox);
   }
 
-  onAddTopBar(callback) {
-    let that = this;
-    let types = ['All', 'Log', 'Info', 'Warn', 'Error'];
-    let btnList = [];
+  onAddTopBar(callback: Function) {
+    const that = this;
+    const types = ['All', 'Log', 'Info', 'Warn', 'Error'];
+    const btnList = [];
     for (let i = 0; i < types.length; i++) {
       btnList.push({
         name: types[i],
@@ -91,9 +111,9 @@ class VConsoleLogTab extends VConsolePlugin {
     callback(btnList);
   }
 
-  onAddTool(callback) {
-    let that = this;
-    let toolList = [{
+  onAddTool(callback: Function) {
+    const that = this;
+    const toolList = [{
       name: 'Clear',
       global: false,
       onClick: function () {
@@ -109,11 +129,11 @@ class VConsoleLogTab extends VConsolePlugin {
    * @public
    */
   onReady() {
-    let that = this;
+    const that = this;
     that.isReady = true;
 
     // log type filter
-    let $subTabs = $.all('.vc-subtab', that.$tabbox);
+    const $subTabs = $.all('.vc-subtab', that.$tabbox);
     $.bind($subTabs, 'click', function (e) {
       e.preventDefault();
       if ($.hasClass(this, 'vc-actived')) {
@@ -122,13 +142,13 @@ class VConsoleLogTab extends VConsolePlugin {
       $.removeClass($subTabs, 'vc-actived');
       $.addClass(this, 'vc-actived');
 
-      let logType = this.dataset.type,
-        $log = $.one('.vc-log', that.$tabbox);
+      const logType: 'all' | VConsoleLogType = this.dataset.type;
+      const $log = $.one('.vc-log', that.$tabbox);
       $.removeClass($log, 'vc-log-partly-log');
       $.removeClass($log, 'vc-log-partly-info');
       $.removeClass($log, 'vc-log-partly-warn');
       $.removeClass($log, 'vc-log-partly-error');
-      if (logType == 'all') {
+      if (logType === 'all') {
         $.removeClass($log, 'vc-log-partly');
       } else {
         $.addClass($log, 'vc-log-partly');
@@ -136,7 +156,7 @@ class VConsoleLogTab extends VConsolePlugin {
       }
     });
 
-    let $content = $.one('.vc-content');
+    const $content = $.one('.vc-content');
     $.bind($content, 'scroll', function (e) {
       if (!that.isShow) {
         return;
@@ -172,7 +192,7 @@ class VConsoleLogTab extends VConsolePlugin {
     window.console.time = this.console.time;
     window.console.timeEnd = this.console.timeEnd;
     window.console.clear = this.console.clear;
-    this.console = {};
+    this.console = null;
 
     const idx = ADDED_LOG_TAB_ID.indexOf(this.id);
     if (idx > -1) {
@@ -183,7 +203,7 @@ class VConsoleLogTab extends VConsolePlugin {
 
   onShow() {
     this.isShow = true;
-    if (this.isInBottom == true) {
+    if (this.isInBottom === true) {
       this.autoScrollToBottom();
     }
   }
@@ -193,13 +213,13 @@ class VConsoleLogTab extends VConsolePlugin {
   }
 
   onShowConsole() {
-    if (this.isInBottom == true) {
+    if (this.isInBottom === true) {
       this.autoScrollToBottom();
     }
   }
 
   onUpdateOption() {
-    if (this.vConsole.option.maxLogNumber != this.maxLogNumber) {
+    if (this.vConsole.option.maxLogNumber !== this.maxLogNumber) {
       this.updateMaxLogNumber();
       this.limitMaxLogs();
     }
@@ -228,12 +248,12 @@ class VConsoleLogTab extends VConsolePlugin {
   }
 
   showLogType(logType) {
-    let $log = $.one('.vc-log', this.$tabbox);
+    const $log = $.one('.vc-log', this.$tabbox);
     $.removeClass($log, 'vc-log-partly-log');
     $.removeClass($log, 'vc-log-partly-info');
     $.removeClass($log, 'vc-log-partly-warn');
     $.removeClass($log, 'vc-log-partly-error');
-    if (logType == 'all') {
+    if (logType === 'all') {
       $.removeClass($log, 'vc-log-partly');
     } else {
       $.addClass($log, 'vc-log-partly');
@@ -248,7 +268,7 @@ class VConsoleLogTab extends VConsolePlugin {
   }
 
   scrollToBottom() {
-    let $content = $.one('.vc-content');
+    const $content = $.one('.vc-content');
     if ($content) {
       $content.scrollTop = $content.scrollHeight - $content.offsetHeight;
     }
@@ -256,14 +276,13 @@ class VConsoleLogTab extends VConsolePlugin {
 
   /**
    * replace window.console with vConsole method
-   * @private
    */
-  mockConsole() {
+  protected mockConsole() {
     const that = this;
-    const methodList = ['log', 'info', 'warn', 'debug', 'error'];
+    const methodList: VConsoleLogType[] = ['log', 'info', 'warn', 'debug', 'error'];
 
     if (!window.console) {
-      window.console = {};
+      (<any>window.console) = {};
     } else {
       methodList.map(function (method) {
         that.console[method] = window.console[method];
@@ -273,7 +292,7 @@ class VConsoleLogTab extends VConsolePlugin {
       that.console.clear = window.console.clear;
     }
 
-    methodList.map(method => {
+    methodList.map((method) => {
       window.console[method] = (...args) => {
         this.printLog({
           logType: method,
@@ -305,15 +324,19 @@ class VConsoleLogTab extends VConsolePlugin {
   clearLog() {
     $.one('.vc-log', this.$tabbox).innerHTML = '';
     this.logNumber = 0;
-    this.previousLog = {};
+    this.previousLog = null;
     this.cachedLogs = {};
+  }
+
+  beforeRenderLog($line: Element) {
+    // do nothing
   }
 
   /**
    * print log to origin console
    * @protected
    */
-  printOriginLog(item) {
+  printOriginLog(item: VConsoleLogItem) {
     if (typeof this.console[item.logType] === 'function') {
       this.console[item.logType].apply(window.console, item.logs);
     }
@@ -321,17 +344,8 @@ class VConsoleLogTab extends VConsolePlugin {
 
   /**
    * print a log to log box
-   * @protected
-   * @param  string  _id        random unique id
-   * @param  string  tabName    default|system
-   * @param  string  logType    log|info|debug|error|warn
-   * @param  array   logs       `logs` or `content` can't be empty
-   * @param  object  content    `logs` or `content` can't be empty
-   * @param  boolean noOrigin
-   * @param  int     date
-   * @param  string  style
    */
-  printLog(item) {
+  protected printLog(item: VConsoleLogItem) {
     let logs = item.logs || [];
     if (!logs.length && !item.content) {
       return;
@@ -341,8 +355,8 @@ class VConsoleLogTab extends VConsolePlugin {
     logs = [].slice.call(logs || []);
 
     // check `[default]` format
+    const pattern = /^\[(\w+)\]$/i;
     let shouldBeHere = true;
-    let pattern = /^\[(\w+)\]$/i;
     let targetTabID = '';
     let isInAddedTab = false;
     if (tool.isString(logs[0])) {
@@ -403,28 +417,35 @@ class VConsoleLogTab extends VConsolePlugin {
     }
 
     // make for previous log
-    const curLog = {
+    const curLog: VConsoleLogView = {
       _id: item._id,
       logType: item.logType,
-      logText: [],
+      logText: '',
       hasContent: !!item.content,
       hasFold: false,
       count: 1,
     };
+    const logText: string[] = [];
     for (let i = 0; i < logs.length; i++) {
       if (tool.isFunction(logs[i])) {
-        curLog.logText.push(logs[i].toString());
+        logText.push(logs[i].toString());
       } else if (tool.isObject(logs[i]) || tool.isArray(logs[i])) {
-        curLog.logText.push(tool.JSONStringify(logs[i]));
+        logText.push(tool.JSONStringify(logs[i]));
         curLog.hasFold = true;
       } else {
-        curLog.logText.push(logs[i]);
+        logText.push(logs[i]);
       }
     }
-    curLog.logText = curLog.logText.join(' ');
+    curLog.logText = logText.join(' ');
 
     // check repeat
-    if (!curLog.hasContent && !curLog.hasFold && this.previousLog.logType === curLog.logType && this.previousLog.logText === curLog.logText) {
+    if (
+      !curLog.hasContent && 
+      !curLog.hasFold && 
+      !!this.previousLog && 
+      this.previousLog.logType === curLog.logType && 
+      this.previousLog.logText === curLog.logText
+    ) {
       this.printRepeatLog();
     } else {
       this.printNewLog(item, logs);
@@ -445,8 +466,7 @@ class VConsoleLogTab extends VConsolePlugin {
   }
 
   /**
-   *
-   * @protected
+   * Render the count of a repeated log
    */
   printRepeatLog() {
     const $item = $.one('#' + this.previousLog._id);
@@ -460,18 +480,17 @@ class VConsoleLogTab extends VConsolePlugin {
       // this.previousLog.count = 1;
     // }
     this.previousLog.count++;
-    $repeat.innerHTML = this.previousLog.count;
+    $repeat.innerHTML = String(this.previousLog.count);
     return;
   }
 
   /**
-   *
-   * @protected
+   * Render a new log
    */
-  printNewLog(item, logs) {
+  protected printNewLog(item: VConsoleLogItem, logs: VConsoleLogArgs) {
 
     // create line
-    let $line = $.render(tplItem, {
+    const $line = $.render(tplItem, {
       _id: item._id,
       logType: item.logType,
       style: item.style || '',
@@ -480,7 +499,7 @@ class VConsoleLogTab extends VConsolePlugin {
 
     // find %c keyword in first log only
     const patternC = /(\%c )|( \%c)/g;
-    let logStyle = [];
+    const logStyle: string[] = [];
     if (tool.isString(logs[0]) && patternC.test(logs[0])) {
       // '%c aaa %c bbb'  =>  ['aaa', 'bbb']
       const _logs = logs[0].split(patternC).filter((val) => {
@@ -500,14 +519,14 @@ class VConsoleLogTab extends VConsolePlugin {
       logs = _logs;
     }
 
-    let $content = $.one('.vc-item-content', $line);
-    const rawLogs = [];
+    const $content = $.one('.vc-item-content', $line);
+    const rawLogs: string[] = [];
 
     // generate content from item.logs
     for (let i = 0; i < logs.length; i++) {
       const curLog = logs[i];
-      let rawLog;
-      let log;
+      let rawLog: string;
+      let log: Element;
       try {
         if (curLog === '') {
           // ignore empty string
@@ -544,10 +563,11 @@ class VConsoleLogTab extends VConsolePlugin {
       if (log) {
         rawLogs.push(rawLog);
 
-        if (typeof log === 'string')
+        if (typeof log === 'string') {
           $content.insertAdjacentHTML('beforeend', log);
-        else
+        } else {
           $content.insertAdjacentElement('beforeend', log);
+        }
       }
     }
 
@@ -560,7 +580,7 @@ class VConsoleLogTab extends VConsolePlugin {
     }
 
     // render to panel
-    if(this.formatLine) $line = this.formatLine($line);
+    this.beforeRenderLog($line);
     $.one('.vc-log', this.$tabbox).insertAdjacentElement('beforeend', $line);
 
     // remove overflow logs
@@ -570,12 +590,11 @@ class VConsoleLogTab extends VConsolePlugin {
 
   /**
    * generate the HTML element of a folded line
-   * @protected
    */
-  getFoldedLine(obj, outer) {
-    let that = this;
+  protected getFoldedLine(obj: any, outer?: string) {
+    const that = this;
     if (!outer) {
-      let json = tool.JSONStringify(obj);
+      const json = tool.JSONStringify(obj);
       let preview = json.substr(0, 36);
       outer = tool.getObjName(obj);
       if (json.length > 36) {
@@ -583,7 +602,7 @@ class VConsoleLogTab extends VConsolePlugin {
       }
       outer = tool.invisibleTextEncode(tool.htmlEncode(outer + ' ' + preview));
     }
-    let $line = $.render(tplFold, {
+    const $line = $.render(tplFold, {
       outer: outer,
       lineType: 'obj'
     });
@@ -599,7 +618,7 @@ class VConsoleLogTab extends VConsolePlugin {
         $.addClass($.one('.vc-fold-inner', $line), 'vc-toggle');
         $.addClass($.one('.vc-fold-outer', $line), 'vc-toggle');
       }
-      let $content = $.one('.vc-fold-inner', $line);
+      const $content = $.one('.vc-fold-inner', $line);
       setTimeout(function () {
         if ($content.children.length == 0 && !!obj) {
           // render object's keys

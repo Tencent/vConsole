@@ -26,9 +26,9 @@ import tplToolItem from './tool_item.html';
 
 // built-in plugins
 import VConsolePlugin from '../lib/plugin.ts';
-import VConsoleLogPlugin from '../log/log.js';
-import VConsoleDefaultPlugin from '../log/default.js';
-import VConsoleSystemPlugin from '../log/system.js';
+import VConsoleLogPlugin from '../log/log.ts';
+import VConsoleDefaultPlugin from '../log/default.ts';
+import VConsoleSystemPlugin from '../log/system.ts';
 import VConsoleNetworkPlugin from '../network/network.ts';
 import VConsoleElementPlugin from '../element/element.js';
 import VConsoleStoragePlugin from '../storage/storage.ts';
