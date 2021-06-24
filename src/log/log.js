@@ -41,7 +41,7 @@ class VConsoleLogTab extends VConsolePlugin {
     this.console = {};
     this.logList = []; // save logs before ready
     this.cachedLogs = {}; // for copy
-    this.previousLog = {}; // { _id: string, logType: string, logText: string }
+    this.previousLog = {}; // { _id: string, logType: string, logText: string, hasFold: boolean }
     this.isInBottom = true; // whether the panel is in the bottom
     this.maxLogNumber = DEFAULT_MAX_LOG_NUMBER;
     this.logNumber = 0;
@@ -408,6 +408,7 @@ class VConsoleLogTab extends VConsolePlugin {
       logType: item.logType,
       logText: [],
       hasContent: !!item.content,
+      hasFold: false,
       count: 1,
     };
     for (let i = 0; i < logs.length; i++) {
@@ -415,6 +416,7 @@ class VConsoleLogTab extends VConsolePlugin {
         curLog.logText.push(logs[i].toString());
       } else if (tool.isObject(logs[i]) || tool.isArray(logs[i])) {
         curLog.logText.push(tool.JSONStringify(logs[i]));
+        curLog.hasFold = true;
       } else {
         curLog.logText.push(logs[i]);
       }
@@ -422,7 +424,7 @@ class VConsoleLogTab extends VConsolePlugin {
     curLog.logText = curLog.logText.join(' ');
 
     // check repeat
-    if (!curLog.hasContent && this.previousLog.logType === curLog.logType && this.previousLog.logText === curLog.logText) {
+    if (!curLog.hasContent && !curLog.hasFold && this.previousLog.logType === curLog.logType && this.previousLog.logText === curLog.logText) {
       this.printRepeatLog();
     } else {
       this.printNewLog(item, logs);
