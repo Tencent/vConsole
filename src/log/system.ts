@@ -13,7 +13,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole System Tab
  */
 
-import VConsoleLogTab from './log.js';
+import VConsoleLogTab from './log';
 import tplTabbox from './tabbox_system.html';
 
 class VConsoleSystemTab extends VConsoleLogTab {
@@ -32,11 +32,11 @@ class VConsoleSystemTab extends VConsoleLogTab {
   printSystemInfo() {
   	// print system info
     const ua = navigator.userAgent;
-    let logMsg = [];
+    let logMsg: string[] = [];
     
     // wechat client version
-    let wxVersion = ua.match(/MicroMessenger\/([\d\.]+)/i);
-    wxVersion = wxVersion && wxVersion[1] ? wxVersion[1] : null;
+    const wxVersionMatch = ua.match(/MicroMessenger\/([\d\.]+)/i);
+    const wxVersion = wxVersionMatch && wxVersionMatch[1] ? wxVersionMatch[1] : null;
     const isMiniprogram = location.host === 'servicewechat.com';
 
     // location
@@ -83,11 +83,11 @@ class VConsoleSystemTab extends VConsoleLogTab {
     // performance related
     // use `setTimeout` to make sure all timing points are available
     setTimeout(function() {
-      let performance = window.performance || window.msPerformance || window.webkitPerformance;
+      const performance = window.performance || (<any>window).msPerformance || (<any>window).webkitPerformance;
 
       // timing
       if (performance && performance.timing) {
-        let t = performance.timing;
+        const t = performance.timing;
         if (t.navigationStart) {
           console.info('[system]', 'navigationStart:', t.navigationStart);
         }
