@@ -53,13 +53,13 @@
   /* global */
 
   .vc-max-height {
-    max-height: 250em / @font;
+    max-height: (250em / @font);
   }
   .vc-max-height-line {
-    max-height: 44em / @font;
+    max-height: (44em / @font);
   }
   .vc-min-height {
-    min-height: 40em / @font;
+    min-height: (40em / @font);
   }
 
   dd, dl, pre {
@@ -71,16 +71,16 @@
   .vc-switch {
     display: block;
     position: fixed;
-    right: 10em / @font;
-    bottom: 10em / @font;
+    right: (10em / @font);
+    bottom: (10em / @font);
     color: #FFF;
     background-color: var(--VC-BRAND);
     line-height: 1;
-    font-size: 14em / @font;
-    padding: 8em / @font 16em / @font;
+    font-size: (14em / @font);
+    padding: (8em / @font) (16em / @font);
     z-index: 10000;
-    border-radius: 4em / @font;
-    box-shadow: 0 0 8em / @font rgba(0,0,0,0.4);
+    border-radius: (4em / @font);
+    box-shadow: 0 0 (8em / @font) rgba(0,0,0,0.4);
   }
 
   .vc-mask {
@@ -119,14 +119,14 @@
   .vc-tabbar {
     border-bottom: 1px solid var(--VC-FG-3);
     overflow-x: auto;
-    height: 39em / @font;
+    height: (39em / @font);
     width: auto;
     white-space: nowrap;
 
     .vc-tab {
       display: inline-block;
-      line-height: 39em / @font;
-      padding: 0 15em / @font;
+      line-height: (39em / @font);
+      padding: 0 (15em / @font);
       border-right: 1px solid var(--VC-FG-3);
       text-decoration: none;
       color: var(--VC-FG-0);
@@ -146,16 +146,16 @@
     overflow-x: hidden;
     overflow-y: auto;
     position: absolute;
-    top: 40em / @font;
+    top: (40em / @font);
     left: 0;
     right: 0;
-    bottom: 40em / @font;
+    bottom: (40em / @font);
     -webkit-overflow-scrolling: touch;
     margin-bottom: constant(safe-area-inset-bottom);
     margin-bottom: env(safe-area-inset-bottom);
   }
   .vc-content.vc-has-topbar {
-    top: 71em / @font;
+    top: (71em / @font);
   }
 
   .vc-topbar {
@@ -184,8 +184,8 @@
       -moz-box-flex: 1;
       -ms-flex: 1;
       flex: 1;
-      line-height: 30em / @font;
-      padding: 0 15em / @font;
+      line-height: (30em / @font);
+      padding: 0 (15em / @font);
       border-bottom: 1px solid var(--VC-FG-3);
       text-decoration: none;
       text-align: center;
@@ -226,13 +226,13 @@
       left: 0;
       right: 0;
       bottom: 0;
-      font-size: 15em / @font;
+      font-size: (15em / @font);
       text-align: center;
     }
 
     .vc-item {
       margin: 0;
-      padding: 6em / @font 8em / @font;
+      padding: (6em / @font) (8em / @font);
       overflow: hidden;
       line-height: 1.3;
       border-bottom: 1px solid var(--VC-FG-3);
@@ -270,7 +270,7 @@
         display: none !important;
       }
       .vc-item-content {
-        margin-right: 60em / @font;
+        margin-right: (60em / @font);
         // display: inline-block;
       }
       i {
@@ -280,11 +280,11 @@
       .vc-item-repeat {
         // display: inline-block;
         float: left;
-        margin-right: 4em / @font;
-        padding: 0 @fontSize / 2;
+        margin-right: (4em / @font);
+        padding: 0 (@fontSize / 2);
         color: #D7E0EF;
         background-color: #42597F;
-        border-radius: @fontSize / 1.5;
+        border-radius: (@fontSize / 1.5);
       }
     }
 
@@ -305,15 +305,15 @@
     }
     .vc-item .vc-item-code.vc-item-code-input,
     .vc-item .vc-item-code.vc-item-code-output {
-      padding-left: 12em / @font;
+      padding-left: (12em / @font);
     }
     .vc-item .vc-item-code.vc-item-code-input:before,
     .vc-item .vc-item-code.vc-item-code-output:before {
       content: "›";
       position: absolute;
-      top: -3em / @font;
+      top: (-3em / @font);
       left: 0;
-      font-size: 16em / @font;
+      font-size: (16em / @font);
       color: #6A5ACD;
     }
     .vc-item .vc-item-code.vc-item-code-output:before {
@@ -328,7 +328,7 @@
       .vc-fold-outer {
         display: block;
         font-style: italic;
-        padding-left: 10em / @font;
+        padding-left: (10em / @font);
         position: relative;
       }
       .vc-fold-outer:active {
@@ -338,15 +338,15 @@
       .vc-fold-outer:before {
         content: "";
         position: absolute;
-        top: 4em / @font;
-        left: 2em / @font;
+        top: (4em / @font);
+        left: (2em / @font);
         width: 0;
         height: 0;
-        border: transparent solid 4em / @font;
+        border: transparent solid (4em / @font);
         border-left-color: var(--VC-FG-1);
       }
       .vc-fold-outer.vc-toggle:before {
-        top: 6em / @font;
+        top: (6em / @font);
         left: 0;
         border-top-color: var(--VC-FG-1);
         border-left-color: transparent;
@@ -354,14 +354,14 @@
 
       .vc-fold-inner {
         display: none;
-        margin-left: 10em / @font;
+        margin-left: (10em / @font);
       }
       .vc-fold-inner.vc-toggle {
         display: block;
       }
 
       .vc-fold-inner .vc-code-key {
-        margin-left: 10em / @font;
+        margin-left: (10em / @font);
       }
       .vc-fold-outer .vc-code-key {
         margin-left: 0;
@@ -415,7 +415,7 @@
     .vc-item-tips {
       background-color: var(--VC-BG-6);
       color: var(--VC-FG-0);
-      font-size: 11em / @font;
+      font-size: (11em / @font);
       padding: 2px 4px;
       border-radius: 4px;
     }
@@ -445,7 +445,7 @@
 
     .vc-cmd {
       position: absolute;
-      height: 40em / @font;
+      height: (40em / @font);
       left: 0;
       right: 0;
       bottom: 41px;
@@ -457,9 +457,9 @@
 
       .vc-cmd-input-wrap {
         display: block;
-        height: 28em / @font;
-        margin-right: 40em / @font;
-        padding: 6em / @font 8em / @font;
+        height: (28em / @font);
+        margin-right: (40em / @font);
+        padding: (6em / @font) (8em / @font);
       }
 
       .vc-cmd-input {
@@ -468,12 +468,12 @@
         resize: none;
         outline: none;
         padding: 0;
-        font-size: 12em / @font;
+        font-size: (12em / @font);
         background-color: transparent;
         color: var(--VC-FG-0);
       }
       .vc-cmd-input::-webkit-input-placeholder {
-        line-height: 28em / @font;
+        line-height: (28em / @font);
       }
 
       .vc-cmd-btn {
@@ -481,7 +481,7 @@
         top: 0;
         right: 0;
         bottom: 0;
-        width: 40em / @font;
+        width: (40em / @font);
         border: none;
         background-color: var(--VC-BG-0);
         color: var(--VC-FG-0);
@@ -504,7 +504,7 @@
       .vc-cmd-prompted li {
         list-style: none;
         line-height: 30px;
-        padding: 0 6em / @font;
+        padding: 0 (6em / @font);
         border-bottom: 1px solid var(--VC-FG-3);
       }
     }
@@ -520,7 +520,7 @@
 
       .vc-group-detail {
         display: none;
-        padding: 0 0 10em / @font 20em / @font;
+        padding: 0 0 (10em / @font) (20em / @font);
         border-bottom: 1px solid var(--VC-FG-3);
       }
 
@@ -573,7 +573,7 @@
         -moz-box-flex: 1;
         -ms-flex: 1;
         flex: 1;
-        padding: 3em / @font 4em / @font;
+        padding: (3em / @font) (4em / @font);
         border-left: 1px solid var(--VC-FG-3);
         overflow: auto;
 
@@ -590,8 +590,8 @@
       }
 
       .vc-small .vc-table-col {
-        padding: 0 4em / @font;
-        font-size: 12em / @font;
+        padding: 0 (4em / @font);
+        font-size: (12em / @font);
       }
 
       .vc-table-col-2 {
@@ -653,7 +653,7 @@
 
   .vc-toolbar {
     border-top: 1px solid var(--VC-FG-3);
-    line-height: 39em / @font;
+    line-height: (39em / @font);
     position: absolute;
     left: 0;
     right: 0;
@@ -696,8 +696,8 @@
     .vc-tool:after {
       content: " ";
       position: absolute;
-      top: 7em / @font;
-      bottom: 7em / @font;
+      top: (7em / @font);
+      bottom: (7em / @font);
       right: 0;
       border-left: 1px solid var(--VC-FG-3);
     }
