@@ -1,7 +1,7 @@
 import VConsolePlugin from "./plugin";
 import { SvelteComponent } from "svelte";
 
-export class VConsoleSveltePlugin<T extends {}> extends VConsolePlugin {
+export class VConsoleSveltePlugin<T extends {} = {}> extends VConsolePlugin {
   Comp: typeof SvelteComponent;
   comp?: SvelteComponent;
   initialProps: T;
