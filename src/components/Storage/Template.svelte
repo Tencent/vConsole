@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { Tabs, TabList, TabPanel, Tab } from "../Tab";
-  import copy from "copy-text-to-clipboard";
-  import Fa from "svelte-fa";
+  import { Tabs, TabList, TabPanel, Tab } from '../Tab';
+  import copy from 'copy-text-to-clipboard';
+  import Fa from 'svelte-fa';
   import {
     faCopy,
     faTrash,
@@ -9,17 +9,17 @@
     faSave,
     faPlus,
     faSync,
-  } from "@fortawesome/free-solid-svg-icons";
-  import { Btn } from "../Button";
-  import { getAllStorages } from "./utils";
-  import { getStringBytes, subString } from "../../lib/tool";
+  } from '@fortawesome/free-solid-svg-icons';
+  import { Btn } from '../Button';
+  import { getAllStorages } from './utils';
+  import { getStringBytes, subString } from '../../lib/tool';
 
   let storages = getAllStorages();
 
   // edit state
   let editingIdx = -1;
-  let editingKey = "";
-  let editingVal = "";
+  let editingKey = '';
+  let editingVal = '';
 
   // force reload
   const handleRefresh = () => {
@@ -27,16 +27,16 @@
   };
 
   const handleAdd = (storage: Storage) => {
-    storage.setItem(`new_item_${Date.now()}`, "new_value");
+    storage.setItem(`new_item_${Date.now()}`, 'new_value');
     handleRefresh();
   };
 
   const handleDel = (storage: Storage, idx: number) => {
-    storage.removeItem(storage.key(idx) ?? "");
+    storage.removeItem(storage.key(idx) ?? '');
     handleRefresh();
   };
   const handleCopy = (key: string, value: string) => {
-    const text = [key, value].join("=");
+    const text = [key, value].join('=');
     copy(text);
   };
   const handleEditOrSave = (
@@ -119,7 +119,7 @@
 </Tabs>
 
 <style lang="less">
-  @import "../../styles/size.less";
+  @import '../../styles/size.less';
   .tab-list {
     position: fixed;
     width: 100%;

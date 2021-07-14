@@ -3,8 +3,8 @@
 </script>
 
 <script>
-  import { setContext, onDestroy } from "svelte";
-  import { writable } from "svelte/store";
+  import { setContext, onDestroy } from 'svelte';
+  import { writable } from 'svelte/store';
 
   const tabs = [];
   const panels = [];

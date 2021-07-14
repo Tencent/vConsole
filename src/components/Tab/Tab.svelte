@@ -1,6 +1,6 @@
 <script>
-  import { getContext } from "svelte";
-  import { TABS } from "./Tabs.svelte";
+  import { getContext } from 'svelte';
+  import { TABS } from './Tabs.svelte';
 
   const tab = {};
   const { registerTab, selectTab, selectedTab } = getContext(TABS);
@@ -13,7 +13,7 @@
 </button>
 
 <style lang="less">
-  @import "../../styles/size.less";
+  @import '../../styles/size.less';
 
   button {
     outline: none;

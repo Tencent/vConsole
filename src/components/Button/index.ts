@@ -1,1 +1,1 @@
-export { default as Btn } from "./Template.svelte";
+export { default as Btn } from './Template.svelte';

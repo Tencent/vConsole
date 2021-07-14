@@ -1,5 +1,5 @@
-import VConsolePlugin from "./plugin";
-import { SvelteComponent } from "svelte";
+import VConsolePlugin from './plugin';
+import { SvelteComponent } from 'svelte';
 
 export class VConsoleSveltePlugin<T extends {} = {}> extends VConsolePlugin {
   Comp: typeof SvelteComponent;
@@ -17,7 +17,7 @@ export class VConsoleSveltePlugin<T extends {} = {}> extends VConsolePlugin {
     this.initialProps = renderProps;
   }
   onRenderTab(callback) {
-    this.$dom = document.createElement("div");
+    this.$dom = document.createElement('div');
     this.comp = new this.Comp({
       target: this.$dom,
       props: this.initialProps,
