@@ -77,6 +77,11 @@
   {#each storages as { storage }}
     <TabPanel>
       <div class="table">
+        <div class="row">
+          <div class="item">Key</div>
+          <div class="item">Value</div>
+          <div class="action" />
+        </div>
         {#each Object.entries(storage) as [k, v], i}
           <div class="row">
             {#if editingIdx === i}
@@ -122,8 +127,7 @@
   }
 
   .table {
-    width: 100%;
-    padding: 8px;
+    margin: 0 8px;
     padding-top: (30em / @font);
   }
   .row {
