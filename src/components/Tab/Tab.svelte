@@ -25,8 +25,11 @@
     margin: 0;
     color: var(--VC-FG-0);
     line-height: (30em / @font);
-    &:hover,:focus {
-      background-color: rgba(0, 0, 0, 0.15);
+    &:hover {
+      background: var(--VC-BG-2);
+    }
+    &:active {
+      background: var(--VC-BG-0);
     }
   }
 
