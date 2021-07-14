@@ -27,8 +27,7 @@
   };
 
   const handleAdd = (storage: Storage) => {
-    const newIdx = storage.length + 1;
-    storage.setItem(`new_item_${newIdx}`, "new_value");
+    storage.setItem(`new_item_${Date.now()}`, "new_value");
     handleRefresh();
   };
 
