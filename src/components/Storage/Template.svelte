@@ -1,6 +1,5 @@
 <script lang="ts">
   import { Tabs, TabList, TabPanel, Tab } from "../Tab";
-  import { cookiesStorage } from "../../lib/cookiesStorage";
   import copy from "copy-text-to-clipboard";
   import Fa from "svelte-fa";
   import {
@@ -9,32 +8,33 @@
     faEdit,
     faSave,
     faPlus,
+    faSync,
   } from "@fortawesome/free-solid-svg-icons";
+  import { Btn } from "../Button";
+  import { getAllStorages } from "./utils";
+  import { getStringBytes, subString } from "../../lib/tool";
 
-  interface IStorageItem {
-    name: string;
-    storage: Storage;
-  }
+  let storages = getAllStorages();
 
-  let storages: IStorageItem[] = [{ name: "cookies", storage: cookiesStorage }];
-  if (globalThis.localStorage)
-    storages.push({ name: "localStorage", storage: localStorage });
-  if (globalThis.sessionStorage)
-    storages.push({ name: "sessionStorage", storage: sessionStorage });
+  // edit state
+  let editingIdx = -1;
+  let editingKey = "";
+  let editingVal = "";
 
-  let editIdx = -1;
-  let editKey = "";
-  let editValue = "";
+  // force reload
+  const handleRefresh = () => {
+    storages = storages;
+  };
 
   const handleAdd = (storage: Storage) => {
     const newIdx = storage.length + 1;
     storage.setItem(`new_item_${newIdx}`, "new_value");
-    storages = storages;
+    handleRefresh();
   };
 
   const handleDel = (storage: Storage, idx: number) => {
     storage.removeItem(storage.key(idx) ?? "");
-    storages = storages;
+    handleRefresh();
   };
   const handleCopy = (key: string, value: string) => {
     const text = [key, value].join("=");
@@ -46,42 +46,46 @@
     value: string,
     i: number
   ) => {
-    const save = editIdx === i;
+    const save = editingIdx === i;
     if (save) {
-      if (editKey !== key) {
-        storage.removeItem(key);
-      }
-      storage.setItem(editKey, editValue);
-      editIdx = -1;
-      storages = storages;
+      if (editingKey !== key) storage.removeItem(key); // dirty key
+      storage.setItem(editingKey, editingVal); // set value anyway
+      editingIdx = -1; // reset editing status
+      handleRefresh();
     } else {
-      editKey = key;
-      editValue = value;
-      editIdx = i;
+      editingKey = key;
+      editingVal = value;
+      editingIdx = i;
     }
+  };
+  const BYTES_LIMIT = 1024;
+  const properDisplay = (str: string) => {
+    const overlength = getStringBytes(str) > BYTES_LIMIT;
+    return overlength ? subString(str, BYTES_LIMIT) : str;
   };
 </script>
 
 <Tabs>
-  <TabList>
-    {#each storages as { name, storage }}
-      <Tab>{name}</Tab>
-    {/each}
-  </TabList>
+  <div class="tab-list">
+    <TabList>
+      {#each storages as { name }}
+        <Tab>{name}</Tab>
+      {/each}
+    </TabList>
+  </div>
 
   {#each storages as { storage }}
     <TabPanel>
       <div class="table">
         {#each Object.entries(storage) as [k, v], i}
           <div class="row">
-            {#if editIdx === i}
-              <input class="item" bind:value={editKey} />
-              <input class="item" bind:value={editValue} />
+            {#if editingIdx === i}
+              <input class="item" bind:value={editingKey} />
+              <input class="item" bind:value={editingVal} />
             {:else}
               <div class="item">{k}</div>
-              <div class="item">{v}</div>
+              <div class="item">{properDisplay(v)}</div>
             {/if}
-
             <div class="action">
               <div on:click={() => handleDel(storage, i)}>
                 <Fa icon={faTrash} />
@@ -90,16 +94,20 @@
                 <Fa icon={faCopy} />
               </div>
               <div on:click={() => handleEditOrSave(storage, k, v, i)}>
-                <Fa icon={editIdx === i ? faSave : faEdit} />
+                <Fa icon={editingIdx === i ? faSave : faEdit} />
               </div>
             </div>
           </div>
         {/each}
         <div class="row">
-          <div class="item add" on:click={() => handleAdd(storage)}>
+          <Btn class="item btn" on:click={() => handleAdd(storage)}>
             <Fa icon={faPlus} />
             Add Item
-          </div>
+          </Btn>
+          <Btn class="item btn" on:click={() => handleRefresh()}>
+            <Fa icon={faSync} />
+            Refresh
+          </Btn>
         </div>
       </div>
     </TabPanel>
@@ -107,20 +115,29 @@
 </Tabs>
 
 <style lang="less">
+  @import "../../styles/size.less";
+  .tab-list {
+    position: fixed;
+    width: 100%;
+  }
+
   .table {
     width: 100%;
     padding: 8px;
+    padding-top: (30em / @font);
   }
   .row {
     display: flex;
-    .item,
-    .action {
+    :global(.item),
+    :global(.action) {
       line-height: 2;
       border: 1px solid var(--VC-FG-3);
     }
-    .item {
+    :global(.item) {
       flex: 2;
-      &.add {
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+      :global(&.btn) {
         text-align: center;
       }
     }
@@ -130,10 +147,12 @@
       justify-content: space-evenly;
       div {
         flex: 1;
-        filter: invert(0.5);
         text-align: center;
         &:hover {
-          filter: none;
+          background: var(--VC-BG-3);
+        }
+        &:active {
+          background: var(--VC-BG-1);
         }
       }
     }
