@@ -8,6 +8,7 @@
   "scripts": {
     "build": "webpack --mode=production",
     "dev": "webpack --mode=development",
+    "watch": "webpack watch --mode=development",
     "serve": "webpack serve --config webpack.serve.config"
   },
   "keywords": [
@@ -20,9 +21,12 @@
     "url": "git+https://github.com/Tencent/vConsole.git"
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^5.15.3",
+    "cookie-storage": "^6.1.0",
     "copy-text-to-clipboard": "^3.0.1",
     "core-js": "^3.11.0",
-    "mutation-observer": "^1.0.3"
+    "mutation-observer": "^1.0.3",
+    "svelte-fa": "^2.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.14.0",
@@ -42,6 +46,9 @@
     "less": "^4.1.1",
     "less-loader": "^8.1.1",
     "style-loader": "^2.0.0",
+    "svelte": "^3.38.3",
+    "svelte-loader": "^3.1.2",
+    "svelte-preprocess": "^4.7.4",
     "webpack": "^5.37.0",
     "webpack-cli": "^4.7.0",
     "webpack-dev-server": "^3.11.2",
