@@ -9,6 +9,7 @@ const contentBase = path.join(__dirname, '/');
 module.exports = merge(baseConfig, {
   mode: 'development',
   devtool: 'eval-source-map',
+  entry: {},
   devServer: {
     host: '0.0.0.0',
     port: 9191,
