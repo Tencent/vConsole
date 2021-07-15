@@ -343,7 +343,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
             if (tool.isString(XMLReq.response)) {
               try {
                 item.response = JSON.parse(XMLReq.response);
-                item.response = JSON.stringify(item.response, null, 1);
+                item.response = tool.JSONStringify(item.response, null, 1);
               } catch (e) {
                 // not a JSON string
                 item.response = XMLReq.response;
@@ -355,7 +355,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
           case 'json':
             if (typeof XMLReq.response !== 'undefined') {
-              item.response = JSON.stringify(XMLReq.response, null, 1);
+              item.response = tool.JSONStringify(XMLReq.response, null, 1);
             }
             break;
 
@@ -560,7 +560,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
             try {
               // try to parse response as JSON
               item.response = JSON.parse(responseBody);
-              item.response = JSON.stringify(item.response, null, 1);
+              item.response = tool.JSONStringify(item.response, null, 1);
             } catch (e) {
               // not real JSON, use 'text' as default type
               item.response = responseBody;

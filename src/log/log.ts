@@ -430,7 +430,7 @@ class VConsoleLogTab extends VConsolePlugin {
       if (tool.isFunction(logs[i])) {
         logText.push(logs[i].toString());
       } else if (tool.isObject(logs[i]) || tool.isArray(logs[i])) {
-        logText.push(tool.JSONStringify(logs[i]));
+        logText.push(tool.SimpleJSONStringify(logs[i]));
         curLog.hasFold = true;
       } else {
         logText.push(logs[i]);
@@ -541,7 +541,7 @@ class VConsoleLogTab extends VConsolePlugin {
           });
         } else if (tool.isObject(curLog) || tool.isArray(curLog)) {
           // object or array
-          rawLog = JSON.stringify(curLog, tool.circularReplacer(), 2)
+          rawLog = tool.JSONStringify(curLog, tool.circularReplacer(), 2)
           log = this.getFoldedLine(curLog);
         } else {
           // default
@@ -594,7 +594,7 @@ class VConsoleLogTab extends VConsolePlugin {
   protected getFoldedLine(obj: any, outer?: string) {
     const that = this;
     if (!outer) {
-      const json = tool.JSONStringify(obj);
+      const json = tool.SimpleJSONStringify(obj);
       let preview = json.substr(0, 36);
       outer = tool.getObjName(obj);
       if (json.length > 36) {

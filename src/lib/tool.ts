@@ -152,9 +152,9 @@ export function invisibleTextEncode(text: string) {
 /**
  * Simple JSON stringify, stringify top level key-value
  */
-export function JSONStringify(stringObject) {
+export function SimpleJSONStringify(stringObject) {
   if (!isObject(stringObject) && !isArray(stringObject)) {
-    return JSON.stringify(stringObject);
+    return JSONStringify(stringObject);
   }
 
   let prefix = '{', suffix = '}';
@@ -184,7 +184,7 @@ export function JSONStringify(stringObject) {
       } else if (isObject(value) || isSymbol(value) || isFunction(value)) {
         str += Object.prototype.toString.call(value);
       } else {
-        str += JSON.stringify(value);
+        str += JSONStringify(value);
       }
       if (i < keys.length - 1) {
         str += ', ';
@@ -195,6 +195,19 @@ export function JSONStringify(stringObject) {
   }
   str += suffix;
   return str;
+}
+
+/**
+ * rewrite JSON.stringify, catch unknown exception 
+ */
+export function JSONStringify(value: any, replacer?: (this: any, key: string, value: any) => any, space?: string | number) {
+  let stringifyResult: string
+  try {
+    stringifyResult = JSON.stringify(value, replacer, space)
+  } catch (err) {
+    stringifyResult = getPrototypeName(value)
+  }
+  return stringifyResult
 }
 
 export function getStringBytes(str: string) {
