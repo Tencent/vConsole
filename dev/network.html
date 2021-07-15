@@ -65,6 +65,7 @@ function postAjax() {
     type: 'xhr',
     '<xss0>': '<xss1> XSS Attack!'
   });
+  // xhr.send(JSON.stringify({foo: 'bar', id: Math.random(), '<xss0>': '<xss1> XSS Attack!'}));
   console.info('postAjax() End');
 }
 
