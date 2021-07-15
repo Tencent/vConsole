@@ -432,11 +432,15 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
         // save POST data
         if (tool.isString(data)) {
-          const arr = data.split('&');
-          item.postData = {};
-          for (let q of arr) {
-            q = q.split('=');
-            item.postData[ q[0] ] = q[1];
+          try { // '{a:1}' => try to parse as json
+            item.postData = JSON.parse(data);
+          } catch (e) { // 'a=1&b=2' => try to parse as query
+            const arr = data.split('&');
+            item.postData = {};
+            for (let q of arr) {
+              q = q.split('=');
+              item.postData[ q[0] ] = q[1];
+            }
           }
         } else if (tool.isPlainObject(data)) {
           item.postData = data;

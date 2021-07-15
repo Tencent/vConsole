@@ -61,10 +61,11 @@ function postAjax() {
   xhr.open('POST', './data/large.json?method=fetchPost&c=中文');
   xhr.send({
     foo: 'bar',
-    id: Math.random(),
+    id: `${Math.random()}${Math.random()}${Math.random()}${Math.random()}${Math.random()}${Math.random()}`,
     type: 'xhr',
     '<xss0>': '<xss1> XSS Attack!'
   });
+  // xhr.send(JSON.stringify({foo: 'bar', id: Math.random(), '<xss0>': '<xss1> XSS Attack!'}));
   console.info('postAjax() End');
 }
 
