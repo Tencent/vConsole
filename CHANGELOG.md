@@ -1,5 +1,11 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### 3.9.0 (2021-07-15)
+
+- `Refactor(Global)` Use Svelte as template engine. (PR #429 by @ManiaciaChao)
+- `Fix(Network)` Fix error when url not starts with `http`.
+
+
 #### 3.8.1 (2021-06-24)
 
 - `Fix(Log)` Do not merge repeated logs with object(s) or array(s) into one line to avoid merging objects with the same structure but different values.

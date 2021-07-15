@@ -672,10 +672,10 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
   private getURL(urlString: string = '') {
     if (urlString.startsWith('//')) {
-      const baseUrl = new URL(window.location.href)
-      urlString = `${baseUrl.protocol}${urlString}`
+      const baseUrl = new URL(window.location.href);
+      urlString = `${baseUrl.protocol}${urlString}`;
     }
-    if (urlString.includes('http')) {
+    if (urlString.startsWith('http')) {
       return new URL(urlString);
     } else {
       return new URL(urlString, window.location.href);
