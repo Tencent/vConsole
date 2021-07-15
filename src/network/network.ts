@@ -524,7 +524,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
         }
       }
 
-      return _fetch(url.toString(), init).then((response) => {
+      const request = tool.isString(input) ? url.toString() : input;
+
+      return _fetch(request, init).then((response) => {
         _fetchReponse = response;
 
         item.endTime = +new Date();
