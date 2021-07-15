@@ -88,6 +88,7 @@ vConsole 本体：
  - [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats)
  - [vconsole-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsole-devtools)
  - [vconsole-outputlog-plugin](https://github.com/sunlanda/vconsole-outputlog-plugin)
+ - [vite-plugin-vconsole](https://github.com/vadxq/vite-plugin-vconsole)
 
 ## 更新记录
 
