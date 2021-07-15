@@ -577,17 +577,17 @@
         padding: (3em / @font) (4em / @font);
         border-left: 1px solid var(--VC-FG-3);
         overflow: auto;
-
-        .vc-table-col-value {
-          white-space: pre-wrap;
-          word-break: break-word;
-          /*white-space: nowrap;
-          text-overflow: ellipsis;*/
-          -webkit-overflow-scrolling: touch;
-        }
       }
       .vc-table-col:first-child {
         border: none;
+      }
+
+      .vc-table-col-value {
+        white-space: pre-wrap;
+        word-break: break-word;
+        /*white-space: nowrap;
+        text-overflow: ellipsis;*/
+        -webkit-overflow-scrolling: touch;
       }
 
       .vc-small .vc-table-col {
