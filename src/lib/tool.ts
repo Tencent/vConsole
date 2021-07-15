@@ -201,13 +201,13 @@ export function SimpleJSONStringify(stringObject) {
  * rewrite JSON.stringify, catch unknown exception 
  */
 export function JSONStringify(value: any, replacer?: (this: any, key: string, value: any) => any, space?: string | number) {
-  let stringifyResult: string
+  let stringifyResult: string;
   try {
-    stringifyResult = JSON.stringify(value, replacer, space)
+    stringifyResult = JSON.stringify(value, replacer, space);
   } catch (err) {
-    stringifyResult = getPrototypeName(value)
+    stringifyResult = getPrototypeName(value);
   }
-  return stringifyResult
+  return stringifyResult;
 }
 
 export function getStringBytes(str: string) {
