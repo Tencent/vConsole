@@ -541,7 +541,12 @@ class VConsoleLogTab extends VConsolePlugin {
           });
         } else if (tool.isObject(curLog) || tool.isArray(curLog)) {
           // object or array
-          rawLog = JSON.stringify(curLog, tool.circularReplacer(), 2)
+          if (curLog._isVue && !curLog.hasOwnProperty('toJSON')) {
+            //Vue instance is missing the toJSON method.
+            rawLog = tool.getPrototypeName(curLog)
+          } else {
+            rawLog = JSON.stringify(curLog, tool.circularReplacer(), 2)
+          }
           log = this.getFoldedLine(curLog);
         } else {
           // default
