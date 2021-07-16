@@ -17,8 +17,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
 import 'core-js/stable/symbol';
 
 // classes
-import VConsole from './core/core.js';
+import VConsole from './core/core';
 
 // export
 export { VConsole };
+
+export * as Tab from './components/Tab'
+export { Btn } from './components/Button'
+
 export default VConsole;

@@ -15,11 +15,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 import tplNodeHead from './tpl_node_head.html';
 import tplNodeFoot from './tpl_node_foot.html';
-
-// import * as tool from '../lib/tool.ts';
-import $ from '../lib/query.ts';
+import $ from '../lib/query';
 
 class NodeView {
+  node: any;
+  view: HTMLElement;
   
   constructor(node) {
     this.node = node;
@@ -32,8 +32,8 @@ class NodeView {
 
 
 
-  _create(node, isRoot) {
-    let view = document.createElement('DIV');
+  _create(node, isRoot?: boolean) {
+    const view = document.createElement('DIV');
     $.addClass(view, 'vcelm-l');
     switch (node.nodeType) {
       case view.ELEMENT_NODE:

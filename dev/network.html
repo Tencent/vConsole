@@ -28,6 +28,7 @@
     <a onclick="loadScriptError()" href="javascript:;" class="weui_btn weui_btn_default">loadScriptError</a>
     <a onclick="loadVideoError()" href="javascript:;" class="weui_btn weui_btn_default">loadVideoError</a>
     <a onclick="loadLinkError()" href="javascript:;" class="weui_btn weui_btn_default">loadLinkError</a>
+    <a onclick="loadAudioError()" href="javascript:;" class="weui_btn weui_btn_default">loadAudioError</a>
   </div>
 </body>
 </html>
@@ -60,10 +61,11 @@ function postAjax() {
   xhr.open('POST', './data/large.json?method=fetchPost&c=中文');
   xhr.send({
     foo: 'bar',
-    id: Math.random(),
+    id: `${Math.random()}${Math.random()}${Math.random()}${Math.random()}${Math.random()}${Math.random()}`,
     type: 'xhr',
     '<xss0>': '<xss1> XSS Attack!'
   });
+  // xhr.send(JSON.stringify({foo: 'bar', id: Math.random(), '<xss0>': '<xss1> XSS Attack!'}));
   console.info('postAjax() End');
 }
 
@@ -310,4 +312,15 @@ function loadLinkError() {
     console.info('loadLinkError() End');
   }
 }
+
+function loadAudioError() {
+  console.info('loadAudioError() Start');
+  const audio = document.createElement("Audio");
+  audio.src = 'http://xxxx.mp3';
+  document.body.appendChild(audio);
+  audio.onerror = () => {
+    console.info('loadAudioError() End');
+  }
+}
+
 </script>

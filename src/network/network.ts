@@ -343,7 +343,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
             if (tool.isString(XMLReq.response)) {
               try {
                 item.response = JSON.parse(XMLReq.response);
-                item.response = JSON.stringify(item.response, null, 1);
+                item.response = tool.JSONStringify(item.response, null, 1);
               } catch (e) {
                 // not a JSON string
                 item.response = XMLReq.response;
@@ -355,7 +355,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
           case 'json':
             if (typeof XMLReq.response !== 'undefined') {
-              item.response = JSON.stringify(XMLReq.response, null, 1);
+              item.response = tool.JSONStringify(XMLReq.response, null, 1);
             }
             break;
 
@@ -432,11 +432,15 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
         // save POST data
         if (tool.isString(data)) {
-          const arr = data.split('&');
-          item.postData = {};
-          for (let q of arr) {
-            q = q.split('=');
-            item.postData[ q[0] ] = q[1];
+          try { // '{a:1}' => try to parse as json
+            item.postData = JSON.parse(data);
+          } catch (e) { // 'a=1&b=2' => try to parse as query
+            const arr = data.split('&');
+            item.postData = {};
+            for (let q of arr) {
+              q = q.split('=');
+              item.postData[ q[0] ] = q[1];
+            }
           }
         } else if (tool.isPlainObject(data)) {
           item.postData = data;
@@ -524,7 +528,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
         }
       }
 
-      return _fetch(url.toString(), init).then((response) => {
+      const request = tool.isString(input) ? url.toString() : input;
+
+      return _fetch(request, init).then((response) => {
         _fetchReponse = response;
 
         item.endTime = +new Date();
@@ -558,7 +564,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
             try {
               // try to parse response as JSON
               item.response = JSON.parse(responseBody);
-              item.response = JSON.stringify(item.response, null, 1);
+              item.response = tool.JSONStringify(item.response, null, 1);
             } catch (e) {
               // not real JSON, use 'text' as default type
               item.response = responseBody;
@@ -672,10 +678,10 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
   private getURL(urlString: string = '') {
     if (urlString.startsWith('//')) {
-      const baseUrl = new URL(window.location.href)
-      urlString = `${baseUrl.protocol}${urlString}`
+      const baseUrl = new URL(window.location.href);
+      urlString = `${baseUrl.protocol}${urlString}`;
     }
-    if (urlString.includes('http')) {
+    if (urlString.startsWith('http')) {
       return new URL(urlString);
     } else {
       return new URL(urlString, window.location.href);

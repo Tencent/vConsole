@@ -3,6 +3,8 @@ const Webpack = require('webpack');
 const Path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const sveltePreprocess = require('svelte-preprocess');
+
 
 module.exports = (env, argv) => {
   const isDev = argv.mode === 'development';
@@ -10,7 +12,7 @@ module.exports = (env, argv) => {
     mode: argv.mode,
     devtool: false,
     entry: {
-      vconsole: Path.resolve(__dirname, './src/vconsole.js')
+      vconsole: Path.resolve(__dirname, './src/vconsole.ts'),
     },
     target: ['web', 'es5'],
     output: {
@@ -20,24 +22,18 @@ module.exports = (env, argv) => {
         name: 'VConsole',
         type: 'umd',
         umdNamedDefine: true,
-        export: 'default'
+        export: 'default',
       },
     },
     resolve: {
-      extensions: [ '.ts', '.js', '.html', '.less' ]
+      extensions: ['.ts', '.js', '.html', '.less', '.mjs', '.svelte'],
+      alias: {
+        svelte: Path.resolve('node_modules', 'svelte'),
+      },
+      mainFields: ['svelte', 'browser', 'module', 'main'],
     },
     module: {
       rules: [
-        {
-          test: /\.html$/,
-          // loader: 'html-loader?minimize=false'
-          use: [
-            {
-              loader: 'html-loader',
-              options: { minimize: false }
-            }
-          ]
-        },
         {
           test: /\.(js|ts)$/,
           use: [
@@ -45,7 +41,17 @@ module.exports = (env, argv) => {
           ]
         },
         {
-          test: /\.less$/i,
+          test: /\.html$/,
+          // loader: 'html-loader?minimize=false'
+          use: [
+            {
+              loader: 'html-loader',
+              options: { minimize: false },
+            },
+          ],
+        },
+        {
+          test: /\.(less|css)$/i,
           // loader: 'style-loader!css-loader!less-loader'
           use: [
             { loader: 'style-loader' },
@@ -53,12 +59,36 @@ module.exports = (env, argv) => {
             {
               loader: 'less-loader',
               options: {
-                lessOptions: { math: 'always' }
-              }
-            }
-          ]
-        }
-      ]
+                lessOptions: { math: 'always' },
+              },
+            },
+          ],
+        },
+        {
+          test: /\.(svelte)$/,
+          use : [{
+            loader: 'svelte-loader',
+            options: {
+              preprocess: sveltePreprocess({
+                sourceMap: isDev,
+              }),
+              compilerOptions: {
+                dev: isDev,
+              },
+              emitCss: !isDev,
+              hotReload: isDev,
+            },
+          }]
+          
+        },
+        {
+          // required to prevent errors from Svelte on Webpack 5+, omit on Webpack 4
+          test: /node_modules\/svelte\/.*\.mjs$/,
+          resolve: {
+            fullySpecified: false,
+          },
+        },
+      ],
     },
     stats: {
       colors: true,
@@ -67,9 +97,9 @@ module.exports = (env, argv) => {
       minimize: !isDev,
       minimizer: [
         new TerserPlugin({
-          extractComments: false
-        })
-      ]
+          extractComments: false,
+        }),
+      ],
     },
     plugins: [
       new Webpack.BannerPlugin({
@@ -80,7 +110,7 @@ module.exports = (env, argv) => {
           'Copyright (C) 2017 THL A29 Limited, a Tencent company. All rights reserved.',
           'Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at',
           'http://opensource.org/licenses/MIT',
-          'Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.'
+          'Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.',
         ].join('\n'),
         entryOnly: true,
       }),
@@ -88,10 +118,10 @@ module.exports = (env, argv) => {
         patterns: [
           {
             from: Path.resolve(__dirname, './src/vconsole.d.ts'),
-            to: Path.resolve(__dirname, './dist/vconsole.min.d.ts')
-          }
-        ]
-      })
-    ]
+            to: Path.resolve(__dirname, './dist/vconsole.min.d.ts'),
+          },
+        ],
+      }),
+    ],
   };
 };

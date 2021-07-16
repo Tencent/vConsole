@@ -14,8 +14,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
  */
 
 import pkg from '../../package.json';
-import * as tool from '../lib/tool.ts';
-import $ from '../lib/query.ts';
+import * as tool from '../lib/tool';
+import $ from '../lib/query';
 
 import './core.less';
 import tpl from './core.html';
@@ -25,17 +25,55 @@ import tplTopBarItem from './topbar_item.html';
 import tplToolItem from './tool_item.html';
 
 // built-in plugins
-import VConsolePlugin from '../lib/plugin.ts';
-import VConsoleLogPlugin from '../log/log.ts';
-import VConsoleDefaultPlugin from '../log/default.ts';
-import VConsoleSystemPlugin from '../log/system.ts';
-import VConsoleNetworkPlugin from '../network/network.ts';
-import VConsoleElementPlugin from '../element/element.js';
-import VConsoleStoragePlugin from '../storage/storage.ts';
+import VConsolePlugin from '../lib/plugin';
+import VConsoleLogPlugin from '../log/log';
+import VConsoleDefaultPlugin from '../log/default';
+import VConsoleSystemPlugin from '../log/system';
+import VConsoleNetworkPlugin from '../network/network';
+import VConsoleElementPlugin from '../element/element';
+import VConsoleStoragePlugin from '../storage/storage';
+
+declare interface VConsoleOptions {
+  defaultPlugins?: string[];
+  maxLogNumber?: number;
+  theme?: '' | 'dark' | 'light';
+  disableLogScrolling?: boolean;
+  onReady?: Function;
+  onClearLog?: Function;
+}
 
 const VCONSOLE_ID = '#__vconsole';
 
 class VConsole {
+  version: string;
+  $dom: HTMLElement;
+  isInited: boolean;
+  option: VConsoleOptions = {};
+  activedTab: string;
+  tabList: any[];
+  pluginList: {};
+  switchPos: {
+    hasMoved: boolean; // exclude click event
+    x: number; // right
+    y: number; // bottom
+    startX: number;
+    startY: number;
+    endX: number;
+    endY: number;
+  };
+
+  // export helper functions to public
+  tool = tool;
+  $ = $;
+
+  // export static class
+  static VConsolePlugin = VConsolePlugin;
+  static VConsoleLogPlugin = VConsoleLogPlugin;
+  static VConsoleDefaultPlugin = VConsoleDefaultPlugin;
+  static VConsoleSystemPlugin = VConsoleSystemPlugin;
+  static VConsoleNetworkPlugin = VConsoleNetworkPlugin;
+  static VConsoleElementPlugin = VConsoleElementPlugin;
+  static VConsoleStoragePlugin = VConsoleStoragePlugin;
 
   constructor(opt) {
     if (!!$.one(VCONSOLE_ID)) {
@@ -92,7 +130,7 @@ class VConsole {
     };
     if (document !== undefined) {
       if (document.readyState === 'loading') {
-        $.bind(window, 'DOMContentLoaded', _onload);
+        $.bind(<any>window, 'DOMContentLoaded', _onload);
       } else {
         _onload();
       }
@@ -151,16 +189,16 @@ class VConsole {
     this.$dom = $.one(VCONSOLE_ID);
 
     // reposition switch button
-    const $switch = $.one('.vc-switch', this.$dom);
-    let switchX = tool.getStorage('switch_x') * 1,
-        switchY = tool.getStorage('switch_y') * 1;
+    const switchX = <any>tool.getStorage('switch_x') * 1,
+          switchY = <any>tool.getStorage('switch_y') * 1;
     this.setSwitchPosition(switchX, switchY);
 
     // modify font-size
     const dpr = window.devicePixelRatio || 1;
     const viewportEl = document.querySelector('[name="viewport"]');
-    if (viewportEl && viewportEl.content) {
-      const initialScale = viewportEl.content.match(/initial\-scale\=\d+(\.\d+)?/);
+    if (viewportEl) {
+      const viewportContent = viewportEl.getAttribute('content') || '';
+      const initialScale = viewportContent.match(/initial\-scale\=\d+(\.\d+)?/);
       const scale = initialScale ? parseFloat(initialScale[0].split('=')[1]) : 1;
       if (scale < 1) {
         this.$dom.style.fontSize = 13 * dpr + 'px';
@@ -217,25 +255,6 @@ class VConsole {
   }
 
   /**
-  * Get an safe [x, y] position for switch button
-  * @private
-  */
-  _getSwitchButtonSafeAreaXY($switch, x, y) {
-    const docWidth = Math.max(document.documentElement.offsetWidth, window.innerWidth);
-    const docHeight = Math.max(document.documentElement.offsetHeight, window.innerHeight);
-    // check edge
-    if (x + $switch.offsetWidth > docWidth) {
-      x = docWidth - $switch.offsetWidth;
-    }
-    if (y + $switch.offsetHeight > docHeight) {
-      y = docHeight - $switch.offsetHeight;
-    }
-    if (x < 0) { x = 0; }
-    if (y < 20) { y = 20; } // safe area for iOS Home indicator
-    return [x, y];
-  }
-
-  /**
   * simulate tap event by touchstart & touchend
   * @private
   */
@@ -251,16 +270,17 @@ class VConsole {
 
     this.$dom.addEventListener('touchstart', function(e) { // todo: if double click
       if (lastTouchStartTime === undefined) {
-        let touch = e.targetTouches[0];
+        const touch = e.targetTouches[0];
+        const target = <Element>e.target;
         touchstartX = touch.pageX;
         touchstartY = touch.pageY;
         lastTouchStartTime = e.timeStamp;
-        targetElem = (e.target.nodeType === Node.TEXT_NODE ? e.target.parentNode : e.target);
+        targetElem = (target.nodeType === Node.TEXT_NODE ? target.parentNode : target);
       }
     }, false);
 
     this.$dom.addEventListener('touchmove', function(e) {
-      let touch = e.changedTouches[0];
+      const touch = e.changedTouches[0];
       if (Math.abs(touch.pageX - touchstartX) > tapBoundary || Math.abs(touch.pageY - touchstartY) > tapBoundary) {
         touchHasMoved = true;
       }
@@ -306,7 +326,6 @@ class VConsole {
           const touch = e.changedTouches[0];
           const event = document.createEvent('MouseEvents');
           event.initMouseEvent('click', true, true, window, 1, touch.screenX, touch.screenY, touch.clientX, touch.clientY, false, false, false, false, 0, null);
-          event.forwardedTouchEvent = true;
           event.initEvent('click', true, true);
           targetElem.dispatchEvent(event);
         }
@@ -451,7 +470,7 @@ class VConsole {
   * trigger a vConsole.option event
   * @protect
   */
-  triggerEvent(eventName, param) {
+  triggerEvent(eventName: string, param?: any) {
     eventName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1);
     if (tool.isFunction(this.option[eventName])) {
       this.option[eventName].apply(this, param);
@@ -495,7 +514,7 @@ class VConsole {
       let $topbar = $.one('.vc-topbar', that.$dom);
       for (let i=0; i<btnList.length; i++) {
         let item = btnList[i];
-        let $item = $.render(tplTopBarItem, {
+        let $item = <HTMLElement>$.render(tplTopBarItem, {
           name: item.name || 'Undefined',
           className: item.className || '',
           pluginID: plugin.id
@@ -784,14 +803,5 @@ class VConsole {
   }
 
 } // END class
-
-// export static class
-VConsole.VConsolePlugin = VConsolePlugin;
-VConsole.VConsoleLogPlugin = VConsoleLogPlugin;
-VConsole.VConsoleDefaultPlugin = VConsoleDefaultPlugin;
-VConsole.VConsoleSystemPlugin = VConsoleSystemPlugin;
-VConsole.VConsoleNetworkPlugin = VConsoleNetworkPlugin;
-VConsole.VConsoleElementPlugin = VConsoleElementPlugin;
-VConsole.VConsoleStoragePlugin = VConsoleStoragePlugin;
 
 export default VConsole;

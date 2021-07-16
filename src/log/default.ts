@@ -298,7 +298,7 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     window.addEventListener('error', function(e) {
       const target = <any>e.target;
       // only catch resources error
-      if (['link', 'video', 'script', 'img'].indexOf(target.localName) > -1) {
+      if (['link', 'video', 'script', 'img', 'audio'].indexOf(target.localName) > -1) {
         const src = target.href || target.src || target.currentSrc;
         that.printLog({
           logType: 'error',
