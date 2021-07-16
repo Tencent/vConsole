@@ -15,24 +15,30 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 import MutationObserver from 'mutation-observer'
 import './style.less';
-import VConsolePlugin from '../lib/plugin.ts';
+import VConsolePlugin from '../lib/plugin';
 import tplTabbox from './tabbox.html';
-import NodeView from './node_view.js';
+import NodeView from './node_view';
 
 // import * as tool from '../lib/tool.ts';
-import $ from '../lib/query.ts';
+import $ from '../lib/query';
 
 class VConsoleElementsTab extends VConsolePlugin {
+  isInited: boolean;
+  node: {};
+  $tabbox: Element;
+  nodes: any[];
+  activedElem: Element;
+  observer: any;
 
   constructor(...args) {
     super(...args);
-    let that = this;
+    const that = this;
 
     that.isInited = false;
     that.node = {};
     that.$tabbox = $.render(tplTabbox, {});
     that.nodes = [];
-    that.activedElem = {}; // actived by user
+    that.activedElem = null; // actived by user
 
     that.observer = new MutationObserver(function(mutations) {
       for (let i=0; i<mutations.length; i++) {
@@ -50,8 +56,8 @@ class VConsoleElementsTab extends VConsolePlugin {
   }
 
   onAddTool(callback) {
-    let that = this;
-    let toolList = [{
+    const that = this;
+    const toolList = [{
       name: 'Expand',
       global: false,
       onClick: function(e) {
@@ -61,7 +67,7 @@ class VConsoleElementsTab extends VConsolePlugin {
             $.one('.vcelm-node', that.activedElem).click();
           } else {
             for (let i=0; i<that.activedElem.childNodes.length; i++) {
-              let $child = that.activedElem.childNodes[i];
+              const $child = <Element>that.activedElem.childNodes[i];
               if ($.hasClass($child, 'vcelm-l') && !$.hasClass($child, 'vcelm-noc') && !$.hasClass($child, 'vc-toggle')) {
                 $.one('.vcelm-node', $child).click();
                 break;
@@ -78,8 +84,8 @@ class VConsoleElementsTab extends VConsolePlugin {
           if ($.hasClass(that.activedElem, 'vc-toggle')) {
             $.one('.vcelm-node', that.activedElem).click();
           } else {
-            if (that.activedElem.parentNode && $.hasClass(that.activedElem.parentNode, 'vcelm-l')) {
-              $.one('.vcelm-node', that.activedElem.parentNode).click();
+            if (that.activedElem.parentNode && $.hasClass(<Element>that.activedElem.parentNode, 'vcelm-l')) {
+              $.one('.vcelm-node', <Element>that.activedElem.parentNode).click();
             }
           }
         }
@@ -229,8 +235,8 @@ class VConsoleElementsTab extends VConsolePlugin {
     }
   }
 
-  renderView(node, $related, renderMethod) {
-    let that = this;
+  renderView(node, $related, renderMethod?: 'replace' | 'insertBefore') {
+    const that = this;
     let $view = (new NodeView(node)).get();
     // connect to node
     node.view = $view;
