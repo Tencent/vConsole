@@ -2,14 +2,15 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### 3.9.0 (2021-07-15)
 
-- `Feature(Log)` Show audio loading error log. (PR #419 by @zimv)
-- `Feature(Storage)` Rewrite Storage panel, supports add/edit/delete storage items. (PR #429 by @ManiaciaChao)
-- `Feature(Plugin)` New third-party plugin [vite-plugin-vconsole](https://github.com/vadxq/vite-plugin-vconsole). (by @vadxq)
+- `Feat(Log)` Show audio loading error log. (PR #419 by @zimv)
+- `Feat(Storage)` Rewrite Storage panel, supports add/edit/delete storage items. (PR #429 by @ManiaciaChao)
+- `Feat(Plugin)` New third-party plugin [vite-plugin-vconsole](https://github.com/vadxq/vite-plugin-vconsole). (by @vadxq)
 - `Refactor(Global)` Use Svelte as template engine. (PR #429 by @ManiaciaChao)
 - `Fix(Network)` Fix error when url not starts with `http`.
 - `Fix(Network)` Fix error when using `Request` as `Fetch`'s parameter. (PR #428 by @tatsunoneko)
 - `Fix(Network)` Display formatted key-value list when `POST` a JSON string. (issue #425)
 - `style` Wrap LESS math operations. (PR #426 by @ManiaciaChao)
+- `Chore` Fix `yarn serve` error. (issue #424)
 
 
 #### 3.8.1 (2021-06-24)

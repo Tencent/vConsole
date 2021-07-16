@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"moduleResolution": "node",
     "allowJs": true,
-		"target": "es5",
+		"target": "es2018",
 		"importsNotUsedAsValues": "remove",
 		"isolatedModules": true,
 		"esModuleInterop": true,
