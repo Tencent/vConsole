@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationDir": "typing",
+    // "outFile": "dist/vconsole.d.ts",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "target": "es2018",
+    "importsNotUsedAsValues": "remove",
+    // "isolatedModules": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "strict": false
+  },
+  "include": ["src/**/*"]
+}

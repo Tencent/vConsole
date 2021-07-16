@@ -21,8 +21,4 @@ import VConsole from './core/core';
 
 // export
 export { VConsole };
-
-export * as Tab from './components/Tab'
-export { Btn } from './components/Button'
-
 export default VConsole;
