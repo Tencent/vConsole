@@ -8,7 +8,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Refactor(Global)` Use Svelte as template engine. (PR #429 by @ManiaciaChao)
 - `Refactor(Core|Element)` Convert core file and Element panel to `.ts` file.
 - `Fix(Log)` Fix error when print object(s) with no `toJSON` method such as `Vue` instance. (PR #431 by @sillyhong)
-- `Fix(Network)` Fix error when url not starts with `http`.
+- `Fix(Network)` Fix error when url not starts with `http`. (issue #420)
 - `Fix(Network)` Fix error when using `Request` as `Fetch`'s parameter. (PR #428 by @tatsunoneko)
 - `Fix(Network)` Display formatted key-value list when `POST` a JSON string. (issue #425)
 - `style` Wrap LESS math operations. (PR #426 by @ManiaciaChao)

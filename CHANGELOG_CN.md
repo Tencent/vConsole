@@ -1,5 +1,20 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### 3.9.0 (2021-07-16)
+
+- `Feat(Log)` 显示 audio 资源加载失败的报错。 (PR #419 by @zimv)
+- `Feat(Storage)` 重写 Storage 面板，现支持添加/编辑/删除内容。 (PR #429 by @ManiaciaChao)
+- `Feat(Plugin)` 新增第三方插件 [vite-plugin-vconsole](https://github.com/vadxq/vite-plugin-vconsole)。 (by @vadxq)
+- `Refactor(Global)` 开始使用 Svelte 作为模板引擎。 (PR #429 by @ManiaciaChao)
+- `Refactor(Core|Element)` 转换 core 文件及 Element 面板为 `.ts` 文件。
+- `Fix(Log)` 修复打印无 `toJSON` 方法的对象（如 `Vue` 实例）时会报错的问题。 (PR #431 by @sillyhong)
+- `Fix(Network)` 修复不以 `http` 开头的 url 会报错的问题。 (issue #420)
+- `Fix(Network)` 修复使用 `Request` 作为 `Fetch` 参数时的报错。 (PR #428 by @tatsunoneko)
+- `Fix(Network)` 当 `POST` 数据为一个 JSON 字符串时亦以 key-value 型键值表来显示数据。 (issue #425)
+- `style` 修正 LESS 数学运算符。 (PR #426 by @ManiaciaChao)
+- `Chore` 修复执行 `yarn serve` 的报错。 (issue #424)
+
+
 #### 3.8.1 (2021-06-24)
 
 - `Fix(Log)` 不再合并包含 object 或 array 的重复日志，以避免合并结构相同但取值不同的对象。
