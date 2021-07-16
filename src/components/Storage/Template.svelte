@@ -77,32 +77,38 @@
     <TabPanel>
       <div class="table">
         <div class="row">
-          <div class="item">Key</div>
-          <div class="item">Value</div>
+          <div class="item item-key">Key</div>
+          <div class="item item-value">Value</div>
           <div class="action" />
         </div>
-        {#each Object.entries(storage) as [k, v], i}
-          <div class="row">
-            {#if editingIdx === i}
-              <input class="item" bind:value={editingKey} />
-              <input class="item" bind:value={editingVal} />
-            {:else}
-              <div class="item">{k}</div>
-              <div class="item">{properDisplay(v)}</div>
-            {/if}
-            <div class="action">
-              <div on:click={() => handleDel(storage, i)}>
-                <Fa icon={faTrash} />
-              </div>
-              <div on:click={() => handleCopy(k, v)}>
-                <Fa icon={faCopy} />
-              </div>
-              <div on:click={() => handleEditOrSave(storage, k, v, i)}>
-                <Fa icon={editingIdx === i ? faSave : faEdit} />
+        {#if storage.length === 0}
+          <div class="row row-empty">
+            <div class="item">Empty</div>
+          </div>
+        {:else}
+          {#each Object.entries(storage) as [k, v], i}
+            <div class="row">
+              {#if editingIdx === i}
+                <input class="item item-key" bind:value={editingKey} />
+                <input class="item item-value" bind:value={editingVal} />
+              {:else}
+                <div class="item item-key">{k}</div>
+                <div class="item item-value">{properDisplay(v)}</div>
+              {/if}
+              <div class="action">
+                <div on:click={() => handleDel(storage, i)}>
+                  <Fa icon={faTrash} />
+                </div>
+                <div on:click={() => handleCopy(k, v)}>
+                  <Fa icon={faCopy} />
+                </div>
+                <div on:click={() => handleEditOrSave(storage, k, v, i)}>
+                  <Fa icon={editingIdx === i ? faSave : faEdit} />
+                </div>
               </div>
             </div>
-          </div>
-        {/each}
+          {/each}
+        {/if}
         <div class="row">
           <Btn class="item btn" on:click={() => handleAdd(storage)}>
             <Fa icon={faPlus} />
@@ -144,6 +150,9 @@
         text-align: center;
       }
     }
+    :global(.item-key) {
+      flex: 1;
+    }
     .action {
       flex: 1;
       display: flex;
@@ -159,5 +168,8 @@
         }
       }
     }
+  }
+  .row-empty {
+    text-align: center;
   }
 </style>

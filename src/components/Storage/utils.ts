@@ -6,12 +6,15 @@ interface IStorageItem {
 }
 
 export const getAllStorages = () => {
-  let storages: IStorageItem[] = [];
-  if (document.cookie)
+  const storages: IStorageItem[] = [];
+  if (document.cookie) {
     storages.push({ name: 'cookies', storage: cookiesStorage });
-  if (globalThis.localStorage)
+  }
+  if (globalThis.localStorage) {
     storages.push({ name: 'localStorage', storage: localStorage });
-  if (globalThis.sessionStorage)
+  }
+  if (globalThis.sessionStorage) {
     storages.push({ name: 'sessionStorage', storage: sessionStorage });
+  }
   return storages;
 };
