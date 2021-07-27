@@ -1,5 +1,11 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### 3.9.1 (2021-07-xx)
+
+- `Fix(Log)` Fix command input style. (PR #437 by @FredZeng)
+- `Chore` Fix `const` `let` error cause by Svelte. (PR #440 by @dellyoung)
+
+
 #### 3.9.0 (2021-07-16)
 
 - `Feat(Log)` Show audio loading error log. (PR #419 by @zimv)
