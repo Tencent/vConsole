@@ -35,7 +35,7 @@ module.exports = (env, argv) => {
     module: {
       rules: [
         {
-          test: /\.(js|ts)$/,
+          test: /\.(js|ts|mjs)$/,
           use: [
             { loader: 'babel-loader' }
           ]
@@ -66,7 +66,7 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.(svelte)$/,
-          use : [{
+          use : [{ loader: 'babel-loader' },{
             loader: 'svelte-loader',
             options: {
               preprocess: sveltePreprocess({
