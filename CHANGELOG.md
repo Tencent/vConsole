@@ -1,8 +1,9 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### 3.9.1 (2021-07-xx)
+#### 3.9.1 (2021-07-27)
 
 - `Fix(Log)` Fix command input style. (PR #437 by @FredZeng)
+- `Fix(Storage)` Fix `globalThis` error. (issue #438 #439)
 - `Chore` Fix `const` `let` error cause by Svelte. (PR #440 by @dellyoung)
 
 
