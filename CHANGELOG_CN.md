@@ -1,5 +1,12 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### 3.9.1 (2021-07-27)
+
+- `Fix(Log)` 修正命令行输入框样式。 (PR #437 by @FredZeng)
+- `Fix(Storage)` 修复由 `globalThis` 引起的报错。 (issue #438 #439)
+- `Chore` 修复由 Svelte 引起的 `const` `let` 报错。 (PR #440 by @dellyoung)
+
+
 #### 3.9.0 (2021-07-16)
 
 - `Feat(Log)` 显示 audio 资源加载失败的报错。 (PR #419 by @zimv)
