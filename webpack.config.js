@@ -66,20 +66,22 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.(svelte)$/,
-          use : [{ loader: 'babel-loader' },{
-            loader: 'svelte-loader',
-            options: {
-              preprocess: sveltePreprocess({
-                sourceMap: isDev,
-              }),
-              compilerOptions: {
-                dev: isDev,
+          use : [
+            { loader: 'babel-loader' },
+            {
+              loader: 'svelte-loader',
+              options: {
+                preprocess: sveltePreprocess({
+                  sourceMap: isDev,
+                }),
+                compilerOptions: {
+                  dev: isDev,
+                },
+                emitCss: !isDev,
+                hotReload: isDev,
               },
-              emitCss: !isDev,
-              hotReload: isDev,
-            },
-          }]
-          
+            }
+          ]
         },
         {
           // required to prevent errors from Svelte on Webpack 5+, omit on Webpack 4
