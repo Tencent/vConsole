@@ -214,9 +214,12 @@ class VConsole {
 
   /**
   * Update theme
-  * @private 
+  * @private
   */
   _updateTheme() {
+    if (!this.$dom) {
+      return;
+    }
     let theme = this.option.theme;
     if (theme !== 'light' && theme !== 'dark') {
       theme = ''; // use system theme
