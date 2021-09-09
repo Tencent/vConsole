@@ -549,7 +549,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
         if (contentType && contentType.includes('application/json')) {
           item.responseType = 'json';
           return response.clone().text();
-        } else if (contentType && contentType.includes('text/html')) {
+        } else if (contentType && (contentType.includes('text/html') || contentType.includes('text/plain'))) {
           item.responseType = 'text';
           return response.clone().text();
         } else {
