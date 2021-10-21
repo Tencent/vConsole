@@ -469,7 +469,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
     const that = this;
     this._fetch = _fetch;
 
-    window.fetch = (input: RequestInfo, init?: RequestInit) => {
+    (<any>window).fetch = (input: RequestInfo, init?: RequestInit) => {
       const id = that.getUniqueID();
       const item = new VConsoleNetworkRequestItem(id);
       that.reqList[id] = item;

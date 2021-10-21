@@ -117,7 +117,7 @@ module.exports = (env, argv) => {
           compiler.hooks.done.tap('DeclarationEmitter', () => {
             if (isDev) return; // only emit declarations in prod mode
             console.group('Emitting type declarations...');
-            execSync('npm run emitDeclaration');
+            execSync('npm run build:typings');
             console.groupEnd();
           });
         },
