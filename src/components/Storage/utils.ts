@@ -10,10 +10,10 @@ export const getAllStorages = () => {
   if (document.cookie !== undefined) {
     storages.push({ name: 'cookies', storage: cookiesStorage });
   }
-  if (globalThis.localStorage) {
+  if (window.localStorage) {
     storages.push({ name: 'localStorage', storage: localStorage });
   }
-  if (globalThis.sessionStorage) {
+  if (window.sessionStorage) {
     storages.push({ name: 'sessionStorage', storage: sessionStorage });
   }
   return storages;
