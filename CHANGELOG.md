@@ -1,5 +1,9 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### 3.9.x (2021-xx-xx)
+
+- `Chore` Use `./typings` as declarations' folder. (RP #433 by @ManiaciaChao)
+
 #### 3.9.1 (2021-07-27)
 
 - `Fix(Log)` Fix command input style. (PR #437 by @FredZeng)

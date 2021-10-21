@@ -8,7 +8,7 @@
     "typing"
   ],
   "main": "dist/vconsole.min.js",
-  "typings": "typing/src/vconsole.d.ts",
+  "typings": "typings/src/vconsole.d.ts",
   "scripts": {
     "build": "webpack --mode=production",
     "dev": "webpack --mode=development",

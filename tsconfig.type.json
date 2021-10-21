@@ -2,7 +2,7 @@
   "compilerOptions": {
     "emitDeclarationOnly": true,
     "declaration": true,
-    "declarationDir": "typing",
+    "declarationDir": "typings",
     // "outFile": "dist/vconsole.d.ts",
     "moduleResolution": "node",
     "allowJs": true,
