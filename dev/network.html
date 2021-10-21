@@ -15,6 +15,7 @@
     <a onclick="getAjax()" href="javascript:;" class="weui_btn weui_btn_default">getAjax</a>
     <a onclick="postAjax()" href="javascript:;" class="weui_btn weui_btn_default">postAjax</a>
     <a onclick="getFetch()" href="javascript:;" class="weui_btn weui_btn_default">getFetch</a>
+    <a onclick="fetchIOSLowBug()" href="javascript:;" class="weui_btn weui_btn_default">fetchIOSLowBug</a>
     <a onclick="getFetchSimple()" href="javascript:;" class="weui_btn weui_btn_default">getFetch(simple)</a>
     <a onclick="postFetch()" href="javascript:;" class="weui_btn weui_btn_default">postFetch</a>
     <a onclick="postFetchByRequest()" href="javascript:;" class="weui_btn weui_btn_default">postFetchByRequest</a>
@@ -100,6 +101,26 @@ function getFetch() {
   });
   console.info('getFetch() End');
 }
+
+function fetchIOSLowBug() {
+  // need ios<11 to test
+  console.info('fetchIOSLowBug() Start, response should be logged after End');
+  window.fetch('./data/success.json?method=fetchGet&id=' + Math.random(), {
+    method: 'GET',
+    headers: {
+      'custom-header': 'foobar',
+      'content-type': 'application/json'
+    },
+  }).then((data) => {
+    return data.clone().json();
+  }).then((data) => {
+    console.log('fetchIOSLowBug Response:', data);
+  }).catch((err) => {
+    console.error('fetchIOSLowBug bug!!!:', err);
+  });
+  console.info('fetchIOSLowBug() End');
+}
+
 
 function getFetchSimple() {
   console.info('getFetchSimple() Start, response should be logged after End');
