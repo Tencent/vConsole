@@ -1,10 +1,10 @@
 [English](./CHANGELOG.md) | 简体中文
 
-#### 3.9.2 (2021-10-22)
+#### 3.9.3 (2021-10-22)
 
 - `Fix(Network)` 修复未完成初始化时调用 `setOption()` 导致的 `Cannot read property 'setAttribute' of null`错误。 (PR #453 by @Zhangstring)
 - `Fix(Network)` 修复 iOS < 11 时产生的 `Fetch` 错误. (PR #457 by @zimv)
-- `Chore` 使用 `./typings` 作为 ts 声明目录。 (RP #433 by @ManiaciaChao)
+- `Chore` 构建时自动生成 `.d.ts` 声明。 (RP #433 by @ManiaciaChao)
 - `Chore` 从 Git 版本控制中移除 `./dist` 目录。
 
 

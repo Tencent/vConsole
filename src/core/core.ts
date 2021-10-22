@@ -13,7 +13,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole core class
  */
 
-import pkg from '../../package.json';
 import * as tool from '../lib/tool';
 import $ from '../lib/query';
 
@@ -82,7 +81,8 @@ class VConsole {
     }
     let that = this;
 
-    this.version = pkg.version;
+    // @ts-ignore
+    this.version = __VERSION__;
     this.$dom = null;
 
     this.isInited = false;

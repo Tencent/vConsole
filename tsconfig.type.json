@@ -2,8 +2,11 @@
   "compilerOptions": {
     "emitDeclarationOnly": true,
     "declaration": true,
-    "declarationDir": "typings",
-    // "outFile": "dist/vconsole.d.ts",
+    // "declarationDir": "./dist/typings",
+    "outFile": "dist/vconsole.min.d.ts",
+    "outDir": "./dist/typings",
+    "baseUrl": "./src",
+    "rootDir": "./src",
     "moduleResolution": "node",
     "allowJs": true,
     "target": "es2018",
@@ -14,5 +17,5 @@
     "sourceMap": true,
     "strict": false
   },
-  "include": ["src/**/*"]
+  "include": ["./src/**/*"]
 }

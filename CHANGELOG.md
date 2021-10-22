@@ -1,10 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### 3.9.2 (2021-10-22)
+#### 3.9.3 (2021-10-22)
 
 - `Fix(Network)` Fix `Cannot read property 'setAttribute' of null` error when call `setOption()` before init. (PR #453 by @Zhangstring)
 - `Fix(Network)` Fix `Fetch` error when iOS < 11. (PR #457 by @zimv)
-- `Chore` Use `./typings` as declarations' folder. (RP #433 by @ManiaciaChao)
+- `Chore` Generate `.d.ts` declarations when built. (RP #433 by @ManiaciaChao)
 - `Chore` Remove `./dist` from Git tracking.
 
 
