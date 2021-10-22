@@ -112,6 +112,9 @@ module.exports = (env, argv) => {
         ].join('\n'),
         entryOnly: true,
       }),
+      new Webpack.DefinePlugin({
+        __VERSION__: JSON.stringify(pkg.version),
+      }),
       {
         apply: (compiler) => {
           compiler.hooks.done.tap('DeclarationEmitter', () => {
