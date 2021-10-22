@@ -21,7 +21,7 @@ module.exports = (env, argv) => {
         name: 'VConsole',
         type: 'umd',
         umdNamedDefine: true,
-        // export: "default",
+        export: "default",
       },
     },
     resolve: {
