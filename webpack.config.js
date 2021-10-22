@@ -1,10 +1,9 @@
 const pkg = require('./package.json');
 const Webpack = require('webpack');
 const Path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
+const { execSync } = require('child_process');
 const TerserPlugin = require('terser-webpack-plugin');
 const sveltePreprocess = require('svelte-preprocess');
-
 
 module.exports = (env, argv) => {
   const isDev = argv.mode === 'development';
@@ -22,7 +21,7 @@ module.exports = (env, argv) => {
         name: 'VConsole',
         type: 'umd',
         umdNamedDefine: true,
-        export: 'default',
+        export: "default",
       },
     },
     resolve: {
@@ -35,10 +34,8 @@ module.exports = (env, argv) => {
     module: {
       rules: [
         {
-          test: /\.(js|ts|mjs)$/,
-          use: [
-            { loader: 'babel-loader' }
-          ]
+          test: /\.(js|ts)$/,
+          use: [{ loader: 'babel-loader' }],
         },
         {
           test: /\.html$/,
@@ -66,20 +63,21 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.(svelte)$/,
-          use : [{ loader: 'babel-loader' },{
-            loader: 'svelte-loader',
-            options: {
-              preprocess: sveltePreprocess({
-                sourceMap: isDev,
-              }),
-              compilerOptions: {
-                dev: isDev,
+          use: [
+            {
+              loader: 'svelte-loader',
+              options: {
+                preprocess: sveltePreprocess({
+                  sourceMap: isDev,
+                }),
+                compilerOptions: {
+                  dev: isDev,
+                },
+                emitCss: !isDev,
+                hotReload: isDev,
               },
-              emitCss: !isDev,
-              hotReload: isDev,
             },
-          }]
-          
+          ],
         },
         {
           // required to prevent errors from Svelte on Webpack 5+, omit on Webpack 4
@@ -114,14 +112,16 @@ module.exports = (env, argv) => {
         ].join('\n'),
         entryOnly: true,
       }),
-      new CopyPlugin({
-        patterns: [
-          {
-            from: Path.resolve(__dirname, './src/vconsole.d.ts'),
-            to: Path.resolve(__dirname, './dist/vconsole.min.d.ts'),
-          },
-        ],
-      }),
+      {
+        apply: (compiler) => {
+          compiler.hooks.done.tap('DeclarationEmitter', () => {
+            if (isDev) return; // only emit declarations in prod mode
+            console.group('Emitting type declarations...');
+            execSync('npm run build:typings');
+            console.groupEnd();
+          });
+        },
+      },
     ],
   };
 };

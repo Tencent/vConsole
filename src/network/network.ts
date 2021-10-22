@@ -469,7 +469,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
     const that = this;
     this._fetch = _fetch;
 
-    window.fetch = (input: RequestInfo, init?: RequestInit) => {
+    (<any>window).fetch = (input: RequestInfo, init?: RequestInit) => {
       const id = that.getUniqueID();
       const item = new VConsoleNetworkRequestItem(id);
       that.reqList[id] = item;
@@ -530,8 +530,10 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
       const request = tool.isString(input) ? url.toString() : input;
 
-      return _fetch(request, init).then((response) => {
-        _fetchReponse = response;
+      return _fetch(request, init).then((res) => {
+        // fix ios<11 https://github.com/github/fetch/issues/504
+        const response = res.clone();
+        _fetchReponse = response.clone();
 
         item.endTime = +new Date();
         item.costTime = item.endTime - (item.startTime || item.endTime);
@@ -549,7 +551,7 @@ class VConsoleNetworkTab extends VConsolePlugin {
         if (contentType && contentType.includes('application/json')) {
           item.responseType = 'json';
           return response.clone().text();
-        } else if (contentType && contentType.includes('text/html')) {
+        } else if (contentType && (contentType.includes('text/html') || contentType.includes('text/plain'))) {
           item.responseType = 'text';
           return response.clone().text();
         } else {
@@ -578,11 +580,19 @@ class VConsoleNetworkTab extends VConsolePlugin {
             break;
         }
 
+        // mock finally
+        that.updateRequest(id, item);
+
         return _fetchReponse;
-      }).finally(() => {
-        _fetchReponse = undefined;
+      }).catch(() => {
+        // mock finally
         that.updateRequest(id, item);
       });
+      // ios<11 finally undefined
+      // .finally(() => {
+      //   _fetchReponse = undefined;
+      //   that.updateRequest(id, item);
+      // });
     };
   }
 

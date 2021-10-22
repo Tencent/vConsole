@@ -7,14 +7,13 @@ interface IStorageItem {
 
 export const getAllStorages = () => {
   const storages: IStorageItem[] = [];
-  const that = globalThis || window;
   if (document.cookie !== undefined) {
     storages.push({ name: 'cookies', storage: cookiesStorage });
   }
-  if (that.localStorage) {
+  if (window.localStorage) {
     storages.push({ name: 'localStorage', storage: localStorage });
   }
-  if (that.sessionStorage) {
+  if (window.sessionStorage) {
     storages.push({ name: 'sessionStorage', storage: sessionStorage });
   }
   return storages;
