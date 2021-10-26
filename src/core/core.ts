@@ -33,25 +33,26 @@ import VConsoleElementPlugin from '../element/element';
 import VConsoleStoragePlugin from '../storage/storage';
 
 declare interface VConsoleOptions {
-  defaultPlugins?: string[];
+  defaultPlugins?: ('system' | 'network' | 'element' | 'storage')[];
   maxLogNumber?: number;
   theme?: '' | 'dark' | 'light';
   disableLogScrolling?: boolean;
-  onReady?: Function;
-  onClearLog?: Function;
+  onReady?: () => void;
+  onClearLog?: () => void;
 }
 
 const VCONSOLE_ID = '#__vconsole';
 
 class VConsole {
-  version: string;
-  $dom: HTMLElement;
-  isInited: boolean;
-  option: VConsoleOptions = {};
-  activedTab: string;
-  tabList: any[];
-  pluginList: {};
-  switchPos: {
+  public version: string;
+  public $dom: HTMLElement;
+  public isInited: boolean;
+  public option: VConsoleOptions = {};
+
+  protected activedTab: string;
+  protected tabList: any[];
+  protected pluginList: {};
+  protected switchPos: {
     hasMoved: boolean; // exclude click event
     x: number; // right
     y: number; // bottom
@@ -62,24 +63,24 @@ class VConsole {
   };
 
   // export helper functions to public
-  tool = tool;
-  $ = $;
+  public tool = tool;
+  public $ = $;
 
   // export static class
-  static VConsolePlugin = VConsolePlugin;
-  static VConsoleLogPlugin = VConsoleLogPlugin;
-  static VConsoleDefaultPlugin = VConsoleDefaultPlugin;
-  static VConsoleSystemPlugin = VConsoleSystemPlugin;
-  static VConsoleNetworkPlugin = VConsoleNetworkPlugin;
-  static VConsoleElementPlugin = VConsoleElementPlugin;
-  static VConsoleStoragePlugin = VConsoleStoragePlugin;
+  public static VConsolePlugin = VConsolePlugin;
+  public static VConsoleLogPlugin = VConsoleLogPlugin;
+  public static VConsoleDefaultPlugin = VConsoleDefaultPlugin;
+  public static VConsoleSystemPlugin = VConsoleSystemPlugin;
+  public static VConsoleNetworkPlugin = VConsoleNetworkPlugin;
+  public static VConsoleElementPlugin = VConsoleElementPlugin;
+  public static VConsoleStoragePlugin = VConsoleStoragePlugin;
 
   constructor(opt?: VConsoleOptions) {
     if (!!$.one(VCONSOLE_ID)) {
       console.debug('vConsole is already exists.');
       return;
     }
-    let that = this;
+    const that = this;
 
     // @ts-ignore
     this.version = __VERSION__;
@@ -151,8 +152,9 @@ class VConsole {
 
   /**
   * add built-in plugins
+  * @private
   */
-  _addBuiltInPlugins() {
+  private _addBuiltInPlugins() {
     // add default log plugin
     this.addPlugin(new VConsoleDefaultPlugin('default', 'Log'));
 
@@ -180,7 +182,7 @@ class VConsole {
   * render panel DOM
   * @private
   */
-  _render() {
+  private _render() {
     if (! $.one(VCONSOLE_ID)) {
       const e = document.createElement('div');
       e.innerHTML = tpl;
@@ -216,7 +218,7 @@ class VConsole {
   * Update theme
   * @private
   */
-  _updateTheme() {
+  private _updateTheme() {
     if (!this.$dom) {
       return;
     }
@@ -227,22 +229,22 @@ class VConsole {
     this.$dom.setAttribute('data-theme', theme);
   }
 
-  setSwitchPosition(switchX, switchY) {
+  public setSwitchPosition(switchX: number, switchY: number) {
     const $switch = $.one('.vc-switch', this.$dom);
     [switchX, switchY] = this._getSwitchButtonSafeAreaXY($switch, switchX, switchY);
     this.switchPos.x = switchX;
     this.switchPos.y = switchY;
     $switch.style.right = switchX + 'px';
     $switch.style.bottom = switchY + 'px';
-    tool.setStorage('switch_x', switchX);
-    tool.setStorage('switch_y', switchY);
+    tool.setStorage('switch_x', switchX + '');
+    tool.setStorage('switch_y', switchY + '');
   }
 
   /**
   * Get an safe [x, y] position for switch button
   * @private
   */
-  _getSwitchButtonSafeAreaXY($switch, x, y) {
+  private _getSwitchButtonSafeAreaXY($switch: HTMLElement, x: number, y: number) {
     const docWidth = Math.max(document.documentElement.offsetWidth, window.innerWidth);
     const docHeight = Math.max(document.documentElement.offsetHeight, window.innerHeight);
     // check edge
@@ -261,7 +263,7 @@ class VConsole {
   * simulate tap event by touchstart & touchend
   * @private
   */
-  _mockTap() {
+  private _mockTap() {
     let tapTime = 700, // maximun tap interval
         tapBoundary = 10; // max tap move distance
 
@@ -344,7 +346,7 @@ class VConsole {
   * bind DOM events
   * @private
   */
-  _bindEvent() {
+  private _bindEvent() {
     const that = this;
 
     // drag & drop switch button
@@ -453,7 +455,7 @@ class VConsole {
   * auto run after initialization
   * @private
   */
-  _autoRun() {
+  private _autoRun() {
     this.isInited = true;
 
     // init plugins
@@ -471,9 +473,8 @@ class VConsole {
 
   /**
   * trigger a vConsole.option event
-  * @protect
   */
-  triggerEvent(eventName: string, param?: any) {
+  public triggerEvent(eventName: string, param?: any) {
     eventName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1);
     if (tool.isFunction(this.option[eventName])) {
       this.option[eventName].apply(this, param);
@@ -484,7 +485,7 @@ class VConsole {
   * init a plugin
   * @private
   */
-  _initPlugin(plugin) {
+  private _initPlugin(plugin: VConsolePlugin) {
     let that = this;
     plugin.vConsole = this;
     // start init
@@ -573,7 +574,7 @@ class VConsole {
   * trigger an event for each plugin
   * @private
   */
-  _triggerPluginsEvent(eventName) {
+  private _triggerPluginsEvent(eventName: string) {
     for (let id in this.pluginList) {
       if (this.pluginList[id].isReady) {
         this.pluginList[id].trigger(eventName);
@@ -585,7 +586,7 @@ class VConsole {
   * trigger an event by plugin's name
   * @private
   */
-  _triggerPluginEvent(pluginName, eventName) {
+  private _triggerPluginEvent(pluginName: string, eventName: string) {
     let plugin = this.pluginList[pluginName];
     if (!!plugin && plugin.isReady) {
       plugin.trigger(eventName);
@@ -598,7 +599,7 @@ class VConsole {
   * @param object VConsolePlugin object
   * @return boolean
   */
-  addPlugin(plugin) {
+  public addPlugin(plugin: VConsolePlugin) {
     // ignore this plugin if it has already been installed
     if (this.pluginList[plugin.id] !== undefined) {
       console.debug('Plugin ' + plugin.id + ' has already been added.');
@@ -622,7 +623,7 @@ class VConsole {
   * @param string pluginID
   * @return boolean
   */
-  removePlugin(pluginID) {
+  public removePlugin(pluginID: string) {
     pluginID = (pluginID + '').toLowerCase();
     let plugin = this.pluginList[pluginID];
     // skip if is has not been installed
@@ -674,7 +675,7 @@ class VConsole {
   * show console panel
   * @public
   */
-  show() {
+  public show() {
     if (!this.isInited) {
       return;
     }
@@ -697,7 +698,7 @@ class VConsole {
   * hide console panel
   * @public
   */
-  hide() {
+  public hide() {
     if (!this.isInited) {
       return;
     }
@@ -714,7 +715,7 @@ class VConsole {
   * show switch button
   * @public
   */
-  showSwitch() {
+  public showSwitch() {
     if (!this.isInited) {
       return;
     }
@@ -725,7 +726,7 @@ class VConsole {
   /**
   * hide switch button
   */
-  hideSwitch() {
+  public hideSwitch() {
     if (!this.isInited) {
       return;
     }
@@ -737,7 +738,7 @@ class VConsole {
   * show a tab
   * @public
   */
-  showTab(tabID) {
+  public showTab(tabID: string) {
     if (!this.isInited) {
       return;
     }
@@ -769,7 +770,7 @@ class VConsole {
   * update option(s)
   * @public
   */
-  setOption(keyOrObj, value) {
+  public setOption(keyOrObj: any, value?: any) {
     if (tool.isString(keyOrObj)) {
       this.option[keyOrObj] = value;
       this._triggerPluginsEvent('updateOption');
@@ -789,7 +790,7 @@ class VConsole {
   * uninstall vConsole
   * @public
   */
-  destroy() {
+  public destroy() {
     if (!this.isInited) {
       return;
     }

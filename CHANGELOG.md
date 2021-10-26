@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### 3.9.4 (2021-10-26)
+
+- `Refactor(Global)` Add Typescript declaration to `VConsole` class.
+
+
 #### 3.9.3 (2021-10-22)
 
 - `Fix(Network)` Fix `Cannot read property 'setAttribute' of null` error when call `setOption()` before init. (PR #453 by @Zhangstring)
