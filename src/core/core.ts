@@ -74,7 +74,7 @@ class VConsole {
   static VConsoleElementPlugin = VConsoleElementPlugin;
   static VConsoleStoragePlugin = VConsoleStoragePlugin;
 
-  constructor(opt) {
+  constructor(opt?: VConsoleOptions) {
     if (!!$.one(VCONSOLE_ID)) {
       console.debug('vConsole is already exists.');
       return;
