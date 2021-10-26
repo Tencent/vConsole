@@ -1,0 +1,14 @@
+{
+  "name": "vconsole-dev",
+  "version": "0.0.1",
+  "description": "",
+  "main": "script/index.js",
+  "scripts": {
+  },
+  "keywords": [],
+  "author": "Maiz",
+  "license": "MIT",
+  "dependencies": {
+    "vconsole": "file:../"
+  }
+}

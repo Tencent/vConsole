@@ -1,5 +1,10 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### 3.9.4 (2021-10-26)
+
+- `Refactor(Global)` 为 `VConsole` 类的方法参数添加 Typescript 声明.
+
+
 #### 3.9.3 (2021-10-22)
 
 - `Fix(Network)` 修复未完成初始化时调用 `setOption()` 导致的 `Cannot read property 'setAttribute' of null`错误。 (PR #453 by @Zhangstring)

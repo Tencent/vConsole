@@ -67,7 +67,7 @@ class VConsolePlugin {
    * @param string
    * @param function
    */
-  on(eventName: string, callback: VConsolePluginEvent) {
+  public on(eventName: string, callback: VConsolePluginEvent) {
     this.eventList[eventName] = callback;
     return this;
   }
@@ -75,7 +75,7 @@ class VConsolePlugin {
   /**
    * trigger an event
    */
-  trigger(eventName: string, data: any) {
+  public trigger(eventName: string, data?: any) {
     if (typeof this.eventList[eventName] === 'function') {
       // registered by `.on()` method
       this.eventList[eventName].call(this, data);
