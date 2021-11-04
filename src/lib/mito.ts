@@ -57,7 +57,7 @@ export default class Mito {
           code += line + ':\n';
         } else {
           // name  -->  name
-          code += 'arr.push('+ line +');\n';
+          code += 'arr.push(String('+ line +'));\n';
         }
       } else {
         // plain text
