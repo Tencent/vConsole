@@ -56,11 +56,11 @@ vConsole.destroy();
 
 ## 手机预览
 
-![](./example/snapshot/qrcode.png)
+![](./doc/snapshot/qrcode.png)
 
 [http://wechatfe.github.io/vconsole/demo.html](http://wechatfe.github.io/vconsole/demo.html)
 
-![](./example/snapshot/panel_log.jpg) ![](./example/snapshot/panel_network.jpg) ![](./example/snapshot/panel_element.jpg) ![](./example/snapshot/panel_storage.jpg)
+![](./doc/snapshot/panel_log.jpg) ![](./doc/snapshot/panel_network.jpg) ![](./doc/snapshot/panel_element.jpg) ![](./doc/snapshot/panel_storage.jpg)
 
 
 
@@ -100,7 +100,7 @@ vConsole 本体：
 
 QQ 群：497430533
 
-![](./example/snapshot/qq_group.png)
+![](./doc/snapshot/qq_group.png)
 
 
 

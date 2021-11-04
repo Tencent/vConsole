@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### 3.9.5-rc (2021-11-xx)
+
+- `Fix(Network)` Fix `URIError` when decode URI fail. (issue #470)
+
+
 #### 3.9.4 (2021-10-26)
 
 - `Refactor(Global)` Add Typescript declaration to `VConsole` class.
