@@ -9,6 +9,7 @@
   <link href="./lib/demo.css" rel="stylesheet"/>
 
   <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://unpkg.com/vue-router@4"></script>
   <script src="../dist/vconsole.min.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
@@ -20,6 +21,10 @@
         <a @click="changeMethod" href="javascript:;" class="weui_btn weui_btn_default">changeMethod</a>
         <a v-if="method=='post'" @click="axios('POST')" href="javascript:;" class="weui_btn weui_btn_default">Axios POST</a>
         <a v-else @click="axios('GET')" href="javascript:;" class="weui_btn weui_btn_default">Axios GET</a>
+      </div>
+      <div>
+        <router-link to="/" class="weui_btn weui_btn_default">Go to Home</router-link>
+        <router-link to="/about" class="weui_btn weui_btn_default">Go to About</router-link>
       </div>
     </div>
   </div>
@@ -42,22 +47,42 @@ window.vConsole = new window.VConsole({
 </script>
 
 <script>
+const Home = { template: '<div>Home</div>' };
+const About = { template: '<div>About</div>' };
+const routes = [
+  { path: '/', component: Home },
+  { path: '/about', component: About },
+];
+const router = VueRouter.createRouter({
+  // 4. Provide the history implementation to use. We are using the hash history for simplicity here.
+  history: VueRouter.createWebHashHistory(),
+  routes, // short for `routes: routes`
+});
+
 const appOptions = {
   data() {
     return {
       book: {
         title: 'vConsole with Vue',
-        that: this,
+        // that: this,
+        // window: window,
       },
       method: 'post',
     };
   },
+  watch: {
+    'book.title': function (newVal, oldVal) {
+      console.log(newVal, oldVal, this);
+    },
+  },
   mounted() {
     console.log('mounted', this);
-    // console.log('Vue', this);
+    // console.log('Vue', Vue);
+    // console.log('Window', window);
+    // console.log(this.$route);
     setInterval(() => {
-      this.book.title = Math.random();
-      // console.log(this.book);
+      // this.book.title = Math.random();
+      // console.log(this);
       // this.axios('POST');
     }, 300);
   },
@@ -80,10 +105,12 @@ const appOptions = {
     },
     changeMethod() {
       this.method = this.method == 'post' ? 'get' : 'post';
+      console.log('changeMethod()', this);
     },
   }
 };
 const app = Vue.createApp(appOptions);
+app.use(router);
 const vm = app.mount('#app');
 
 window.vueApp = app;

@@ -638,6 +638,8 @@ class VConsoleLogTab extends VConsolePlugin {
               val = '"' + tool.invisibleTextEncode(val) + '"';
             } else if (tool.isNumber(val)) {
               valueType = 'number';
+            } else if (tool.isBigInt(val)) {
+              valueType = 'bigint';
             } else if (tool.isBoolean(val)) {
               valueType = 'boolean';
             } else if (tool.isNull(val)) {
