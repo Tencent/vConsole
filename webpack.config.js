@@ -99,6 +99,9 @@ module.exports = (env, argv) => {
         }),
       ],
     },
+    watchOptions: {
+      ignored: ['**/node_modules'],
+    },
     plugins: [
       new Webpack.BannerPlugin({
         banner: [

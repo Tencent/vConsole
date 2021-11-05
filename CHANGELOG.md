@@ -1,8 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### 3.9.5-rc (2021-11-xx)
+#### 3.10.0-rc (2021-11-xx)
 
+- `Feat(Log)` Add support for `BigInt` and update `Symbol` log style.
 - `Fix(Network)` Fix `URIError` when decode URI fail. (issue #470)
+- `Fix(Log)` Fix "Cannot convert a Symbol value to a string" error when logged a `symbol` value.
 
 
 #### 3.9.4 (2021-10-26)

@@ -47,7 +47,6 @@ interface VConsoleLogView {
 }
 
 class VConsoleLogTab extends VConsolePlugin {
-  static AddedLogID = [];
   tplTabbox: string = ''; // MUST be overwrite in child class
   allowUnformattedLog: boolean = true; // `[xxx]` format log
   isReady: boolean = false;
