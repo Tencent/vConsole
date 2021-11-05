@@ -269,20 +269,13 @@ export function getObjAllKeys(obj) {
   if (!isObject(obj) && !isArray(obj)) {
     return [];
   }
-  // if (isArray(obj)) {
-  //   const m = [];
-  //   obj.forEach((_, index) => {
-  //     m.push(index)
-  //   });
-  //   return m;
-  // }
-  // return Object.getOwnPropertyNames(obj).sort();
   const keys = [];
   for (let k in obj) {
+    // typeof `k` may be `string | number | symbol`
     keys.push(k);
   }
-  return <string[]>keys.sort((a, b) => {
-    return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+  return keys.sort((a, b) => {
+    return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
   });
 }
 
