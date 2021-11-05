@@ -433,7 +433,7 @@ class VConsoleLogTab extends VConsolePlugin {
         logText.push(tool.SimpleJSONStringify(logs[i]));
         curLog.hasFold = true;
       } else {
-        logText.push(logs[i]);
+        logText.push(String(logs[i]));
       }
     }
     curLog.logText = logText.join(' ');
@@ -545,7 +545,7 @@ class VConsoleLogTab extends VConsolePlugin {
           log = this.getFoldedLine(curLog);
         } else {
           // default
-          rawLog = curLog;
+          rawLog = String(curLog);
           // log = (logStyle[i] ? `<span style="${logStyle[i]}"> ` : '<span> ') + tool.htmlEncode(curLog).replace(/\n/g, '<br/>') + '</span>';
           log = $.render(tplLineLog, {
             log: curLog,
