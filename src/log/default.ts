@@ -17,7 +17,6 @@ import $ from '../lib/query';
 import * as tool from '../lib/tool';
 import VConsoleLogTab from './log';
 import tplTabbox from './tabbox_default.html';
-import tplItemCode from './item_code.html';
 
 class VConsoleDefaultTab extends VConsoleLogTab {
   private filterText = '';
@@ -316,8 +315,9 @@ class VConsoleDefaultTab extends VConsoleLogTab {
     // print command to console
     this.printLog({
       logType: 'log',
-      content: $.render(tplItemCode, {content: cmd, type: 'input'}),
-      style: ''
+      logs: [cmd],
+      style: '',
+      logClass: 'vc-item-code vc-item-code-input',
     });
     // do not use `eval` or `new Function` to avoid `unsafe-eval` CSP rule
     /*  let code = '';
@@ -363,25 +363,10 @@ class VConsoleDefaultTab extends VConsoleLogTab {
           error = window.__vConsole_cmd_error;*/
 
     // print result to console
-    let $content;
-    if (tool.isArray(result) || tool.isObject(result)) {
-      $content = this.getFoldedLine(result);
-    } else {
-      if (tool.isNull(result)) {
-        result = 'null';
-      } else if (tool.isUndefined(result)) {
-        result = 'undefined';
-      } else if (tool.isFunction(result)) {
-        result = 'function()'
-      } else if (tool.isString(result)) {
-        result = '"' + result + '"';
-      }
-      $content = $.render(tplItemCode, {content: result, type: 'output'});
-    }
     this.printLog({
       logType: 'log',
-      content: $content,
-      style: ''
+      logs: [result],
+      logClass: 'vc-item-code vc-item-code-output',
     });
     (<any>window).winKeys = Object.getOwnPropertyNames(window).sort();
   }

@@ -36,6 +36,7 @@ interface VConsoleLogItem {
   noOrigin?: boolean;
   date?: number;
   style?: string;
+  logClass?: string;
 }
 interface VConsoleLogView {
   _id: string;
@@ -174,6 +175,10 @@ class VConsoleLogTab extends VConsolePlugin {
 
     // copy
     VConsoleItemCopy.delegate(this.$tabbox, (id) => {
+      that.printOriginLog({
+        logs: ['COPY:', that.cachedLogs[id]],
+        logType: 'log',
+      });
       return that.cachedLogs[id];
     });
   }
@@ -537,6 +542,7 @@ class VConsoleLogTab extends VConsolePlugin {
           log = $.render(tplLineLog, {
             log: rawLog,
             logStyle: '',
+            logClass: item.logClass,
           });
         } else if (tool.isObject(curLog) || tool.isArray(curLog)) {
           // object or array
@@ -549,6 +555,7 @@ class VConsoleLogTab extends VConsolePlugin {
           log = $.render(tplLineLog, {
             log: curLog,
             logStyle: logStyle[i],
+            logClass: item.logClass,
           });
         }
       } catch (e) {
@@ -556,7 +563,7 @@ class VConsoleLogTab extends VConsolePlugin {
         // log = `<span> [${rawLog}]</span>`;
         log = $.render(tplLineLog, {
           log: ` [${rawLog}]`,
-          logStyle: ''
+          logStyle: '',
         });
       }
       if (log) {
