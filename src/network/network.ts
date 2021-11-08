@@ -510,19 +510,19 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
       if (Object.prototype.toString.call(requestHeader) === '[object Headers]') {
         item.requestHeader = {};
-        (<Headers>requestHeader).forEach((value, key) => {
+        for (const [key, value] of <Headers>requestHeader) {
           item.requestHeader[key] = value;
-        });
+        }
       } else {
         item.requestHeader = requestHeader;
       }
 
       // save GET data
-      if (url.search) {
+      if (url.search && url.searchParams) {
         item.getData = {};
-        url.searchParams.forEach((value, key) => {
+        for (const [key, value] of url.searchParams) {
           item.getData[key] = value;
-        });
+        }
       }
 
       // save POST data
@@ -548,9 +548,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
         item.statusText = String(response.status);
 
         item.header = {};
-        response.headers.forEach((value, key) => {
+        for (const [key, value] of response.headers) {
           item.header[key] = value;
-        });
+        }
         item.readyState = 4;
 
         // parse response body by Content-Type
@@ -636,11 +636,11 @@ class VConsoleNetworkTab extends VConsolePlugin {
       item.status = 0;
       item.statusText = 'Pending';
       
-      if (url.search) {
+      if (url.search && url.searchParams) {
         item.getData = {};
-        url.searchParams.forEach((value, key) => {
+        for (const [key, value] of url.searchParams) {
           item.getData[key] = value;
-        });
+        }
       }
       item.postData = that.getFormattedBody(data);
 
@@ -681,9 +681,9 @@ class VConsoleNetworkTab extends VConsolePlugin {
 
       case 'URLSearchParams':
         ret = {};
-        (<URLSearchParams>body).forEach((value, key) => {
+        for (const [key, value] of <URLSearchParams>body) {
           ret[key] = value;
-        });
+        }
         break;
 
       default:
