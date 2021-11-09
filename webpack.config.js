@@ -71,6 +71,7 @@ module.exports = (env, argv) => {
         {
           test: /\.(svelte)$/,
           use: [
+            'babel-loader',
             {
               loader: 'svelte-loader',
               options: {
@@ -89,10 +90,11 @@ module.exports = (env, argv) => {
         },
         {
           // required to prevent errors from Svelte on Webpack 5+, omit on Webpack 4
-          test: /node_modules\/svelte\/.*\.mjs$/,
+          test: /node_modules\/svelte\/.*\.m?js$/,
           resolve: {
             fullySpecified: false,
           },
+          use: ['babel-loader'],
         },
       ],
     },

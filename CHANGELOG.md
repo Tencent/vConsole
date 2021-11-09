@@ -8,6 +8,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix(Log)` Now commands and output logs can be copied.
 - `Fix(Network)` Fix `URIError` when decode URI fail. (issue #470)
 - `Fix(Network)` Fix potential `forEach` error. (issue #471)
+- `Chore` Transform svelte output code to ES5. (issue #468)
 
 
 #### 3.9.4 (2021-10-26)
