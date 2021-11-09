@@ -16,7 +16,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 import * as tool from '../lib/tool';
 import $ from '../lib/query';
 
-import coreStyle from './core.less';
+import Style from './core.less';
 import tpl from './core.html';
 import tplTabbar from './tabbar.html';
 import tplTabbox from './tabbox.html';
@@ -82,8 +82,8 @@ class VConsole {
     }
     const that = this;
 
-    // styles
-    coreStyle.use();
+    // create style tag
+    Style.use();
 
     // @ts-ignore
     this.version = __VERSION__;
