@@ -3,8 +3,11 @@ English | [简体中文](./CHANGELOG_CN.md)
 #### 3.10.0-rc (2021-11-xx)
 
 - `Feat(Log)` Add support for `BigInt` and update `Symbol` log style.
-- `Fix(Network)` Fix `URIError` when decode URI fail. (issue #470)
+- `Refactor(Global)` Lazy load style tag when vConsole init; Use `this || self` as `globalObject`. (issue #441)
 - `Fix(Log)` Fix "Cannot convert a Symbol value to a string" error when logged a `symbol` value.
+- `Fix(Log)` Now commands and output logs can be copied.
+- `Fix(Network)` Fix `URIError` when decode URI fail. (issue #470)
+- `Fix(Network)` Fix potential `forEach` error. (issue #471)
 
 
 #### 3.9.4 (2021-10-26)
@@ -100,8 +103,8 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### 3.5.0 (2021-04-28)
 
-- `Feature(Log)` Add ability to copy a single line of logs. (by @akai)
-- `Feature(Plugin)` New third-party plugin [vconsole-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsole-devtools). (by @Zippowxk)
+- `Feat(Log)` Add ability to copy a single line of logs. (by @akai)
+- `Feat(Plugin)` New third-party plugin [vconsole-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsole-devtools). (by @Zippowxk)
 - `Perf(System)` Rename "System" field to "Client", and add `MacOS` version.
 - `Fix(Log)` Use natural sorting to sort object and array's keys. (issue #372)
 - `Fix(Network)` Fix JSON parse error when `contentType` is `text/html`. (by @zimv)
@@ -110,7 +113,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### V3.4.1 (2021-04-09)
 
-- `Feature(Global)` Add `setSwitchPosition(x, y)` method to update the position of switch button, see [Public Properties & Methods](./doc/public_properties_methods.md) for more details.
+- `Feat(Global)` Add `setSwitchPosition(x, y)` method to update the position of switch button, see [Public Properties & Methods](./doc/public_properties_methods.md) for more details.
 - `Perf(Global)` Add `Symbol` polyfill. (issue #361)
 - `Fix(Global)` Update theme style after `setOption()`.
 - `Fix(Global)` Remove `transitionEnd` to prevent compatibility issues. (issue #364)
@@ -120,14 +123,14 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### V3.4.0 (2021-01-14)
 
-- `Feature(Global)` Add darkmode theme, see `vConsole.option.theme` in [Public Properties & Methods](./doc/public_properties_methods.md). (PR #307 by @progrape)
-- `Feature(Global)` Add safe area to switch button. (issue #353)
-- `Feature(Log)` Auto move input cursor to the bracket after autocomplete command. (issue #293)
-- `Feature(System)` Add `Location` info to System tab. (issue #343)
-- `Feature(Network)` Add `fetch` log in Network tab. (by @weiqian93)
-- `Feature(Network)` Add Request Headers to Network tab.
-- `Feature(Network)` Use short URL and display parameters in Network tab. (issue #291)
-- `Feature(Plugin)` New third-party plugin [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats). (by @smackgg)
+- `Feat(Global)` Add darkmode theme, see `vConsole.option.theme` in [Public Properties & Methods](./doc/public_properties_methods.md). (PR #307 by @progrape)
+- `Feat(Global)` Add safe area to switch button. (issue #353)
+- `Feat(Log)` Auto move input cursor to the bracket after autocomplete command. (issue #293)
+- `Feat(System)` Add `Location` info to System tab. (issue #343)
+- `Feat(Network)` Add `fetch` log in Network tab. (by @weiqian93)
+- `Feat(Network)` Add Request Headers to Network tab.
+- `Feat(Network)` Use short URL and display parameters in Network tab. (issue #291)
+- `Feat(Plugin)` New third-party plugin [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats). (by @smackgg)
 - `Fix(Global)` The position of the switch button will be reset by mistake when clicked.
 - `Fix(Global)` Fix `document.documentElement.offsetHeight|offsetWidth` is unreliable in newer browsers. (PR #314 by @littlee)
 - `Fix(Global)` Prevent dispatchEvent for disabled or readOnly elements. (PR #314 by @norux)
@@ -141,8 +144,8 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### V3.3.4 (2019-08-19)
 
-- `Feature(Log)` Add `%c` log format to support custom log style, see [Tutorial](./doc/tutorial.md) for more details.
-- `Feature(Plugin)` Add `VConsole.VConsoleLogPlugin` (`VConsole.VConsole*` plugins etc.) to `VConsole` class.
+- `Feat(Log)` Add `%c` log format to support custom log style, see [Tutorial](./doc/tutorial.md) for more details.
+- `Feat(Plugin)` Add `VConsole.VConsoleLogPlugin` (`VConsole.VConsole*` plugins etc.) to `VConsole` class.
 - `Fix(Global)` Fix a few minor issues. (#267 by @Molunerfinn, #272 by @domom)
 - `Fix(Storage)` Fix remove cookie fail when it is set path=/ or top domain. (#264 by @qianxinfeng)
 - `Perf(Global)` Display vConsole on `window DOMContentLoaded` instead of `window load`.
@@ -150,7 +153,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### V3.3.2 (2019-07-04)
 
-- `Feature(Global)` Add TypeScript definition file. (by @jas0ncn)
+- `Feat(Global)` Add TypeScript definition file. (by @jas0ncn)
 - `Fix(Log)` Avoid scrolling to bottom when away from bottom edge. (by @ele828)
 - `Fix(Global)` Fix switch button position issue. (by @rexschuang)
 - `Fix(Global)` Fix a few minor issues. (by @stenders)
@@ -158,14 +161,14 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### V3.3.0 (2019-02-02)
 
-- `Feature(Log)` Add the ability to collapse the same log.
+- `Feat(Log)` Add the ability to collapse the same log.
 - `Fix(Log)` Fix issue which formatted log (like `console.log('[foo]', 'bar')`) will not display in Log tab.
 
 
 #### V3.2.2 (2019-01-17)
 
-- `Feature` Add console command prompt. (by @65147400)
-- `Feature` Add SessionStorage support in Storage tab. (by @hkc452)
+- `Feat` Add console command prompt. (by @65147400)
+- `Feat` Add SessionStorage support in Storage tab. (by @hkc452)
 - `Fix` Fix `JSON.stringify` function which was incorrectly rewritten.
 - `Fix` Fix `logNumber` bug which was not reset when clear logs. (by @liuyuekeng)
 - `Fix` Fix unencoded HTML tag in Network tab. (by @mokang)
@@ -176,8 +179,8 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### V3.2.0 (2018-04-10)
 
-- `Feature` Support `console.time()` and `console.timeEnd()`.
-- `Feature` Add `disableLogScrolling` (in `vConsole.option`).
+- `Feat` Support `console.time()` and `console.timeEnd()`.
+- `Feat` Add `disableLogScrolling` (in `vConsole.option`).
 - `Fix` Fix `setOption()` error.
 - `Fix` Fix cookies' value wrong display.
 - `Fix` Fix "Uncaught InvalidStateError". (by @fireyy)
@@ -185,9 +188,9 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### V3.1.0 (2017-12-27)
 
-- `Feature` Add `vConsole.showSwitch()` and `vConsole.hideSwitch()` methods, see [Public Properties & Methods](./doc/public_properties_methods.md).
-- `Feature` Add `onReady` and `onClearLog` callback function to `vConsole.option`.
-- `Feature` Auto clear logs when `console.clear()` is called.
+- `Feat` Add `vConsole.showSwitch()` and `vConsole.hideSwitch()` methods, see [Public Properties & Methods](./doc/public_properties_methods.md).
+- `Feat` Add `onReady` and `onClearLog` callback function to `vConsole.option`.
+- `Feat` Auto clear logs when `console.clear()` is called.
 - `Fix` Fix `\r` error when build in Windows.
 - `Fix` Fix `Symbol` error in iOS8 or other old OS.
 
@@ -196,31 +199,31 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 Basic:
 
-- `Feature` Require manual init vConsole `var vConsole = new VConsole(option)`.
-- `Feature` Add configuaration `vConsole.option`, which can be set when `new VConsole` or `setOption(key, value)`.
-- `Feature` Support for custom loading of default built-in plugins by using `defaultPlugins` in the above option.
-- `Feature` Add `setOption(key, value)` method.
+- `Feat` Require manual init vConsole `var vConsole = new VConsole(option)`.
+- `Feat` Add configuaration `vConsole.option`, which can be set when `new VConsole` or `setOption(key, value)`.
+- `Feat` Support for custom loading of default built-in plugins by using `defaultPlugins` in the above option.
+- `Feat` Add `setOption(key, value)` method.
 - `Perf` Support CSP rule `unsafe-eval` and `unsafe-inline`.
 - `Perf` Optimize `font-size` when `initial-scale < 1`.
 
 Log plugin:
 
-- `Feature` Support `maxLogNumber` option to limit maximum log number.
+- `Feat` Support `maxLogNumber` option to limit maximum log number.
 - `Fix` Fix the crash caused by printing large objects.
 - `Perf` Only the logs written as `console.log('[system]', xxx)` will be shown in System tab, so `console.log('[system] xxx')` will be shown in default log tab.
 
 Network plugin:
 
-- `Feature` Support `Query String Parameters` and `Form Data`.
+- `Feat` Support `Query String Parameters` and `Form Data`.
 - `Perf` Auto format JSON response.
 - `Fix` Fix bug that XHR status is always "Pending" when using 3rd HTTP libraries.
 
 Plugins:
 
-- `Feature` Plugins can get vConsole instance by `this.vConsole` on/after `init` event is called.
-- `Feature` Add `updateOption` event to detect `vConsole.option` changes.
-- `Feature` Add Element tab as a built-in plugin.
-- `Feature` Add Storage tab as a built-in plugin.
+- `Feat` Plugins can get vConsole instance by `this.vConsole` on/after `init` event is called.
+- `Feat` Add `updateOption` event to detect `vConsole.option` changes.
+- `Feat` Add Element tab as a built-in plugin.
+- `Feat` Add Storage tab as a built-in plugin.
 
 
 
@@ -240,16 +243,16 @@ Plugins:
 
 #### V2.5.0 (2016-09-28)
 
-- `Feature` Add `vConsole.removePlugin()` method, see [Public Properties & Methods](./doc/public_properties_methods.md).
-- `Feature` Add `remove` plugin event, see [Plugin: Event List](./doc/plugin_event_list.md).
+- `Feat` Add `vConsole.removePlugin()` method, see [Public Properties & Methods](./doc/public_properties_methods.md).
+- `Feat` Add `remove` plugin event, see [Plugin: Event List](./doc/plugin_event_list.md).
 - `Perf` Disable page scrolling while vConsole is scrolling.
 - `Fix` Fix `window.onerror()` typo.
 
 
 #### V2.4.0 (2016-08-31)
 
-- `Feature` Add `addTopBar` plugin event, see [Plugin: Event List](./doc/plugin_event_list.md).
-- `Feature` Add log type filter to Log & System tab.
+- `Feat` Add `addTopBar` plugin event, see [Plugin: Event List](./doc/plugin_event_list.md).
+- `Feat` Add log type filter to Log & System tab.
 - `Perf` Log list will not automatically scroll to bottom while printing new logs if the viewport is not at the end of list.
 - `Perf` Fix UI bugs.
 - `Fix` Fix XSS issue when print object logs.
@@ -264,27 +267,27 @@ Plugins:
 
 #### V2.3.0 (2016-08-15)
 
-- `Feature` Objects or Arrays can be expended layer by layer.
-- `Feature` All object's properties, including private properties, can be enumerable now.
+- `Feat` Objects or Arrays can be expended layer by layer.
+- `Feat` All object's properties, including private properties, can be enumerable now.
 - `Perf` Support `tap` event within vConsole's DOM container to speed up `click` event.
 
 
 #### V2.2.1 (2016-08-08)
 
 - `Perf` Add complete performance timing log to System tab.
-- `Feature` Add third-party plugin list to README.
+- `Feat` Add third-party plugin list to README.
 
 
 #### V2.2.0 (2016-07-13)
 
-- `Feature` Add `vConsole.version` property.
-- `Feature` Add `xhr._noVConsole` property to `XMLHttpRequest` objects to customize whether a XHR should display in Network tab.
+- `Feat` Add `vConsole.version` property.
+- `Feat` Add `xhr._noVConsole` property to `XMLHttpRequest` objects to customize whether a XHR should display in Network tab.
 
 
 #### V2.1.0 (2016-06-29)
 
-- `Feature` Add `vConsole.tool` & `vConsole.$` helper functions, see [Helper Functions](./doc/helper_functions.md).
-- `Feature` Public properties & methods of vConsole are available, see [Public Properties & Methods](./doc/public_properties_methods.md).
+- `Feat` Add `vConsole.tool` & `vConsole.$` helper functions, see [Helper Functions](./doc/helper_functions.md).
+- `Feat` Public properties & methods of vConsole are available, see [Public Properties & Methods](./doc/public_properties_methods.md).
 - `Fix` Fix issue that `error` in `window.onerror()` may be undefined.
 - `Fix` Fix error that `xhr.status` may be unavailable when `xhr.readyState < 4`.
 
@@ -299,10 +302,10 @@ Plugins:
 
 #### v2.0.0 (2016-06-05)
 
-- `Feature` Rebuild completely, support custom plugin, see [Plugin: Getting Started](./doc/plugin_getting_started.md).
-- `Feature` Support execute JS command line in Log tab.
-- `Feature` Support circular structure object in Log and System tab.
-- `Feature` Support viewing request headers and response in Network tab.
+- `Feat` Rebuild completely, support custom plugin, see [Plugin: Getting Started](./doc/plugin_getting_started.md).
+- `Feat` Support execute JS command line in Log tab.
+- `Feat` Support circular structure object in Log and System tab.
+- `Feat` Support viewing request headers and response in Network tab.
 - `Perf` Switch button will not be dragged out of screen.
 - `Perf` Auto print User Agent in System tab.
 - `Perf` Show log's time in Log and System tab.
@@ -315,7 +318,7 @@ Plugins:
 
 #### v1.3.0 (2016-05-20)
 
-- `Feature` Support Drag and Drop switch button.
+- `Feat` Support Drag and Drop switch button.
 - `Fix` Fix initialization failure when loaded asynchronously.
 
 
@@ -326,8 +329,8 @@ Plugins:
 
 #### v1.2.0 (2016-05-11)
 
-- `Feature` Add network panel.
-- `Feature` Deprecate `vConsole.ready()` method.
+- `Feat` Add network panel.
+- `Feat` Deprecate `vConsole.ready()` method.
 - `Perf` Display formatted Object & Array variable.
 - `Perf` Add English README and CHANGELOG.
 - `Perf` Improve UI.
@@ -335,8 +338,8 @@ Plugins:
 
 #### v1.1.0 (2016-05-06)
 
-- `Feature` Support `window.onerror()` to catch exceptions and errors.
-- `Feature` Support `[default|system|...]` string to print logs to specific panel.
+- `Feat` Support `window.onerror()` to catch exceptions and errors.
+- `Feat` Support `[default|system|...]` string to print logs to specific panel.
 
 
 #### v1.0.5 (2016-04-29)

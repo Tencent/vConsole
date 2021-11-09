@@ -23,6 +23,7 @@ module.exports = (env, argv) => {
         umdNamedDefine: true,
         export: "default",
       },
+      globalObject: 'this || self',
     },
     resolve: {
       extensions: ['.ts', '.js', '.html', '.less', '.mjs', '.svelte'],
@@ -51,7 +52,10 @@ module.exports = (env, argv) => {
           test: /\.(less|css)$/i,
           // loader: 'style-loader!css-loader!less-loader'
           use: [
-            { loader: 'style-loader' },
+            {
+              loader: 'style-loader',
+              options: { injectType: 'lazySingletonStyleTag' },
+            },
             { loader: 'css-loader' },
             {
               loader: 'less-loader',
