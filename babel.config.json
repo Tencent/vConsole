@@ -3,9 +3,10 @@
     [
       "@babel/preset-env",
       {
-        "modules": false,
+        "modules": "auto",
         "targets": "defaults",
-        "loose": true
+        "loose": true,
+        "debug": false
       }
     ],
     "@babel/preset-typescript"

@@ -1,9 +1,9 @@
 <script>
   import { getContext } from 'svelte';
-  import { TABS } from './Tabs.svelte';
+  import { TabsContext } from './index';
 
   const panel = {};
-  const { registerPanel, selectedPanel } = getContext(TABS);
+  const { registerPanel, selectedPanel } = getContext(TabsContext);
 
   registerPanel(panel);
 </script>

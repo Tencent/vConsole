@@ -11,12 +11,12 @@
   "main": "dist/vconsole.min.js",
   "typings": "dist/vconsole.min.d.ts",
   "scripts": {
-    "build": "webpack --mode=production",
+    "build": "webpack --mode=production --progress",
     "build:typings": "tsc --build tsconfig.type.json",
-    "build:dev": "webpack --mode=development",
+    "build:dev": "webpack --mode=development --progress",
     "watch": "webpack --mode=development --watch --progress",
-    "serve": "webpack serve --config webpack.serve.config",
-    "prepublish": "npm run build",
+    "serve": "webpack serve --config webpack.serve.config --progress",
+    "prepublish1": "npm run build",
     "test:pack": "npx npm-packlist"
   },
   "keywords": [
@@ -41,6 +41,7 @@
     "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@babel/plugin-proposal-export-namespace-from": "^7.12.13",
     "@babel/plugin-proposal-object-rest-spread": "^7.13.8",
+    "@babel/plugin-transform-block-scoping": "^7.16.0",
     "@babel/preset-env": "^7.14.1",
     "@babel/preset-typescript": "^7.13.0",
     "babel-loader": "^8.2.2",

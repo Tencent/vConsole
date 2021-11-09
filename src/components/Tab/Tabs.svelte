@@ -1,17 +1,14 @@
-<script context="module">
-  export const TABS = {};
-</script>
-
-<script>
+<script lang="ts">
   import { setContext, onDestroy } from 'svelte';
   import { writable } from 'svelte/store';
+  import { TabsContext } from './index';
 
   const tabs = [];
   const panels = [];
   const selectedTab = writable(null);
   const selectedPanel = writable(null);
 
-  setContext(TABS, {
+  setContext(TabsContext, {
     registerTab: (tab) => {
       tabs.push(tab);
       selectedTab.update((current) => current || tab);
