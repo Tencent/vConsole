@@ -553,7 +553,7 @@ class VConsoleLogTab extends VConsolePlugin {
           rawLog = String(curLog);
           // log = (logStyle[i] ? `<span style="${logStyle[i]}"> ` : '<span> ') + tool.htmlEncode(curLog).replace(/\n/g, '<br/>') + '</span>';
           log = $.render(tplLineLog, {
-            log: rawLog,
+            log: curLog,
             logStyle: logStyle[i],
             logClass: item.logClass,
           });
