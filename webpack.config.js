@@ -4,13 +4,9 @@ const { execSync } = require('child_process');
 const TerserPlugin = require('terser-webpack-plugin');
 const sveltePreprocess = require('svelte-preprocess');
 const pkg = require('./package.json');
-// const babelConfig = require('./babel.config.json');
 
 module.exports = (env, argv) => {
   const isDev = argv.mode === 'development';
-  // babelConfig.presets[0][1].modules = false;
-  // babelConfig.presets[0][1].targets = { esmodules: true };
-  // babelConfig.presets[0][1].debug = false;
   return {
     mode: argv.mode,
     devtool: false,
@@ -40,8 +36,9 @@ module.exports = (env, argv) => {
       rules: [
         {
           test: /\.(js|ts)$/,
-          // exclude: /node_modules\/(?!svelte)/,
-          use: [{ loader: 'babel-loader' }],
+          use: [
+            { loader: 'babel-loader' }
+          ],
         },
         {
           test: /\.html$/,
@@ -77,7 +74,6 @@ module.exports = (env, argv) => {
               options: {
                 preprocess: sveltePreprocess({
                   sourceMap: isDev,
-                  // babel: babelConfig,
                 }),
                 compilerOptions: {
                   dev: isDev,

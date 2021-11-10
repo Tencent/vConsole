@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"declaration": true,
 		"moduleResolution": "node",
     "allowJs": true,
 		"target": "es6",
@@ -13,15 +14,7 @@
 		"paths": {
 			"src/*": ["src/*"]
 		},
-		"types": [
-			"svelte",
-			"svelte/store",
-			"svelte/motion",
-			"svelte/transition",
-			"svelte/animate",
-			"svelte/easing"
-		]
 	},
-  "include": ["src/**/*", "webpack.config.ts"],
+  "include": ["src/**/*"],
 	"exclude": ["node_modules/*"],
 }

@@ -1,14 +1,15 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### 3.10.0-rc (2021-11-xx)
+#### 3.9.5 (2021-11-10)
 
-- `Feat(Log)` Add support for `BigInt` and update `Symbol` log style.
-- `Refactor(Global)` Lazy load style tag when vConsole init; Use `this || self` as `globalObject`. (issue #441)
-- `Fix(Log)` Fix "Cannot convert a Symbol value to a string" error when logged a `symbol` value.
+- `Style(Log)` Add support for `BigInt` and update `Symbol` log style.
+- `Refactor(Style)` Lazy load style tag when vConsole init.
+- `Fix(Global)` Use `this || self` as `globalObject` to prevent `self is not defined` error. (issue #441)
+- `Fix(Log)` Fix `Cannot convert a Symbol value to a string` error when logged a `Symbol` value.
 - `Fix(Log)` Now commands and output logs can be copied.
 - `Fix(Network)` Fix `URIError` when decode URI fail. (issue #470)
 - `Fix(Network)` Fix potential `forEach` error. (issue #471)
-- `Chore` Transform svelte output code to ES5. (issue #468)
+- `Chore` Transform Svelte output code to ES5. (issue #468)
 
 
 #### 3.9.4 (2021-10-26)
@@ -42,7 +43,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix(Network)` Fix error when url not starts with `http`. (issue #420)
 - `Fix(Network)` Fix error when using `Request` as `Fetch`'s parameter. (PR #428 by @tatsunoneko)
 - `Fix(Network)` Display formatted key-value list when `POST` a JSON string. (issue #425)
-- `style` Wrap LESS math operations. (PR #426 by @ManiaciaChao)
+- `Style` Wrap LESS math operations. (PR #426 by @ManiaciaChao)
 - `Chore` Fix `yarn serve` error. (issue #424)
 
 
