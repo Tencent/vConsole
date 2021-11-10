@@ -1,5 +1,17 @@
 [English](./CHANGELOG.md) | 简体中文
 
+#### 3.9.5 (2021-11-10)
+
+- `Style(Log)` 支持 `BigInt` 类型并更新 `Symbol` 类型的样式。
+- `Refactor(Style)` 在 vConsole 初始化时再懒加载 style 标签（而非 import 后就加载）。
+- `Fix(Global)` 使用 `this || self` 作为 `globalObject`，以避免 `self is not defined` 错误。 (issue #441)
+- `Fix(Log)` 修复打印 `Symbol` 类型时产生的 `Cannot convert a Symbol value to a string` 错误。
+- `Fix(Log)` 修复 commands 命令及其输出结果无法复制的问题。
+- `Fix(Network)` 修复解码 URL 参数时产生的 `URIError` 错误。 (issue #470)
+- `Fix(Network)` 修复潜在的由 `forEach` 引起的错误。 (issue #471)
+- `Chore` 转换 Svelte 代码产物到 ES5 标准，以避免 ES6 引发的构建问题。 (issue #468)
+
+
 #### 3.9.4 (2021-10-26)
 
 - `Refactor(Global)` 为 `VConsole` 类的方法参数添加 Typescript 声明.

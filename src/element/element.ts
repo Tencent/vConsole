@@ -14,7 +14,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
  */
 
 import MutationObserver from 'mutation-observer'
-import './style.less';
+import Style from './style.less';
 import VConsolePlugin from '../lib/plugin';
 import tplTabbox from './tabbox.html';
 import NodeView from './node_view';
@@ -33,6 +33,9 @@ class VConsoleElementsTab extends VConsolePlugin {
   constructor(...args) {
     super(...args);
     const that = this;
+
+    // create style tag
+    Style.use();
 
     that.isInited = false;
     that.node = {};

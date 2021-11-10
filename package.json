@@ -1,6 +1,6 @@
 {
   "name": "vconsole",
-  "version": "3.9.4",
+  "version": "3.9.5",
   "description": "A lightweight, extendable front-end developer tool for mobile web page.",
   "homepage": "https://github.com/Tencent/vConsole",
   "files": [
@@ -11,12 +11,12 @@
   "main": "dist/vconsole.min.js",
   "typings": "dist/vconsole.min.d.ts",
   "scripts": {
-    "build": "webpack --mode=production",
+    "build": "webpack --mode=production --progress",
     "build:typings": "tsc --build tsconfig.type.json",
-    "build:dev": "webpack --mode=development",
-    "watch": "webpack watch --mode=development",
-    "serve": "webpack serve --config webpack.serve.config",
-    "prepublish": "npm run build",
+    "build:typings:TODO": "dts-bundle-generator --no-banner=true -o dist/vconsole.min.d.ts src/vconsole.ts",
+    "build:dev": "webpack --mode=development --progress",
+    "watch": "webpack --mode=development --watch --progress",
+    "serve": "webpack serve --config webpack.serve.config --progress",
     "test:pack": "npx npm-packlist"
   },
   "keywords": [
@@ -41,12 +41,14 @@
     "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@babel/plugin-proposal-export-namespace-from": "^7.12.13",
     "@babel/plugin-proposal-object-rest-spread": "^7.13.8",
+    "@babel/plugin-transform-block-scoping": "^7.16.0",
     "@babel/preset-env": "^7.14.1",
     "@babel/preset-typescript": "^7.13.0",
     "babel-loader": "^8.2.2",
     "babel-plugin-add-module-exports": "^1.0.4",
     "chai": "^4.3.4",
     "css-loader": "^5.2.4",
+    "dts-bundle-generator": "^5.9.0",
     "html-loader": "^2.1.2",
     "jsdom": "^16.5.3",
     "json-loader": "^0.5.7",

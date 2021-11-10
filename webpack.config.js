@@ -1,9 +1,9 @@
-const pkg = require('./package.json');
 const Webpack = require('webpack');
 const Path = require('path');
 const { execSync } = require('child_process');
 const TerserPlugin = require('terser-webpack-plugin');
 const sveltePreprocess = require('svelte-preprocess');
+const pkg = require('./package.json');
 
 module.exports = (env, argv) => {
   const isDev = argv.mode === 'development';
@@ -23,6 +23,7 @@ module.exports = (env, argv) => {
         umdNamedDefine: true,
         export: "default",
       },
+      globalObject: 'this || self',
     },
     resolve: {
       extensions: ['.ts', '.js', '.html', '.less', '.mjs', '.svelte'],
@@ -35,11 +36,12 @@ module.exports = (env, argv) => {
       rules: [
         {
           test: /\.(js|ts)$/,
-          use: [{ loader: 'babel-loader' }],
+          use: [
+            { loader: 'babel-loader' }
+          ],
         },
         {
           test: /\.html$/,
-          // loader: 'html-loader?minimize=false'
           use: [
             {
               loader: 'html-loader',
@@ -49,9 +51,11 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.(less|css)$/i,
-          // loader: 'style-loader!css-loader!less-loader'
           use: [
-            { loader: 'style-loader' },
+            {
+              loader: 'style-loader',
+              options: { injectType: 'lazySingletonStyleTag' },
+            },
             { loader: 'css-loader' },
             {
               loader: 'less-loader',
@@ -64,6 +68,7 @@ module.exports = (env, argv) => {
         {
           test: /\.(svelte)$/,
           use: [
+            'babel-loader',
             {
               loader: 'svelte-loader',
               options: {
@@ -73,23 +78,25 @@ module.exports = (env, argv) => {
                 compilerOptions: {
                   dev: isDev,
                 },
-                emitCss: !isDev,
-                hotReload: isDev,
+                emitCss: false,
+                hotReload: false,
               },
             },
           ],
         },
         {
           // required to prevent errors from Svelte on Webpack 5+, omit on Webpack 4
-          test: /node_modules\/svelte\/.*\.mjs$/,
+          test: /node_modules\/svelte\/.*\.m?js$/,
           resolve: {
             fullySpecified: false,
           },
+          use: ['babel-loader'],
         },
       ],
     },
     stats: {
       colors: true,
+      errorDetails: true,
     },
     optimization: {
       minimize: !isDev,
@@ -98,6 +105,9 @@ module.exports = (env, argv) => {
           extractComments: false,
         }),
       ],
+    },
+    watchOptions: {
+      ignored: ['**/node_modules'],
     },
     plugins: [
       new Webpack.BannerPlugin({

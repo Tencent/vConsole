@@ -1,8 +1,9 @@
 {
 	"compilerOptions": {
+		"declaration": true,
 		"moduleResolution": "node",
     "allowJs": true,
-		"target": "es2018",
+		"target": "es6",
 		"importsNotUsedAsValues": "remove",
 		"isolatedModules": true,
 		"esModuleInterop": true,
@@ -13,15 +14,7 @@
 		"paths": {
 			"src/*": ["src/*"]
 		},
-		"types": [
-			"svelte",
-			"svelte/store",
-			"svelte/motion",
-			"svelte/transition",
-			"svelte/animate",
-			"svelte/easing"
-		]
 	},
-  "include": ["src/**/*", "webpack.config.ts"],
-	"exclude": ["node_modules/*", "__sapper__/*", "public/*"],
+  "include": ["src/**/*"],
+	"exclude": ["node_modules/*"],
 }

@@ -36,6 +36,7 @@ interface VConsoleLogItem {
   noOrigin?: boolean;
   date?: number;
   style?: string;
+  logClass?: string;
 }
 interface VConsoleLogView {
   _id: string;
@@ -47,7 +48,6 @@ interface VConsoleLogView {
 }
 
 class VConsoleLogTab extends VConsolePlugin {
-  static AddedLogID = [];
   tplTabbox: string = ''; // MUST be overwrite in child class
   allowUnformattedLog: boolean = true; // `[xxx]` format log
   isReady: boolean = false;
@@ -175,6 +175,10 @@ class VConsoleLogTab extends VConsolePlugin {
 
     // copy
     VConsoleItemCopy.delegate(this.$tabbox, (id) => {
+      that.printOriginLog({
+        logs: ['COPY:', that.cachedLogs[id]],
+        logType: 'log',
+      });
       return that.cachedLogs[id];
     });
   }
@@ -433,7 +437,7 @@ class VConsoleLogTab extends VConsolePlugin {
         logText.push(tool.SimpleJSONStringify(logs[i]));
         curLog.hasFold = true;
       } else {
-        logText.push(logs[i]);
+        logText.push(String(logs[i]));
       }
     }
     curLog.logText = logText.join(' ');
@@ -538,6 +542,7 @@ class VConsoleLogTab extends VConsolePlugin {
           log = $.render(tplLineLog, {
             log: rawLog,
             logStyle: '',
+            logClass: item.logClass,
           });
         } else if (tool.isObject(curLog) || tool.isArray(curLog)) {
           // object or array
@@ -545,11 +550,12 @@ class VConsoleLogTab extends VConsolePlugin {
           log = this.getFoldedLine(curLog);
         } else {
           // default
-          rawLog = curLog;
+          rawLog = String(curLog);
           // log = (logStyle[i] ? `<span style="${logStyle[i]}"> ` : '<span> ') + tool.htmlEncode(curLog).replace(/\n/g, '<br/>') + '</span>';
           log = $.render(tplLineLog, {
             log: curLog,
             logStyle: logStyle[i],
+            logClass: item.logClass,
           });
         }
       } catch (e) {
@@ -557,7 +563,7 @@ class VConsoleLogTab extends VConsolePlugin {
         // log = `<span> [${rawLog}]</span>`;
         log = $.render(tplLineLog, {
           log: ` [${rawLog}]`,
-          logStyle: ''
+          logStyle: '',
         });
       }
       if (log) {
@@ -638,6 +644,8 @@ class VConsoleLogTab extends VConsolePlugin {
               val = '"' + tool.invisibleTextEncode(val) + '"';
             } else if (tool.isNumber(val)) {
               valueType = 'number';
+            } else if (tool.isBigInt(val)) {
+              valueType = 'bigint';
             } else if (tool.isBoolean(val)) {
               valueType = 'boolean';
             } else if (tool.isNull(val)) {

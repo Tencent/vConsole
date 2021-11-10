@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dev: Network</title>
-  <link href="../example/lib/weui.min.css" rel="stylesheet"/>
-  <link href="../example/lib/demo.css" rel="stylesheet"/>
+  <link href="./lib/weui.min.css" rel="stylesheet"/>
+  <link href="./lib/demo.css" rel="stylesheet"/>
 
   <script src="../dist/vconsole.min.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -197,10 +197,10 @@ function getFetchText() {
 function postImage() {
   console.info('postImage() Start, response should be logged after End');
   const xhr = new XMLHttpRequest();
-  xhr.open('POST', '../example/snapshot/panel_log.jpg?method=xhrPost&id=' + Math.random());
+  xhr.open('POST', './lib/snapshot/panel_log.jpg?method=xhrPost&id=' + Math.random());
   xhr.send();
 
-  window.fetch('../example/snapshot/qrcode.png?method=fetchPost&id=' + Math.random(), {
+  window.fetch('./lib/snapshot/qrcode.png?method=fetchPost&id=' + Math.random(), {
     method: 'POST',
   });
   console.info('postImage() End');

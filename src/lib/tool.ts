@@ -46,6 +46,9 @@ export function getDate(time: number) {
 export function isNumber(value) {
   return Object.prototype.toString.call(value) == '[object Number]';
 }
+export function isBigInt(value) {
+  return Object.prototype.toString.call(value) == '[object BigInt]';
+}
 export function isString(value) {
   return Object.prototype.toString.call(value) == '[object String]';
 }
@@ -71,6 +74,7 @@ export function isObject(value) {
     // if it isn't a primitive value, then it is a common object
     (
       !isNumber(value) &&
+      !isBigInt(value) &&
       !isString(value) &&
       !isBoolean(value) &&
       !isArray(value) &&
@@ -181,10 +185,13 @@ export function SimpleJSONStringify(stringObject) {
       // value
       if (isArray(value)) {
         str += 'Array(' + value.length + ')';
-      } else if (isObject(value) || isSymbol(value) || isFunction(value)) {
+      } else if (isSymbol(value)) {
+        str += String(value);
+      } else if (isObject(value) || isFunction(value)) {
         str += Object.prototype.toString.call(value);
       } else {
-        str += JSONStringify(value);
+        // str += JSONStringify(value);
+        str += String(value);
       }
       if (i < keys.length - 1) {
         str += ', ';
@@ -269,20 +276,13 @@ export function getObjAllKeys(obj) {
   if (!isObject(obj) && !isArray(obj)) {
     return [];
   }
-  // if (isArray(obj)) {
-  //   const m = [];
-  //   obj.forEach((_, index) => {
-  //     m.push(index)
-  //   });
-  //   return m;
-  // }
-  // return Object.getOwnPropertyNames(obj).sort();
   const keys = [];
   for (let k in obj) {
+    // typeof `k` may be `string | number | symbol`
     keys.push(k);
   }
-  return <string[]>keys.sort((a, b) => {
-    return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+  return keys.sort((a, b) => {
+    return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
   });
 }
 
