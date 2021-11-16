@@ -1,9 +1,11 @@
-import { cookiesStorage } from '../../lib/cookiesStorage';
+import { CookieStorage } from 'cookie-storage';
 
 interface IStorageItem {
   name: string;
   storage: Storage;
 }
+
+export const cookiesStorage = new CookieStorage();
 
 export const getAllStorages = () => {
   const storages: IStorageItem[] = [];

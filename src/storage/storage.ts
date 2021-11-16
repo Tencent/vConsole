@@ -1,7 +1,8 @@
 import VConsoleSveltePlugin from '../lib/sveltePlugin';
-import { StorageTab } from '../components/Storage';
+import { default as StorageComp } from './storage.svelte';
+
 export default class VConsoleStorageTab extends VConsoleSveltePlugin {
-  constructor(id: string, name: string, renderProps = { propA: 1 }) {
-    super(id, name, StorageTab, renderProps);
+  constructor(id: string, name: string, renderProps = { }) {
+    super(id, name, StorageComp, renderProps);
   }
 }

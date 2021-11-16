@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+#### 3.10.0 (2021-11-xx)
+
+- `Refactor(Network)` Use Svelte as template engine.
+
+
 #### 3.9.5 (2021-11-10)
 
 - `Style(Log)` Add support for `BigInt` and update `Symbol` log style.

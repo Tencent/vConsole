@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Tabs, TabList, TabPanel, Tab } from '../Tab';
+  import { Tabs, TabList, TabPanel, Tab } from '../components/Tab';
   import copy from 'copy-text-to-clipboard';
   import Fa from 'svelte-fa';
   import {
@@ -10,9 +10,9 @@
     faPlus,
     faSync,
   } from '@fortawesome/free-solid-svg-icons';
-  import { Btn } from '../Button';
+  import { Btn } from '../components/Button';
   import { getAllStorages } from './utils';
-  import { getStringBytes, subString } from '../../lib/tool';
+  import { getStringBytes, subString } from '../lib/tool';
 
   let storages = getAllStorages();
 
@@ -125,7 +125,7 @@
 </Tabs>
 
 <style lang="less">
-  @import '../../styles/size.less';
+  @import '../styles/size.less';
   .tab-list {
     position: fixed;
     width: 100%;

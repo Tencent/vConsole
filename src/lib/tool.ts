@@ -310,3 +310,11 @@ export function getStorage(key: string) {
   key = 'vConsole_' + key;
   return localStorage.getItem(key);
 }
+
+
+/**
+ * Generate a 6-digit unique string with prefix `"__vc_" + ${prefix}`
+ */
+export function getUniqueID(prefix: string = '') {
+  return '__vc_' + prefix + Math.random().toString(36).substring(2, 8);
+}
