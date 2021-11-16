@@ -2,6 +2,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 #### 3.10.0 (2021-11-xx)
 
+- `Feat(Network)` Add copy button to requests.
 - `Refactor(Network)` Use Svelte as template engine.
 
 
