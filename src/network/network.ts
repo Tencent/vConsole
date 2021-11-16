@@ -3,7 +3,7 @@ import VConsoleSveltePlugin from '../lib/sveltePlugin';
 import { default as NetworkComp } from './network.svelte';
 import { VConsoleNetworkModel } from './network.model';
 
-export default class VConsoleNetworkTab extends VConsoleSveltePlugin {
+export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
   public module: VConsoleNetworkModel;
   private isShow: boolean = false;
   public isInBottom: boolean = true; // whether the panel is in the bottom

@@ -22,7 +22,7 @@ import NodeView from './node_view';
 // import * as tool from '../lib/tool.ts';
 import $ from '../lib/query';
 
-class VConsoleElementsTab extends VConsolePlugin {
+export class VConsoleElementPlugin extends VConsolePlugin {
   isInited: boolean;
   node: {};
   $tabbox: Element;
@@ -364,5 +364,3 @@ class VConsoleElementsTab extends VConsolePlugin {
   }
 
 } // END class
-
-export default VConsoleElementsTab;

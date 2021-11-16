@@ -18,7 +18,7 @@ import * as tool from '../lib/tool';
 import VConsoleLogTab from './log';
 import tplTabbox from './tabbox_default.html';
 
-class VConsoleDefaultTab extends VConsoleLogTab {
+export class VConsoleDefaultPlugin extends VConsoleLogTab {
   private filterText = '';
 
   constructor(...args) {
@@ -376,5 +376,3 @@ class VConsoleDefaultTab extends VConsoleLogTab {
   }
 
 } // END class
-
-export default VConsoleDefaultTab;

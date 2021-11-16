@@ -16,7 +16,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 import VConsoleLogTab from './log';
 import tplTabbox from './tabbox_system.html';
 
-class VConsoleSystemTab extends VConsoleLogTab {
+export class VConsoleSystemPlugin extends VConsoleLogTab {
 
   constructor(...args) {
     super(...args);
@@ -128,5 +128,3 @@ class VConsoleSystemTab extends VConsoleLogTab {
   }
 
 } // END class
-
-export default VConsoleSystemTab;

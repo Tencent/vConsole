@@ -26,11 +26,11 @@ import tplToolItem from './tool_item.html';
 // built-in plugins
 import VConsolePlugin from '../lib/plugin';
 import VConsoleLogPlugin from '../log/log';
-import VConsoleDefaultPlugin from '../log/default';
-import VConsoleSystemPlugin from '../log/system';
-import VConsoleNetworkPlugin from '../network/network';
-import VConsoleElementPlugin from '../element/element';
-import VConsoleStoragePlugin from '../storage/storage';
+import { VConsoleDefaultPlugin } from '../log/default';
+import { VConsoleSystemPlugin } from '../log/system';
+import { VConsoleNetworkPlugin } from '../network/network';
+import { VConsoleElementPlugin } from '../element/element';
+import { VConsoleStoragePlugin } from '../storage/storage';
 
 declare interface VConsoleOptions {
   defaultPlugins?: ('system' | 'network' | 'element' | 'storage')[];
