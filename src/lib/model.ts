@@ -1,15 +1,16 @@
 type AConstructorTypeOf<T, U extends any[] = any[]> = new (...args: U) => T;
 
 export class VConsoleModel {
-  public static singleton: VConsoleModel;
+  public static singleton: { [ctorName: string] : VConsoleModel } = {};
   protected _onDataUpdateCallbacks: Function[] = [];
 
   public static getSingleton<T extends VConsoleModel>(ctor: AConstructorTypeOf<T>): T {
-    if (VConsoleModel.singleton) {
-      return <T>VConsoleModel.singleton;
+    const ctorName: string = ctor.prototype.constructor.name;
+    if (VConsoleModel.singleton[ctorName]) {
+      return <T>VConsoleModel.singleton[ctorName];
     }
-    VConsoleModel.singleton = new ctor();
-    return <T>VConsoleModel.singleton;
+    VConsoleModel.singleton[ctorName] = new ctor();
+    return <T>VConsoleModel.singleton[ctorName];
   }
 
   public onDataUpdate(cb: Function) {

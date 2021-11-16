@@ -3,7 +3,7 @@
   import Fa from 'svelte-fa';
   import { faCopy } from '@fortawesome/free-solid-svg-icons';
   import * as tool from '../lib/tool';
-  import { VConsoleNetworkModel } from './networkModel';
+  import { VConsoleNetworkModel } from './network.model';
 
   const networkModel = VConsoleNetworkModel.getSingleton(VConsoleNetworkModel);
   let reqList = networkModel.reqList;

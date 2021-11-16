@@ -11,10 +11,11 @@
     faSync,
   } from '@fortawesome/free-solid-svg-icons';
   import { Btn } from '../components/Button';
-  import { getAllStorages } from './utils';
+  import { VConsoleStorageModel } from './storage.model';
   import { getStringBytes, subString } from '../lib/tool';
 
-  let storages = getAllStorages();
+  const storageModel = VConsoleStorageModel.getSingleton(VConsoleStorageModel);
+  let storages = storageModel.getAllStorages();
 
   // edit state
   let editingIdx = -1;

@@ -1,7 +1,7 @@
 import $ from '../lib/query';
 import VConsoleSveltePlugin from '../lib/sveltePlugin';
 import { default as NetworkComp } from './network.svelte';
-import { VConsoleNetworkModel } from './networkModel';
+import { VConsoleNetworkModel } from './network.model';
 
 export default class VConsoleNetworkTab extends VConsoleSveltePlugin {
   public module: VConsoleNetworkModel;
