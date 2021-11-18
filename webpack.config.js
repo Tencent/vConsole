@@ -77,6 +77,7 @@ module.exports = (env, argv) => {
                 }),
                 compilerOptions: {
                   dev: isDev,
+                  accessors: true,
                 },
                 emitCss: false,
                 hotReload: false,

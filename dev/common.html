@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <title>Test: Common</title>
+  <link href="./lib/weui.min.css" rel="stylesheet"/>
+  <link href="./lib/demo.css" rel="stylesheet"/>
+</head>
+<body ontouchstart>
+  <div id="page" class="page">
+    <a onclick="normalObject()" href="javascript:;" class="weui_btn weui_btn_default">Log</a>
+    <a onclick="changeTheme('dark')" href="javascript:;" class="weui_btn weui_btn_default">Theme:dark</a>
+    <a onclick="changeTheme('light')" href="javascript:;" class="weui_btn weui_btn_default">Theme:light</a>
+    <a onclick="changeTheme('')" href="javascript:;" class="weui_btn weui_btn_default">Theme:auto</a>
+    <a onclick="toggleVConsole()" href="javascript:;" class="weui_btn weui_btn_default">vConsole:show/hide</a>
+    <a onclick="toggleSwitch()" href="javascript:;" class="weui_btn weui_btn_default">Switch:show/hide</a>
+    <a onclick="switchPosition()" href="javascript:;" class="weui_btn weui_btn_default">switchPosition</a>
+    <a onclick="destroy()" href="javascript:;" class="weui_btn weui_btn_default">Destroy</a>
+  </div>
+</body>
+</html>
+
+<script type="module">
+import '../dist/vconsole.min.js';
+
+window.vConsole = new window.VConsole({
+  maxLogNumber: 1000,
+  // disableLogScrolling: true,
+  // theme: 'dark',
+  onReady: function() {
+    console.log('vConsole is ready.');
+  },
+  onClearLog: function() {
+    console.log('on clearLog');
+  }
+});
+</script>
+
+<script>
+function normalObject() {
+  console.info('normalObject() Start');
+  console.log('A normal JSON:', {
+    number: 233,
+    string: 'Hello world',
+    boolean: true,
+    symbol: Symbol('foo'),
+    bigint: 99999999999n,
+    obj: {foo: 'bar'},
+    array: [8, 7, 6],
+    func: function(a) { alert('b'); }
+  });
+  console.info('normalObject() End');
+}
+
+function changeTheme(theme) {
+  console.info('changeTheme() Start');
+  window.vConsole.setOption('theme', theme);
+  console.log('Current Theme:', theme || 'auto');
+  console.info('changeTheme() End');
+}
+
+function toggleVConsole() {
+  console.info('toggleVConsole() Start');
+  window.vConsole.show();
+  setTimeout(() => {
+    window.vConsole.hide();
+  }, 1000);
+  console.info('toggleVConsole() End');
+}
+
+let showSwitch = true;
+function toggleSwitch() {
+  console.info('toggleSwitch() Start');
+  showSwitch = !showSwitch;
+  showSwitch ? window.vConsole.showSwitch() : window.vConsole.hideSwitch();
+  console.info('toggleSwitch() End');
+}
+
+function switchPosition() {
+  console.info('switchPosition() Start');
+  vConsole.setSwitchPosition(20, 20);
+  console.info('switchPosition() End');
+}
+
+function destroy() {
+  console.info('destroy() Start');
+  window.vConsole.destroy();
+  console.info('destroy() End');
+}
+</script>

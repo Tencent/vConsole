@@ -1,11 +1,11 @@
 import { CookieStorage } from 'cookie-storage';
+import { writable } from 'svelte/store';
 import { VConsoleModel } from '../lib/model';
 
 interface IStorageItem {
   name: string;
   storage: Storage;
 }
-
 export class VConsoleStorageModel extends VConsoleModel {
   protected cookiesStorage: CookieStorage = new CookieStorage();
 
@@ -23,5 +23,3 @@ export class VConsoleStorageModel extends VConsoleModel {
     return storages;
   }
 }
-
-export default VConsoleStorageModel;

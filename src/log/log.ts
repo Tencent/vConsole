@@ -47,7 +47,7 @@ interface VConsoleLogView {
   count: number; // repeated count
 }
 
-class VConsoleLogTab extends VConsolePlugin {
+export class VConsoleLogPlugin extends VConsolePlugin {
   tplTabbox: string = ''; // MUST be overwrite in child class
   allowUnformattedLog: boolean = true; // `[xxx]` format log
   isReady: boolean = false;
@@ -97,10 +97,12 @@ class VConsoleLogTab extends VConsolePlugin {
         data: {
           type: types[i].toLowerCase()
         },
+        actived: i === 0,
         className: '',
-        onClick: function () {
-          if (!$.hasClass(this, 'vc-actived')) {
-            that.showLogType(this.dataset.type || 'all');
+        onClick: (e: PointerEvent, data: { type: string }) => {
+          const $target: any = e.target;
+          if (!$.hasClass($target, 'vc-actived')) {
+            this.showLogType(data?.type || 'all');
           } else {
             return false;
           }
@@ -112,13 +114,12 @@ class VConsoleLogTab extends VConsolePlugin {
   }
 
   onAddTool(callback: Function) {
-    const that = this;
     const toolList = [{
       name: 'Clear',
       global: false,
-      onClick: function () {
-        that.clearLog();
-        that.vConsole.triggerEvent('clearLog');
+      onClick: () => {
+        this.clearLog();
+        this.vConsole.triggerEvent('clearLog');
       }
     }];
     callback(toolList);
@@ -726,6 +727,3 @@ class VConsoleLogTab extends VConsolePlugin {
   }
 
 } // END class
-
-
-export default VConsoleLogTab;

@@ -5,7 +5,7 @@ export class VConsoleSveltePlugin<T extends {} = {}> extends VConsolePlugin {
   CompClass: typeof SvelteComponent;
   compInstance?: SvelteComponent;
   initialProps: T;
-  $dom: HTMLElement;
+  // $container: HTMLElement;
 
   constructor(
     id: string,
@@ -23,16 +23,18 @@ export class VConsoleSveltePlugin<T extends {} = {}> extends VConsolePlugin {
   }
 
   onRenderTab(callback) {
-    this.$dom = document.createElement('div');
+    const $container = document.createElement('div');
     this.compInstance = new this.CompClass({
-      target: this.$dom,
+      target: $container,
       props: this.initialProps,
     });
-    callback(this.$dom);
+    callback($container.firstElementChild);
   }
 
-  onRemove() {}
+  onRemove() {
+    if (this.compInstance) {
+      this.compInstance.$destroy();
+    }
+  }
 
 }
-
-export default VConsoleSveltePlugin;

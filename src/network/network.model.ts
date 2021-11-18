@@ -1,3 +1,4 @@
+import { writable, get } from 'svelte/store';
 import * as tool from '../lib/tool';
 import { VConsoleModel } from '../lib/model';
  
@@ -25,10 +26,17 @@ export class VConsoleNetworkRequestItem {
     this.id = id;
   }
 }
- 
+
+/**
+ * Network Store
+ */
+export const requestList = writable<{ [id: string]: VConsoleNetworkRequestItem }>({});
+
+
+/**
+ * Network Model
+ */
 export class VConsoleNetworkModel extends VConsoleModel {
-  public reqList: { [id: string]: VConsoleNetworkRequestItem } = {};
-  
   private _xhrOpen: XMLHttpRequest['open'] = undefined; // the origin function
   private _xhrSend: XMLHttpRequest['send'] = undefined;
   private _xhrSetRequestHeader: XMLHttpRequest['setRequestHeader'] = undefined;
@@ -65,8 +73,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
 
   clearLog() {
     // remove list
-    this.reqList = {};
-    this.triggerDataUpdate();
+    requestList.set({});
   }
 
   /**
@@ -74,18 +81,17 @@ export class VConsoleNetworkModel extends VConsoleModel {
     * @private
     */
   private updateRequest(id: string, data: VConsoleNetworkRequestItem | Object) {
-    // see whether add new item into list
-    // const preCount = Object.keys(this.reqList).length;
-
     // update item
-    const item = this.reqList[id] || new VConsoleNetworkRequestItem(id);
+    const reqList = get(requestList);
+    const item = reqList[id] || new VConsoleNetworkRequestItem(id);
     for (let key in data) {
       item[key] = data[key];
     }
-    this.reqList[id] = item;
+    requestList.update((reqList) => {
+      reqList[id] = item;
+      return reqList;
+    });
     // console.log(item);
-
-    this.triggerDataUpdate();
   }
 
   /**
@@ -122,7 +128,8 @@ export class VConsoleNetworkModel extends VConsoleModel {
       const _onreadystatechange = XMLReq.onreadystatechange || function() {};
       const onreadystatechange = function() {
 
-        const item = that.reqList[id] || new VConsoleNetworkRequestItem(id);
+        const reqList = get(requestList);
+        const item = reqList[id] || new VConsoleNetworkRequestItem(id);
 
         // update status
         item.readyState = XMLReq.readyState;
@@ -244,7 +251,8 @@ export class VConsoleNetworkModel extends VConsoleModel {
       const XMLReq = this;
       const args = [].slice.call(arguments);
 
-      const item = that.reqList[XMLReq._requestID];
+      const reqList = get(requestList);
+      const item = reqList[XMLReq._requestID];
       if (item) {
         if (!item.requestHeader) { item.requestHeader = {}; }
         item.requestHeader[args[0]] = args[1];
@@ -259,7 +267,8 @@ export class VConsoleNetworkModel extends VConsoleModel {
             data = args[0];
       const { _requestID = tool.getUniqueID(), _url, _method } = <any>XMLReq;
 
-      const item = that.reqList[_requestID] || new VConsoleNetworkRequestItem(_requestID);
+      const reqList = get(requestList);
+      const item = reqList[_requestID] || new VConsoleNetworkRequestItem(_requestID);
       item.method = _method ? _method.toUpperCase() : 'GET';
 
       let query = _url ? _url.split('?') : []; // a.php?b=c&d=?e => ['a.php', 'b=c&d=', 'e']
@@ -329,7 +338,10 @@ export class VConsoleNetworkModel extends VConsoleModel {
     (<any>window).fetch = (input: RequestInfo, init?: RequestInit) => {
       const id = tool.getUniqueID();
       const item = new VConsoleNetworkRequestItem(id);
-      that.reqList[id] = item;
+      requestList.update((reqList) => {
+        reqList[id] = item;
+        return reqList;
+      });
       let url: URL,
           method = 'GET',
           requestHeader: HeadersInit = null;
@@ -474,7 +486,10 @@ export class VConsoleNetworkModel extends VConsoleModel {
     window.navigator.sendBeacon = (urlString: string, data?: BodyInit) => {
       const id = tool.getUniqueID();
       const item = new VConsoleNetworkRequestItem(id);
-      that.reqList[id] = item;
+      requestList.update((reqList) => {
+        reqList[id] = item;
+        return reqList;
+      });
 
       const url = that.getURL(urlString);
       item.id = id;

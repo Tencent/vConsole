@@ -32,7 +32,7 @@ Key                   | Type     | Optional | Default value                     
 defaultPlugins        | Array    | true     | ['system', 'network', 'element', 'storage'] | Listed built-in plugins will be inited and loaded into vConsole. 
 onReady               | Function | true     |                                             | Trigger after vConsole is inited and default plugins is loaded.
 onClearLog            | Function | true     |                                             | Trigger after click "Clear" button in Log and System panel.
-maxLogNumber          | Number   | true     | 1000                                        | Overflow logs will be removed from log tabs.
+maxLogNumber          | Number   | true     | 1000                                        | Overflow logs will be removed from log panels.
 disableLogScrolling   | Boolean  | true     |                                             | If `false`, panel will not scroll to bottom while printing new logs.
 theme                 | String   | true     | 'light'                                     | Theme mode, 'light' | 'dark'.
 
@@ -46,43 +46,6 @@ vConsole.setOption('maxLogNumber', 5000);
 // or:
 vConsole.setOption({maxLogNumber: 5000});
 ```
-
-
-### vConsole.activedTab
-
-The actived tab's plugin id.
-
-- Readonly
-- Type: string
-- Default: "default"
-
-Example:
-
-```javascript
-vConsole.activedTab // => "system"
-```
-
-
-### vConsole.tabList
-
-A list of installed tabs' plugin id.
-
-- Readonly
-- Type: array(string)
-
-Example:
-
-```javascript
-vConsole.tabList // => ["default", "system"]
-```
-
-
-### vConsole.$dom
-
-vConsole's HTML element.
-
-- Type: HTMLDivElement
-
 
 
 ## Methods
@@ -180,14 +143,14 @@ vConsole.removePlugin('my_plugin');
 ```
 
 
-### vConsole.showTab(pluginID)
+### vConsole.showPlugin(pluginID)
 
-Activating a tab according to its plugin id.
+Activating a panel according to its plugin id.
 
-Plugin event `hide` will be triggered for previous actived tab, and `show` for current actived tab.
+Plugin event `hide` will be triggered for previous actived panel, and `show` for current actived panel.
 
 ##### Parameters:
-- (required) pluginID: A string, tab's plugin id.
+- (required) pluginID: A string, panel's plugin id.
 
 ##### Return:
 - None
@@ -195,7 +158,7 @@ Plugin event `hide` will be triggered for previous actived tab, and `show` for c
 ##### Example:
 
 ```javascript
-vConsole.showTab("system"); // show System tab
+vConsole.showPlugin("system"); // show System panel
 ```
 
 

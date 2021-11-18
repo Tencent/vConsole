@@ -1,29 +1,28 @@
 <script lang="ts">
   import copy from 'copy-text-to-clipboard';
+  import { onDestroy } from 'svelte';
   import Fa from 'svelte-fa';
   import { faCopy } from '@fortawesome/free-solid-svg-icons';
   import * as tool from '../lib/tool';
-  import { VConsoleNetworkModel } from './network.model';
+  import { requestList } from './network.model';
 
-  const networkModel = VConsoleNetworkModel.getSingleton(VConsoleNetworkModel);
-  let reqList = networkModel.reqList;
-  let reqCount = Object.keys(reqList).length;
-  networkModel.onDataUpdate(() => {
-    reqList = networkModel.reqList;
-    reqCount = Object.keys(reqList).length;
+  let reqCount = Object.keys($requestList).length;
+  const unsubscribe = requestList.subscribe((value) => {
+    reqCount = Object.keys(value).length;
   });
 
   const onTapPreview = (reqId: string) => {
-    reqList[reqId].actived = !reqList[reqId].actived;
+    $requestList[reqId].actived = !$requestList[reqId].actived;
   };
   const onTapCopy = (reqId: string, key: string) => {
-    console.log('onTapCopy', reqId, key);
-    if (tool.isObject(reqList[reqId][key]) || tool.isArray(reqList[reqId][key])) {
-      copy(tool.JSONStringify(reqList[reqId][key]));
+    if (tool.isObject($requestList[reqId][key]) || tool.isArray($requestList[reqId][key])) {
+      copy(tool.JSONStringify($requestList[reqId][key]));
     } else {
-      copy(reqList[reqId][key]);
+      copy($requestList[reqId][key]);
     }
   };
+
+  onDestroy(unsubscribe);
 </script>
 
 <div class="vc-table">
@@ -36,7 +35,7 @@
   </dl>
 
   <div class="vc-log">
-    {#each Object.entries(reqList) as [reqId, req]}
+    {#each Object.entries($requestList) as [reqId, req]}
       <div class="vc-group" class:vc-actived="{req.actived}" id="{req.id}">
         <dl class="vc-table-row vc-group-preview" class:vc-table-row-error="{req.status >= 400}" on:click={() => onTapPreview(req.id)}>
           <dd class="vc-table-col vc-table-col-4">{req.name}</dd>

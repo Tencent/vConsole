@@ -1,4 +1,4 @@
-import VConsoleSveltePlugin from '../lib/sveltePlugin';
+import { VConsoleSveltePlugin } from '../lib/sveltePlugin';
 import { default as StorageComp } from './storage.svelte';
 
 export class VConsoleStoragePlugin extends VConsoleSveltePlugin {

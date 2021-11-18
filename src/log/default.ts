@@ -15,10 +15,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 import $ from '../lib/query';
 import * as tool from '../lib/tool';
-import VConsoleLogTab from './log';
+import { VConsoleLogPlugin } from './log';
 import tplTabbox from './tabbox_default.html';
 
-export class VConsoleDefaultPlugin extends VConsoleLogTab {
+export class VConsoleDefaultPlugin extends VConsoleLogPlugin {
   private filterText = '';
 
   constructor(...args) {

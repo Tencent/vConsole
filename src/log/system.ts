@@ -13,10 +13,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole System Tab
  */
 
-import VConsoleLogTab from './log';
+import { VConsoleLogPlugin } from './log';
 import tplTabbox from './tabbox_system.html';
 
-export class VConsoleSystemPlugin extends VConsoleLogTab {
+export class VConsoleSystemPlugin extends VConsoleLogPlugin {
 
   constructor(...args) {
     super(...args);
