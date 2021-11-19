@@ -1,5 +1,4 @@
 import { CookieStorage } from 'cookie-storage';
-import { writable } from 'svelte/store';
 import { VConsoleModel } from '../lib/model';
 
 interface IStorageItem {
@@ -8,18 +7,24 @@ interface IStorageItem {
 }
 export class VConsoleStorageModel extends VConsoleModel {
   protected cookiesStorage: CookieStorage = new CookieStorage();
+  protected storages: IStorageItem[];
 
+  /**
+   * Get the singleton of storage list.
+   */
   public getAllStorages() {
-    const storages: IStorageItem[] = [];
-    if (document.cookie !== undefined) {
-      storages.push({ name: 'cookies', storage: this.cookiesStorage });
+    if (!this.storages) {
+      this.storages = [];
+      if (document.cookie !== undefined) {
+        this.storages.push({ name: 'cookies', storage: this.cookiesStorage });
+      }
+      if (window.localStorage) {
+        this.storages.push({ name: 'localStorage', storage: localStorage });
+      }
+      if (window.sessionStorage) {
+        this.storages.push({ name: 'sessionStorage', storage: sessionStorage });
+      }
     }
-    if (window.localStorage) {
-      storages.push({ name: 'localStorage', storage: localStorage });
-    }
-    if (window.sessionStorage) {
-      storages.push({ name: 'sessionStorage', storage: sessionStorage });
-    }
-    return storages;
+    return this.storages;
   }
 }

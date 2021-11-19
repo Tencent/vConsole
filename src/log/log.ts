@@ -88,7 +88,6 @@ export class VConsoleLogPlugin extends VConsolePlugin {
   }
 
   onAddTopBar(callback: Function) {
-    const that = this;
     const types = ['All', 'Log', 'Info', 'Warn', 'Error'];
     const btnList = [];
     for (let i = 0; i < types.length; i++) {

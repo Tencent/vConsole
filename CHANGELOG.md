@@ -12,6 +12,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 - `Feat(Network)` Add copy button to requests.
 - `Refactor(Core|Network)` Rebuild views by using Svelte as template engine.
+- `Refactor(Storage)` Improve UX.
 
 
 #### 3.9.5 (2021-11-10)

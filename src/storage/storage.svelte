@@ -1,13 +1,11 @@
 <script lang="ts">
-  import { Tabs, TabList, TabPanel, Tab } from '../components/Tab';
-  import { Btn } from '../components/Button';
   import Icon from '../component/icon.svelte';
   import IconCopy from '../component/iconCopy.svelte';
   import { VConsoleStorageModel } from './storage.model';
   import { getStringBytes, subString } from '../lib/tool';
 
-  const storageModel = VConsoleStorageModel.getSingleton(VConsoleStorageModel);
-  let storages = storageModel.getAllStorages();
+  export let storages: ReturnType<VConsoleStorageModel["getAllStorages"]> = [];
+  export let activedName = '';
 
   // edit state
   let editingIdx = -1;
@@ -17,11 +15,6 @@
   // force reload
   const handleRefresh = () => {
     storages = storages;
-  };
-
-  const onTapAdd = (storage: Storage) => {
-    storage.setItem(`new_item_${Date.now()}`, 'new_value');
-    handleRefresh();
   };
 
   const onTapDelete = (storage: Storage, idx: number) => {
@@ -56,75 +49,48 @@
   };
 </script>
 
-<Tabs>
-  <div class="tab-list">
-    <TabList>
-      {#each storages as { name }}
-        <Tab>{name}</Tab>
-      {/each}
-    </TabList>
+<div class="table">
+  <div class="row">
+    <div class="item item-key">Key</div>
+    <div class="item item-value">Value</div>
+    <div class="action" />
   </div>
-
-  {#each storages as { storage }}
-    <TabPanel>
-      <div class="table">
+  {#each storages as { name, storage }}
+    {#if name === activedName}
+      {#each Object.entries(storage) as [k, v], i}
         <div class="row">
-          <div class="item item-key">Key</div>
-          <div class="item item-value">Value</div>
-          <div class="action" />
-        </div>
-        {#if storage.length === 0}
-          <div class="row row-empty">
-            <div class="item">Empty</div>
+          {#if editingIdx === i}
+            <input class="item item-key" bind:value={editingKey} />
+            <input class="item item-value" bind:value={editingVal} />
+          {:else}
+            <div class="item item-key">{k}</div>
+            <div class="item item-value">{properDisplay(v)}</div>
+          {/if}
+          <div class="action">
+            {#if editingIdx === i}
+              <Icon name="cancel" on:click={onTapCancelEdit} />
+              <Icon name="done" on:click={() => handleEditOrSave(storage, k, v, i)} />
+            {:else}
+              <Icon name="delete" on:click={() => onTapDelete(storage, i)} />
+              <IconCopy content={[k, v].join('=')} />
+              <Icon name="edit" on:click={() => handleEditOrSave(storage, k, v, i)} />
+            {/if}
           </div>
-        {:else}
-          {#each Object.entries(storage) as [k, v], i}
-            <div class="row">
-              {#if editingIdx === i}
-                <input class="item item-key" bind:value={editingKey} />
-                <input class="item item-value" bind:value={editingVal} />
-              {:else}
-                <div class="item item-key">{k}</div>
-                <div class="item item-value">{properDisplay(v)}</div>
-              {/if}
-              <div class="action">
-                {#if editingIdx === i}
-                  <Icon name="cancel" on:click={onTapCancelEdit} />
-                  <Icon name="done" on:click={() => handleEditOrSave(storage, k, v, i)} />
-                {:else}
-                  <Icon name="delete" on:click={() => onTapDelete(storage, i)} />
-                  <IconCopy content={[k, v].join('=')} />
-                  <Icon name="edit" on:click={() => handleEditOrSave(storage, k, v, i)} />
-                {/if}
-              </div>
-            </div>
-          {/each}
-        {/if}
-        <div class="row">
-          <Btn class="item btn" on:click={() => onTapAdd(storage)}>
-            <Icon name="add" />
-            Add Item
-          </Btn>
-          <Btn class="item btn" on:click={() => handleRefresh()}>
-            <Icon name="refresh" />
-            Refresh
-          </Btn>
         </div>
-      </div>
-    </TabPanel>
+      {:else}
+        <div class="row row-empty">
+          <div class="item">Empty</div>
+        </div>
+      {/each}
+    {/if}
   {/each}
-</Tabs>
+</div>
 
 <style lang="less">
   @import '../styles/size.less';
-  .tab-list {
-    position: fixed;
-    width: 100%;
-  }
-
   .table {
     margin: 0 8px;
-    padding-top: (30em / @font);
+    // padding-top: (30em / @font);
   }
   .row {
     display: flex;
