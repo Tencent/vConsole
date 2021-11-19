@@ -20,7 +20,7 @@ import $ from '../lib/query';
 
 import Style from './core.less';
 
-import CoreCompClass from './core.svelte';
+import { default as CoreCompClass } from './core.svelte';
 
 // built-in plugins
 import { VConsolePlugin, IVConsoleTopbarOptions } from '../lib/plugin';
@@ -97,8 +97,7 @@ class VConsole {
       if (this.isInited) {
         return;
       }
-      this._render();
-      // this._bindEvent();
+      this._initComponent();
       this._autoRun();
     };
     if (document !== undefined) {
@@ -151,10 +150,10 @@ class VConsole {
   }
 
   /**
-  * render panel DOM
+  * init view component
   * @private
   */
-  private _render() {
+  private _initComponent() {
     if (! $.one(VCONSOLE_ID)) {
       const switchX = <any>tool.getStorage('switch_x') * 1;
       const switchY = <any>tool.getStorage('switch_y') * 1;

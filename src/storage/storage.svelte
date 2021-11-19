@@ -1,16 +1,8 @@
 <script lang="ts">
   import { Tabs, TabList, TabPanel, Tab } from '../components/Tab';
-  import copy from 'copy-text-to-clipboard';
-  import Fa from 'svelte-fa';
-  import {
-    faCopy,
-    faTrash,
-    faEdit,
-    faSave,
-    faPlus,
-    faSync,
-  } from '@fortawesome/free-solid-svg-icons';
   import { Btn } from '../components/Button';
+  import Icon from '../component/icon.svelte';
+  import IconCopy from '../component/iconCopy.svelte';
   import { VConsoleStorageModel } from './storage.model';
   import { getStringBytes, subString } from '../lib/tool';
 
@@ -27,18 +19,14 @@
     storages = storages;
   };
 
-  const handleAdd = (storage: Storage) => {
+  const onTapAdd = (storage: Storage) => {
     storage.setItem(`new_item_${Date.now()}`, 'new_value');
     handleRefresh();
   };
 
-  const handleDel = (storage: Storage, idx: number) => {
+  const onTapDelete = (storage: Storage, idx: number) => {
     storage.removeItem(storage.key(idx) ?? '');
     handleRefresh();
-  };
-  const handleCopy = (key: string, value: string) => {
-    const text = [key, value].join('=');
-    copy(text);
   };
   const handleEditOrSave = (
     storage: Storage,
@@ -58,6 +46,9 @@
       editingIdx = i;
     }
   };
+  const onTapCancelEdit = () => {
+    editingIdx = -1;
+  }
   const BYTES_LIMIT = 1024;
   const properDisplay = (str: string) => {
     const overlength = getStringBytes(str) > BYTES_LIMIT;
@@ -97,26 +88,25 @@
                 <div class="item item-value">{properDisplay(v)}</div>
               {/if}
               <div class="action">
-                <div on:click={() => handleDel(storage, i)}>
-                  <Fa icon={faTrash} />
-                </div>
-                <div on:click={() => handleCopy(k, v)}>
-                  <Fa icon={faCopy} />
-                </div>
-                <div on:click={() => handleEditOrSave(storage, k, v, i)}>
-                  <Fa icon={editingIdx === i ? faSave : faEdit} />
-                </div>
+                {#if editingIdx === i}
+                  <Icon name="cancel" on:click={onTapCancelEdit} />
+                  <Icon name="done" on:click={() => handleEditOrSave(storage, k, v, i)} />
+                {:else}
+                  <Icon name="delete" on:click={() => onTapDelete(storage, i)} />
+                  <IconCopy content={[k, v].join('=')} />
+                  <Icon name="edit" on:click={() => handleEditOrSave(storage, k, v, i)} />
+                {/if}
               </div>
             </div>
           {/each}
         {/if}
         <div class="row">
-          <Btn class="item btn" on:click={() => handleAdd(storage)}>
-            <Fa icon={faPlus} />
+          <Btn class="item btn" on:click={() => onTapAdd(storage)}>
+            <Icon name="add" />
             Add Item
           </Btn>
           <Btn class="item btn" on:click={() => handleRefresh()}>
-            <Fa icon={faSync} />
+            <Icon name="refresh" />
             Refresh
           </Btn>
         </div>
@@ -158,9 +148,10 @@
       flex: 1;
       display: flex;
       justify-content: space-evenly;
-      div {
+      :global(.vc-icon) {
         flex: 1;
         text-align: center;
+        display: block;
         &:hover {
           background: var(--VC-BG-3);
         }

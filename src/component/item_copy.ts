@@ -9,16 +9,16 @@ export default class VConsoleItemCopy {
    * Delegate copy button `onClick` event on a perent element.
    */
   public static delegate($el: Element, getCopyText: (id: string) => string) {
-    $.delegate($el, 'click', '.vc-item-copy', (e) => {
-      const $btn = (<Element>e.target).closest('.vc-item-copy');
+    $.delegate($el, 'click', '.vc-icon-copy', (e) => {
+      const $btn = (<Element>e.target).closest('.vc-icon-copy');
       const { id } = $btn.closest('.vc-item-id');
       const text = getCopyText(id);
 
       if (text !== null && this.copy(text)) {
-        $btn.classList.add('vc-item-copy-success');
+        $btn.classList.add('vc-icon-copy-success');
 
         setTimeout(() => {
-          $btn.classList.remove('vc-item-copy-success');
+          $btn.classList.remove('vc-icon-copy-success');
         }, 600);
       };
     });

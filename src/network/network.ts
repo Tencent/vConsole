@@ -52,6 +52,7 @@ export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
   }
 
   onRemove() {
+    super.onRemove();
     this.module.unMock();
     if (typeof this.storeUnsubscribe === 'function') {
       this.storeUnsubscribe();

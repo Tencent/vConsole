@@ -1,9 +1,8 @@
 <script lang="ts">
   import copy from 'copy-text-to-clipboard';
   import { onDestroy } from 'svelte';
-  import Fa from 'svelte-fa';
-  import { faCopy } from '@fortawesome/free-solid-svg-icons';
   import * as tool from '../lib/tool';
+  import { default as IconCopy } from '../component/iconCopy.svelte';
   import { requestList } from './network.model';
 
   let reqCount = Object.keys($requestList).length;
@@ -13,13 +12,6 @@
 
   const onTapPreview = (reqId: string) => {
     $requestList[reqId].actived = !$requestList[reqId].actived;
-  };
-  const onTapCopy = (reqId: string, key: string) => {
-    if (tool.isObject($requestList[reqId][key]) || tool.isArray($requestList[reqId][key])) {
-      copy(tool.JSONStringify($requestList[reqId][key]));
-    } else {
-      copy($requestList[reqId][key]);
-    }
   };
 
   onDestroy(unsubscribe);
@@ -48,7 +40,7 @@
             <dl class="vc-table-row vc-left-border">
               <dt class="vc-table-col vc-table-col-title">
                 General
-                <i class="vc-table-row-icon" on:click="{() => onTapCopy(req.id, 'url')}"><Fa icon="{faCopy}"/></i>
+                <i class="vc-table-row-icon"><IconCopy content={req.url} /></i>
               </dt>
             </dl>
             <div class="vc-table-row vc-left-border vc-small">
@@ -69,7 +61,7 @@
             <dl class="vc-table-row vc-left-border">
               <dt class="vc-table-col vc-table-col-title">
                 Response Headers
-                <i class="vc-table-row-icon" on:click="{() => onTapCopy(req.id, 'header')}"><Fa icon="{faCopy}"/></i>
+                <i class="vc-table-row-icon"><IconCopy content={req.header} /></i>
               </dt>
             </dl>
             {#each Object.entries(req.header) as [key, item]}
@@ -85,7 +77,7 @@
             <dl class="vc-table-row vc-left-border">
               <dt class="vc-table-col vc-table-col-title">
                 Request Headers
-                <i class="vc-table-row-icon" on:click="{() => onTapCopy(req.id, 'requestHeader')}"><Fa icon="{faCopy}"/></i>
+                <i class="vc-table-row-icon"><IconCopy content={req.requestHeader} /></i>
               </dt>
             </dl>
             {#each Object.entries(req.requestHeader) as [key, item]}
@@ -101,7 +93,7 @@
             <dl class="vc-table-row vc-left-border">
               <dt class="vc-table-col vc-table-col-title">
                 Query String Parameters
-                <i class="vc-table-row-icon" on:click="{() => onTapCopy(req.id, 'getData')}"><Fa icon="{faCopy}"/></i>
+                <i class="vc-table-row-icon"><IconCopy content={req.getData} /></i>
               </dt>
             </dl>
             {#each Object.entries(req.getData) as [key, item]}
@@ -117,7 +109,7 @@
             <dl class="vc-table-row vc-left-border">
               <dt class="vc-table-col vc-table-col-title">
                 Request Payload
-                <i class="vc-table-row-icon" on:click="{() => onTapCopy(req.id, 'postData')}"><Fa icon="{faCopy}"/></i>
+                <i class="vc-table-row-icon"><IconCopy content={req.postData} /></i>
               </dt>
             </dl>
             {#if (typeof req.postData === 'string')}
@@ -138,7 +130,7 @@
             <dl class="vc-table-row vc-left-border">
               <dt class="vc-table-col vc-table-col-title">
                 Response
-                <i class="vc-table-row-icon" on:click="{() => onTapCopy(req.id, 'response')}"><Fa icon="{faCopy}"/></i>
+                <i class="vc-table-row-icon"><IconCopy content={req.response} /></i>
               </dt>
             </dl>
             <div class="vc-table-row vc-left-border vc-small">
