@@ -510,6 +510,7 @@
     .vc-table {
 
       .vc-table-row {
+        line-height: 1.5;
         display: -webkit-box;
         display: -webkit-flex;
         display: -moz-box;
@@ -610,6 +611,29 @@
 
       .vc-table-col-title {
         font-weight: bold;
+      }
+
+      .vc-table-action {
+        display: flex;
+        justify-content: space-evenly;
+
+        .vc-icon {
+          flex: 1;
+          text-align: center;
+          display: block;
+          &:hover {
+            background: var(--VC-BG-3);
+          }
+          &:active {
+            background: var(--VC-BG-1);
+          }
+        }
+      }
+
+      .vc-table-empty {
+        text-align: center;
+        color: var(--VC-FG-1);
+        line-height: 2;
       }
     }
 

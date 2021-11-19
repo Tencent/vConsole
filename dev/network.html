@@ -36,12 +36,15 @@
 </html>
 
 <script>
-window.vConsole = new window.VConsole({
+const vConsole = new window.VConsole({
   maxLogNumber: 1000,
   // defaultPlugins: ['system', 'network'],
   // disableLogScrolling: true,
   onReady: function() {
     console.log('vConsole is ready.');
+    setTimeout(() => {
+      vConsole.showPlugin('network');
+    }, 100);
   }
 });
 

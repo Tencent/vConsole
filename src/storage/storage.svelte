@@ -49,24 +49,24 @@
   };
 </script>
 
-<div class="table">
-  <div class="row">
-    <div class="item item-key">Key</div>
-    <div class="item item-value">Value</div>
-    <div class="action" />
+<div class="vc-table">
+  <div class="vc-table-row">
+    <div class="vc-table-col">Key</div>
+    <div class="vc-table-col vc-table-col-2">Value</div>
+    <div class="vc-table-col vc-table-col-1 vc-table-action" />
   </div>
   {#each storages as { name, storage }}
     {#if name === activedName}
       {#each Object.entries(storage) as [k, v], i}
-        <div class="row">
+        <div class="vc-table-row">
           {#if editingIdx === i}
-            <input class="item item-key" bind:value={editingKey} />
-            <input class="item item-value" bind:value={editingVal} />
+            <input class="vc-table-col " bind:value={editingKey} />
+            <input class="vc-table-col vc-table-col-2" bind:value={editingVal} />
           {:else}
-            <div class="item item-key">{k}</div>
-            <div class="item item-value">{properDisplay(v)}</div>
+            <div class="vc-table-col">{k}</div>
+            <div class="vc-table-col vc-table-col-2">{properDisplay(v)}</div>
           {/if}
-          <div class="action">
+          <div class="vc-table-col vc-table-col-1 vc-table-action">
             {#if editingIdx === i}
               <Icon name="cancel" on:click={onTapCancelEdit} />
               <Icon name="done" on:click={() => handleEditOrSave(storage, k, v, i)} />
@@ -78,8 +78,8 @@
           </div>
         </div>
       {:else}
-        <div class="row row-empty">
-          <div class="item">Empty</div>
+        <div class="vc-table-row">
+          <div class="vc-table-col vc-table-empty">Empty</div>
         </div>
       {/each}
     {/if}
@@ -87,47 +87,5 @@
 </div>
 
 <style lang="less">
-  @import '../styles/size.less';
-  .table {
-    margin: 0 8px;
-    // padding-top: (30em / @font);
-  }
-  .row {
-    display: flex;
-    :global(.item),
-    :global(.action) {
-      line-height: 2;
-      border: 1px solid var(--VC-FG-3);
-    }
-    :global(.item) {
-      flex: 2;
-      overflow-x: hidden;
-      text-overflow: ellipsis;
-      :global(&.btn) {
-        text-align: center;
-      }
-    }
-    :global(.item-key) {
-      flex: 1;
-    }
-    .action {
-      flex: 1;
-      display: flex;
-      justify-content: space-evenly;
-      :global(.vc-icon) {
-        flex: 1;
-        text-align: center;
-        display: block;
-        &:hover {
-          background: var(--VC-BG-3);
-        }
-        &:active {
-          background: var(--VC-BG-1);
-        }
-      }
-    }
-  }
-  .row-empty {
-    text-align: center;
-  }
+
 </style>
