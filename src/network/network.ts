@@ -1,6 +1,6 @@
 import $ from '../lib/query';
 import { VConsoleSveltePlugin } from '../lib/sveltePlugin';
-import { default as NetworkComp } from './network.svelte';
+import NetworkComp from './network.svelte';
 import { requestList, VConsoleNetworkModel } from './network.model';
 export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
   protected module: VConsoleNetworkModel;

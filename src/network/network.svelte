@@ -1,14 +1,14 @@
 <script lang="ts">
-  import copy from 'copy-text-to-clipboard';
   import { onDestroy } from 'svelte';
-  import * as tool from '../lib/tool';
-  import { default as IconCopy } from '../component/iconCopy.svelte';
+  import IconCopy from '../component/iconCopy.svelte';
   import { requestList } from './network.model';
 
-  let reqCount = Object.keys($requestList).length;
-  const unsubscribe = requestList.subscribe((value) => {
-    reqCount = Object.keys(value).length;
-  });
+  let reqCount = 0;
+  const updateReqCount = (list: typeof $requestList) => {
+    reqCount = Object.keys(list).length;
+  };
+  const unsubscribe = requestList.subscribe(updateReqCount);
+  updateReqCount($requestList);
 
   const onTapPreview = (reqId: string) => {
     $requestList[reqId].actived = !$requestList[reqId].actived;
