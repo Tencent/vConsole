@@ -127,11 +127,12 @@ class VConsole {
   */
   private _addBuiltInPlugins() {
     // add default log plugin
-    this.addPlugin(new VConsoleDefaultPlugin('default', 'Log'));
+    // this.addPlugin(new VConsoleDefaultPlugin('default', 'Log'));
 
     // add other built-in plugins according to user's config
     const list = this.option.defaultPlugins;
     const plugins = {
+      'default': {proto: VConsoleSystemPlugin, name: 'Log'},
       'system': {proto: VConsoleSystemPlugin, name: 'System'},
       'network': {proto: VConsoleNetworkPlugin, name: 'Network'},
       'element': {proto: VConsoleElementPlugin, name: 'Element'},

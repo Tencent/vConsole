@@ -207,9 +207,10 @@ function getFetch500() {
       'content-type': 'application/json'
     },
   }).then((data) => {
+    console.log('Fetch Response:', data);
     return data.text();
   }).then((data) => {
-    console.log('getFetchText Response:', data);
+    console.log('Fetch Data:', data);
   });
   console.info('getFetch500() End');
 }
