@@ -241,6 +241,11 @@ export class VConsoleElementPlugin extends VConsoleSveltePlugin {
     }
   }
 
+  /**
+   * Expand the actived node.
+   * If the node is collapsed, expand it.
+   * If the node is expanded, expand it's child nodes.
+   */
   protected _expandActivedNode() {
     const node = get(activedNode);
     if (!node._isExpand) {
@@ -253,16 +258,27 @@ export class VConsoleElementPlugin extends VConsoleSveltePlugin {
     this._refreshStore();
   }
 
+  /**
+   * Collapse the actived node.
+   * If the node is expanded, and has expanded child nodes, collapse it's child nodes.
+   * If the node is expanded, and has no expanded child node, collapse it self.
+   * If the node is collapsed, do nothing.
+   */
   protected _collapseActivedNode() {
     const node = get(activedNode);
     if (node._isExpand) {
+      let hasExpandedChild = false;
       for (let i = 0; i < node.childNodes.length; i++) {
-        node.childNodes[i]._isExpand = false;
+        if (node.childNodes[i]._isExpand) {
+          hasExpandedChild = true;
+          node.childNodes[i]._isExpand = false;
+        }
       }
-    } else {
-      node._isExpand = false;
+      if (!hasExpandedChild) {
+        node._isExpand = false;
+      }
+      this._refreshStore();
     }
-    this._refreshStore();
   }
 
   protected _isIgnoredNode(elem: Node) {
