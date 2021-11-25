@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { IVConsoleNode, activedNode } from './element.model';
+  import { activedNode } from './element.model';
+  import type { IVConsoleNode } from './element.model';
 
   /*************************************
    * Public properties

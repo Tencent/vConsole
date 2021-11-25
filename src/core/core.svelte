@@ -3,7 +3,7 @@
   import query from '../lib/query';
   import * as tool from '../lib/tool';
   import { default as SwitchButton } from './switchButton.svelte';
-  import { IVConsoleTopbarOptions, IVConsoleToolbarOptions } from '../lib/plugin';
+  import type { IVConsoleTopbarOptions, IVConsoleToolbarOptions } from '../lib/plugin';
 
   /*************************************
    * Public properties

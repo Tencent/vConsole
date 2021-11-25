@@ -2,7 +2,8 @@
 import { get } from 'svelte/store';
 import { VConsoleSveltePlugin } from '../lib/sveltePlugin';
 import ElementComp from './element.svelte';
-import { IVConsoleNode, rootNode, activedNode } from './element.model';
+import { rootNode, activedNode } from './element.model';
+import type { IVConsoleNode } from './element.model';
 
 /**
  * vConsole Element Panel
@@ -66,7 +67,7 @@ export class VConsoleElementPlugin extends VConsoleSveltePlugin {
 
     // listen component
     this.compInstance.$on('toggleNode', (e) => {
-      console.log('activedNode event', e)
+      // console.log('activedNode event', e)
       activedNode.set(e.detail.node);
     });
 
