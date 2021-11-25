@@ -4,19 +4,21 @@ vConsole
 ---
 一个轻量、可拓展、针对手机网页的前端开发者调试面板。
 
+vConsole 是微信小程序的官方调试工具。
 
-## 特性
 
-- 查看 console 日志
-- 查看网络请求
-- 查看页面 element 结构
-- 查看 Cookies、localStorage 和 SessionStorage
+## 功能特性
+
+- 日志(Logs)： `console.log|info|error|...`
+- 网络(Network)： `XMLHttpRequest`, `Fetch`, `sendBeacon`
+- 节点(Element)： HTML 节点树
+- 存储(Storage)： `Cookies`, `LocalStorage`, `SessionStorage`
 - 手动执行 JS 命令行
 - 自定义插件
 
 
 
-## Release Notes
+## 版本说明
 
 最新版本： [![npm version](https://img.shields.io/npm/v/vconsole/latest.svg)](https://www.npmjs.com/package/vconsole)
 

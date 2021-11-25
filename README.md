@@ -4,15 +4,17 @@ vConsole
 ---
 A lightweight, extendable front-end developer tool for mobile web page.
 
+vConsole is the official debugging tool for WeChat Miniprograms.
+
 
 ## Features
 
-- View console logs
-- View network requests
-- View document elements
-- View Cookies, LocalStorage and SessionStorage
+- Logs: `console.log|info|error|...`
+- Network: `XMLHttpRequest`, `Fetch`, `sendBeacon`
+- Element: HTML elements tree
+- Storage: `Cookies`, `LocalStorage`, `SessionStorage`
 - Execute JS command manually
-- Custom plugin
+- Custom plugins
 
 
 

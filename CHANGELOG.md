@@ -1,6 +1,6 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-#### 3.10.0-rc (2021-11-xx)
+## 3.10.0-rc (2021-11-xx)
 
 **Breaking Changes:**
 
@@ -15,7 +15,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Refactor(Storage)` Improve UX.
 
 
-#### 3.9.5 (2021-11-10)
+## 3.9.5 (2021-11-10)
 
 - `Style(Log)` Add support for `BigInt` and update `Symbol` log style.
 - `Refactor(Style)` Lazy load style tag when vConsole init.
@@ -27,12 +27,12 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Chore` Transform Svelte output code to ES5. (issue #468)
 
 
-#### 3.9.4 (2021-10-26)
+## 3.9.4 (2021-10-26)
 
 - `Refactor(Global)` Add Typescript declaration to `VConsole` class.
 
 
-#### 3.9.3 (2021-10-22)
+## 3.9.3 (2021-10-22)
 
 - `Fix(Network)` Fix `Cannot read property 'setAttribute' of null` error when call `setOption()` before init. (PR #453 by @Zhangstring)
 - `Fix(Network)` Fix `Fetch` error when iOS < 11. (PR #457 by @zimv)
@@ -40,14 +40,14 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Chore` Remove `./dist` from Git tracking.
 
 
-#### 3.9.1 (2021-07-27)
+## 3.9.1 (2021-07-27)
 
 - `Fix(Log)` Fix command input style. (PR #437 by @FredZeng)
 - `Fix(Storage)` Fix `globalThis` error. (issue #438 #439)
 - `Chore` Fix `const` `let` error cause by Svelte. (PR #440 by @dellyoung)
 
 
-#### 3.9.0 (2021-07-16)
+## 3.9.0 (2021-07-16)
 
 - `Feat(Log)` Show audio loading error log. (PR #419 by @zimv)
 - `Feat(Storage)` Rewrite Storage panel, supports add/edit/delete storage items. (PR #429 by @ManiaciaChao)
@@ -62,7 +62,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Chore` Fix `yarn serve` error. (issue #424)
 
 
-#### 3.8.1 (2021-06-24)
+## 3.8.1 (2021-06-24)
 
 - `Fix(Log)` Do not merge repeated logs with object(s) or array(s) into one line to avoid merging objects with the same structure but different values.
 - `Fix(Log)` Fix the issue that log filter does not take effect after selecting the log type.
@@ -71,14 +71,14 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Refactor(Log)` Convert Log & System panel to `.ts` file.
 
 
-#### 3.8.0 (2021-06-23)
+## 3.8.0 (2021-06-23)
 
 - `Feat(Log)` Show resource (image/video/link/script) loading error log. (PR #411 by @zimv)
 - `Chore` Add `target: ['web', 'es5']` to Webpack to avoid compatibility issues. (issue #404)
 - `Fix(Network)` Fix error when `new URL('x', undefined)`. (PR #409 by @moonkop)
 
 
-#### 3.7.0 (2021-05-27)
+## 3.7.0 (2021-05-27)
 
 - `Feat(Storage)` Show preview value to prevent large raw value blocking rendering. (issue #300)
 - `Feat(Storage)` Add copy button and delete button.
@@ -88,12 +88,12 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix(Network)` Fix error when `Content-Type` is empty.
 
 
-#### 3.6.1 (2021-05-24)
+## 3.6.1 (2021-05-24)
 
 - `Fix(Network)` Fix "Invalid base URL" error. (PR #402)
 
 
-#### 3.6.0 (2021-05-21)
+## 3.6.0 (2021-05-21)
 
 - `Feat(Log)` Print `unhandledrejection` log. (PR #389 by @zimv)
 - `Feat(Network)` Support `navigator.sendBeacon()` in Network panel. (PR #383 by @cola119)
@@ -104,7 +104,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix(Element)` Fix issue that elements are rendered as nested when `attributes` or `characterData` changed. (issue #399)
 
 
-#### 3.5.2 (2021-05-13)
+## 3.5.2 (2021-05-13)
 
 - `Chore(Global)` Update to Webpack5 and update all NPM packages to the latest version.
 - `Fix(Global)` Fix invalid click caused by wrong `selection`.
@@ -112,13 +112,13 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix(Log)` Fix XSS risk.
 
 
-#### 3.5.1 (2021-05-07)
+## 3.5.1 (2021-05-07)
 
 - `Chore(Babel)` Fix incorrect `catch` built by babel-loader. (PR #392 by @myl0204)
 - `Fix(Network)` Fix typing error. (PR #388 by @xovel)
 
 
-#### 3.5.0 (2021-04-28)
+## 3.5.0 (2021-04-28)
 
 - `Feat(Log)` Add ability to copy a single line of logs. (by @akai)
 - `Feat(Plugin)` New third-party plugin [vconsole-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsole-devtools). (by @Zippowxk)
@@ -128,7 +128,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix(Network)` Fix `disableLogScrolling` not working in Network panel. (issue #282, #379)
 
 
-#### V3.4.1 (2021-04-09)
+## v3.4.1 (2021-04-09)
 
 - `Feat(Global)` Add `setSwitchPosition(x, y)` method to update the position of switch button, see [Public Properties & Methods](./doc/public_properties_methods.md) for more details.
 - `Perf(Global)` Add `Symbol` polyfill. (issue #361)
@@ -138,7 +138,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix(Network)` Fix XSS risks.
 
 
-#### V3.4.0 (2021-01-14)
+## v3.4.0 (2021-01-14)
 
 - `Feat(Global)` Add darkmode theme, see `vConsole.option.theme` in [Public Properties & Methods](./doc/public_properties_methods.md). (PR #307 by @progrape)
 - `Feat(Global)` Add safe area to switch button. (issue #353)
@@ -159,7 +159,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Chore` Update Webpack DevServer option. (by @QinZhen001)
 
 
-#### V3.3.4 (2019-08-19)
+## v3.3.4 (2019-08-19)
 
 - `Feat(Log)` Add `%c` log format to support custom log style, see [Tutorial](./doc/tutorial.md) for more details.
 - `Feat(Plugin)` Add `VConsole.VConsoleLogPlugin` (`VConsole.VConsole*` plugins etc.) to `VConsole` class.
@@ -168,7 +168,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Perf(Global)` Display vConsole on `window DOMContentLoaded` instead of `window load`.
 
 
-#### V3.3.2 (2019-07-04)
+## v3.3.2 (2019-07-04)
 
 - `Feat(Global)` Add TypeScript definition file. (by @jas0ncn)
 - `Fix(Log)` Avoid scrolling to bottom when away from bottom edge. (by @ele828)
@@ -176,13 +176,13 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix(Global)` Fix a few minor issues. (by @stenders)
 
 
-#### V3.3.0 (2019-02-02)
+## v3.3.0 (2019-02-02)
 
 - `Feat(Log)` Add the ability to collapse the same log.
 - `Fix(Log)` Fix issue which formatted log (like `console.log('[foo]', 'bar')`) will not display in Log tab.
 
 
-#### V3.2.2 (2019-01-17)
+## v3.2.2 (2019-01-17)
 
 - `Feat` Add console command prompt. (by @65147400)
 - `Feat` Add SessionStorage support in Storage tab. (by @hkc452)
@@ -194,7 +194,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Perf` Add bottom safe area to adapt to full screen such as iPhone X. (by @dingyi1993)
 
 
-#### V3.2.0 (2018-04-10)
+## v3.2.0 (2018-04-10)
 
 - `Feat` Support `console.time()` and `console.timeEnd()`.
 - `Feat` Add `disableLogScrolling` (in `vConsole.option`).
@@ -203,7 +203,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix` Fix "Uncaught InvalidStateError". (by @fireyy)
 
 
-#### V3.1.0 (2017-12-27)
+## v3.1.0 (2017-12-27)
 
 - `Feat` Add `vConsole.showSwitch()` and `vConsole.hideSwitch()` methods, see [Public Properties & Methods](./doc/public_properties_methods.md).
 - `Feat` Add `onReady` and `onClearLog` callback function to `vConsole.option`.
@@ -212,7 +212,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix` Fix `Symbol` error in iOS8 or other old OS.
 
 
-#### V3.0.0 (2017-09-27)
+## v3.0.0 (2017-09-27)
 
 Basic:
 
@@ -244,21 +244,21 @@ Plugins:
 
 
 
-## V2.x.x
+## v2.x.x
 
-#### V2.5.2 (2016-12-27)
+## v2.5.2 (2016-12-27)
 
 - `Fix` Catch errors when eval custom commands in Log tab.
 
 
-#### V2.5.1 (2016-10-18)
+## v2.5.1 (2016-10-18)
 
 - `Fix` Fix `scrollHeight` error in some cases.
 - `Fix` Fix flex layout in iOS 8 devices.
 - `Perf` Performance enhancement.
 
 
-#### V2.5.0 (2016-09-28)
+## v2.5.0 (2016-09-28)
 
 - `Feat` Add `vConsole.removePlugin()` method, see [Public Properties & Methods](./doc/public_properties_methods.md).
 - `Feat` Add `remove` plugin event, see [Plugin: Event List](./doc/plugin_event_list.md).
@@ -266,7 +266,7 @@ Plugins:
 - `Fix` Fix `window.onerror()` typo.
 
 
-#### V2.4.0 (2016-08-31)
+## v2.4.0 (2016-08-31)
 
 - `Feat` Add `addTopBar` plugin event, see [Plugin: Event List](./doc/plugin_event_list.md).
 - `Feat` Add log type filter to Log & System tab.
@@ -276,32 +276,32 @@ Plugins:
 - `Fix` Switch button will not be positioned out of edges in some special cases.
 
 
-#### V2.3.1 (2016-08-16)
+## v2.3.1 (2016-08-16)
 
 - `Fix` Replace custom `tap` event (in V2.3.0) with `click` event (still support fast response) to prevent conflicts.
 - `Perf` Remove `now` item and add `navigationStart` time in System tab.
 
 
-#### V2.3.0 (2016-08-15)
+## v2.3.0 (2016-08-15)
 
 - `Feat` Objects or Arrays can be expended layer by layer.
 - `Feat` All object's properties, including private properties, can be enumerable now.
 - `Perf` Support `tap` event within vConsole's DOM container to speed up `click` event.
 
 
-#### V2.2.1 (2016-08-08)
+## v2.2.1 (2016-08-08)
 
 - `Perf` Add complete performance timing log to System tab.
 - `Feat` Add third-party plugin list to README.
 
 
-#### V2.2.0 (2016-07-13)
+## v2.2.0 (2016-07-13)
 
 - `Feat` Add `vConsole.version` property.
 - `Feat` Add `xhr._noVConsole` property to `XMLHttpRequest` objects to customize whether a XHR should display in Network tab.
 
 
-#### V2.1.0 (2016-06-29)
+## v2.1.0 (2016-06-29)
 
 - `Feat` Add `vConsole.tool` & `vConsole.$` helper functions, see [Helper Functions](./doc/helper_functions.md).
 - `Feat` Public properties & methods of vConsole are available, see [Public Properties & Methods](./doc/public_properties_methods.md).
@@ -309,7 +309,7 @@ Plugins:
 - `Fix` Fix error that `xhr.status` may be unavailable when `xhr.readyState < 4`.
 
 
-#### v2.0.1 (2016-06-16)
+## v2.0.1 (2016-06-16)
 
 - `Fix` Fix error that vConsole may not work at X5 browser engine.
 - `Fix` Fix error that `localStorage` is null in some kind of devices.
@@ -317,7 +317,7 @@ Plugins:
 - `Perf` Improve UI in Android.
 
 
-#### v2.0.0 (2016-06-05)
+## v2.0.0 (2016-06-05)
 
 - `Feat` Rebuild completely, support custom plugin, see [Plugin: Getting Started](./doc/plugin_getting_started.md).
 - `Feat` Support execute JS command line in Log tab.
@@ -333,18 +333,18 @@ Plugins:
 
 # v1.x.x
 
-#### v1.3.0 (2016-05-20)
+## v1.3.0 (2016-05-20)
 
 - `Feat` Support Drag and Drop switch button.
 - `Fix` Fix initialization failure when loaded asynchronously.
 
 
-#### v1.2.1 (2016-05-16)
+## v1.2.1 (2016-05-16)
 
 - `Fix` Fix data lost when sending a POST request.
 
 
-#### v1.2.0 (2016-05-11)
+## v1.2.0 (2016-05-11)
 
 - `Feat` Add network panel.
 - `Feat` Deprecate `vConsole.ready()` method.
@@ -353,24 +353,24 @@ Plugins:
 - `Perf` Improve UI.
 
 
-#### v1.1.0 (2016-05-06)
+## v1.1.0 (2016-05-06)
 
 - `Feat` Support `window.onerror()` to catch exceptions and errors.
 - `Feat` Support `[default|system|...]` string to print logs to specific panel.
 
 
-#### v1.0.5 (2016-04-29)
+## v1.0.5 (2016-04-29)
 
 - `Fix` Fix webpack compilation.
 - `Fix` Fix XSS when printing HTML string.
 
 
-#### v1.0.4 (2016-04-28)
+## v1.0.4 (2016-04-28)
 
 - `Fix` Fix the `main` path in `package.json`.
 - `Perf` Update demo pages.
 
 
-#### v1.0.2 (2016-04-27)
+## v1.0.2 (2016-04-27)
 
 - Initial release.
