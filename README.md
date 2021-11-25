@@ -1,9 +1,7 @@
 English | [简体中文](./README_CN.md)
 
 vConsole
-==============================
-[![npm version](https://badge.fury.io/js/vconsole.svg)](https://badge.fury.io/js/vconsole)
-
+---
 A lightweight, extendable front-end developer tool for mobile web page.
 
 
@@ -17,7 +15,20 @@ A lightweight, extendable front-end developer tool for mobile web page.
 - Custom plugin
 
 
-## Usage
+
+## Release Notes
+
+Latest version: [![npm version](https://img.shields.io/npm/v/vconsole/latest.svg)](https://www.npmjs.com/package/vconsole)
+
+Detailed release notes for each version are available on [Changelog](./CHANGELOG.md).
+
+
+
+## Guide
+
+See [Tutorial](./doc/tutorial.md) for more usage details.
+
+For installation, there are 2 primary ways of adding vConsole to a project:
 
 Method 1: Using npm (Recommanded)
 
@@ -39,7 +50,7 @@ console.log('Hello world');
 vConsole.destroy();
 ```
 
-Method 2: Using unpkg CDN in HTML:
+Method 2: Using CDN in HTML:
 
 ```html
 <script src="https://unpkg.com/vconsole/dist/vconsole.min.js"></script>
@@ -49,7 +60,6 @@ Method 2: Using unpkg CDN in HTML:
 </script>
 ```
 
-See [Tutorial](./doc/tutorial.md) for more usage details.
 
 
 ## Preview
@@ -84,10 +94,6 @@ Plugin:
  - [vconsole-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsole-devtools)
  - [vconsole-outputlog-plugin](https://github.com/sunlanda/vconsole-outputlog-plugin)
  - [vite-plugin-vconsole](https://github.com/vadxq/vite-plugin-vconsole)
-
-## Changelog
-
-[CHANGELOG.md](./CHANGELOG.md)
 
 
 ## Feedback
