@@ -53,7 +53,7 @@ vConsole.destroy();
 Method 2: Using CDN in HTML:
 
 ```html
-<script src="https://unpkg.com/vconsole/dist/vconsole.min.js"></script>
+<script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
 <script>
   // VConsole will be exported to `window.VConsole` by default.
   var vConsole = new window.VConsole();
