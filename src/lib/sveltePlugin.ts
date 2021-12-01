@@ -11,11 +11,11 @@ export class VConsoleSveltePlugin<T extends {} = {}> extends VConsolePlugin {
     id: string,
     name: string,
     CompClass: typeof SvelteComponent,
-    renderProps: T
+    initialProps: T
   ) {
     super(id, name);
     this.CompClass = CompClass;
-    this.initialProps = renderProps;
+    this.initialProps = initialProps;
   }
 
   onReady() {

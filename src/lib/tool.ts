@@ -131,12 +131,11 @@ export function isPlainObject(obj) {
 
 
 /**
- * HTML encode a string
- * @param string text
- * @return string
+ * Escape HTML to XSS-safe text.
  */
-export function htmlEncode(text: string) {
+export function htmlEncode(text: string | number) {
   // return document.createElement('a').appendChild( document.createTextNode(text) ).parentNode.innerHTML;
+  if (typeof text !== 'string' && typeof text !== 'number') { return text; }
   return String(text).replace(/[<>&" ]/g, (c) => {
     return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', ' ': '&nbsp;' }[c];
   });
@@ -144,9 +143,10 @@ export function htmlEncode(text: string) {
 
 
 /**
- * Change invisible characters to visible characters
+ * Convert a text's invisible characters to visible characters.
  */
-export function invisibleTextEncode(text: string) {
+export function getVisibleText(text: string) {
+  if (typeof text !== 'string') { return text; }
   return String(text).replace(/[\n\t]/g, (c) => {
     return { '\n': '\\n', '\t': '\\t' }[c];
   });
@@ -154,9 +154,9 @@ export function invisibleTextEncode(text: string) {
 
 
 /**
- * Simple JSON stringify, stringify top level key-value
+ * A safe `JSON.stringify` method. 
  */
-export function SimpleJSONStringify(stringObject) {
+export function safeJSONStringify(stringObject, maxLevel = -1, curLevel = 0) {
   if (!isObject(stringObject) && !isArray(stringObject)) {
     return JSONStringify(stringObject);
   }
@@ -167,11 +167,12 @@ export function SimpleJSONStringify(stringObject) {
     suffix = ']'
   }
   let str = prefix;
-  const keys = getObjAllKeys(stringObject);
+  const keys = getEnumerableKeys(stringObject);
   for (let i = 0; i < keys.length; i ++) {
-    const key = keys[i];
-    const value = stringObject[key];
     try {
+      const key = keys[i];
+      const value = stringObject[key];
+
       // key
       if (!isArray(stringObject)) {
         if (isObject(key) || isArray(key) || isSymbol(key)) {
@@ -184,11 +185,26 @@ export function SimpleJSONStringify(stringObject) {
 
       // value
       if (isArray(value)) {
-        str += 'Array(' + value.length + ')';
+        if (maxLevel > -1 && curLevel >= maxLevel) {
+          str += 'Array(' + value.length + ')';
+        } else {
+          str += safeJSONStringify(value, maxLevel, curLevel + 1);
+        }
+      } else if (isObject(value)) {
+        if (maxLevel > -1 && curLevel >= maxLevel) {
+          // str += Object.prototype.toString.call(value);
+          str += (value.constructor?.name || 'Object') + ' {}';
+        } else {
+          str += safeJSONStringify(value, maxLevel, curLevel + 1);
+        }
+      } else if (isString(value)) {
+        str += '"' + getVisibleText(value) + '"';
       } else if (isSymbol(value)) {
-        str += String(value);
-      } else if (isObject(value) || isFunction(value)) {
-        str += Object.prototype.toString.call(value);
+        str += String(value).replace(/^Symbol\((.*)\)$/i, 'Symbol("$1")');
+      } else if (isFunction(value)) {
+        str += (value.name || 'function') + '()';
+      } else if (isBigInt(value)) {
+        str += String(value) + 'n';
       } else {
         // str += JSONStringify(value);
         str += String(value);
@@ -205,7 +221,7 @@ export function SimpleJSONStringify(stringObject) {
 }
 
 /**
- * rewrite JSON.stringify, catch unknown exception 
+ * Call original `JSON.stringify` and catch unknown exceptions.
  */
 export function JSONStringify(value: any, replacer?: (this: any, key: string, value: any) => any, space?: string | number) {
   let stringifyResult: string;
@@ -270,27 +286,60 @@ export function circularReplacer() {
 }
 
 /**
- * get an object's all keys ignore whether they are not enumerable
+ * Sore an `string[]` by string.
  */
-export function getObjAllKeys(obj) {
-  if (!isObject(obj) && !isArray(obj)) {
-    return [];
-  }
-  const keys = [];
-  for (let k in obj) {
-    // typeof `k` may be `string | number | symbol`
-    keys.push(k);
-  }
-  return keys.sort((a, b) => {
+export function sortArray(arr: string[]) {
+  return arr.sort((a, b) => {
     return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
   });
 }
 
 /**
- * get an object's prototype name
+ * Get enumerable keys of an object or array.
+ */
+export function getEnumerableKeys(obj) {
+  if (!isObject(obj) && !isArray(obj)) {
+    return [];
+  }
+  return Object.keys(obj);
+}
+
+
+/**
+ * Get enumerable and non-enumerable keys of an object or array.
+ */
+export function getEnumerableAndNonEnumerableKeys(obj) {
+  if (!isObject(obj) && !isArray(obj)) {
+    return [];
+  }
+  return Object.getOwnPropertyNames(obj);
+}
+
+/**
+ * Get non-enumerable keys of an object or array.
+ */
+export function getNonEnumerableKeys(obj) {
+  const enumKeys = getEnumerableKeys(obj);
+  const enumAndNonEnumKeys = getEnumerableAndNonEnumerableKeys(obj);
+  return enumAndNonEnumKeys.filter((key) => {
+    const i = enumKeys.indexOf(key);
+    return i === -1;
+  });
+}
+
+export function getSymbolKeys(obj) {
+  if (!isObject(obj) && !isArray(obj)) {
+    return [];
+  }
+  return Object.getOwnPropertySymbols(obj);
+}
+
+/**
+ * Get an object's constructor|prototype name.
  */
 export function getObjName(obj) {
-  return <string>Object.prototype.toString.call(obj).replace('[object ', '').replace(']', '');
+  const constructorName = obj?.constructor?.name;
+  return constructorName || <string>Object.prototype.toString.call(obj).replace('[object ', '').replace(']', '');
 }
 
 /**

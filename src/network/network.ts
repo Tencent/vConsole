@@ -2,6 +2,7 @@ import $ from '../lib/query';
 import { VConsoleSveltePlugin } from '../lib/sveltePlugin';
 import NetworkComp from './network.svelte';
 import { requestList, VConsoleNetworkModel } from './network.model';
+
 export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
   protected module: VConsoleNetworkModel;
   protected storeUnsubscribe: ReturnType<typeof requestList.subscribe>;

@@ -7,28 +7,48 @@
   <title>Test: Log</title>
   <link href="./lib/weui.min.css" rel="stylesheet"/>
   <link href="./lib/demo.css" rel="stylesheet"/>
+  <style>
+    .section {
+      padding: 0 0 12px;
+    }
+    .section .hd {
+      text-align: center;
+      font-size: 18px;
+      line-height: 2;
+      color: #225fba;
+    }
+  </style>
 
   <!-- <script src="../dist/vconsole.min.js"></script> -->
   <!-- <script src="https://unpkg.com/vconsole/dist/vconsole.min.js"></script> -->
 </head>
 <body ontouchstart>
   <div id="page" class="page">
-    <a onclick="formattedLog()" href="javascript:;" class="weui_btn weui_btn_default">formattedLog</a>
-    <a onclick="styledLog()" href="javascript:;" class="weui_btn weui_btn_default">styledLog</a>
-    <a onclick="normalObject()" href="javascript:;" class="weui_btn weui_btn_default">normalObject</a>
-    <a onclick="circularObject()" href="javascript:;" class="weui_btn weui_btn_default">circularObject</a>
-    <a onclick="circularArray()" href="javascript:;" class="weui_btn weui_btn_default">circularArray</a>
-    <a onclick="largeObject()" href="javascript:;" class="weui_btn weui_btn_default">largeObject</a>
-    <a onclick="smallArray()" href="javascript:;" class="weui_btn weui_btn_default">smallArray</a>
-    <a onclick="symbolObject()" href="javascript:;" class="weui_btn weui_btn_default">symbolObject</a>
-    <a onclick="repeatLog()" href="javascript:;" class="weui_btn weui_btn_default">repeatLog</a>
-    <a onclick="windowError()" href="javascript:;" class="weui_btn weui_btn_default">window.error</a>
-    <a onclick="promiseReject()" href="javascript:;" class="weui_btn weui_btn_default">promiseReject</a>
-    <a onclick="xssLog()" href="javascript:;" class="weui_btn weui_btn_default">XSS: Log</a>
-    <a onclick="xssStorage()" href="javascript:;" class="weui_btn weui_btn_default">XSS: Storage</a>
-    <a onclick="changeTheme('dark')" href="javascript:;" class="weui_btn weui_btn_default">Theme:dark</a>
-    <a onclick="changeTheme('light')" href="javascript:;" class="weui_btn weui_btn_default">Theme:light</a>
-    <a onclick="changeTheme('')" href="javascript:;" class="weui_btn weui_btn_default">Theme:auto</a>
+    <div class="section">
+      <div class="hd">Object</div>
+
+      <a onclick="normalObject()" href="javascript:;" class="weui_btn weui_btn_default">Common Object</a>
+      <a onclick="largeObject()" href="javascript:;" class="weui_btn weui_btn_default">Large Object</a>
+      <a onclick="circularObject()" href="javascript:;" class="weui_btn weui_btn_default">Circular Object & Array</a>
+    </div>
+
+    <div class="section">
+      <div class="hd">Common Log</div>
+
+      <a onclick="allDataTypes()" href="javascript:;" class="weui_btn weui_btn_default">All Data Types</a>
+      <a onclick="logTypes()" href="javascript:;" class="weui_btn weui_btn_default">Log Types</a>
+      <a onclick="formattedLog()" href="javascript:;" class="weui_btn weui_btn_default">Different Log Panel</a>
+      <a onclick="styledLog()" href="javascript:;" class="weui_btn weui_btn_default">Styled Log</a>
+      <a onclick="repeatLog()" href="javascript:;" class="weui_btn weui_btn_default">Repeated Log</a>
+    </div>
+
+    <div class="section">
+      <div class="hd">Exception</div>
+
+      <a onclick="windowError()" href="javascript:;" class="weui_btn weui_btn_default">window.error</a>
+      <a onclick="promiseReject()" href="javascript:;" class="weui_btn weui_btn_default">Promise Reject</a>
+      <a onclick="xssLog()" href="javascript:;" class="weui_btn weui_btn_default">XSS Log</a>
+    </div>
   </div>
 </body>
 </html>
@@ -40,6 +60,7 @@ window.vConsole = new window.VConsole({
   maxLogNumber: 1000,
   // disableLogScrolling: true,
   // theme: 'dark',
+  defaultPlugins: [],
   onReady: function() {
     console.log('vConsole is ready.');
   },
@@ -55,47 +76,41 @@ window.vConsole = new window.VConsole({
 //   console.log('[system]', Math.random());
 // }, 300);
 
+class FooClass {
+  constructor() {
+    this.bar = 'foo';
+  }
+};
+
 function formattedLog() {
-  console.info('formattedLog() Start');
-  console.log('[default]', 'This log should be shown in Log tab.');
+  console.log('[default]', 'This log should be shown in Log panel.');
   console.log('[default]', 'Switch to System tab to see next log.');
-  console.log('[system]', 'This log should be shown in System tab.');
-  console.log('[foobar]', 'This log should be shown in Log tab.');
-  console.info('formattedLog() End');
+  console.log('[system]', 'This log should be shown in System panel.');
+  console.log('[foobar]', 'This log should be shown in Log panel. (No "foobar" plugin.)');
 }
 
 function styledLog() {
-  console.info('styledLog() Start');
   console.log('%c red %c blue %c log.', 'color:red', 'color:blue', 'font-weight:bold', 'Use %c format.');
-  console.info('styledLog() End');
 }
 
 function normalObject() {
-  console.info('normalObject() Start');
-  console.log('A normal JSON:', {
+  const obj = {
     number: 233,
-    string: 'Hello world',
+    string: 'Hi you!\nFoo\t<b>bar!!</b>',
     boolean: true,
-    symbol: Symbol('foo'),
-    bigint: 99999999999n,
+    symbolValue: Symbol('foo'),
+    bigint: 98979695949n,
     obj: {foo: 'bar'},
     array: [8, 7, 6],
-    func: function(a) { alert('b'); }
-  });
-  console.info('normalObject() End');
-}
-
-function circularArray() {
-  console.info('circularArray() Start');
-  var arr = [];
-  arr[0] = 'foo';
-  arr[1] = arr;
-  console.log('A circular structure array:', arr);
-  console.info('circularArray() End');
+    func: function foo(a) { alert('b'); },
+    class: FooClass,
+    classInstance: new FooClass(),
+  };
+  obj[Symbol('symbolKey')] = 'The key is a symbol.';
+  console.log('A common object:', obj);
 }
 
 function circularObject() {
-  console.info('circularArray() Start');
   var obj = {
     foo: 'bar'
   };
@@ -103,33 +118,42 @@ function circularObject() {
   obj.next = {};
   obj.next.next = obj.next;
   obj.next.self = obj;
-  console.log('A circular structure JSON:', obj);
-  console.info('circularObject() End');
+  console.log('A cyclically referenced object:', obj);
+
+  var arr = [];
+  arr[0] = 'foo';
+  arr[1] = arr;
+  console.log('A cyclically referenced array:', arr);
 }
 
 function largeObject() {
-  console.info('largeObject() Start');
-  var obj = {},
-      max = 500;
-  for (var i=1; i<=max; i++) {
-    obj[ 'key_' + i ] = Math.random();
-  }
-  console.log(max + ' keys:', obj);
-  console.info('largeObject() End');
+  var obj = {
+    window: window,
+  };
+  console.log('largeObject', obj);
 }
 
-function smallArray() {
-  console.info('smallArray() Start');
-  var arr = [0,1,2,3,4,5,6,7,8,9,10,11];
-  console.log(arr);
-  console.info('smallArray() End');
+function allDataTypes() {
+  console.log('String:', 'The first line;\nThe second line.', '<b>A HTML tag line.</b>');
+  console.log('Number:', 65535);
+  console.log('BigInt:', 99987654321n);
+  console.log('Boolean:', true, false);
+  console.log('Null:', null);
+  console.log('Undefined:', undefined);
+  console.log('Symbol:', Symbol('Foo'));
+  console.log('Array:', [0,1,2,3,4,5,6,7,8,9,10,11]);
+  console.log('Object:', {'foo': 'bar'});
+  console.log('Function:', allDataTypes);
+  console.log('Class:', FooClass);
+  console.log('ClassInstance:', new FooClass);
 }
 
-function symbolObject() {
-  console.info('symbolObject() Start');
-  var sym = Symbol('Foo');
-  console.log(sym);
-  console.info('symbolObject() End');
+function logTypes() {
+  console.log('console.log()');
+  console.info('console.info()');
+  console.debug('console.debug()');
+  console.warn('console.warn()');
+  console.error('console.error()');
 }
 
 function repeatLog() {
@@ -150,15 +174,12 @@ function repeatLog() {
 }
 
 function windowError() {
-  console.info('windowError() Start');
   console.log(Error);
   a.b = 1;
-  console.info('windowError() End');
 }
 
 function promiseReject() {
-  console.info('promiseReject() Start');
-  Promise.reject('reject string');
+  Promise.reject('reject a string');
   Promise.reject(new Error('reject an Error'));
   Promise.reject({message: 'reject an object'});
   Promise.reject(666).then((result) => {
@@ -166,13 +187,9 @@ function promiseReject() {
   }, (result) => {
     console.log('rejected', result);
   });
-  setTimeout(() => {
-    console.info('promiseReject() End');
-  }, 0)
 }
 
 function xssLog() {
-  console.info('xssLog() Start');
   const arr = [
     "-->\tyo\n'\"/><iframe>",
     ["-->\tyo\n'\"/><iframe>"]
@@ -184,21 +201,6 @@ function xssLog() {
   console.log('XSS str:', "-->\tyo\n'\"/><iframe>");
   console.log(arr);
   console.log(obj);
-  console.info('xssLog() End');
 }
 
-function xssStorage() {
-  console.info('xssStorage() Start');
-  localStorage.setItem("-->\tyo\n'\"/><iframe>", "-->\tyo\n'\"/><iframe>");
-  sessionStorage.setItem("-->\tyo\n'\"/><iframe>", "-->\tyo\n'\"/><iframe>");
-  document.cookie = "foo=-->\tyo";
-  console.info('xssStorage() End');
-}
-
-function changeTheme(theme) {
-  console.info('changeTheme() Start');
-  window.vConsole.setOption('theme', theme);
-  console.log('Current Theme:', theme || 'auto');
-  console.info('changeTheme() End');
-}
 </script>

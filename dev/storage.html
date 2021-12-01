@@ -15,6 +15,7 @@
     <a onclick="setCookie()" href="javascript:;" class="weui_btn weui_btn_default">setCookie</a>
     <a onclick="setDomainCookie()" href="javascript:;" class="weui_btn weui_btn_default">setDomainCookie</a>
     <a onclick="largeStorage()" href="javascript:;" class="weui_btn weui_btn_default">largeStorage</a>
+    <a onclick="xssStorage()" href="javascript:;" class="weui_btn weui_btn_default">XSS</a>
   </div>
 </body>
 </html>
@@ -118,5 +119,13 @@ function largeStorage() {
   console.log('large value:', value);
   localStorage.setItem('MassiveHugeLargeBigItem', value);
   console.info('largeStorage() End');
+}
+
+function xssStorage() {
+  console.info('xssStorage() Start');
+  localStorage.setItem("-->\tyo\n'\"/><iframe>", "-->\tyo\n'\"/><iframe>");
+  sessionStorage.setItem("-->\tyo\n'\"/><iframe>", "-->\tyo\n'\"/><iframe>");
+  document.cookie = "foo=-->\tyo";
+  console.info('xssStorage() End');
 }
 </script>

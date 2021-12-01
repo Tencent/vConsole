@@ -24,9 +24,9 @@ import { default as CoreCompClass } from './core.svelte';
 
 // built-in plugins
 import { VConsolePlugin, IVConsoleTopbarOptions } from '../lib/plugin';
-import { VConsoleLogPlugin } from '../log/log';
+import { VConsoleLogPlugin } from '../log1/log';
 import { VConsoleDefaultPlugin } from '../log/default';
-import { VConsoleSystemPlugin } from '../log/system';
+import { VConsoleSystemPlugin } from '../log1/system';
 import { VConsoleNetworkPlugin } from '../network/network';
 import { VConsoleElementPlugin } from '../element/element';
 import { VConsoleStoragePlugin } from '../storage/storage';
@@ -132,17 +132,17 @@ class VConsole {
     // add other built-in plugins according to user's config
     const list = this.option.defaultPlugins;
     const plugins = {
-      // 'default': {proto: VConsoleSystemPlugin, name: 'Log'},
-      'system': {proto: VConsoleSystemPlugin, name: 'System'},
-      'network': {proto: VConsoleNetworkPlugin, name: 'Network'},
-      'element': {proto: VConsoleElementPlugin, name: 'Element'},
-      'storage': {proto: VConsoleStoragePlugin, name: 'Storage'}
+      // 'default': { proto: VConsoleSystemPlugin, name: 'Log' },
+      'system': { proto: VConsoleSystemPlugin, name: 'System' },
+      'network': { proto: VConsoleNetworkPlugin, name: 'Network' },
+      'element': { proto: VConsoleElementPlugin, name: 'Element' },
+      'storage': { proto: VConsoleStoragePlugin, name: 'Storage' }
     };
     if (!!list && tool.isArray(list)) {
-      for (let i=0; i<list.length; i++) {
-        let tab = plugins[list[i]];
-        if (!!tab) {
-          this.addPlugin(new tab.proto(list[i], tab.name));
+      for (let i = 0; i < list.length; i++) {
+        const pluginConf = plugins[list[i]];
+        if (!!pluginConf) {
+          this.addPlugin(new pluginConf.proto(list[i], pluginConf.name));
         } else {
           console.debug('Unrecognized default plugin ID:', list[i]);
         }

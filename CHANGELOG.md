@@ -10,8 +10,9 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 **Normal Updates:**
 
+- `Feat(Log)` Support object's `Symbol` keys.
 - `Feat(Network)` Add copy button to requests.
-- `Refactor(Core|Network|Element)` Rebuild views by using Svelte as template engine.
+- `Refactor(Core|Log|Network|Element)` Rebuild views by using Svelte as template engine.
 - `Refactor(Storage)` Improve UX.
 
 
