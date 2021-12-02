@@ -130,26 +130,30 @@ export function isPlainObject(obj) {
 }
 
 
+const _htmlEncodePatterns = /[<>&" ]/g;
+const _htmlEncodeReplacer = (c: string) => {
+  return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', ' ': '&nbsp;' }[c];
+};
 /**
  * Escape HTML to XSS-safe text.
  */
 export function htmlEncode(text: string | number) {
   // return document.createElement('a').appendChild( document.createTextNode(text) ).parentNode.innerHTML;
   if (typeof text !== 'string' && typeof text !== 'number') { return text; }
-  return String(text).replace(/[<>&" ]/g, (c) => {
-    return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', ' ': '&nbsp;' }[c];
-  });
+  return String(text).replace(_htmlEncodePatterns, _htmlEncodeReplacer);
 }
 
 
+const _visibleTextPatterns = /[\n\t]/g;
+const _visibleTextReplacer = (c: string) => {
+  return { '\n': '\\n', '\t': '\\t' }[c];
+};
 /**
  * Convert a text's invisible characters to visible characters.
  */
 export function getVisibleText(text: string) {
   if (typeof text !== 'string') { return text; }
-  return String(text).replace(/[\n\t]/g, (c) => {
-    return { '\n': '\\n', '\t': '\\t' }[c];
-  });
+  return String(text).replace(_visibleTextPatterns, _visibleTextReplacer);
 }
 
 
@@ -285,13 +289,14 @@ export function circularReplacer() {
   };
 }
 
+const _sortArrayCompareFn = <T extends string>(a: T, b: T) => {
+  return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
+};
 /**
  * Sore an `string[]` by string.
  */
 export function sortArray(arr: string[]) {
-  return arr.sort((a, b) => {
-    return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
-  });
+  return arr.sort(_sortArrayCompareFn);
 }
 
 /**

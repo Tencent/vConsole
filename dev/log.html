@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <title>Test: Log</title>
+  <title>vConsole: Log</title>
   <link href="./lib/weui.min.css" rel="stylesheet"/>
   <link href="./lib/demo.css" rel="stylesheet"/>
   <style>
@@ -196,7 +196,7 @@ function xssLog() {
   ];
   const obj = {
     'key': 'foo\nbar\tyoo',
-    "-->\tyo\n'\"/><iframe>": "-->\n'\"/><iframe>"
+    "-->\tyo\n'\"/><div>": "-->\n'\"/><iframe>"
   };
   console.log('XSS str:', "-->\tyo\n'\"/><iframe>");
   console.log(arr);

@@ -162,7 +162,6 @@ export class VConsoleLogModel extends VConsoleModel {
     if (typeof this.origConsole.log === 'function') {
       return;
     }
-    const that = this;
     const methodList = this.LOG_METHODS;
 
     // save original console object
@@ -179,7 +178,7 @@ export class VConsoleLogModel extends VConsoleModel {
 
     methodList.map((method) => {
       window.console[method] = ((...args) => {
-        that.addLog({
+        this.addLog({
           type: method,
           origData: args || [],
         });
@@ -240,7 +239,7 @@ export class VConsoleLogModel extends VConsoleModel {
   /**
    * Add a vConsole log.
    */
-  public addLog(item: { type: IConsoleLogMethod, origData: any[] }) {
+  public addLog(item: { type: IConsoleLogMethod, origData: any[] }, opt?: { noOrig: boolean }) {
     // prepare data
     const log: IVConsoleLog = {
       _id: tool.getUniqueID(),
@@ -281,8 +280,11 @@ export class VConsoleLogModel extends VConsoleModel {
     // this.callOriginalConsole('info', get(logListMap));
 
     this._pushLogList(pluginId, log);
-    // logging to original console
-    this.callOriginalConsole(item.type, ...item.origData);
+
+    if (!opt?.noOrig) {
+      // logging to original console
+      this.callOriginalConsole(item.type, ...item.origData);
+    }
   }
 
   protected _pushLogList(pluginId: string, log: IVConsoleLog) {
