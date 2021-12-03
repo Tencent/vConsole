@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as tool from '../lib/tool';
   import LogValue from './logValue.svelte';
-  // import { getValueTextAndType } from './log.model';
+  import { VConsoleUninvocatableObject } from './log.model';
 
   export let origData: any;
   export let dataKey: string = undefined;
@@ -9,13 +9,15 @@
 
   let isToggle: boolean = false;
   let isTree: boolean = false;
+  let isShowProto: boolean = false;
   let childEnumKeys: string[] = [];
   let childNonEnumKeys: string[] = [];
   let childSymbolKeys: symbol[] = [];
 
   $: {
-    isTree = tool.isArray(origData) || tool.isObject(origData);
-    if (isTree) {
+    isTree = !(origData instanceof VConsoleUninvocatableObject) && (tool.isArray(origData) || tool.isObject(origData));
+    if (isTree && isToggle) {
+      isShowProto = tool.isObject(origData) && childNonEnumKeys.indexOf('__proto__') === -1;
       childEnumKeys = tool.sortArray(tool.getEnumerableKeys(origData));
       childNonEnumKeys = tool.sortArray(tool.getNonEnumerableKeys(origData));
       childSymbolKeys = tool.getSymbolKeys(origData);
@@ -24,6 +26,15 @@
 
   const onTapTreeNode = () => {
     isToggle = !isToggle;
+  };
+  const getValueByKey = (key: any) => {
+    // invocate some object's property may cause error,
+    // DO NOT invocate `origData[key]` directly.
+    try {
+      return origData[key];
+    } catch (e) {
+      return new VConsoleUninvocatableObject();
+    }
   };
 </script>
 
@@ -36,16 +47,16 @@
   {#if isTree && isToggle}
     <div class="vc-log-tree-child">
       {#each childEnumKeys as key}
-        <svelte:self origData={origData[key]} dataKey={key} />
-      {/each}
-      {#each childNonEnumKeys as key}
-        <svelte:self origData={origData[key]} dataKey={key} keyType="private" />
+        <svelte:self origData={getValueByKey(key)} dataKey={key} />
       {/each}
       {#each childSymbolKeys as key}
-        <svelte:self origData={origData[key]} dataKey={String(key)} keyType="symbol" />
+        <svelte:self origData={getValueByKey(key)} dataKey={String(key)} keyType="symbol" />
       {/each}
-      {#if tool.isObject(origData)}
-        <svelte:self origData={origData.__proto__} dataKey="[[Prototype]]" keyType="private" />
+      {#each childNonEnumKeys as key}
+        <svelte:self origData={getValueByKey(key)} dataKey={key} keyType="private" />
+      {/each}
+      {#if isShowProto}
+        <svelte:self origData={getValueByKey('__proto__')} dataKey="__proto__" keyType="private" />
       {/if}
     </div>
   {/if}
@@ -54,6 +65,7 @@
 
 <style lang="less">
 @import "../styles/var.less";
+
 // tree
 .vc-log-tree {
   display: block;

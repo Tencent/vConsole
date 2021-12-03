@@ -56,6 +56,7 @@ class VConsole {
   public $ = $;
 
   // export static class
+  public static tool = tool;
   public static VConsolePlugin = VConsolePlugin;
   public static VConsoleLogPlugin = VConsoleLogPlugin;
   public static VConsoleDefaultPlugin = VConsoleDefaultPlugin;

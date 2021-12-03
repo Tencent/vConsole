@@ -15,7 +15,7 @@
       text = handler(content) || '';
     } else {
       if (tool.isObject(content) || tool.isArray(content)) {
-        text = tool.JSONStringify(content);
+        text = tool.safeJSONStringify(content);
       } else {
         text = content;
       }

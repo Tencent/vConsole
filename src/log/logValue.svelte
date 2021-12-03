@@ -63,7 +63,8 @@
   white-space: normal;
 }
 .vc-log-val-null,
-.vc-log-val-undefined {
+.vc-log-val-undefined,
+.vc-log-val-uninvocatable {
   color: var(--VC-CODE-NULL-FG);
 }
 .vc-log-val-symbol {

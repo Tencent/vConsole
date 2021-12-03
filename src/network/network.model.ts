@@ -200,7 +200,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
             if (tool.isString(XMLReq.response)) {
               try {
                 item.response = JSON.parse(XMLReq.response);
-                item.response = tool.JSONStringify(item.response, null, 1);
+                item.response = tool.safeJSONStringify(item.response, 10, 500000);
               } catch (e) {
                 // not a JSON string
                 item.response = XMLReq.response;
@@ -212,7 +212,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
 
           case 'json':
             if (typeof XMLReq.response !== 'undefined') {
-              item.response = tool.JSONStringify(XMLReq.response, null, 1);
+              item.response = tool.safeJSONStringify(XMLReq.response, 10, 500000);
             }
             break;
 
@@ -435,7 +435,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
             try {
               // try to parse response as JSON
               item.response = JSON.parse(responseBody);
-              item.response = tool.JSONStringify(item.response, null, 1);
+              item.response = tool.safeJSONStringify(item.response, 10, 500000);
             } catch (e) {
               // not real JSON, use 'text' as default type
               item.response = responseBody;

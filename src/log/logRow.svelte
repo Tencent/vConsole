@@ -11,7 +11,8 @@
     let text: string[] = [];
     try {
       for (let i = 0; i < log.data.length; i++) {
-        text.push(tool.safeJSONStringify(log.data[i].origData, 0));
+        // Only copy up to 10 levels of object depth and single key size up to 10KB
+        text.push(tool.safeJSONStringify(log.data[i].origData, 10, 10000));
       }
     } catch (e) {
       // do nothing

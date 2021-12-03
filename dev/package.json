@@ -3,12 +3,12 @@
   "version": "0.0.1",
   "description": "",
   "main": "script/index.js",
-  "scripts": {
-  },
+  "scripts": {},
   "keywords": [],
   "author": "Maiz",
   "license": "MIT",
   "dependencies": {
+    "jsdom": "^19.0.0",
     "vconsole": "file:../"
   }
 }

@@ -36,7 +36,7 @@ export const logListMap = writable<IVConsoleLogListMap>({});
 
 
 /**********************************
- * Methods
+ * Methods and Classes
  **********************************/
 
 const getPreviewText = (val: any) => {
@@ -57,7 +57,10 @@ const getPreviewText = (val: any) => {
 export const getValueTextAndType = (val: any, wrapString = true) => {
   let valueType = 'undefined';
   let text = val;
-  if (tool.isArray(val)) {
+  if (val instanceof VConsoleUninvocatableObject) {
+    valueType = 'uninvocatable';
+    text = '(...)';
+  } else if (tool.isArray(val)) {
     valueType = 'array';
     text = getPreviewText(val);
   } else if (tool.isObject(val)) {
@@ -92,6 +95,10 @@ export const getValueTextAndType = (val: any, wrapString = true) => {
     text = String(val);
   }
   return { text, valueType };
+}
+
+export class VConsoleUninvocatableObject {
+
 }
 
 
@@ -203,6 +210,8 @@ export class VConsoleLogModel extends VConsoleModel {
       this.clearLog();
       this.callOriginalConsole('clear', ...args);
     }).bind(window.console);
+
+    (<any>window)._console = this.origConsole;
   }
 
   /**

@@ -76,8 +76,18 @@ window.vConsole = new window.VConsole({
 //   console.log('[system]', Math.random());
 // }, 300);
 
-class FooClass {
+class FooBaseBaseClass {
+
+}
+class FooBaseClass extends FooBaseBaseClass {
   constructor() {
+    super();
+    this.name = 'base';
+  }
+}
+class FooClass extends FooBaseClass {
+  constructor() {
+    super();
     this.bar = 'foo';
   }
 };
@@ -102,17 +112,25 @@ function normalObject() {
     bigint: 98979695949n,
     obj: {foo: 'bar'},
     array: [8, 7, 6],
+    undefined: undefined,
     func: function foo(a) { alert('b'); },
     class: FooClass,
     classInstance: new FooClass(),
   };
   obj[Symbol('symbolKey')] = 'The key is a symbol.';
   console.log('A common object:', obj);
+  // console.log(obj.classInstance);
+  // console.log(obj.classInstance.__proto__);
+  // console.log(Object.getPrototypeOf(obj.classInstance));
 }
 
 function circularObject() {
+  class NestObj { }
+  var nest = new NestObj();
+  nest.self = nest;
   var obj = {
-    foo: 'bar'
+    foo: 'bar',
+    nest: nest,
   };
   obj.self = obj;
   obj.next = {};

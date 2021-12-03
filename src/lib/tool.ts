@@ -157,71 +157,129 @@ export function getVisibleText(text: string) {
 }
 
 
-/**
- * A safe `JSON.stringify` method. 
- */
-export function safeJSONStringify(stringObject, maxLevel = -1, curLevel = 0) {
-  if (!isObject(stringObject) && !isArray(stringObject)) {
-    return JSONStringify(stringObject);
+type ISafeJSONStringifyOption = { ret: string, maxDepth: number, keyMaxLen: number, circularFinder: (val: any) => any };
+const _safeJSONStringifyCircularFinder = () => {
+  const seen = new WeakSet();
+  return (value: any) => {
+    if (typeof(value) === 'object' && value !== null) {
+      if (seen.has(value)) {
+        return true;
+      }
+      seen.add(value);
+    }
+    return false;
+  };
+};
+const _safeJSONStringifyFlatValue = (value: any, maxLen = 0) => {
+  let str = '';
+  if (isString(value)) {
+    const len = value.length;
+    if (maxLen > 0 && len > maxLen) {
+      value = subString(value, maxLen) + `...(${getBytesText(getStringBytes(value))})`;
+    }
+    str += '"' + getVisibleText(value) + '"';
+  } else if (isSymbol(value)) {
+    str += String(value).replace(/^Symbol\((.*)\)$/i, 'Symbol("$1")');
+  } else if (isFunction(value)) {
+    str += (value.name || 'function') + '()';
+  } else if (isBigInt(value)) {
+    str += String(value) + 'n';
+  } else {
+    // str += JSONStringify(value);
+    str += String(value);
+  }
+  return str;
+};
+// use depth first traversal
+const _safeJSONStringify = (obj, opt: ISafeJSONStringifyOption, _curDepth = 0) => {
+  if (!isObject(obj) && !isArray(obj)) {
+    opt.ret += _safeJSONStringifyFlatValue(obj, opt.keyMaxLen);
+    return;
+  }
+
+  const isCircular = opt.circularFinder(obj);
+  if (isCircular) {
+    if (isArray(obj)) {
+      opt.ret += '(Circular Array)';
+    } else if (isObject) {
+      opt.ret += `(Circular ${obj.constructor?.name || 'Object'})`;
+    }
+    return;
   }
 
   let prefix = '{', suffix = '}';
-  if (isArray(stringObject)) {
+  if (isArray(obj)) {
     prefix = '[';
-    suffix = ']'
+    suffix = ']';
   }
-  let str = prefix;
-  const keys = getEnumerableKeys(stringObject);
+  opt.ret += prefix;
+  const keys = getEnumerableKeys(obj);
   for (let i = 0; i < keys.length; i ++) {
+    const key = keys[i];
+    // (window as any)._console.log('for key:', key, _curDepth);
+    // handle key
     try {
-      const key = keys[i];
-      const value = stringObject[key];
-
-      // key
-      if (!isArray(stringObject)) {
+      if (!isArray(obj)) {
         if (isObject(key) || isArray(key) || isSymbol(key)) {
-          str += Object.prototype.toString.call(key);
+          opt.ret += Object.prototype.toString.call(key);
         } else {
-          str += key;
+          opt.ret += key;
         }
-        str += ': ';
-      }
-
-      // value
-      if (isArray(value)) {
-        if (maxLevel > -1 && curLevel >= maxLevel) {
-          str += 'Array(' + value.length + ')';
-        } else {
-          str += safeJSONStringify(value, maxLevel, curLevel + 1);
-        }
-      } else if (isObject(value)) {
-        if (maxLevel > -1 && curLevel >= maxLevel) {
-          // str += Object.prototype.toString.call(value);
-          str += (value.constructor?.name || 'Object') + ' {}';
-        } else {
-          str += safeJSONStringify(value, maxLevel, curLevel + 1);
-        }
-      } else if (isString(value)) {
-        str += '"' + getVisibleText(value) + '"';
-      } else if (isSymbol(value)) {
-        str += String(value).replace(/^Symbol\((.*)\)$/i, 'Symbol("$1")');
-      } else if (isFunction(value)) {
-        str += (value.name || 'function') + '()';
-      } else if (isBigInt(value)) {
-        str += String(value) + 'n';
-      } else {
-        // str += JSONStringify(value);
-        str += String(value);
-      }
-      if (i < keys.length - 1) {
-        str += ', ';
+        opt.ret += ': ';
       }
     } catch (e) {
+      // cannot stringify `key`, skip this key-value pair
       continue;
     }
+
+    // handle value
+    try {
+      const value = obj[key];
+      if (isArray(value)) {
+        if (opt.maxDepth > -1 && _curDepth >= opt.maxDepth) {
+          opt.ret += 'Array(' + value.length + ')';
+        } else {
+          _safeJSONStringify(value, opt, _curDepth + 1);
+        }
+      } else if (isObject(value)) {
+        if (opt.maxDepth > -1 && _curDepth >= opt.maxDepth) {
+          // opt.ret += Object.prototype.toString.call(value);
+          opt.ret += (value.constructor?.name || 'Object') + ' {}';
+        } else {
+          _safeJSONStringify(value, opt, _curDepth + 1);
+        }
+      } else {
+        // opt.ret += JSONStringify(value);
+        opt.ret += _safeJSONStringifyFlatValue(value, opt.keyMaxLen);
+      }
+
+    } catch (e) {
+      // cannot stringify `value`, use a default text
+      opt.ret += '(...)';
+    }
+
+    if (opt.keyMaxLen > 0 && opt.ret.length >= opt.keyMaxLen * 10) {
+      opt.ret += ', (...)';
+      break;
+    }
+    if (i < keys.length - 1) {
+      opt.ret += ', ';
+    }
   }
-  str += suffix;
-  return str;
+  opt.ret += suffix;
+}
+/**
+ * A safe `JSON.stringify` method. 
+ */
+export function safeJSONStringify(obj, maxDepth = -1, keyMaxLen = -1) {
+  const opt = {
+    ret: '',
+    maxDepth,
+    keyMaxLen,
+    circularFinder: _safeJSONStringifyCircularFinder(),
+  };
+  _safeJSONStringify(obj, opt);
+  return opt.ret;
 }
 
 /**
@@ -258,35 +316,22 @@ export function getBytesText(bytes: number) {
   return bytes + ' B';
 }
 
-export function subString(str: string, len: number) {    
-  const r = /[^\x00-\xff]/g; 
-  let m: number;  
+const _subStringPattern = /[^\x00-\xff]/g
+export function subString(str: string, len: number) {
+  let m: number;
 
-  if (str.replace(r, '**').length > len) {
-    m = Math.floor(len / 2);  
+  if (str.replace(_subStringPattern, '**').length > len) {
+    m = Math.floor(len / 2);
 
-    for (let i = m, l = str.length; i < l; i++) {    
+    for (let i = m, l = str.length; i < l; i++) {
       const sub = str.substr(0, i);
-      if (sub.replace(r, '**').length >= len) {    
-        return sub; 
-      }    
-    } 
+      if (sub.replace(_subStringPattern, '**').length >= len) {
+        return sub;
+      }
+    }
   }
 
   return str;
-}
-
-export function circularReplacer() {
-  const seen = [];
-  return (key, value) => {
-    if (typeof(value) === 'object' && value !== null) {
-      if (seen.indexOf(value) >= 0) {
-        return '[Circular]';
-      }
-      seen.push(value);
-    }
-    return value;
-  };
 }
 
 const _sortArrayCompareFn = <T extends string>(a: T, b: T) => {
@@ -339,12 +384,16 @@ export function getSymbolKeys(obj) {
   return Object.getOwnPropertySymbols(obj);
 }
 
+const _getObjNamePattern = /(function|class) ([^ \{\()}]{1,})[\(| ]/;
 /**
- * Get an object's constructor|prototype name.
+ * Get an object's constructor name.
  */
 export function getObjName(obj) {
-  const constructorName = obj?.constructor?.name;
-  return constructorName || <string>Object.prototype.toString.call(obj).replace('[object ', '').replace(']', '');
+  // const constructorName = obj?.constructor?.name;
+  // return constructorName || <string>Object.prototype.toString.call(obj).replace('[object ', '').replace(']', '');
+  if (obj === null || obj === undefined) { return ''; }
+  const results = _getObjNamePattern.exec(obj.constructor.toString());
+  return (results && results.length > 1) ? results[2] : '';
 }
 
 /**
