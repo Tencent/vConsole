@@ -701,7 +701,7 @@ export class VConsoleLogPlugin extends VConsolePlugin {
             let proto = obj.__proto__,
               $proto,
               $constructor;
-            if (Object.prototype.hasOwnProperty.call(obj, 'constructor')) {
+            if (Object.prototype.hasOwnProperty.call(obj, 'constructor') && typeof obj.constructor === 'function') {
               $constructor = $.render(tplFold, {
                 lineType: 'kv',
                 key: 'constructor',
