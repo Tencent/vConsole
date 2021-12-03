@@ -302,9 +302,13 @@ export function getFunctionSignature (fn) {
   }
 
   try {
-    const match = fn.toString().match(/\((.*([\r?\n].*)*)\)/);
-    if (match && match[1]) {
-      return `function ${functionName}(${match[1].split(',').map(s => s.trim()).join(', ')})`;
+    const match = fn.toString().match(/\((.*?([\r?\n].*?)*?)\)\s*({|=>)/);
+    if (match) {
+      if (match[3] === '=>') {
+        return `(${match[1] ? match[1].split(',').map(s => s.trim()).join(', ') : ''}) => {...}`;
+      } else {
+        return `function ${functionName}(${match[1] ? match[1].split(',').map(s => s.trim()).join(', ') : ''})`;
+      }
     }
   } catch (_) {}
   return `function ${functionName}()`;
