@@ -656,7 +656,7 @@ export class VConsoleLogPlugin extends VConsolePlugin {
               val = 'undefined';
             } else if (tool.isFunction(val)) {
               valueType = 'function';
-              val = 'function()';
+              val = tool.getFunctionSignature(val);
             } else if (tool.isSymbol(val)) {
               valueType = 'symbol';
             }
@@ -699,7 +699,18 @@ export class VConsoleLogPlugin extends VConsolePlugin {
           // render object's prototype
           if (tool.isObject(obj)) {
             let proto = obj.__proto__,
-              $proto;
+              $proto,
+              $constructor;
+            if (Object.prototype.hasOwnProperty.call(obj, 'constructor')) {
+              $constructor = $.render(tplFold, {
+                lineType: 'kv',
+                key: 'constructor',
+                keyType: 'private',
+                value: tool.getFunctionSignature(obj.constructor),
+                valueType: 'function'
+              });
+              $content.insertAdjacentElement('beforeend', $constructor);
+            }
             if (tool.isObject(proto)) {
               $proto = that.getFoldedLine(proto, $.render(tplFoldCode, {
                 key: '__proto__',

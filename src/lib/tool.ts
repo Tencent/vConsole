@@ -276,14 +276,38 @@ export function getObjAllKeys(obj) {
   if (!isObject(obj) && !isArray(obj)) {
     return [];
   }
-  const keys = [];
+  let keys = [];
   for (let k in obj) {
     // typeof `k` may be `string | number | symbol`
     keys.push(k);
   }
+  if (obj instanceof Error && !Object.prototype.hasOwnProperty.call(obj, 'constructor')) {
+    keys = [...keys, 'message', 'stack'];
+    keys = keys.filter((key, index) => (keys.indexOf(key) === index));
+  }
   return keys.sort((a, b) => {
     return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
   });
+}
+
+export function getFunctionSignature (fn) {
+  if (!isFunction(fn)) {
+    return '';
+  }
+  let functionName;
+  try {
+    functionName = fn.name || '';
+  } catch (_) {
+    functionName = '';
+  }
+
+  try {
+    const match = fn.toString().match(/\((.*([\r?\n].*)*)\)/);
+    if (match && match[1]) {
+      return `function ${functionName}(${match[1].split(',').map(s => s.trim()).join(', ')})`;
+    }
+  } catch (_) {}
+  return `function ${functionName}()`;
 }
 
 /**
