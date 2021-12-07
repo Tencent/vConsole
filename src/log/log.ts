@@ -1,8 +1,9 @@
+import { get } from 'svelte/store';
 import * as tool from '../lib/tool';
 import { VConsoleSveltePlugin } from '../lib/sveltePlugin';
 import LogComp from './log.svelte';
-import { VConsoleLogModel } from './log.model';
-// import type { IConsoleLogMethod, IVConsoleLog, IVConsoleLogData } from './log.model';
+import { VConsoleLogModel, logStore } from './log.model';
+import type { IConsoleLogMethod } from './log.model';
 
 const MAX_LOG_NUMBER = 1000;
 
@@ -32,7 +33,32 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
     this.module.unbindPlugin(this.id);
   }
 
-  public onAddTool(callback) {
+  onAddTopBar(callback: Function) {
+    const types = ['All', 'Log', 'Info', 'Warn', 'Error'];
+    const btnList = [];
+    for (let i = 0; i < types.length; i++) {
+      btnList.push({
+        name: types[i],
+        data: {
+          type: types[i].toLowerCase()
+        },
+        actived: i === 0,
+        className: '',
+        onClick: (e: PointerEvent, data: { type: 'all' | IConsoleLogMethod }) => {
+          const store = get(logStore)[this.id];
+          if (data.type === store.filterType) { return false; }
+          logStore.update((s) => {
+            s[this.id].filterType = data.type;
+            return s;
+          });
+        }
+      });
+    }
+    btnList[0].className = 'vc-actived';
+    callback(btnList);
+  }
+
+  public onAddTool(callback: Function) {
     const toolList = [{
       name: 'Clear',
       global: false,

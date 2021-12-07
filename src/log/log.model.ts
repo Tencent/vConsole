@@ -34,7 +34,6 @@ export interface IVConsoleAddLogOptions {
 export interface IVConsoleLogStore {
   logList: IVConsoleLog[];
   filterType: 'all' | IConsoleLogMethod;
-  filterText: string;
 }
 
 
@@ -80,7 +79,6 @@ export class VConsoleLogModel extends VConsoleModel {
     logStore.update((store) => {
       store[pluginId] = {
         logList: [],
-        filterText: '',
         filterType: 'all',
       };
       return store;

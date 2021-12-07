@@ -3,6 +3,7 @@
   import { logStore } from './log.model';
   import LogRow from './logRow.svelte';
   import LogCommand from './logCommand.svelte';
+  // import type { IVConsoleLog } from './log.model';
 
   export let pluginId: string = 'default';
   export let showCmd: boolean = false;
@@ -16,7 +17,13 @@
 
 <div class="vc-logs" class:vc-log-has-cmd={showCmd}>
   {#each $logStore[pluginId].logList as log}
-    {#if filterText === '' || isMatchedFilterText(log, filterText)}
+    {#if (
+      // filterType
+      $logStore[pluginId].filterType === 'all' || $logStore[pluginId].filterType === log.type)
+      &&
+      // filterText
+      (filterText === '' || isMatchedFilterText(log, filterText)
+    )}
       <LogRow log={log} />
     {/if}
   {:else}
