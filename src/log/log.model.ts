@@ -20,6 +20,7 @@ export interface IVConsoleLogData {
 export interface IVConsoleLog {
   _id: string;
   type: IConsoleLogMethod;
+  cmdType?: 'input' | 'output';
   date: number;
   data: IVConsoleLogData[]; // the `args: any[]` of `console.log(...args)`
 }
@@ -97,6 +98,42 @@ export const getValueTextAndType = (val: any, wrapString = true) => {
   return { text, valueType };
 }
 
+const frontIdentifierList = ['.', '[', '(', '{', '}'];
+const backIdentifierList = [']', ')', '}'];
+
+const _getIdentifier = (text: string, identifierList: string[], startPos = 0) => {
+  // for case 'aa.bb.cc'
+  const ret = {
+    text: '',        // '.'
+    pos: -1,         // 5
+    before: '',      // 'aa.bb'
+    after: '',       // 'cc'
+  };
+  for (let i = text.length - 1; i >= startPos; i--) {
+    const idx = identifierList.indexOf(text[i]);
+    if (idx > -1) {
+      ret.text = identifierList[idx];
+      ret.pos = i;
+      ret.before = text.substring(startPos, i);
+      ret.after = text.substring(i + 1, text.length);
+      break;
+    }
+  }
+  return ret;
+};
+export const getLastIdentifier = (text: string) => {
+  const front = _getIdentifier(text, frontIdentifierList, 0);
+  const back = _getIdentifier(text, backIdentifierList, front.pos + 1);
+  return {
+    front,
+    back,
+  };
+};
+
+
+/**
+ * An empty class.
+ */
 export class VConsoleUninvocatableObject {
 
 }
@@ -211,7 +248,8 @@ export class VConsoleLogModel extends VConsoleModel {
       this.callOriginalConsole('clear', ...args);
     }).bind(window.console);
 
-    (<any>window)._console = this.origConsole;
+    // convenient for other uses
+    (<any>window)._vcOrigConsole = this.origConsole;
   }
 
   /**
@@ -221,6 +259,9 @@ export class VConsoleLogModel extends VConsoleModel {
     // recover original console methods
     for (const method in this.origConsole) {
       window.console[method] = this.origConsole[method] as any;
+    }
+    if ((<any>window)._vcOrigConsole) {
+      delete (<any>window)._vcOrigConsole;
     }
   }
 
@@ -248,11 +289,12 @@ export class VConsoleLogModel extends VConsoleModel {
   /**
    * Add a vConsole log.
    */
-  public addLog(item: { type: IConsoleLogMethod, origData: any[] }, opt?: { noOrig: boolean }) {
+  public addLog(item: { type: IConsoleLogMethod, origData: any[] }, opt?: { noOrig?: boolean, cmdType?: 'input' | 'output' }) {
     // prepare data
     const log: IVConsoleLog = {
       _id: tool.getUniqueID(),
       type: item.type,
+      cmdType: opt?.cmdType,
       date: Date.now(),
       data: [],
     };
@@ -274,7 +316,7 @@ export class VConsoleLogModel extends VConsoleModel {
     const firstData = log.data[0]?.origData;
     if (tool.isString(firstData)) {
       const match = (firstData as string).match(this.pluginPattern);
-      if (match !== null && match.length > 0) {
+      if (match !== null && match.length > 1) {
         const id = match[1].toLowerCase();
         if (this.ADDED_LOG_PLUGIN_ID.indexOf(id) > -1) {
           pluginId = id;
@@ -295,6 +337,33 @@ export class VConsoleLogModel extends VConsoleModel {
       this.callOriginalConsole(item.type, ...item.origData);
     }
   }
+
+  /**
+   * Execute a JS command.
+   */
+  public evalCommand(cmd: string) {
+    this.addLog({
+      type: 'log',
+      origData: [cmd],
+    }, { cmdType: 'input' });
+
+    let result = void 0;
+
+    try {
+      result = eval.call(window, '(' + cmd + ')');
+    } catch (e) {
+      try {
+        result = eval.call(window, cmd);
+      } catch (e) {
+        ;
+      }
+    }
+
+    this.addLog({
+      type: 'log',
+      origData: [result],
+    }, { cmdType: 'output' });
+  };
 
   protected _pushLogList(pluginId: string, log: IVConsoleLog) {
     logListMap.update((listMap) => {

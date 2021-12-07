@@ -76,6 +76,7 @@ window.vConsole = new window.VConsole({
 //   console.log('[system]', Math.random());
 // }, 300);
 
+// make a prototype chain
 class FooBaseBaseClass {
 
 }
@@ -90,6 +91,20 @@ class FooClass extends FooBaseClass {
     super();
     this.bar = 'foo';
   }
+}
+
+// make a global object
+var aa = {
+  ba: {
+    ca: 1,
+    cb: 2,
+    cc: 3,
+  },
+  bb: {
+    cd: 4,
+    ce: 5,
+  },
+  bc: [1, 2, 3],
 };
 
 function formattedLog() {

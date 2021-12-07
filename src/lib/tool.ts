@@ -392,7 +392,7 @@ export function getObjName(obj) {
   // const constructorName = obj?.constructor?.name;
   // return constructorName || <string>Object.prototype.toString.call(obj).replace('[object ', '').replace(']', '');
   if (obj === null || obj === undefined) { return ''; }
-  const results = _getObjNamePattern.exec(obj.constructor.toString());
+  const results = _getObjNamePattern.exec(obj?.constructor?.toString() || '');
   return (results && results.length > 1) ? results[2] : '';
 }
 

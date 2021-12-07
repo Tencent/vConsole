@@ -21,8 +21,9 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
     this.module.bindPlugin(id);
   }
 
-  protected _refreshComponent() {
-    this.compInstance.logListMap = logListMap;
+  public onRemove() {
+    super.onRemove();
+    this.module.unbindPlugin(this.id);
   }
 }
 

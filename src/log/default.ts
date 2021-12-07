@@ -9,6 +9,7 @@ export class VConsoleDefaultPlugin extends VConsoleLogPlugin {
   public onReady() {
     super.onReady();
     this.bindErrors();
+    this.compInstance.showCmd = true;
   }
 
   public onRemove() {

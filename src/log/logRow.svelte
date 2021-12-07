@@ -22,7 +22,7 @@
 </script>
 
 {#if log}
-  <div id="{log._id}" class="vc-log-row vc-log-{log.type}">
+  <div id="{log._id}" class="vc-log-row vc-log-{log.type}" class:vc-log-input={log.cmdType === 'input'} class:vc-log-output={log.cmdType === 'output'}>
     <div class="vc-logrow-icon">
       <IconCopy handler={onTapCopy} />
     </div>
@@ -48,6 +48,7 @@
   line-height: 1.3;
   border-bottom: 1px solid var(--VC-FG-3);
   word-break: break-word;
+  position: relative;
 }
 .vc-log-info {
   color: var(--VC-PURPLE);
@@ -68,5 +69,22 @@
 
 .vc-logrow-icon {
   float: right;
+}
+
+.vc-log-input,
+.vc-log-output {
+  padding-left: (12em / @font);
+}
+.vc-log-input:before,
+.vc-log-output:before {
+  content: "›";
+  position: absolute;
+  top: (2em / @font);
+  left: 0;
+  font-size: (16em / @font);
+  color: #6A5ACD;
+}
+.vc-log-output:before {
+  content: "‹";
 }
 </style>
