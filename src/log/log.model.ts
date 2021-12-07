@@ -33,7 +33,8 @@ export interface IVConsoleAddLogOptions {
 
 export interface IVConsoleLogStore {
   logList: IVConsoleLog[];
-  filter: string;
+  filterType: 'all' | IConsoleLogMethod;
+  filterText: string;
 }
 
 
@@ -79,7 +80,8 @@ export class VConsoleLogModel extends VConsoleModel {
     logStore.update((store) => {
       store[pluginId] = {
         logList: [],
-        filter: '',
+        filterText: '',
+        filterType: 'all',
       };
       return store;
     });
@@ -193,7 +195,6 @@ export class VConsoleLogModel extends VConsoleModel {
     logStore.update((store) => {
       for (const id in store) {
         store[id].logList = [];
-        store[id].filter = '';
       }
       return store;
     });
@@ -233,8 +234,6 @@ export class VConsoleLogModel extends VConsoleModel {
 
     // extract pluginId by `[xxx]` format
     const pluginId = this._extractPluginIdByLog(log);
-
-    
 
     if (this._isRepeatedLog(pluginId, log)) {
       this._updateLastLogRepeated(pluginId);

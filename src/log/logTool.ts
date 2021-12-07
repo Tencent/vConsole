@@ -1,4 +1,5 @@
 import * as tool from '../lib/tool';
+import type { IVConsoleLog } from './log.model';
 
 const getPreviewText = (val: any) => {
   const json = tool.safeJSONStringify(val, 0);
@@ -92,6 +93,19 @@ export const getLastIdentifier = (text: string) => {
     front,
     back,
   };
+};
+
+export const isMatchedFilterText = (log: IVConsoleLog, filterText: string) => {
+  if (filterText === '') { return true; }
+  for (let i = 0; i < log.data.length; i++) {
+    const type = typeof log.data[i].origData;
+    if (type === 'string') {
+      if (log.data[i].origData.indexOf(filterText) > -1) {
+        return true;
+      }
+    }
+  }
+  return false;
 };
 
 

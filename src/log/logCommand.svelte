@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, createEventDispatcher } from 'svelte';
   import Icon from '../component/icon.svelte';
   import { getLastIdentifier } from './logTool';
-  import { VConsoleLogModel } from './log.model';
+  import { VConsoleLogModel, logStore } from './log.model';
   // import LogRow from './logRow.svelte';
 
   interface ICmdPromptedItem {
@@ -21,6 +21,7 @@
 
   const module = VConsoleLogModel.getSingleton(VConsoleLogModel);
   const cachedObjKeys: { [key: string]: string[] } = {};
+  const dispatch = createEventDispatcher();
   const _console = (window as any)._vcOrigConsole;
 
   let cmdElement: HTMLTextAreaElement;
@@ -158,6 +159,10 @@
     }
   };
 
+  const dispatchFilterEvent = () => {
+    dispatch('filterText', { filterText: filterValue });
+  };
+
   /*************************************
    * DOM Events
    *************************************/
@@ -174,6 +179,7 @@
       clearPromptedList();
     } else if (name === 'filter') {
       filterValue = '';
+      dispatchFilterEvent();
     }
   };
   const onTapPromptedItem = (item: ICmdPromptedItem) => {
@@ -206,7 +212,7 @@
     clearPromptedList();
   };
   const onFilterSubmit = (e) => {
-
+    dispatchFilterEvent();
   };
 </script>
 
@@ -251,7 +257,11 @@
         <Icon name="clear" />
       </div>
     {/if}
-    <textarea class="vc-cmd-input" placeholder="filter..."></textarea>
+    <textarea
+      class="vc-cmd-input"
+      placeholder="filter..."
+      bind:value={filterValue}
+    ></textarea>
   </div>
 </form>
 

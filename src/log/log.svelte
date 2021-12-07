@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { isMatchedFilterText } from './logTool';
   import { logStore } from './log.model';
   import LogRow from './logRow.svelte';
   import LogCommand from './logCommand.svelte';
@@ -6,17 +7,24 @@
   export let pluginId: string = 'default';
   export let showCmd: boolean = false;
 
+  let filterText: string = '';
+
+  const onFilterText = (e) => {
+    filterText = e.detail.filterText || '';
+  };
 </script>
 
 <div class="vc-logs" class:vc-log-has-cmd={showCmd}>
   {#each $logStore[pluginId].logList as log}
-    <LogRow log={log} />
+    {#if filterText === '' || isMatchedFilterText(log, filterText)}
+      <LogRow log={log} />
+    {/if}
   {:else}
     <div class="vs-logs-empty"></div>
   {/each}
 
   {#if showCmd}
-    <LogCommand />
+    <LogCommand on:filterText={onFilterText} />
   {/if}
 
 </div>
