@@ -8,9 +8,11 @@
 
 </script>
 
-<div class:vc-log-has-cmd={showCmd}>
+<div class="vc-logs" class:vc-log-has-cmd={showCmd}>
   {#each $logListMap[pluginId] as log}
     <LogRow log={log} />
+  {:else}
+    <div class="vs-logs-empty"></div>
   {/each}
 
   {#if showCmd}
@@ -21,6 +23,18 @@
 
 <style lang="less">
 @import "../styles/var.less";
+
+.vs-logs-empty:before {
+  content: "Empty";
+  color: var(--VC-FG-1);
+  position: absolute;
+  top: 45%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-size: (15em / @font);
+  text-align: center;
+}
 
 .vc-log-has-cmd {
   padding-bottom: (80em / @font);

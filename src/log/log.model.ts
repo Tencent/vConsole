@@ -26,6 +26,12 @@ export interface IVConsoleLog {
 }
 
 export type IVConsoleLogListMap = { [pluginId: string]: IVConsoleLog[] };
+export type IVConsoleLogFilter = { [pluginId: string]: string };
+
+export interface IVConsoleAddLogOptions {
+  noOrig?: boolean;
+  cmdType?: 'input' | 'output';
+}
 
 
 /**********************************
@@ -33,6 +39,7 @@ export type IVConsoleLogListMap = { [pluginId: string]: IVConsoleLog[] };
  **********************************/
 
 export const logListMap = writable<IVConsoleLogListMap>({});
+export const logFilter = writable<IVConsoleLogFilter>({});
 
 
 
@@ -172,8 +179,8 @@ export class VConsoleLogModel extends VConsoleModel {
       return listMap;
     });
     this.ADDED_LOG_PLUGIN_ID.push(pluginId);
-    this.pluginPattern = new RegExp(`^\[${this.ADDED_LOG_PLUGIN_ID.join('|')}\]$`, 'i');
-    this.callOriginalConsole('debug', this.pluginPattern);
+    this.pluginPattern = new RegExp(`^\\[(${this.ADDED_LOG_PLUGIN_ID.join('|')})\\]$`, 'i');
+    // this.callOriginalConsole('info', 'bindPlugin:', this.pluginPattern);
     return true;
   }
 
@@ -285,11 +292,23 @@ export class VConsoleLogModel extends VConsoleModel {
       return listMap;
     });
   }
+
+  /**
+   * Remove a plugin's logs.
+   */
+  public clearPluginLog(pluginId: string) {
+    logListMap.update((listMap) => {
+      if (listMap[pluginId]) {
+        listMap[pluginId] = [];
+      }
+      return listMap;
+    });
+  }
   
   /**
    * Add a vConsole log.
    */
-  public addLog(item: { type: IConsoleLogMethod, origData: any[] }, opt?: { noOrig?: boolean, cmdType?: 'input' | 'output' }) {
+  public addLog(item: { type: IConsoleLogMethod, origData: any[] }, opt?: IVConsoleAddLogOptions) {
     // prepare data
     const log: IVConsoleLog = {
       _id: tool.getUniqueID(),
@@ -324,9 +343,8 @@ export class VConsoleLogModel extends VConsoleModel {
           log.data.shift();
         }
       }
+      // this.callOriginalConsole('info', 'match:', match, firstData);
     }
-
-
     // this.callOriginalConsole('info', 'addLog()', pluginId, log);
     // this.callOriginalConsole('info', get(logListMap));
 

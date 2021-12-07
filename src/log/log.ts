@@ -25,6 +25,18 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
     super.onRemove();
     this.module.unbindPlugin(this.id);
   }
+
+  public onAddTool(callback) {
+    const toolList = [{
+      name: 'Clear',
+      global: false,
+      onClick: (e) => {
+        this.module.clearPluginLog(this.id);
+      }
+    }];
+    callback(toolList);
+  }
+
 }
 
 export default VConsoleLogPlugin;
