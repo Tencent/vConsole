@@ -68,7 +68,7 @@
     if (!identifier) {
       identifier = getLastIdentifier(cmdValue);
     }
-    _console.log('identifier', identifier.front, identifier.back)
+    // _console.log('identifier', identifier.front, identifier.back)
 
     // for case 'aabb',
     // use 'aabb' as a key of global object
@@ -83,12 +83,12 @@
     }
     // if keyName starts/ends with quote(s), remove it
     keyName = keyName.replace(/(^['"]+)|(['"']+$)/g, '');
-    _console.log('objName:', objName, 'keyName:', keyName);
+    // _console.log('objName:', objName, 'keyName:', keyName);
 
     if (!cachedObjKeys[objName]) {
       try {
         cachedObjKeys[objName] = Object.getOwnPropertyNames(eval('(' + objName + ')')).sort();
-        _console.log('cachedObjKeys', objName, keyName, cachedObjKeys[objName].length);
+        // _console.log('cachedObjKeys', objName, keyName, cachedObjKeys[objName].length);
       } catch (e) {
         // do nothing
         // _console.log('cachedObjKeys error', e);
@@ -104,7 +104,8 @@
           }
           
           const key = String(cachedObjKeys[objName][i]);
-          if (key.toLowerCase()?.startsWith(keyName?.toLowerCase())) {
+          const keyPattern = new RegExp('^' + keyName, 'i'); // polyfill String.startsWith
+          if (keyPattern.test(key)) {
             let completeCmd = objName;
             if (identifier.front.text === '.' || identifier.front.text === '') {
               completeCmd += '.' + key;
@@ -128,7 +129,7 @@
       const m = Math.min(200, (promptedList.length + 1) * 31);
       promptedStyle = `display: block; height: ${m}px; margin-top: ${-m-2}px;`;
       promptedList = promptedList;
-      _console.log('promptedList:', promptedList);
+      // _console.log('promptedList:', promptedList);
     } else {
       clearPromptedList();
     }
@@ -182,7 +183,7 @@
       // do nothing
     }
     cmdValue = item.value + (type === 'function' ? '()' : '');
-    _console.log('onTapPromptedItem', item);
+    // _console.log('onTapPromptedItem', item);
     clearPromptedList();
   };
   const onCmdFocus = () => {
