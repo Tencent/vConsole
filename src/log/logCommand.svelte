@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import Icon from '../component/icon.svelte';
-  import { getLastIdentifier, VConsoleLogModel } from './log.model';
+  import { getLastIdentifier } from './logTool';
+  import { VConsoleLogModel } from './log.model';
   // import LogRow from './logRow.svelte';
 
   interface ICmdPromptedItem {

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { logListMap } from './log.model';
+  import { logStore } from './log.model';
   import LogRow from './logRow.svelte';
   import LogCommand from './logCommand.svelte';
 
@@ -9,7 +9,7 @@
 </script>
 
 <div class="vc-logs" class:vc-log-has-cmd={showCmd}>
-  {#each $logListMap[pluginId] as log}
+  {#each $logStore[pluginId].logList as log}
     <LogRow log={log} />
   {:else}
     <div class="vs-logs-empty"></div>

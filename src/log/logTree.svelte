@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as tool from '../lib/tool';
   import LogValue from './logValue.svelte';
-  import { VConsoleUninvocatableObject } from './log.model';
+  import { VConsoleUninvocatableObject } from './logTool';
 
   export let origData: any;
   export let dataKey: string = undefined;

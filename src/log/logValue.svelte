@@ -1,7 +1,6 @@
 <script lang="ts">
   import * as tool from '../lib/tool';
-  import { getValueTextAndType } from './log.model';
-  import type { IVConsoleLogData } from './log.model';
+  import { getValueTextAndType } from './logTool';
 
   export let origData: any;
   export let dataKey: string = undefined;

@@ -33,117 +33,20 @@ export interface IVConsoleAddLogOptions {
   cmdType?: 'input' | 'output';
 }
 
+export interface IVConsoleLogStore {
+  logList: IVConsoleLog[];
+  filter: string;
+}
+
 
 /**********************************
  * Stores
  **********************************/
 
-export const logListMap = writable<IVConsoleLogListMap>({});
-export const logFilter = writable<IVConsoleLogFilter>({});
+// export const logListMap = writable<IVConsoleLogListMap>({});
+// export const logFilter = writable<IVConsoleLogFilter>({});
+export const logStore = writable<{ [pluginId: string]: IVConsoleLogStore }>({});
 
-
-
-/**********************************
- * Methods and Classes
- **********************************/
-
-const getPreviewText = (val: any) => {
-  const json = tool.safeJSONStringify(val, 0);
-  let preview = json.substr(0, 36);
-  let ret = tool.getObjName(val);
-  if (json.length > 36) {
-    preview += '...';
-  }
-  // ret = tool.getVisibleText(tool.htmlEncode(ret + ' ' + preview));
-  ret = tool.getVisibleText(ret + ' ' + preview);
-  return ret;
-};
-
-/**
- * Get a value's text content and its type.
- */
-export const getValueTextAndType = (val: any, wrapString = true) => {
-  let valueType = 'undefined';
-  let text = val;
-  if (val instanceof VConsoleUninvocatableObject) {
-    valueType = 'uninvocatable';
-    text = '(...)';
-  } else if (tool.isArray(val)) {
-    valueType = 'array';
-    text = getPreviewText(val);
-  } else if (tool.isObject(val)) {
-    valueType = 'object';
-    text = getPreviewText(val);
-  } else if (tool.isString(val)) {
-    valueType = 'string';
-    text = tool.getVisibleText(val);
-    if (wrapString) {
-      text = '"' + text + '"';
-    }
-  } else if (tool.isNumber(val)) {
-    valueType = 'number';
-    text = String(val);
-  } else if (tool.isBigInt(val)) {
-    valueType = 'bigint';
-    text = String(val) + 'n';
-  } else if (tool.isBoolean(val)) {
-    valueType = 'boolean';
-    text = String(val);
-  } else if (tool.isNull(val)) {
-    valueType = 'null';
-    text = 'null';
-  } else if (tool.isUndefined(val)) {
-    valueType = 'undefined';
-    text = 'undefined';
-  } else if (tool.isFunction(val)) {
-    valueType = 'function';
-    text = (val.name || 'function') + '()';
-  } else if (tool.isSymbol(val)) {
-    valueType = 'symbol';
-    text = String(val);
-  }
-  return { text, valueType };
-}
-
-const frontIdentifierList = ['.', '[', '(', '{', '}'];
-const backIdentifierList = [']', ')', '}'];
-
-const _getIdentifier = (text: string, identifierList: string[], startPos = 0) => {
-  // for case 'aa.bb.cc'
-  const ret = {
-    text: '',        // '.'
-    pos: -1,         // 5
-    before: '',      // 'aa.bb'
-    after: '',       // 'cc'
-  };
-  for (let i = text.length - 1; i >= startPos; i--) {
-    const idx = identifierList.indexOf(text[i]);
-    if (idx > -1) {
-      ret.text = identifierList[idx];
-      ret.pos = i;
-      ret.before = text.substring(startPos, i);
-      ret.after = text.substring(i + 1, text.length);
-      break;
-    }
-  }
-  return ret;
-};
-export const getLastIdentifier = (text: string) => {
-  const front = _getIdentifier(text, frontIdentifierList, 0);
-  const back = _getIdentifier(text, backIdentifierList, front.pos + 1);
-  return {
-    front,
-    back,
-  };
-};
-
-
-/**
- * An empty class.
- */
-export class VConsoleUninvocatableObject {
-
-}
 
 
 /**********************************
@@ -154,6 +57,7 @@ export class VConsoleLogModel extends VConsoleModel {
   public readonly LOG_METHODS: IConsoleLogMethod[] = ['log', 'info', 'warn', 'debug', 'error'];
   public ADDED_LOG_PLUGIN_ID: string[] = [];
   public maxLogNumber: number = 1000;
+  protected logCounter: number = 0; // a counter used to do some tasks on a regular basis
   protected pluginPattern: RegExp;
 
   /**
@@ -174,9 +78,12 @@ export class VConsoleLogModel extends VConsoleModel {
       this.mockConsole();
     }
 
-    logListMap.update((listMap) => {
-      listMap[pluginId] = [];
-      return listMap;
+    logStore.update((store) => {
+      store[pluginId] = {
+        logList: [],
+        filter: '',
+      };
+      return store;
     });
     this.ADDED_LOG_PLUGIN_ID.push(pluginId);
     this.pluginPattern = new RegExp(`^\\[(${this.ADDED_LOG_PLUGIN_ID.join('|')})\\]$`, 'i');
@@ -193,10 +100,10 @@ export class VConsoleLogModel extends VConsoleModel {
     if (idx === -1) { return false; }
 
     this.ADDED_LOG_PLUGIN_ID.splice(idx, 1);
-    logListMap.update((listMap) => {
-      listMap[pluginId] = [];
-      delete listMap[pluginId];
-      return listMap;
+    logStore.update((store) => {
+      store[pluginId].logList = [];
+      delete store[pluginId];
+      return store;
     });
 
     if (this.ADDED_LOG_PLUGIN_ID.length === 0) {
@@ -285,11 +192,12 @@ export class VConsoleLogModel extends VConsoleModel {
    * Remove all logs.
    */
   public clearLog() {
-    logListMap.update((listMap) => {
-      for (const id in listMap) {
-        listMap[id] = [];
+    logStore.update((store) => {
+      for (const id in store) {
+        store[id].logList = [];
+        store[id].filter = '';
       }
-      return listMap;
+      return store;
     });
   }
 
@@ -297,11 +205,11 @@ export class VConsoleLogModel extends VConsoleModel {
    * Remove a plugin's logs.
    */
   public clearPluginLog(pluginId: string) {
-    logListMap.update((listMap) => {
-      if (listMap[pluginId]) {
-        listMap[pluginId] = [];
+    logStore.update((store) => {
+      if (store[pluginId]) {
+        store[pluginId].logList = [];
       }
-      return listMap;
+      return store;
     });
   }
   
@@ -349,11 +257,33 @@ export class VConsoleLogModel extends VConsoleModel {
     // this.callOriginalConsole('info', get(logListMap));
 
     this._pushLogList(pluginId, log);
+    this._limitLogListLength();
 
     if (!opt?.noOrig) {
       // logging to original console
       this.callOriginalConsole(item.type, ...item.origData);
     }
+  }
+
+  public _limitLogListLength() {
+    // update logList length every N rounds
+    const N = 10;
+    this.logCounter++;
+    if (this.logCounter % N !== 0) {
+      return;
+    }
+    this.logCounter = 0;
+
+    logStore.update((store) => {
+      for (const id in store) {
+        if (store[id].logList.length > this.maxLogNumber) {
+          // delete N more logs for performance
+          const ret = store[id].logList.splice(0, store[id].logList.length - this.maxLogNumber + N);
+          // this.callOriginalConsole('info', 'delete', id, ret.length, store[id].logList.length);
+        }
+      }
+      return store;
+    });
   }
 
   /**
@@ -384,9 +314,9 @@ export class VConsoleLogModel extends VConsoleModel {
   };
 
   protected _pushLogList(pluginId: string, log: IVConsoleLog) {
-    logListMap.update((listMap) => {
-      listMap[pluginId].push(log);
-      return listMap;
+    logStore.update((store) => {
+      store[pluginId].logList.push(log);
+      return store;
     });
   }
 }

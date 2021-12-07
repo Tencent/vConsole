@@ -1,4 +1,3 @@
-import * as tool from '../lib/tool';
 import { VConsoleLogPlugin } from './log';
 
 export class VConsoleSystemPlugin extends VConsoleLogPlugin {

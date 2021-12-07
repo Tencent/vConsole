@@ -39,6 +39,7 @@
       <a onclick="logTypes()" href="javascript:;" class="weui_btn weui_btn_default">Log Types</a>
       <a onclick="formattedLog()" href="javascript:;" class="weui_btn weui_btn_default">Different Log Panel</a>
       <a onclick="styledLog()" href="javascript:;" class="weui_btn weui_btn_default">Styled Log</a>
+      <a onclick="maxLogNumber()" href="javascript:;" class="weui_btn weui_btn_default">Large Number of Logs</a>
       <a onclick="repeatLog()" href="javascript:;" class="weui_btn weui_btn_default">Repeated Log</a>
     </div>
 
@@ -57,7 +58,7 @@
 import '../dist/vconsole.min.js';
 
 window.vConsole = new window.VConsole({
-  maxLogNumber: 1000,
+  maxLogNumber: 25,
   // disableLogScrolling: true,
   // theme: 'dark',
   defaultPlugins: ['system'],
@@ -204,6 +205,14 @@ function repeatLog() {
       console.log('repeatLog() End');
     }
   }, 50);
+}
+
+function maxLogNumber() {
+  let n = 0;
+  setInterval(() => {
+    n++;
+    console.log('Log:', n);
+  }, 100);
 }
 
 function windowError() {
