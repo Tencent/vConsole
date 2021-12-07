@@ -3,9 +3,14 @@
   import IconCopy from '../component/iconCopy.svelte';
   import LogValue from './logValue.svelte';
   import LogTree from './logTree.svelte';
+  import { VConsoleUninvocatableObject } from './logTool';
   import type { IVConsoleLog } from './log.model';
 
   export let log: IVConsoleLog;
+
+  const isTree = (origData: any) => {
+    return !(origData instanceof VConsoleUninvocatableObject) && (tool.isArray(origData) || tool.isObject(origData));
+  };
   
   const onTapCopy = () => {
     let text: string[] = [];
@@ -26,9 +31,12 @@
     <div class="vc-logrow-icon">
       <IconCopy handler={onTapCopy} />
     </div>
+    {#if log.repeated}
+      <div class="vc-log-repeat">{log.repeated}</div>
+    {/if}
     <div class="vc-log-content">
       {#each log.data as logData}
-        {#if logData.isTree}
+        {#if isTree(logData.origData)}
           <LogTree origData={logData.origData} />
         {:else}
           <LogValue origData={logData.origData} />
@@ -50,6 +58,8 @@
   word-break: break-word;
   position: relative;
 }
+
+// log type
 .vc-log-info {
   color: var(--VC-PURPLE);
 }
@@ -67,10 +77,31 @@
   background-color: var(--VC-ERROR-BG);
 }
 
+// copy icon
 .vc-logrow-icon {
   float: right;
 }
 
+// repeat
+.vc-log-repeat {
+  // display: inline-block;
+  float: left;
+  margin-right: (4em / @font);
+  padding: 0 (@fontSize / 2);
+  color: #D7E0EF;
+  background-color: #42597F;
+  border-radius: (@fontSize / 1.5);
+}
+.vc-log-error .vc-log-repeat {
+  color: #901818;
+  background-color: var(--VC-RED);
+}
+.vc-log-warn .vc-log-repeat {
+  color: #987D20;
+  background-color: #F4BD02;
+}
+
+// command input & output
 .vc-log-input,
 .vc-log-output {
   padding-left: (12em / @font);

@@ -12,15 +12,13 @@ export interface IVConsoleLogData {
   origData: any; // The original logging data
   // type: '' | 'object' | 'array' | 'string' | 'number' | 'bigint' | 'boolean' | 'null' | 'undefined' | 'function' | 'symbol';
   // textContent: string;
-  isPrivate?: boolean;
-  isToggle?: boolean;
-  isTree?: boolean;
 }
 
 export interface IVConsoleLog {
   _id: string;
   type: IConsoleLogMethod;
   cmdType?: 'input' | 'output';
+  repeated?: number;
   date: number;
   data: IVConsoleLogData[]; // the `args: any[]` of `console.log(...args)`
 }
@@ -230,60 +228,25 @@ export class VConsoleLogModel extends VConsoleModel {
       const data: IVConsoleLogData = {
         origData: item.origData[i],
       };
-      if (tool.isObject(origData) || tool.isArray(origData)) {
-        data.isTree = true;
-      }
       log.data.push(data);
     }
 
-    // if origData[0] is `[xxx]` format, and `xxx` is a Log plugin id,
-    // then put this log to that plugin,
-    // otherwise put it to default plugin
-    let pluginId = 'default';
-    const firstData = log.data[0]?.origData;
-    if (tool.isString(firstData)) {
-      const match = (firstData as string).match(this.pluginPattern);
-      if (match !== null && match.length > 1) {
-        const id = match[1].toLowerCase();
-        if (this.ADDED_LOG_PLUGIN_ID.indexOf(id) > -1) {
-          pluginId = id;
-          // if matched, delete `[xxx]` value
-          log.data.shift();
-        }
-      }
-      // this.callOriginalConsole('info', 'match:', match, firstData);
+    // extract pluginId by `[xxx]` format
+    const pluginId = this._extractPluginIdByLog(log);
+
+    
+
+    if (this._isRepeatedLog(pluginId, log)) {
+      this._updateLastLogRepeated(pluginId);
+    } else {
+      this._pushLogList(pluginId, log);
+      this._limitLogListLength();
     }
-    // this.callOriginalConsole('info', 'addLog()', pluginId, log);
-    // this.callOriginalConsole('info', get(logListMap));
-
-    this._pushLogList(pluginId, log);
-    this._limitLogListLength();
-
+    
     if (!opt?.noOrig) {
       // logging to original console
       this.callOriginalConsole(item.type, ...item.origData);
     }
-  }
-
-  public _limitLogListLength() {
-    // update logList length every N rounds
-    const N = 10;
-    this.logCounter++;
-    if (this.logCounter % N !== 0) {
-      return;
-    }
-    this.logCounter = 0;
-
-    logStore.update((store) => {
-      for (const id in store) {
-        if (store[id].logList.length > this.maxLogNumber) {
-          // delete N more logs for performance
-          const ret = store[id].logList.splice(0, store[id].logList.length - this.maxLogNumber + N);
-          // this.callOriginalConsole('info', 'delete', id, ret.length, store[id].logList.length);
-        }
-      }
-      return store;
-    });
   }
 
   /**
@@ -313,9 +276,79 @@ export class VConsoleLogModel extends VConsoleModel {
     }, { cmdType: 'output' });
   };
 
+  protected _extractPluginIdByLog(log: IVConsoleLog) {
+    // if origData[0] is `[xxx]` format, and `xxx` is a Log plugin id,
+    // then put this log to that plugin,
+    // otherwise put it to default plugin.
+    let pluginId = 'default';
+    const firstData = log.data[0]?.origData;
+    if (tool.isString(firstData)) {
+      const match = (firstData as string).match(this.pluginPattern);
+      if (match !== null && match.length > 1) {
+        const id = match[1].toLowerCase();
+        if (this.ADDED_LOG_PLUGIN_ID.indexOf(id) > -1) {
+          pluginId = id;
+          // if matched, delete `[xxx]` value
+          log.data.shift();
+        }
+      }
+    }
+    return pluginId;
+  }
+
+  protected _isRepeatedLog(pluginId: string, log: IVConsoleLog) {
+    const store = get(logStore)[pluginId];
+    const lastLog = store.logList[store.logList.length - 1];
+    if (!lastLog) {
+      return false;
+    }
+
+    let isRepeated = false;
+    if (log.type === lastLog.type && log.cmdType === lastLog.cmdType && log.data.length === lastLog.data.length) {
+      isRepeated = true;
+      for (let i = 0; i < log.data.length; i++) {
+        if (log.data[i].origData !== lastLog.data[i].origData) {
+          isRepeated = false;
+          break;
+        }
+      }
+    }
+    return isRepeated;
+  }
+
+  protected _updateLastLogRepeated(pluginId: string) {
+    logStore.update((store) => {
+      const list = store[pluginId].logList
+      const last = list[list.length - 1];
+      last.repeated = last.repeated ? last.repeated + 1 : 2;
+      return store;
+    });
+  }
+
   protected _pushLogList(pluginId: string, log: IVConsoleLog) {
     logStore.update((store) => {
       store[pluginId].logList.push(log);
+      return store;
+    });
+  }
+
+  protected _limitLogListLength() {
+    // update logList length every N rounds
+    const N = 10;
+    this.logCounter++;
+    if (this.logCounter % N !== 0) {
+      return;
+    }
+    this.logCounter = 0;
+
+    logStore.update((store) => {
+      for (const id in store) {
+        if (store[id].logList.length > this.maxLogNumber) {
+          // delete N more logs for performance
+          store[id].logList.splice(0, store[id].logList.length - this.maxLogNumber + N);
+          // this.callOriginalConsole('info', 'delete', id, store[id].logList.length);
+        }
+      }
       return store;
     });
   }

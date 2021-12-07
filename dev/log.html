@@ -192,16 +192,21 @@ function logTypes() {
 
 function repeatLog() {
   console.log('repeatLog() Start');
-  var a = {a: {b: 1}};
-  var count = 0;
-  var timer = setInterval(() => {
+  const a = {a: {b: 1}};
+  const e = new Error();
+  const f = function(){};
+  let count = 0;
+  let timer = setInterval(() => {
     count ++;
-    console.log('repeat', 'foo bar', function(){});
-    if (count >= 10) {
+    console.log('repeat', 'foo bar', f);
+    if (count > 10) {
       clearInterval(timer);
 
-      console.log('repeat', a);
-      console.log('repeat', a);
+      console.warn('repeat warn', a);
+      console.warn('repeat warn', a);
+      console.warn('repeat warn', a);
+      console.error('repeat error', e);
+      console.error('repeat error', e);
       console.log('repeatLog() End');
     }
   }, 50);
