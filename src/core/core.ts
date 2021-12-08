@@ -24,7 +24,7 @@ import { default as CoreCompClass } from './core.svelte';
 
 // built-in plugins
 import { VConsolePlugin, IVConsoleTopbarOptions } from '../lib/plugin';
-import { VConsoleLogPlugin } from '../log1/log';
+import { VConsoleLogPlugin } from '../log/log';
 import { VConsoleDefaultPlugin } from '../log/default';
 import { VConsoleSystemPlugin } from '../log/system';
 import { VConsoleNetworkPlugin } from '../network/network';
