@@ -39,24 +39,22 @@ export function getDate(time: number) {
 }
 
 /**
- * determines whether the passed value is a specific type
- * @param any value
- * @return boolean
+ * Determine whether a value is of a specific type.
  */
 export function isNumber(value) {
-  return Object.prototype.toString.call(value) == '[object Number]';
+  return Object.prototype.toString.call(value) === '[object Number]';
 }
 export function isBigInt(value) {
-  return Object.prototype.toString.call(value) == '[object BigInt]';
+  return typeof value === 'bigint';
 }
 export function isString(value) {
-  return Object.prototype.toString.call(value) == '[object String]';
+  return typeof value === 'string';
 }
 export function isArray(value) {
-  return Object.prototype.toString.call(value) == '[object Array]';
+  return Object.prototype.toString.call(value) === '[object Array]';
 }
 export function isBoolean(value) {
-  return Object.prototype.toString.call(value) == '[object Boolean]';
+  return typeof value === 'boolean';
 }
 export function isUndefined(value) {
   return value === undefined;
@@ -65,11 +63,11 @@ export function isNull(value) {
   return value === null;
 }
 export function isSymbol(value) {
-  return Object.prototype.toString.call(value) == '[object Symbol]';
+  return typeof value === 'symbol';
 }
 export function isObject(value) {
   return (
-    Object.prototype.toString.call(value) == '[object Object]'
+    Object.prototype.toString.call(value) === '[object Object]'
     ||
     // if it isn't a primitive value, then it is a common object
     (
@@ -86,17 +84,17 @@ export function isObject(value) {
   );
 }
 export function isFunction(value) {
-  return Object.prototype.toString.call(value) == '[object Function]';
+  return typeof value === 'function';
 }
 export function isElement(value) {
   return (
     typeof HTMLElement === 'object' ? value instanceof HTMLElement : //DOM2
-      value && typeof value === "object" && value !== null && value.nodeType === 1 && typeof value.nodeName==="string"
+      value && typeof value === 'object' && value !== null && value.nodeType === 1 && typeof value.nodeName === 'string'
   );
 }
 export function isWindow(value) {
-  var toString = Object.prototype.toString.call(value);
-  return toString == '[object global]' || toString == '[object Window]' || toString == '[object DOMWindow]';
+  const name = Object.prototype.toString.call(value);
+  return name === '[object Window]' || name === '[object DOMWindow]' || name === '[object global]';
 }
 
 /**
@@ -104,6 +102,18 @@ export function isWindow(value) {
  */
 export function getPrototypeName(value) {
   return <string>Object.prototype.toString.call(value).replace(/\[object (.*)\]/, '$1');
+}
+
+const _getObjNamePattern = /(function|class) ([^ \{\()}]{1,})[\(| ]/;
+/**
+ * Get an object's constructor name.
+ */
+export function getObjName(obj) {
+  // const constructorName = obj?.constructor?.name;
+  // return constructorName || <string>Object.prototype.toString.call(obj).replace('[object ', '').replace(']', '');
+  if (obj === null || obj === undefined) { return ''; }
+  const results = _getObjNamePattern.exec(obj?.constructor?.toString() || '');
+  return (results && results.length > 1) ? results[2] : '';
 }
 
 /**
@@ -382,18 +392,6 @@ export function getSymbolKeys(obj) {
     return [];
   }
   return Object.getOwnPropertySymbols(obj);
-}
-
-const _getObjNamePattern = /(function|class) ([^ \{\()}]{1,})[\(| ]/;
-/**
- * Get an object's constructor name.
- */
-export function getObjName(obj) {
-  // const constructorName = obj?.constructor?.name;
-  // return constructorName || <string>Object.prototype.toString.call(obj).replace('[object ', '').replace(']', '');
-  if (obj === null || obj === undefined) { return ''; }
-  const results = _getObjNamePattern.exec(obj?.constructor?.toString() || '');
-  return (results && results.length > 1) ? results[2] : '';
 }
 
 /**
