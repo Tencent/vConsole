@@ -27,7 +27,12 @@
 </script>
 
 {#if log}
-  <div id="{log._id}" class="vc-log-row vc-log-{log.type}" class:vc-log-input={log.cmdType === 'input'} class:vc-log-output={log.cmdType === 'output'}>
+  <div
+    id="{log._id}"
+    class="vc-log-row vc-log-{log.type}"
+    class:vc-log-input={log.cmdType === 'input'}
+    class:vc-log-output={log.cmdType === 'output'}
+  >
     <div class="vc-logrow-icon">
       <IconCopy handler={onTapCopy} />
     </div>
@@ -39,7 +44,7 @@
         {#if isTree(logData.origData)}
           <LogTree origData={logData.origData} />
         {:else}
-          <LogValue origData={logData.origData} />
+          <LogValue origData={logData.origData} style={logData.style} />
         {/if}
       {/each}
     </div>

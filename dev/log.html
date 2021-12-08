@@ -37,8 +37,8 @@
 
       <a onclick="allDataTypes()" href="javascript:;" class="weui_btn weui_btn_default">All Data Types</a>
       <a onclick="logTypes()" href="javascript:;" class="weui_btn weui_btn_default">Log Types</a>
-      <a onclick="formattedLog()" href="javascript:;" class="weui_btn weui_btn_default">Different Log Panel</a>
-      <a onclick="styledLog()" href="javascript:;" class="weui_btn weui_btn_default">Styled Log</a>
+      <a onclick="differentPanelLog()" href="javascript:;" class="weui_btn weui_btn_default">Different Log Panel</a>
+      <a onclick="formattingLog()" href="javascript:;" class="weui_btn weui_btn_default">Formatting Log</a>
       <a onclick="maxLogNumber()" href="javascript:;" class="weui_btn weui_btn_default">Large Number of Logs</a>
       <a onclick="repeatLog()" href="javascript:;" class="weui_btn weui_btn_default">Repeated Log</a>
     </div>
@@ -108,15 +108,21 @@ var aa = {
   bc: [1, 2, 3],
 };
 
-function formattedLog() {
+function differentPanelLog() {
   console.log('[default]', 'This log should be shown in Log panel.');
-  console.log('[default]', 'Switch to System tab to see next log.');
+  console.log('[DEFAULT]', 'Switch to System tab to see next log.');
   console.log('[system]', 'This log should be shown in System panel.');
   console.log('[foobar]', 'This log should be shown in Log panel. (No "foobar" plugin.)');
 }
 
-function styledLog() {
-  console.log('%c red %c blue %c log.', 'color:red', 'color:blue', 'font-weight:bold', 'Use %c format.');
+function formattingLog() {
+  console.log('%c red,%c blue, %c bold.', 'color:red', 'color:blue', 'font-weight:bold', '(Use %c format)');
+  console.log('%c %c Continuous styling, only blue is applied.', 'color:red', 'color:blue', '(Use %c format)');
+  console.log('Invalid styling format %c will be %c ignored.', {color:'blue'}, '"/>xss', 'font-weight:bold', '(Use %c format)');
+  console.log('Hi %s, Im %s!', 'Foo', 'Bar', '(Use %s format)');
+  console.log('Force an object, %s, to be output as a string!', new FooClass, '(Use %s format)');
+  console.log('Today is the %d day of this week.', (new Date).getDay() + 1, '(Use %d format)');
+  console.log('Inline an object, %o, in a string.', new FooClass, '(Use %o format)');
 }
 
 function normalObject() {

@@ -1,5 +1,5 @@
 import * as tool from '../lib/tool';
-import type { IVConsoleLog } from './log.model';
+import type { IVConsoleLog, IVConsoleLogData } from './log.model';
 
 const getPreviewText = (val: any) => {
   const json = tool.safeJSONStringify(val, 0);
@@ -106,6 +106,100 @@ export const isMatchedFilterText = (log: IVConsoleLog, filterText: string) => {
     }
   }
   return false;
+};
+
+
+// keywords: `%c | %s | %d | %o`, must starts or ends with a blank
+const logFormattingPattern = /(\%[csdo] )|( \%[csdo])/g;
+/**
+ * Styling log output (`%c`), or string substitutions (`%s`, `%d`, `%o`).
+ * Apply to the first log only.
+ */
+export const getLogDatasWithFormatting = (origDatas: any[]) => {
+  // reset RegExp.lastIndex to ensure search starts from beginning
+  logFormattingPattern.lastIndex = 0;
+  if (tool.isString(origDatas[0]) && logFormattingPattern.test(origDatas[0])) {
+    const rawDatas = [...origDatas];
+    const firstData: string = rawDatas.shift();
+
+    // use firstData as display logs
+    const mainLogs = firstData.split(logFormattingPattern).filter((val) => {
+      return val !== undefined && val !== '';
+    });
+    // use remain logs as replace item
+    const subLogs = rawDatas;
+
+    const logDataList: IVConsoleLogData[] = [];
+    let isSetOrigData = false;
+    let origData: any;
+    let style = '';
+    while (mainLogs.length > 0) {
+      const mainText = mainLogs.shift();
+      
+      if (/ ?\%c ?/.test(mainText)) {
+        // Use subLogs[0] as CSS style.
+        // If subLogs[0] is not set, use original mainText as origData.
+        // If subLogs[0] is not a string, then leave style empty.
+        if (subLogs.length > 0) {
+          style = subLogs.shift();
+          if (typeof style !== 'string') {
+            style = '';
+          }
+        } else {
+          origData = mainText;
+          style = '';
+          isSetOrigData = true;
+        }
+      } else if (/ ?\%[sd] ?/.test(mainText)) {
+        // Use subLogs[0] as origData (as String).
+        // If subLogs[0] is not set, use original mainText as origData.
+        // If subLogs[0] is not a string, convert it to a string.
+        if (subLogs.length > 0) {
+          origData = tool.isObject(subLogs[0]) ? tool.getObjName(subLogs.shift()) : String(subLogs.shift());
+        } else {
+          origData = mainText;
+        }
+        isSetOrigData = true;
+      } else if (/ ?\%o ?/.test(mainText)) {
+        // Use subLogs[0] as origData (as original Object value).
+        // If subLogs[0] is not set, use original mainText as origData.
+        origData = subLogs.length > 0 ? subLogs.shift() : mainText;
+        isSetOrigData = true;
+      } else {
+        origData = mainText;
+        isSetOrigData = true;
+      }
+
+      if (isSetOrigData) {
+        const log: IVConsoleLogData = { origData };
+        if (style) {
+          log.style = style;
+        }
+        logDataList.push(log);
+        // reset
+        isSetOrigData = false;
+        origData = undefined;
+        style = '';
+      }
+    }
+    // If there are remaining subLogs, add them to logs.
+    for (let i = 0; i < subLogs.length; i++) {
+      logDataList.push({
+        origData: subLogs[i],
+      });
+    }
+    // (window as any)._vcOrigConsole.log('getLogDataWithSubstitutions format', logDataList);
+    return logDataList;
+  } else {
+    const logDataList: IVConsoleLogData[] = [];
+    for (let i = 0; i < origDatas.length; i++) {
+      logDataList.push({
+        origData: origDatas[i],
+      });
+    }
+    // (window as any)._vcOrigConsole.log('getLogDataWithSubstitutions normal', logDataList);
+    return logDataList;
+  }
 };
 
 

@@ -1,6 +1,7 @@
 import { writable, get } from 'svelte/store';
 import * as tool from '../lib/tool';
 import { VConsoleModel } from '../lib/model';
+import { getLogDatasWithFormatting } from './logTool';
 
 /**********************************
  * Interfaces
@@ -10,8 +11,7 @@ export type IConsoleLogMethod = 'log' | 'info' | 'debug' | 'warn' | 'error';
 
 export interface IVConsoleLogData {
   origData: any; // The original logging data
-  // type: '' | 'object' | 'array' | 'string' | 'number' | 'bigint' | 'boolean' | 'null' | 'undefined' | 'function' | 'symbol';
-  // textContent: string;
+  style?: string;
 }
 
 export interface IVConsoleLog {
@@ -33,7 +33,6 @@ export interface IVConsoleAddLogOptions {
 
 export interface IVConsoleLogStore {
   logList: IVConsoleLog[];
-  filterType: 'all' | IConsoleLogMethod;
 }
 
 
@@ -41,8 +40,6 @@ export interface IVConsoleLogStore {
  * Stores
  **********************************/
 
-// export const logListMap = writable<IVConsoleLogListMap>({});
-// export const logFilter = writable<IVConsoleLogFilter>({});
 export const logStore = writable<{ [pluginId: string]: IVConsoleLogStore }>({});
 
 
@@ -79,7 +76,6 @@ export class VConsoleLogModel extends VConsoleModel {
     logStore.update((store) => {
       store[pluginId] = {
         logList: [],
-        filterType: 'all',
       };
       return store;
     });
@@ -213,22 +209,22 @@ export class VConsoleLogModel extends VConsoleModel {
   /**
    * Add a vConsole log.
    */
-  public addLog(item: { type: IConsoleLogMethod, origData: any[] }, opt?: IVConsoleAddLogOptions) {
+  public addLog(item: { type: IConsoleLogMethod, origData: any[] } = { type: 'log', origData: [] }, opt?: IVConsoleAddLogOptions) {
     // prepare data
     const log: IVConsoleLog = {
       _id: tool.getUniqueID(),
       type: item.type,
       cmdType: opt?.cmdType,
       date: Date.now(),
-      data: [],
+      data: getLogDatasWithFormatting(item.origData || []),
     };
-    for (let i = 0; i < item?.origData.length; i++) {
-      const origData = item.origData[i];
-      const data: IVConsoleLogData = {
-        origData: item.origData[i],
-      };
-      log.data.push(data);
-    }
+    // for (let i = 0; i < item?.origData.length; i++) {
+    //   const data: IVConsoleLogData = {
+    //     origData: item.origData[i],
+    //   };
+    //   log.data.push(data);
+    // }
+    // log.data = getLogDatasWithFormatting(item?.origData);
 
     // extract pluginId by `[xxx]` format
     const pluginId = this._extractPluginIdByLog(log);

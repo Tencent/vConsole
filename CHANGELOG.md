@@ -1,18 +1,20 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-## 3.10.0-rc (2021-11-xx)
+## 3.10.0-rc (2021-12-xx)
 
 **Breaking Changes:**
 
+- `Refactor(Global)` Rebuild `Core|Log|Network|Element` views by using Svelte as template engine.
 - `Refactor(Core)` Remove `vConsole.(tabList | activedTab | $dom)` properties.
 - `Refactor(Plugin)` Rename `vConsole.showTab(pluginID)` to `vConsole.showPlugin(pluginID)`.
 - `Refactor(Plugin)` The callback option `{ data, onClick }` of plugin event `addTopBar` is changed: `onClick` method will receive 2 arguments (which was 0 before): `(event: Event, data?: any) => boolean`, which `data` is the above option's `data` field.
 
-**Normal Updates:**
+**Common Updates:**
 
 - `Feat(Log)` Support object's `Symbol` keys.
+- `Feat(Log)` Support multi-level keyword hint in Log's command line input.
+- `Feat(Log)` Support string formatting `%s, %d, %o`, and better `%c` CSS styling formatting.
 - `Feat(Network)` Add copy button to requests.
-- `Refactor(Core|Log|Network|Element)` Rebuild views by using Svelte as template engine.
 - `Refactor(Storage)` Improve UX.
 
 

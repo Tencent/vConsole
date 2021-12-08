@@ -3,10 +3,11 @@
   import { logStore } from './log.model';
   import LogRow from './logRow.svelte';
   import LogCommand from './logCommand.svelte';
-  // import type { IVConsoleLog } from './log.model';
+  import type { IConsoleLogMethod } from './log.model';
 
   export let pluginId: string = 'default';
   export let showCmd: boolean = false;
+  export let filterType: 'all' | IConsoleLogMethod = 'all';
 
   let filterText: string = '';
 
@@ -19,7 +20,7 @@
   {#each $logStore[pluginId].logList as log}
     {#if (
       // filterType
-      $logStore[pluginId].filterType === 'all' || $logStore[pluginId].filterType === log.type)
+      filterType === 'all' || filterType === log.type)
       &&
       // filterText
       (filterText === '' || isMatchedFilterText(log, filterText)

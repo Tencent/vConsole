@@ -1,8 +1,8 @@
-import { get } from 'svelte/store';
-import * as tool from '../lib/tool';
+// import { get } from 'svelte/store';
+// import * as tool from '../lib/tool';
 import { VConsoleSveltePlugin } from '../lib/sveltePlugin';
 import LogComp from './log.svelte';
-import { VConsoleLogModel, logStore } from './log.model';
+import { VConsoleLogModel } from './log.model';
 import type { IConsoleLogMethod } from './log.model';
 
 const MAX_LOG_NUMBER = 1000;
@@ -45,12 +45,8 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
         actived: i === 0,
         className: '',
         onClick: (e: PointerEvent, data: { type: 'all' | IConsoleLogMethod }) => {
-          const store = get(logStore)[this.id];
-          if (data.type === store.filterType) { return false; }
-          logStore.update((s) => {
-            s[this.id].filterType = data.type;
-            return s;
-          });
+          if (data.type === this.compInstance.filterType) { return false; }
+          this.compInstance.filterType = data.type;
         }
       });
     }
