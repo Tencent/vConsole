@@ -37,10 +37,15 @@
 
       <a onclick="allDataTypes()" href="javascript:;" class="weui_btn weui_btn_default">All Data Types</a>
       <a onclick="logTypes()" href="javascript:;" class="weui_btn weui_btn_default">Log Types</a>
-      <a onclick="differentPanelLog()" href="javascript:;" class="weui_btn weui_btn_default">Different Log Panel</a>
-      <a onclick="formattingLog()" href="javascript:;" class="weui_btn weui_btn_default">Formatting Log</a>
-      <a onclick="maxLogNumber()" href="javascript:;" class="weui_btn weui_btn_default">Large Number of Logs</a>
-      <a onclick="repeatLog()" href="javascript:;" class="weui_btn weui_btn_default">Repeated Log</a>
+      <a onclick="differentPanelLog()" href="javascript:;" class="weui_btn weui_btn_default">Output to Different Panels</a>
+      <a onclick="maxLogNumber()" href="javascript:;" class="weui_btn weui_btn_default">Reach maxLogNumber</a>
+    </div>
+
+    <div class="section">
+      <div class="hd">Behavior</div>
+
+      <a onclick="formattingLog()" href="javascript:;" class="weui_btn weui_btn_default">Formatting Logs</a>
+      <a onclick="repeatLog()" href="javascript:;" class="weui_btn weui_btn_default">Repeated Logs</a>
     </div>
 
     <div class="section">
@@ -148,9 +153,9 @@ function normalObject() {
 
 function circularObject() {
   class NestObj { }
-  var nest = new NestObj();
+  const nest = new NestObj();
   nest.self = nest;
-  var obj = {
+  const obj = {
     foo: 'bar',
     nest: nest,
   };
@@ -160,17 +165,22 @@ function circularObject() {
   obj.next.self = obj;
   console.log('A cyclically referenced object:', obj);
 
-  var arr = [];
+  const arr = [];
   arr[0] = 'foo';
   arr[1] = arr;
   console.log('A cyclically referenced array:', arr);
 }
 
 function largeObject() {
-  var obj = {
+  const obj = {
     window: window,
+    longList: [],
   };
+  for (let i = 0; i < 300; i++) {
+    obj.longList.push(i + 1);
+  }
   console.log('largeObject', obj);
+  // setInterval(() => { console.log(Math.random()); }, 100);
 }
 
 function allDataTypes() {

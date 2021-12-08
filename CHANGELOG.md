@@ -14,6 +14,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Feat(Log)` Support object's `Symbol` keys.
 - `Feat(Log)` Support multi-level keyword hint in Log's command line input.
 - `Feat(Log)` Support string formatting `%s, %d, %o`, and better `%c` CSS styling formatting.
+- `Feat(Log)` Add pagination to objects or arrays to improve rendering performance, with 50 key-values per page.
 - `Feat(Network)` Add copy button to requests.
 - `Refactor(Storage)` Improve UX.
 

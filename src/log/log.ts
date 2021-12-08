@@ -15,7 +15,6 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
   public isReady: boolean = false;
   public isShow: boolean = false;
   public isInBottom: boolean = true; // whether the panel is in the bottom
-  // public maxLogNumber: number = 1000;
 
 
   constructor(id: string, name: string,) {
