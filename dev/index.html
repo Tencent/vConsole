@@ -3,20 +3,36 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Dev: Log</title>
+  <title>vConsole: Demo</title>
   <link href="../dev/lib/weui.min.css" rel="stylesheet"/>
   <link href="../dev/lib/demo.css" rel="stylesheet"/>
+  <script src="../dist/vconsole.min.js"></script>
 </head>
 <body ontouchstart>
   <div class="page">
-    <a href="./common.html" class="weui_btn weui_btn_default">common</a>
-    <a href="./log.html" class="weui_btn weui_btn_default">log</a>
-    <a href="./network.html" class="weui_btn weui_btn_default">network</a>
-    <a href="./async.html" class="weui_btn weui_btn_default">async</a>
-    <a href="./storage.html" class="weui_btn weui_btn_default">storage</a>
-    <a href="./element.html" class="weui_btn weui_btn_default">element</a>
-    <a href="./plugin.html" class="weui_btn weui_btn_default">plugin</a>
+    <a href="./common.html" class="weui_btn weui_btn_default">Common Functions</a>
+    <a href="./log.html" class="weui_btn weui_btn_default">Log</a>
+    <a href="./network.html" class="weui_btn weui_btn_default">Network</a>
+    <a href="./element.html" class="weui_btn weui_btn_default">Element</a>
+    <a href="./storage.html" class="weui_btn weui_btn_default">Storage</a>
+    <a href="./plugin.html" class="weui_btn weui_btn_default">Custom Plugin</a>
+    <a href="./async.html" class="weui_btn weui_btn_default">Async Loading</a>
     <a href="./vue.html" class="weui_btn weui_btn_default">Vue</a>
   </div>
 </body>
 </html>
+
+<script>
+new window.VConsole({
+  maxLogNumber: 25,
+  // disableLogScrolling: true,
+  // theme: 'dark',
+  defaultPlugins: ['system'],
+  onReady: function() {
+    console.log('vConsole is ready.');
+  },
+  onClearLog: function() {
+    console.log('on clearLog');
+  }
+});
+</script>

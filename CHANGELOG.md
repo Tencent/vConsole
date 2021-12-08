@@ -2,12 +2,15 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 ## 3.10.0-rc (2021-12-xx)
 
+>> In this version, we refactored a lot of core logic, and used Svelte as the rendering engine for all views.
+>> So there are some breaking changes, a small number of methods and properties are not forward compatible.
+
 **Breaking Changes:**
 
-- `Refactor(Global)` Rebuild `Core|Log|Network|Element` views by using Svelte as template engine.
-- `Refactor(Core)` Remove `vConsole.(tabList | activedTab | $dom)` properties.
-- `Refactor(Plugin)` Rename `vConsole.showTab(pluginID)` to `vConsole.showPlugin(pluginID)`.
-- `Refactor(Plugin)` The callback option `{ data, onClick }` of plugin event `addTopBar` is changed: `onClick` method will receive 2 arguments (which was 0 before): `(event: Event, data?: any) => boolean`, which `data` is the above option's `data` field.
+- `Refactor(Core|Log|Network|Element)` Rebuild all views by using Svelte as template engine.
+- `Refactor(Core)` *Remove* `vConsole.(tabList | activedTab | $dom)` properties.
+- `Refactor(Plugin)` *Rename* `vConsole.showTab(pluginID)` to `vConsole.showPlugin(pluginID)`.
+- `Refactor(Plugin)` *Change* callback option `{ data, onClick }` of plugin event `addTopBar`: `onClick` method will receive 2 arguments (which was 0 before): `(event: Event, data?: any) => boolean`, which `data` is the above option's `data` field.
 
 **Common Updates:**
 
