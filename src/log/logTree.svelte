@@ -8,23 +8,30 @@
   export let keyType: '' | 'private' | 'symbol' = '';
 
   const KEY_PAGE_SIZE = 50;
+  let isInited: boolean = false;
   let isToggle: boolean = false;
   let isTree: boolean = false;
   let isShowProto: boolean = false;
-  let childEnumKeys: string[] = [];
-  let childNonEnumKeys: string[] = [];
-  let childSymbolKeys: symbol[] = [];
+  let childEnumKeys: string[];
+  let childNonEnumKeys: string[];
+  let childSymbolKeys: symbol[];
   let childEnumKeyOffset = KEY_PAGE_SIZE;
   let childNonEnumKeyOffset = KEY_PAGE_SIZE;
 
   $: {
-    isTree = !(origData instanceof VConsoleUninvocatableObject) && (tool.isArray(origData) || tool.isObject(origData));
-    if (isTree && isToggle) {
-      isShowProto = tool.isObject(origData) && childNonEnumKeys.indexOf('__proto__') === -1;
-      childEnumKeys = tool.sortArray(tool.getEnumerableKeys(origData));
-      childNonEnumKeys = tool.sortArray(tool.getNonEnumerableKeys(origData));
-      childSymbolKeys = tool.getSymbolKeys(origData);
+    if (!isInited) {
+      isTree = !(origData instanceof VConsoleUninvocatableObject) && (tool.isArray(origData) || tool.isObject(origData));
+      isInited = true;
     }
+
+    if (isTree && isToggle) {
+      // keys only need to be initialized once
+      childEnumKeys = childEnumKeys || tool.sortArray(tool.getEnumerableKeys(origData));
+      childNonEnumKeys = childNonEnumKeys || tool.sortArray(tool.getNonEnumerableKeys(origData));
+      childSymbolKeys = childSymbolKeys || tool.getSymbolKeys(origData);
+      isShowProto = tool.isObject(origData) && childNonEnumKeys.indexOf('__proto__') === -1;
+    }
+    // (window as any)._vcOrigConsole.log('logTree update');
   }
 
   const loadNextPageChildKeys = (keyType: 'enum' | 'nonEnum') => {
@@ -59,7 +66,7 @@
 
   {#if isTree && isToggle}
     <div class="vc-log-tree-child">
-      {#each childEnumKeys as key, i}
+      {#each childEnumKeys as key, i (key)}
         {#if i < childEnumKeyOffset}
           <svelte:self origData={getValueByKey(key)} dataKey={key} />
         {/if}
@@ -68,11 +75,11 @@
         <div class="vc-log-tree-loadmore" on:click={() => loadNextPageChildKeys('enum')}>{getLoadMoreText(childEnumKeys.length - childEnumKeyOffset)}</div>
       {/if}
 
-      {#each childSymbolKeys as key}
+      {#each childSymbolKeys as key (key)}
         <svelte:self origData={getValueByKey(key)} dataKey={String(key)} keyType="symbol" />
       {/each}
 
-      {#each childNonEnumKeys as key, i}
+      {#each childNonEnumKeys as key, i (key)}
         {#if i < childNonEnumKeyOffset}
           <svelte:self origData={getValueByKey(key)} dataKey={key} keyType="private" />
         {/if}

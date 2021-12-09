@@ -19,6 +19,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Feat(Log)` Support string formatting `%s, %d, %o`, and better `%c` CSS styling formatting.
 - `Feat(Log)` Add pagination to objects or arrays to improve rendering performance, with 50 key-values per page.
 - `Feat(Network)` Add copy button to requests.
+- `Feat(Element)` Improve UX, selected node will be highlighted and applied to Expand/Collapse action.
 - `Refactor(Storage)` Improve UX.
 
 

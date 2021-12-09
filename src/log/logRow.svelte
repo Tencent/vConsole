@@ -1,4 +1,5 @@
 <script lang="ts">
+	// import { beforeUpdate, afterUpdate } from 'svelte';
   import * as tool from '../lib/tool';
   import IconCopy from '../component/iconCopy.svelte';
   import LogValue from './logValue.svelte';
@@ -8,21 +9,30 @@
 
   export let log: IVConsoleLog;
 
+  let cachedCopyText: string = undefined;
+
+  // $: {
+  //   (window as any)._vcOrigConsole.log('logRow update', log._id, ...log.data);
+  // }
+
   const isTree = (origData: any) => {
     return !(origData instanceof VConsoleUninvocatableObject) && (tool.isArray(origData) || tool.isObject(origData));
   };
   
   const onTapCopy = () => {
-    let text: string[] = [];
-    try {
-      for (let i = 0; i < log.data.length; i++) {
-        // Only copy up to 10 levels of object depth and single key size up to 10KB
-        text.push(tool.safeJSONStringify(log.data[i].origData, 10, 10000));
+    if (cachedCopyText === undefined) {
+      const text: string[] = [];
+      try {
+        for (let i = 0; i < log.data.length; i++) {
+          // Only copy up to 10 levels of object depth and single key size up to 10KB
+          text.push(tool.safeJSONStringify(log.data[i].origData, 10, 10000));
+        }
+      } catch (e) {
+        // do nothing
       }
-    } catch (e) {
-      // do nothing
+      cachedCopyText = text.join(' ');
     }
-    return text.join(' ');
+    return cachedCopyText;
   };
 </script>
 
@@ -40,7 +50,7 @@
       <div class="vc-log-repeat">{log.repeated}</div>
     {/if}
     <div class="vc-log-content">
-      {#each log.data as logData}
+      {#each log.data as logData, i (i)}
         {#if isTree(logData.origData)}
           <LogTree origData={logData.origData} />
         {:else}

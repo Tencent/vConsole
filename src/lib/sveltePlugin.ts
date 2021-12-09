@@ -5,7 +5,6 @@ export class VConsoleSveltePlugin<T extends {} = {}> extends VConsolePlugin {
   CompClass: typeof SvelteComponent;
   compInstance?: SvelteComponent;
   initialProps: T;
-  // $container: HTMLElement;
 
   constructor(
     id: string,

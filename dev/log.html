@@ -27,18 +27,19 @@
     <div class="section">
       <div class="hd">Object</div>
 
+      <a onclick="(() => console.log('hello'))()" href="javascript:;" class="weui_btn weui_btn_default">String</a>
       <a onclick="normalObject()" href="javascript:;" class="weui_btn weui_btn_default">Common Object</a>
       <a onclick="largeObject()" href="javascript:;" class="weui_btn weui_btn_default">Large Object</a>
       <a onclick="circularObject()" href="javascript:;" class="weui_btn weui_btn_default">Circular Object & Array</a>
+      <a onclick="proxyObject()" href="javascript:;" class="weui_btn weui_btn_default">Proxy Object</a>
     </div>
 
     <div class="section">
       <div class="hd">Common Log</div>
 
       <a onclick="allDataTypes()" href="javascript:;" class="weui_btn weui_btn_default">All Data Types</a>
-      <a onclick="logTypes()" href="javascript:;" class="weui_btn weui_btn_default">Log Types</a>
+      <a onclick="logTypes()" href="javascript:;" class="weui_btn weui_btn_default">Log/Info/Debug/Warn/Error</a>
       <a onclick="differentPanelLog()" href="javascript:;" class="weui_btn weui_btn_default">Output to Different Panels</a>
-      <a onclick="maxLogNumber()" href="javascript:;" class="weui_btn weui_btn_default">Reach maxLogNumber</a>
     </div>
 
     <div class="section">
@@ -46,6 +47,7 @@
 
       <a onclick="formattingLog()" href="javascript:;" class="weui_btn weui_btn_default">Formatting Logs</a>
       <a onclick="repeatLog()" href="javascript:;" class="weui_btn weui_btn_default">Repeated Logs</a>
+      <a onclick="maxLogNumber()" href="javascript:;" class="weui_btn weui_btn_default">Reach maxLogNumber</a>
     </div>
 
     <div class="section">
@@ -183,7 +185,27 @@ function largeObject() {
   // setInterval(() => { console.log(Math.random()); }, 100);
 }
 
-function allDataTypes() {
+function proxyObject() {
+  const obj = {
+    // foo: 'bar',
+  };
+  let warnCount = 0;
+  const p = new Proxy(obj, {
+    ownKeys(target) {
+      const keys = Reflect.ownKeys(target);
+      if (warnCount < 10000) {
+        warnCount++;
+        // window._vcOrigConsole.warn('Access to a proxy object\'s keys.', warnCount);
+        console.warn('Access to a proxy object\'s keys.');
+      }
+      return keys;
+      // return [];
+    },
+  }); 
+  console.log('A proxy object:', p); 
+}
+
+function allDataTypes(aa, bb, cc) {
   console.log('String:', 'The first line;\nThe second line.', '<b>A HTML tag line.</b>');
   console.log('Number:', 65535);
   console.log('BigInt:', 99987654321n);
@@ -237,7 +259,7 @@ function maxLogNumber() {
 }
 
 function windowError() {
-  console.log(Error);
+  console.log(new Error('Hello Error!'));
   a.b = 1;
 }
 

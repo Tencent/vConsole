@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { onMount, createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import Icon from '../component/icon.svelte';
   import { getLastIdentifier } from './logTool';
-  import { VConsoleLogModel, logStore } from './log.model';
+  import { VConsoleLogModel } from './log.model';
   // import LogRow from './logRow.svelte';
 
   interface ICmdPromptedItem {
@@ -22,7 +22,7 @@
   const module = VConsoleLogModel.getSingleton(VConsoleLogModel);
   const cachedObjKeys: { [key: string]: string[] } = {};
   const dispatch = createEventDispatcher();
-  const _console = (window as any)._vcOrigConsole;
+  // const _console = (window as any)._vcOrigConsole;
 
   let cmdElement: HTMLTextAreaElement;
   let cmdValue = '';
@@ -35,9 +35,9 @@
    * Lifecycle
    *************************************/
 
-  onMount(() => {
+  // onMount(() => {
 
-  });
+  // });
   
 
   /*************************************
@@ -167,12 +167,6 @@
    * DOM Events
    *************************************/
 
-  const onTapOk = () => {
-
-  };
-  const onTapFilter = () => {
-
-  };
   const onTapClearText = (name: string) => {
     if (name === 'cmd') {
       cmdValue = '';
@@ -217,7 +211,7 @@
 </script>
 
 <form class="vc-cmd" on:submit|preventDefault={onCmdSubmit}>
-  <button class="vc-cmd-btn" type="submit" on:click={onTapOk}>OK</button>
+  <button class="vc-cmd-btn" type="submit">OK</button>
 
   <ul class='vc-cmd-prompted' style="{promptedStyle}">
     {#if promptedList.length > 0}
@@ -249,7 +243,7 @@
 </form>
 
 <form class="vc-cmd vc-filter" on:submit|preventDefault={onFilterSubmit}>
-  <button class="vc-cmd-btn" type="submit" on:click={onTapFilter}>Filter</button>
+  <button class="vc-cmd-btn" type="submit">Filter</button>
   <ul class='vc-cmd-prompted'></ul>
   <div class="vc-cmd-input-wrap">
     {#if filterValue.length > 0}

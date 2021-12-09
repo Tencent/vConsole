@@ -2,6 +2,7 @@
 // import * as tool from '../lib/tool';
 import { VConsoleSveltePlugin } from '../lib/sveltePlugin';
 import LogComp from './log.svelte';
+import { VConsoleLogStore as Store } from './log.store';
 import { VConsoleLogModel } from './log.model';
 import type { IConsoleLogMethod } from './log.model';
 
@@ -15,10 +16,10 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
   public isReady: boolean = false;
   public isShow: boolean = false;
   public isInBottom: boolean = true; // whether the panel is in the bottom
-
+  protected storeUnsubscriber: Function;
 
   constructor(id: string, name: string,) {
-    super(id, name, LogComp, { pluginId: id });
+    super(id, name, LogComp, { pluginId: id, filterType: 'all' });
     this.module.bindPlugin(id);
   }
 
@@ -32,7 +33,7 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
     this.module.unbindPlugin(this.id);
   }
 
-  onAddTopBar(callback: Function) {
+  public onAddTopBar(callback: Function) {
     const types = ['All', 'Log', 'Info', 'Warn', 'Error'];
     const btnList = [];
     for (let i = 0; i < types.length; i++) {

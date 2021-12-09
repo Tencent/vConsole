@@ -9,19 +9,25 @@
 
   let dataValue: string = '';
   let valueType: string = '';
+  let isInited: boolean = false;
   let isInTree: boolean = false;
 
   $: {
-    // the value is NOT in a tree when key is undefined
-    isInTree = dataKey !== undefined;
-    
-    const ret = getValueTextAndType(origData, isInTree);
-    valueType = ret.valueType;
-    dataValue = ret.text;
+    if (!isInited) {
+      // the value is NOT in a tree when key is undefined
+      isInTree = dataKey !== undefined;
 
-    if (!isInTree && valueType === 'string') {
-      // convert string
-      dataValue = tool.htmlEncode(dataValue.replace('\\n', '\n').replace('\\t', '\t'));
+      const ret = getValueTextAndType(origData, isInTree);
+      valueType = ret.valueType;
+      dataValue = ret.text;
+
+      if (!isInTree && valueType === 'string') {
+        // convert string
+        dataValue = tool.htmlEncode(dataValue.replace('\\n', '\n').replace('\\t', '\t'));
+      }
+
+      // (window as any)._vcOrigConsole.log('logValue update', origData);
+      isInited = true;
     }
   }
 </script>

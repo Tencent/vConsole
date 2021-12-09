@@ -1,15 +1,27 @@
 <script lang="ts">
+  // import { onMount, onDestroy } from 'svelte';
   import { isMatchedFilterText } from './logTool';
-  import { logStore } from './log.model';
+  // import { logStore } from './log.store';
+  import { VConsoleLogStore as Store } from './log.store';
   import LogRow from './logRow.svelte';
   import LogCommand from './logCommand.svelte';
-  import type { IConsoleLogMethod } from './log.model';
+  import type { IConsoleLogMethod, IVConsoleLog } from './log.model';
 
   export let pluginId: string = 'default';
   export let showCmd: boolean = false;
   export let filterType: 'all' | IConsoleLogMethod = 'all';
 
+  let isInited: boolean = false;
   let filterText: string = '';
+  let store: ReturnType<typeof Store.get>;
+
+  $: {
+    if (!isInited) {
+      store = Store.get(pluginId);
+      isInited = true;
+      // (window as any)._vcOrigConsole.log('log.svelte update', pluginId);
+    }
+  }
 
   const onFilterText = (e) => {
     filterText = e.detail.filterText || '';
@@ -17,19 +29,21 @@
 </script>
 
 <div class="vc-logs" class:vc-log-has-cmd={showCmd}>
-  {#each $logStore[pluginId].logList as log}
-    {#if (
-      // filterType
-      filterType === 'all' || filterType === log.type)
-      &&
-      // filterText
-      (filterText === '' || isMatchedFilterText(log, filterText)
-    )}
-      <LogRow log={log} />
-    {/if}
+  {#if $store && $store.logList.length > 0}
+    {#each $store.logList as log (log._id)}
+      {#if (
+        // filterType
+        filterType === 'all' || filterType === log.type)
+        &&
+        // filterText
+        (filterText === '' || isMatchedFilterText(log, filterText)
+      )}
+        <LogRow log={log} />
+      {/if}
+    {/each}
   {:else}
     <div class="vs-logs-empty"></div>
-  {/each}
+  {/if}
 
   {#if showCmd}
     <LogCommand on:filterText={onFilterText} />

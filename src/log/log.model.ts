@@ -2,6 +2,7 @@ import { writable, get } from 'svelte/store';
 import * as tool from '../lib/tool';
 import { VConsoleModel } from '../lib/model';
 import { getLogDatasWithFormatting } from './logTool';
+import { VConsoleLogStore as Store } from './log.store';
 
 /**********************************
  * Interfaces
@@ -31,16 +32,16 @@ export interface IVConsoleAddLogOptions {
   cmdType?: 'input' | 'output';
 }
 
-export interface IVConsoleLogStore {
-  logList: IVConsoleLog[];
-}
+// export interface IVConsoleLogStore {
+//   logList: IVConsoleLog[];
+// }
 
 
 /**********************************
  * Stores
  **********************************/
 
-export const logStore = writable<{ [pluginId: string]: IVConsoleLogStore }>({});
+// export const logStore = writable<{ [pluginId: string]: IVConsoleLogStore }>({});
 
 
 
@@ -73,12 +74,14 @@ export class VConsoleLogModel extends VConsoleModel {
       this.mockConsole();
     }
 
-    logStore.update((store) => {
-      store[pluginId] = {
-        logList: [],
-      };
-      return store;
-    });
+    // logStore.update((store) => {
+    //   store[pluginId] = {
+    //     logList: [],
+    //   };
+    //   return store;
+    // });
+    Store.create(pluginId);
+
     this.ADDED_LOG_PLUGIN_ID.push(pluginId);
     this.pluginPattern = new RegExp(`^\\[(${this.ADDED_LOG_PLUGIN_ID.join('|')})\\]$`, 'i');
     // this.callOriginalConsole('info', 'bindPlugin:', this.pluginPattern);
@@ -94,11 +97,12 @@ export class VConsoleLogModel extends VConsoleModel {
     if (idx === -1) { return false; }
 
     this.ADDED_LOG_PLUGIN_ID.splice(idx, 1);
-    logStore.update((store) => {
-      store[pluginId].logList = [];
-      delete store[pluginId];
-      return store;
-    });
+    // logStore.update((store) => {
+    //   store[pluginId].logList = [];
+    //   delete store[pluginId];
+    //   return store;
+    // });
+    Store.delete(pluginId);
 
     if (this.ADDED_LOG_PLUGIN_ID.length === 0) {
       this.unmockConsole();
@@ -186,22 +190,33 @@ export class VConsoleLogModel extends VConsoleModel {
    * Remove all logs.
    */
   public clearLog() {
-    logStore.update((store) => {
-      for (const id in store) {
-        store[id].logList = [];
-      }
-      return store;
-    });
+    // logStore.update((store) => {
+    //   for (const id in store) {
+    //     store[id].logList = [];
+    //   }
+    //   return store;
+    // });
+    const stores = Store.getAll();
+    for (let id in stores) {
+      stores[id].update((store) => {
+        store.logList = [];
+        return store;
+      });
+    }
   }
 
   /**
    * Remove a plugin's logs.
    */
   public clearPluginLog(pluginId: string) {
-    logStore.update((store) => {
-      if (store[pluginId]) {
-        store[pluginId].logList = [];
-      }
+    // logStore.update((store) => {
+    //   if (store[pluginId]) {
+    //     store[pluginId].logList = [];
+    //   }
+    //   return store;
+    // });
+    Store.get(pluginId).update((store) => {
+      store.logList = [];
       return store;
     });
   }
@@ -290,7 +305,7 @@ export class VConsoleLogModel extends VConsoleModel {
   }
 
   protected _isRepeatedLog(pluginId: string, log: IVConsoleLog) {
-    const store = get(logStore)[pluginId];
+    const store = Store.getRaw(pluginId);
     const lastLog = store.logList[store.logList.length - 1];
     if (!lastLog) {
       return false;
@@ -310,8 +325,8 @@ export class VConsoleLogModel extends VConsoleModel {
   }
 
   protected _updateLastLogRepeated(pluginId: string) {
-    logStore.update((store) => {
-      const list = store[pluginId].logList
+    Store.get(pluginId).update((store) => {
+      const list = store.logList
       const last = list[list.length - 1];
       last.repeated = last.repeated ? last.repeated + 1 : 2;
       return store;
@@ -319,8 +334,8 @@ export class VConsoleLogModel extends VConsoleModel {
   }
 
   protected _pushLogList(pluginId: string, log: IVConsoleLog) {
-    logStore.update((store) => {
-      store[pluginId].logList.push(log);
+    Store.get(pluginId).update((store) => {
+      store.logList.push(log);
       return store;
     });
   }
@@ -334,15 +349,16 @@ export class VConsoleLogModel extends VConsoleModel {
     }
     this.logCounter = 0;
 
-    logStore.update((store) => {
-      for (const id in store) {
-        if (store[id].logList.length > this.maxLogNumber) {
+    const stores = Store.getAll();
+    for (const id in stores) {
+      stores[id].update((store) => {
+        if (store.logList.length > this.maxLogNumber) {
           // delete N more logs for performance
-          store[id].logList.splice(0, store[id].logList.length - this.maxLogNumber + N);
+          store.logList.splice(0, store.logList.length - this.maxLogNumber + N);
           // this.callOriginalConsole('info', 'delete', id, store[id].logList.length);
         }
-      }
-      return store;
-    });
+        return store;
+      });
+    }
   }
 }

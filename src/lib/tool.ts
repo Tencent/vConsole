@@ -277,7 +277,7 @@ const _safeJSONStringify = (obj, opt: ISafeJSONStringifyOption, _curDepth = 0) =
     }
   }
   opt.ret += suffix;
-}
+};
 /**
  * A safe `JSON.stringify` method. 
  */

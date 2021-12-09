@@ -10,13 +10,13 @@
 </head>
 <body ontouchstart>
   <div id="page" class="page">
-    <a onclick="normalObject()" href="javascript:;" class="weui_btn weui_btn_default">Log</a>
-    <a onclick="changeTheme('dark')" href="javascript:;" class="weui_btn weui_btn_default">Theme:dark</a>
-    <a onclick="changeTheme('light')" href="javascript:;" class="weui_btn weui_btn_default">Theme:light</a>
-    <a onclick="changeTheme('')" href="javascript:;" class="weui_btn weui_btn_default">Theme:auto</a>
-    <a onclick="toggleVConsole()" href="javascript:;" class="weui_btn weui_btn_default">vConsole:show/hide</a>
-    <a onclick="toggleSwitch()" href="javascript:;" class="weui_btn weui_btn_default">Switch:show/hide</a>
-    <a onclick="switchPosition()" href="javascript:;" class="weui_btn weui_btn_default">switchPosition</a>
+    <a onclick="outputLogs()" href="javascript:;" class="weui_btn weui_btn_default">Output Logs</a>
+    <a onclick="changeTheme('dark')" href="javascript:;" class="weui_btn weui_btn_default">Theme: dark</a>
+    <a onclick="changeTheme('light')" href="javascript:;" class="weui_btn weui_btn_default">Theme: light</a>
+    <a onclick="changeTheme('')" href="javascript:;" class="weui_btn weui_btn_default">Theme: auto</a>
+    <a onclick="toggleVConsole()" href="javascript:;" class="weui_btn weui_btn_default">vConsole: show/hide</a>
+    <a onclick="toggleSwitch()" href="javascript:;" class="weui_btn weui_btn_default">Switch: show/hide</a>
+    <a onclick="switchPosition()" href="javascript:;" class="weui_btn weui_btn_default">Switch: setPosition</a>
     <a onclick="destroy()" href="javascript:;" class="weui_btn weui_btn_default">Destroy</a>
   </div>
 </body>
@@ -30,63 +30,62 @@ window.vConsole = new window.VConsole({
   // disableLogScrolling: true,
   // theme: 'dark',
   onReady: function() {
-    console.log('vConsole is ready.');
+    console.log('vConsole: onReady');
   },
   onClearLog: function() {
-    console.log('on clearLog');
-  }
+    console.log('vConsole: onClearLog');
+  },
 });
 </script>
 
 <script>
-function normalObject() {
-  console.info('normalObject() Start');
-  console.log('A normal JSON:', {
+class FooClass {
+  constructor() { this.foo = 'bar'; }
+}
+function outputLogs() {
+  const obj = {
     number: 233,
-    string: 'Hello world',
+    string: 'Hi you!\nFoo\t<b>bar!!</b>',
     boolean: true,
-    symbol: Symbol('foo'),
-    bigint: 99999999999n,
+    symbolValue: Symbol('foo'),
+    bigint: 98979695949n,
     obj: {foo: 'bar'},
     array: [8, 7, 6],
-    func: function(a) { alert('b'); }
-  });
-  console.info('normalObject() End');
+    undefined: undefined,
+    func: function foo(a) { alert('b'); },
+    class: FooClass,
+    classInstance: new FooClass(),
+  };
+  obj[Symbol('symbolKey')] = 'The key is a symbol.';
+  console.log('A common object:', obj);
 }
 
 function changeTheme(theme) {
-  console.info('changeTheme() Start');
   window.vConsole.setOption('theme', theme);
   console.log('Current Theme:', theme || 'auto');
-  console.info('changeTheme() End');
 }
 
 function toggleVConsole() {
-  console.info('toggleVConsole() Start');
   window.vConsole.show();
   setTimeout(() => {
     window.vConsole.hide();
   }, 1000);
-  console.info('toggleVConsole() End');
 }
 
 let showSwitch = true;
 function toggleSwitch() {
-  console.info('toggleSwitch() Start');
   showSwitch = !showSwitch;
   showSwitch ? window.vConsole.showSwitch() : window.vConsole.hideSwitch();
-  console.info('toggleSwitch() End');
+  console.info('vConsole switch is show:', showSwitch);
 }
 
 function switchPosition() {
-  console.info('switchPosition() Start');
   vConsole.setSwitchPosition(20, 20);
-  console.info('switchPosition() End');
+  console.info('vConsole switch position:', 20, 20);
 }
 
 function destroy() {
-  console.info('destroy() Start');
   window.vConsole.destroy();
-  console.info('destroy() End');
+  console.log('vConsole is destroyed');
 }
 </script>

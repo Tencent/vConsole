@@ -72,14 +72,19 @@ const appOptions = {
   },
   watch: {
     'book.title': function (newVal, oldVal) {
-      console.log(newVal, oldVal, this);
+      console.log('book.title', newVal, oldVal, this);
     },
   },
   mounted() {
-    console.log('mounted', this);
+    // console.log('mounted', this);
     // console.log('Vue', Vue);
     // console.log('Window', window);
     // console.log(this.$route);
+    // console.log(this.book);
+    setTimeout(() => {
+      // console.log(window.vueApp);
+      console.log(typeof window.vueVm);
+    }, 100);
     // setInterval(() => {
       // this.book.title = Math.random();
       // console.log(this);
