@@ -23,7 +23,7 @@ export class VConsoleStoragePlugin extends VConsoleSveltePlugin {
     for (let i = 0; i < storages.length; i++) {
       const name = storages[i].name;
       btnList.push({
-        name: name[0].toUpperCase() + name.substr(1),
+        name: name[0].toUpperCase() + name.substring(1),
         data: {
           name: name,
         },

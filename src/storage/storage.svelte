@@ -2,11 +2,12 @@
   import Icon from '../component/icon.svelte';
   import IconCopy from '../component/iconCopy.svelte';
   import { VConsoleStorageModel } from './storage.model';
-  import { getStringBytes, subString } from '../lib/tool';
+  import { getStringBytes, getBytesText, subString } from '../lib/tool';
 
-  export let storages: ReturnType<VConsoleStorageModel["getAllStorages"]> = [];
+  export let storages: ReturnType<VConsoleStorageModel['getAllStorages']> = [];
   export let activedName = '';
 
+  const BYTES_LIMIT = 1024;
   // edit state
   let editingIdx = -1;
   let editingKey = '';
@@ -15,6 +16,7 @@
   // force reload
   const handleRefresh = () => {
     storages = storages;
+    editingIdx = -1;
   };
 
   const onTapDelete = (storage: Storage, idx: number) => {
@@ -41,11 +43,10 @@
   };
   const onTapCancelEdit = () => {
     editingIdx = -1;
-  }
-  const BYTES_LIMIT = 1024;
+  };
   const properDisplay = (str: string) => {
-    const overlength = getStringBytes(str) > BYTES_LIMIT;
-    return overlength ? subString(str, BYTES_LIMIT) : str;
+    const bytes = getStringBytes(str);
+    return bytes > BYTES_LIMIT ? subString(str, BYTES_LIMIT) + ` (${getBytesText(bytes)})` : str;
   };
 </script>
 
@@ -59,13 +60,19 @@
     {#if name === activedName}
       {#each Object.entries(storage) as [k, v], i}
         <div class="vc-table-row">
+
           {#if editingIdx === i}
-            <input class="vc-table-col " bind:value={editingKey} />
-            <input class="vc-table-col vc-table-col-2" bind:value={editingVal} />
+            <div class="vc-table-col">
+              <textarea class="vc-table-input" bind:value={editingKey}></textarea>
+            </div>
+            <div class="vc-table-col vc-table-col-2">
+              <textarea class="vc-table-input" bind:value={editingVal}></textarea>
+            </div>
           {:else}
             <div class="vc-table-col">{k}</div>
             <div class="vc-table-col vc-table-col-2">{properDisplay(v)}</div>
           {/if}
+          
           <div class="vc-table-col vc-table-col-1 vc-table-action">
             {#if editingIdx === i}
               <Icon name="cancel" on:click={onTapCancelEdit} />
@@ -78,14 +85,8 @@
           </div>
         </div>
       {:else}
-        <div class="vc-table-row">
-          <div class="vc-table-col vc-table-empty">Empty</div>
-        </div>
+        <div class="vc-plugin-empty"></div>
       {/each}
     {/if}
   {/each}
 </div>
-
-<style lang="less">
-
-</style>

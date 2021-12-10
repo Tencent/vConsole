@@ -334,7 +334,7 @@ export function subString(str: string, len: number) {
     m = Math.floor(len / 2);
 
     for (let i = m, l = str.length; i < l; i++) {
-      const sub = str.substr(0, i);
+      const sub = str.substring(0, i);
       if (sub.replace(_subStringPattern, '**').length >= len) {
         return sub;
       }

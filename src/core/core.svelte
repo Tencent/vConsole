@@ -264,7 +264,7 @@
   transform: translate(0, 100%);
 }
 
-#__vconsole.vc-toggle {
+.vc-toggle {
 
   .vc-switch {
     display: none;
