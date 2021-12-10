@@ -113,3 +113,23 @@
   on:touchmove={onTouchMove}
   on:click
 >vConsole</div>
+
+<style lang="less">
+@import "../styles/var.less";
+
+.vc-switch {
+  display: block;
+  position: fixed;
+  right: (10em / @font);
+  bottom: (10em / @font);
+  color: #FFF;
+  background-color: var(--VC-BRAND);
+  line-height: 1;
+  font-size: (14em / @font);
+  padding: (8em / @font) (16em / @font);
+  z-index: 10000;
+  border-radius: (4em / @font);
+  box-shadow: 0 0 (8em / @font) rgba(0,0,0,0.4);
+}
+
+</style>

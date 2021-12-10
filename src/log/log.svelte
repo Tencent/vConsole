@@ -28,7 +28,7 @@
   };
 </script>
 
-<div class="vc-logs" class:vc-log-has-cmd={showCmd}>
+<div class="vc-plugin-content" class:vc-logs-has-cmd={showCmd}>
   {#if $store && $store.logList.length > 0}
     {#each $store.logList as log (log._id)}
       {#if (
@@ -42,7 +42,7 @@
       {/if}
     {/each}
   {:else}
-    <div class="vs-logs-empty"></div>
+    <div class="vc-plugin-empty"></div>
   {/if}
 
   {#if showCmd}
@@ -54,19 +54,7 @@
 <style lang="less">
 @import "../styles/var.less";
 
-.vs-logs-empty:before {
-  content: "Empty";
-  color: var(--VC-FG-1);
-  position: absolute;
-  top: 45%;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  font-size: (15em / @font);
-  text-align: center;
-}
-
-.vc-log-has-cmd {
+.vc-logs-has-cmd {
   padding-bottom: (80em / @font);
 }
 </style>

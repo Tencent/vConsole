@@ -204,8 +204,8 @@
     >
       {#each Object.entries(pluginList) as [pluginId, plugin]}
         <div
-          id="__vc_log_{plugin.id}"
-          class="vc-logbox"
+          id="__vc_plug_{plugin.id}"
+          class="vc-plugin-box"
           class:vc-actived="{plugin.id === activedPluginId}"
           bind:this={divContentInner}
         ></div>
@@ -228,3 +228,241 @@
   </div>
 </div>
 
+<style lang="less">
+@import "../styles/var.less";
+
+.vc-mask {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0, 0);
+  z-index: 10001;
+  -webkit-transition: background .3s;
+  transition: background .3s;
+  -webkit-tap-highlight-color: transparent;
+  overflow-y: scroll;
+}
+
+.vc-panel {
+  display: none;
+  position: fixed;
+  min-height: 85%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10002;
+  background-color: var(--VC-BG-0);
+  -webkit-transition: -webkit-transform .3s;
+  transition: -webkit-transform .3s;
+  transition: transform .3s;
+  transition: transform .3s, -webkit-transform .3s;
+
+  -webkit-transform: translate(0, 100%);
+  transform: translate(0, 100%);
+}
+
+#__vconsole.vc-toggle {
+
+  .vc-switch {
+    display: none;
+  }
+
+  .vc-mask {
+    background: rgba(0, 0, 0, 0.6);
+    display: block;
+  }
+
+  .vc-panel {
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+  }
+}
+
+
+// tabbar
+.vc-tabbar {
+  border-bottom: 1px solid var(--VC-FG-3);
+  overflow-x: auto;
+  height: (39em / @font);
+  width: auto;
+  white-space: nowrap;
+
+  .vc-tab {
+    display: inline-block;
+    line-height: (39em / @font);
+    padding: 0 (15em / @font);
+    border-right: 1px solid var(--VC-FG-3);
+    text-decoration: none;
+    color: var(--VC-FG-0);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+  .vc-tab:active {
+    background-color: rgba(0,0,0,0.15);
+  }
+  .vc-tab.vc-actived {
+    background-color: var(--VC-BG-1);
+  }
+}
+
+// topbar
+.vc-topbar {
+  background-color: var(--VC-BG-1);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  -moz-box-orient: horizontal;
+  -moz-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  width: 100%;
+
+  .vc-toptab {
+    display: none;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -moz-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    line-height: (30em / @font);
+    padding: 0 (15em / @font);
+    border-bottom: 1px solid var(--VC-FG-3);
+    text-decoration: none;
+    text-align: center;
+    color: var(--VC-FG-0);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+  .vc-toptab.vc-toggle {
+    display: block;
+  }
+  .vc-toptab:active {
+    background-color: rgba(0,0,0,0.15);
+  }
+  .vc-toptab.vc-actived {
+    border-bottom: 1px solid var(--VC-INDIGO);
+  }
+}
+
+// toolbar
+.vc-toolbar {
+  border-top: 1px solid var(--VC-FG-3);
+  line-height: (39em / @font);
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  -moz-box-orient: horizontal;
+  -moz-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+
+  .vc-tool {
+    display: none;
+    font-style: normal;
+    text-decoration: none;
+    color: var(--VC-FG-0);
+    width: 50%;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -moz-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    text-align: center;
+    position: relative;
+    -webkit-touch-callout: none;
+  }
+  .vc-tool.vc-toggle,
+  .vc-tool.vc-global-tool {
+    display: block;
+  }
+
+  .vc-tool:active {
+    background-color: rgba(0,0,0,0.15);
+  }
+  .vc-tool:after {
+    content: " ";
+    position: absolute;
+    top: (7em / @font);
+    bottom: (7em / @font);
+    right: 0;
+    border-left: 1px solid var(--VC-FG-3);
+  }
+
+  .vc-tool-last:after {
+    border: none;
+  }
+}
+
+// content
+.vc-content {
+  background-color: var(--VC-BG-2);
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: absolute;
+  top: (40em / @font);
+  left: 0;
+  right: 0;
+  bottom: (40em / @font);
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: constant(safe-area-inset-bottom);
+  margin-bottom: env(safe-area-inset-bottom);
+}
+.vc-content.vc-has-topbar {
+  top: (71em / @font);
+}
+.vc-plugin-box {
+  display: none;
+  position: relative;
+  min-height: 100%;
+}
+.vc-plugin-box.vc-actived {
+  display: block;
+}
+:global(.vc-plugin-content) {
+  padding-bottom: (39em / @font) * 2;
+  -webkit-tap-highlight-color: transparent;
+}
+:global(.vc-plugin-empty:before),
+:global(.vc-plugin-content:empty:before) {
+  content: "Empty";
+  color: var(--VC-FG-1);
+  position: absolute;
+  top: 45%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-size: (15em / @font);
+  text-align: center;
+}
+
+
+
+// safe area
+@supports (bottom: constant(safe-area-inset-bottom)) or (bottom: env(safe-area-inset-bottom)) {
+  .vc-toolbar,
+  .vc-switch {
+    bottom: constant(safe-area-inset-bottom);
+    bottom: env(safe-area-inset-bottom);
+  }
+}
+</style>

@@ -26,7 +26,7 @@
     <dd class="vc-table-col">Time</dd>
   </dl>
 
-  <div class="vc-log">
+  <div class="vc-plugin-content">
     {#each Object.entries($requestList) as [reqId, req]}
       <div class="vc-group" class:vc-actived="{req.actived}" id="{req.id}">
         <dl class="vc-table-row vc-group-preview" class:vc-table-row-error="{req.status >= 400}" on:click={() => onTapPreview(req.id)}>
@@ -145,5 +145,41 @@
 </div>
 
 <style lang="less">
-  
+@import "../styles/var.less";
+
+
+// group
+.vc-group {
+
+  .vc-group-preview {
+    -webkit-touch-callout: none;
+  }
+  .vc-group-preview:active {
+    background-color: var(--VC-BG-COLOR-ACTIVE);
+  }
+
+  .vc-group-detail {
+    display: none;
+    padding: 0 0 (10em / @font) (20em / @font);
+    border-bottom: 1px solid var(--VC-FG-3);
+  }
+
+}
+.vc-group.vc-actived {
+
+  .vc-group-detail {
+    display: block;
+    background-color: var(--VC-BG-1);
+  }
+
+  .vc-table-row {
+    background-color: var(--VC-BG-2);
+  }
+
+  .vc-group-preview {
+    background-color: var(--VC-BG-1);
+  }
+}
+
+
 </style>

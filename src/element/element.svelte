@@ -3,6 +3,6 @@
   import ElementNode from './elementNode.svelte';
 </script>
 
-<div class="vc-log">
+<div class="vc-plugin-content">
   <ElementNode node={$rootNode} on:toggleNode />
 </div>
