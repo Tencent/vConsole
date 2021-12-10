@@ -27,7 +27,7 @@
     <div class="section">
       <div class="hd">Object</div>
 
-      <a onclick="(() => console.log('hello'))()" href="javascript:;" class="weui_btn weui_btn_default">String</a>
+      <a onclick="(() => console.log('Hello vConsole!'))()" href="javascript:;" class="weui_btn weui_btn_default">A Simple String</a>
       <a onclick="normalObject()" href="javascript:;" class="weui_btn weui_btn_default">Common Object</a>
       <a onclick="largeObject()" href="javascript:;" class="weui_btn weui_btn_default">Large Object</a>
       <a onclick="circularObject()" href="javascript:;" class="weui_btn weui_btn_default">Circular Object & Array</a>
@@ -70,11 +70,11 @@ window.vConsole = new window.VConsole({
   // theme: 'dark',
   defaultPlugins: ['system'],
   onReady: function() {
-    console.log('vConsole is ready.');
+    console.log('vConsole: onReady');
   },
   onClearLog: function() {
-    console.log('on clearLog');
-  }
+    console.log('vConsole: onClearLog');
+  },
 });
 </script>
 

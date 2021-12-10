@@ -42,7 +42,7 @@
     }
   };
   const getLoadMoreText = (count: number) => {
-    return `(...${count} key${count > 1 ? 's' : ''} left)`;
+    return `(...${count} Key${count > 1 ? 's' : ''} Left)`;
   };
   const onTapTreeNode = () => {
     isToggle = !isToggle;
@@ -142,16 +142,17 @@
 // load more
 .vc-log-tree-loadmore {
   text-decoration: underline;
-  padding-left: (20em / @font);
+  padding-left: (24em / @font);
   position: relative;
+  color: var(--VC-CODE-FUNC-FG);
 }
 .vc-log-tree-loadmore::before {
-  content: "›";
+  content: "››";
   position: absolute;
   top: (-2em / @font);
   left: (10em / @font);
   font-size: (16em / @font);
-  color: var(--VC-CODE-KEY-FG);
+  color: var(--VC-CODE-FUNC-FG);
 }
 .vc-log-tree-loadmore:active {
   background-color: var(--VC-BG-COLOR-ACTIVE);

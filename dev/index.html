@@ -10,6 +10,12 @@
 </head>
 <body ontouchstart>
   <div class="page">
+    <h1 class="page_title">vConsole Demo</h1>
+    <div class="weui_text_area">
+      <p class="weui_msg_desc">
+        <a href="https://github.com/Tencent/vConsole" target="_blank">Github</a>
+      </p>
+    </div>
     <a href="./common.html" class="weui_btn weui_btn_default">Common Functions</a>
     <a href="./log.html" class="weui_btn weui_btn_default">Log</a>
     <a href="./network.html" class="weui_btn weui_btn_default">Network</a>
@@ -24,10 +30,10 @@
 
 <script>
 new window.VConsole({
-  maxLogNumber: 25,
+  maxLogNumber: 1000,
   // disableLogScrolling: true,
   // theme: 'dark',
-  defaultPlugins: ['system'],
+  // defaultPlugins: [],
   onReady: function() {
     console.log('vConsole is ready.');
   },
