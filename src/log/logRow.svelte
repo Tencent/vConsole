@@ -9,8 +9,6 @@
 
   export let log: IVConsoleLog;
 
-  let cachedCopyText: string = undefined;
-
   // $: {
   //   (window as any)._vcOrigConsole.log('logRow update', log._id, ...log.data);
   // }
@@ -20,19 +18,16 @@
   };
   
   const onTapCopy = () => {
-    if (cachedCopyText === undefined) {
-      const text: string[] = [];
-      try {
-        for (let i = 0; i < log.data.length; i++) {
-          // Only copy up to 10 levels of object depth and single key size up to 10KB
-          text.push(tool.safeJSONStringify(log.data[i].origData, 10, 10000));
-        }
-      } catch (e) {
-        // do nothing
+    const text: string[] = [];
+    try {
+      for (let i = 0; i < log.data.length; i++) {
+        // Only copy up to 10 levels of object depth and single key size up to 10KB
+        text.push(tool.safeJSONStringify(log.data[i].origData, 10, 10000));
       }
-      cachedCopyText = text.join(' ');
+    } catch (e) {
+      // do nothing
     }
-    return cachedCopyText;
+    return text.join(' ');
   };
 </script>
 
