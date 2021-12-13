@@ -479,6 +479,7 @@ class VConsole {
     }
     // remove component
     this.compInstance.$destroy();
+    Style.unuse();
 
     // reverse isInited when destroyed
     this.isInited = false;

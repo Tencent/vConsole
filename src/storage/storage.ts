@@ -3,7 +3,7 @@ import { VConsoleStorageModel } from './storage.model';
 import { default as StorageComp } from './storage.svelte';
 
 export class VConsoleStoragePlugin extends VConsoleSveltePlugin {
-  protected model = VConsoleStorageModel.getSingleton(VConsoleStorageModel);
+  protected model = VConsoleStorageModel.getSingleton(VConsoleStorageModel, 'VConsoleStorageModel');
 
   constructor(id: string, name: string, renderProps = { }) {
     super(id, name, StorageComp, renderProps);

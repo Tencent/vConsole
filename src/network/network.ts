@@ -4,7 +4,7 @@ import NetworkComp from './network.svelte';
 import { requestList, VConsoleNetworkModel } from './network.model';
 
 export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
-  protected module: VConsoleNetworkModel;
+  protected module: VConsoleNetworkModel = VConsoleNetworkModel.getSingleton(VConsoleNetworkModel, 'VConsoleNetworkModel');
   protected storeUnsubscribe: ReturnType<typeof requestList.subscribe>;
   protected isShow: boolean = false;
   protected isInBottom: boolean = true; // whether the panel is in the bottom
@@ -12,7 +12,6 @@ export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
   constructor(id: string, name: string, renderProps = { }) {
     super(id, name, NetworkComp, renderProps);
 
-    this.module = VConsoleNetworkModel.getSingleton(VConsoleNetworkModel);
     this.storeUnsubscribe = requestList.subscribe((value) => {
       // scroll to bottom
       if (this.isInBottom && this.isShow) {
@@ -54,7 +53,9 @@ export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
 
   onRemove() {
     super.onRemove();
-    this.module.unMock();
+    if (this.module) {
+      this.module.unMock();
+    }
     if (typeof this.storeUnsubscribe === 'function') {
       this.storeUnsubscribe();
     }

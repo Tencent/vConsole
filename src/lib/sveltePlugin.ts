@@ -15,6 +15,7 @@ export class VConsoleSveltePlugin<T extends {} = {}> extends VConsolePlugin {
     super(id, name);
     this.CompClass = CompClass;
     this.initialProps = initialProps;
+    console.log('VConsoleSveltePlugin constructor', id);
   }
 
   onReady() {

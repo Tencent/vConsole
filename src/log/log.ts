@@ -12,7 +12,7 @@ const MAX_LOG_NUMBER = 1000;
  * vConsole Log Plugin (base class).
  */
 export class VConsoleLogPlugin extends VConsoleSveltePlugin {
-  public module: VConsoleLogModel = VConsoleLogModel.getSingleton(VConsoleLogModel);;
+  public module: VConsoleLogModel = VConsoleLogModel.getSingleton(VConsoleLogModel, 'VConsoleLogModel');
   public isReady: boolean = false;
   public isShow: boolean = false;
   public isInBottom: boolean = true; // whether the panel is in the bottom

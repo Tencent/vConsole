@@ -5,5 +5,6 @@ declare module '*.html' {
 
 declare module '*.less' {
   const use: () => void;
-  export { use };
+  const unuse: () => void;
+  export { use, unuse };
 }

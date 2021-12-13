@@ -57,6 +57,12 @@
       <a onclick="promiseReject()" href="javascript:;" class="weui_btn weui_btn_default">Promise Reject</a>
       <a onclick="xssLog()" href="javascript:;" class="weui_btn weui_btn_default">XSS Log</a>
     </div>
+
+    <div class="section">
+      <div class="hd">Dev</div>
+
+      <a onclick="observeMutation()" href="javascript:;" class="weui_btn weui_btn_default">Observe Mutation</a>
+    </div>
   </div>
 </body>
 </html>
@@ -288,4 +294,36 @@ function xssLog() {
   console.log(obj);
 }
 
+let observerStarted = false;
+const observer = new MutationObserver((mutations) => {
+  for (let i = 0; i < mutations.length; i++) {
+    const mutation = mutations[i];
+    switch (mutation.type) {
+      case 'childList':
+        window._vcOrigConsole.log(mutation.type, 'add:'+mutation.addedNodes.length, 'remove:'+mutation.removedNodes.length, mutation.target);
+        break;
+      case 'characterData':
+        window._vcOrigConsole.log(mutation.type, 'old:'+mutation.oldValue, mutation.target);
+        break;
+      case 'attributes':
+        let newValue = mutation.target.attributes[mutation.attributeName]?.value;
+        window._vcOrigConsole.log(mutation.type, 'name:'+mutation.attributeName, 'old:'+mutation.oldValue, 'new:'+newValue, mutation.target);
+        break;
+    }
+  }
+});
+function observeMutation() {
+  if (observerStarted === false) {
+    observerStarted = true;
+    observer.observe(document.documentElement, {
+      attributes: true,
+      childList: true,
+      characterData: true,
+      subtree: true
+    });
+  } else {
+    observerStarted = false;
+    observer.disconnect();
+  }
+}
 </script>
