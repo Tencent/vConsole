@@ -42,7 +42,6 @@
 
 {#if log}
   <div
-    id="{log._id}"
     class="vc-log-row vc-log-{log.type}"
     class:vc-log-input={log.cmdType === 'input'}
     class:vc-log-output={log.cmdType === 'output'}
