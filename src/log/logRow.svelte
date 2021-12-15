@@ -1,9 +1,10 @@
 <script lang="ts">
-	// import { beforeUpdate, afterUpdate } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import * as tool from '../lib/tool';
   import IconCopy from '../component/iconCopy.svelte';
   import LogValue from './logValue.svelte';
   import LogTree from './logTree.svelte';
+  import Style from './logRow.less';
   import { VConsoleUninvocatableObject } from './logTool';
   import type { IVConsoleLog } from './log.model';
 
@@ -12,6 +13,14 @@
   // $: {
   //   (window as any)._vcOrigConsole.log('logRow update', log._id, ...log.data);
   // }
+
+  onMount(() => {
+    Style.use();
+  });
+
+  onDestroy(() => {
+    Style.unuse();
+  });
 
   const isTree = (origData: any) => {
     return !(origData instanceof VConsoleUninvocatableObject) && (tool.isArray(origData) || tool.isObject(origData));
@@ -55,77 +64,3 @@
     </div>
   </div>
 {/if}
-
-<style lang="less">
-@import "../styles/var.less";
-
-.vc-log-row {
-  margin: 0;
-  padding: (6em / @font) (8em / @font);
-  overflow: hidden;
-  line-height: 1.3;
-  border-bottom: 1px solid var(--VC-FG-3);
-  word-break: break-word;
-  position: relative;
-}
-
-// log type
-.vc-log-info {
-  color: var(--VC-PURPLE);
-}
-.vc-log-debug {
-  color: var(--VC-YELLOW);
-}
-.vc-log-warn {
-  color: var(--VC-ORANGE);
-  border-color: var(--VC-WARN-BORDER);
-  background-color: var(--VC-WARN-BG);
-}
-.vc-log-error {
-  color: var(--VC-RED);
-  border-color: var(--VC-ERROR-BORDER);
-  background-color: var(--VC-ERROR-BG);
-}
-
-// copy icon
-.vc-logrow-icon {
-  float: right;
-}
-
-// repeat
-.vc-log-repeat {
-  // display: inline-block;
-  float: left;
-  margin-right: (4em / @font);
-  padding: 0 (@fontSize / 2);
-  color: #D7E0EF;
-  background-color: #42597F;
-  border-radius: (@fontSize / 1.5);
-}
-.vc-log-error .vc-log-repeat {
-  color: #901818;
-  background-color: var(--VC-RED);
-}
-.vc-log-warn .vc-log-repeat {
-  color: #987D20;
-  background-color: #F4BD02;
-}
-
-// command input & output
-.vc-log-input,
-.vc-log-output {
-  padding-left: (12em / @font);
-}
-.vc-log-input:before,
-.vc-log-output:before {
-  content: "›";
-  position: absolute;
-  top: (2em / @font);
-  left: 0;
-  font-size: (16em / @font);
-  color: #6A5ACD;
-}
-.vc-log-output:before {
-  content: "‹";
-}
-</style>

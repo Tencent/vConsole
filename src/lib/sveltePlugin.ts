@@ -15,7 +15,6 @@ export class VConsoleSveltePlugin<T extends {} = {}> extends VConsolePlugin {
     super(id, name);
     this.CompClass = CompClass;
     this.initialProps = initialProps;
-    console.log('VConsoleSveltePlugin constructor', id);
   }
 
   onReady() {
@@ -28,6 +27,7 @@ export class VConsoleSveltePlugin<T extends {} = {}> extends VConsolePlugin {
       target: $container,
       props: this.initialProps,
     });
+    // console.log('onRenderTab', this.compInstance);
     callback($container.firstElementChild);
   }
 

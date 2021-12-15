@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { onDestroy } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import IconCopy from '../component/iconCopy.svelte';
   import { requestList } from './network.model';
+  import Style from './network.less';
 
   let reqCount = 0;
   const updateReqCount = (list: typeof $requestList) => {
@@ -14,7 +15,14 @@
     $requestList[reqId].actived = !$requestList[reqId].actived;
   };
 
-  onDestroy(unsubscribe);
+  onMount(() => {
+    Style.use();
+  });
+
+  onDestroy(() => {
+    unsubscribe();
+    Style.unuse();
+  });
 </script>
 
 <div class="vc-table">
@@ -143,43 +151,3 @@
 
   </div>
 </div>
-
-<style lang="less">
-@import "../styles/var.less";
-
-
-// group
-.vc-group {
-
-  .vc-group-preview {
-    -webkit-touch-callout: none;
-  }
-  .vc-group-preview:active {
-    background-color: var(--VC-BG-COLOR-ACTIVE);
-  }
-
-  .vc-group-detail {
-    display: none;
-    padding: 0 0 (10em / @font) (20em / @font);
-    border-bottom: 1px solid var(--VC-FG-3);
-  }
-
-}
-.vc-group.vc-actived {
-
-  .vc-group-detail {
-    display: block;
-    background-color: var(--VC-BG-1);
-  }
-
-  .vc-table-row {
-    background-color: var(--VC-BG-2);
-  }
-
-  .vc-group-preview {
-    background-color: var(--VC-BG-1);
-  }
-}
-
-
-</style>

@@ -1,7 +1,9 @@
 <script lang="ts">
+  import { onMount, onDestroy } from 'svelte';
   import * as tool from '../lib/tool';
   import LogValue from './logValue.svelte';
   import { VConsoleUninvocatableObject } from './logTool';
+  import Style from './logTree.less';
 
   export let origData: any;
   export let dataKey: string = undefined;
@@ -33,6 +35,14 @@
     }
     // (window as any)._vcOrigConsole.log('logTree update');
   }
+
+  onMount(() => {
+    Style.use();
+  });
+
+  onDestroy(() => {
+    Style.unuse();
+  });
 
   const loadNextPageChildKeys = (keyType: 'enum' | 'nonEnum') => {
     if (keyType === 'enum') {
@@ -95,66 +105,3 @@
   {/if}
 
 </div>
-
-<style lang="less">
-@import "../styles/var.less";
-
-// tree
-.vc-log-tree {
-  display: block;
-  overflow: auto;
-  position: relative;
-  -webkit-overflow-scrolling: touch;
-}
-
-// tree node
-.vc-log-tree-node {
-  display: block;
-  font-style: italic;
-  padding-left: (10em / @font);
-  position: relative;
-}
-.vc-log-tree.vc-is-tree > .vc-log-tree-node:active {
-  background-color: var(--VC-BG-COLOR-ACTIVE);
-}
-.vc-log-tree.vc-is-tree > .vc-log-tree-node::before {
-  content: "";
-  position: absolute;
-  top: (4em / @font);
-  left: (2em / @font);
-  width: 0;
-  height: 0;
-  border: transparent solid (4em / @font);
-  border-left-color: var(--VC-FG-1);
-}
-.vc-log-tree.vc-is-tree.vc-toggle > .vc-log-tree-node::before {
-  top: (6em / @font);
-  left: 0;
-  border-top-color: var(--VC-FG-1);
-  border-left-color: transparent;
-}
-
-// tree child
-.vc-log-tree-child {
-  margin-left: (10em / @font);
-}
-
-// load more
-.vc-log-tree-loadmore {
-  text-decoration: underline;
-  padding-left: (24em / @font);
-  position: relative;
-  color: var(--VC-CODE-FUNC-FG);
-}
-.vc-log-tree-loadmore::before {
-  content: "››";
-  position: absolute;
-  top: (-2em / @font);
-  left: (10em / @font);
-  font-size: (16em / @font);
-  color: var(--VC-CODE-FUNC-FG);
-}
-.vc-log-tree-loadmore:active {
-  background-color: var(--VC-BG-COLOR-ACTIVE);
-}
-</style>

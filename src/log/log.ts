@@ -1,8 +1,5 @@
-// import { get } from 'svelte/store';
-// import * as tool from '../lib/tool';
 import { VConsoleSveltePlugin } from '../lib/sveltePlugin';
 import LogComp from './log.svelte';
-import { VConsoleLogStore as Store } from './log.store';
 import { VConsoleLogModel } from './log.model';
 import type { IConsoleLogMethod } from './log.model';
 

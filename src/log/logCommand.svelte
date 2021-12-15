@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { onMount, onDestroy, createEventDispatcher } from 'svelte';
   import Icon from '../component/icon.svelte';
   import { getLastIdentifier } from './logTool';
   import { VConsoleLogModel } from './log.model';
+  import Style from './logCommand.less';
   // import LogRow from './logRow.svelte';
 
   interface ICmdPromptedItem {
@@ -19,7 +20,7 @@
    * Inner properties
    *************************************/
 
-  const module = VConsoleLogModel.getSingleton(VConsoleLogModel);
+  const module = VConsoleLogModel.getSingleton(VConsoleLogModel, 'VConsoleLogModel');
   const cachedObjKeys: { [key: string]: string[] } = {};
   const dispatch = createEventDispatcher();
   // const _console = (window as any)._vcOrigConsole;
@@ -35,9 +36,13 @@
    * Lifecycle
    *************************************/
 
-  // onMount(() => {
+  onMount(() => {
+    Style.use();
+  });
 
-  // });
+  onDestroy(() => {
+    Style.unuse();
+  });
   
 
   /*************************************
@@ -258,95 +263,3 @@
     ></textarea>
   </div>
 </form>
-
-<style lang="less">
-@import "../styles/var.less";
-
-// container
-.vc-cmd {
-  position: absolute;
-  height: (40em / @font);
-  left: 0;
-  right: 0;
-  bottom: (40em / @font);
-  border-top: 1px solid var(--VC-FG-3);
-  display: block !important;
-
-  &.vc-filter{
-    bottom: 0;
-  }
-}
-
-// input or textarea
-.vc-cmd-input-wrap {
-  display: block;
-  position: relative;
-  height: (28em / @font);
-  margin-right: (40em / @font);
-  padding: (6em / @font) (8em / @font);
-}
-.vc-cmd-input {
-  width: 100%;
-  border: none;
-  resize: none;
-  outline: none;
-  padding: 0;
-  font-size: (12em / @font);
-  background-color: transparent;
-  color: var(--VC-FG-0);
-}
-.vc-cmd-input::-webkit-input-placeholder {
-  line-height: (28em / @font);
-}
-
-// button
-.vc-cmd-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: (40em / @font);
-  border: none;
-  background-color: var(--VC-BG-0);
-  color: var(--VC-FG-0);
-  outline: none;
-  -webkit-touch-callout: none;
-  font-size: 1em;
-}
-.vc-cmd-clear-btn {
-  position: absolute;
-  text-align: center;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: (40em / @font);
-  line-height: (40em / @font);
-}
-.vc-cmd-btn:active,
-.vc-cmd-clear-btn:active {
-  background-color: var(--VC-BG-COLOR-ACTIVE);
-}
-
-// prompted list
-.vc-cmd-prompted {
-  position: absolute;
-  left: (6em / @font);
-  right: (6em / @font);
-  background-color: var(--VC-BG-3);
-  border: 1px solid var(--VC-FG-3);
-  overflow-x: scroll;
-  display: none;
-}
-.vc-cmd-prompted li {
-  list-style: none;
-  line-height: 30px;
-  padding: 0 (6em / @font);
-  border-bottom: 1px solid var(--VC-FG-3);
-}
-.vc-cmd-prompted li:active {
-  background-color: var(--VC-BG-COLOR-ACTIVE);
-}
-.vc-cmd-prompted-hide {
-  text-align: center;
-}
-</style>

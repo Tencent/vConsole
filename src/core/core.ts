@@ -18,7 +18,8 @@ import { SvelteComponent } from 'svelte';
 import * as tool from '../lib/tool';
 import $ from '../lib/query';
 
-import Style from './core.less';
+// import Style from './core.less';
+// import './core.less';
 
 import { default as CoreCompClass } from './core.svelte';
 
@@ -72,7 +73,8 @@ class VConsole {
     }
 
     // create style tag
-    Style.use();
+    // Style.use && Style.use();
+    // console.log('core.ts Style', Style);
 
     this.isInited = false;
     this.option = {
@@ -169,6 +171,7 @@ class VConsole {
           },
         },
       });
+      // console.log('core.ts compInstance', this.compInstance);
 
       // bind events
       this.compInstance.$on('show', (e) => {
@@ -479,7 +482,7 @@ class VConsole {
     }
     // remove component
     this.compInstance.$destroy();
-    Style.unuse();
+    // Style.unuse && Style.unuse();
 
     // reverse isInited when destroyed
     this.isInited = false;

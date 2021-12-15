@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { onMount, onDestroy } from 'svelte';
   import * as tool from '../lib/tool';
   import { getValueTextAndType } from './logTool';
+  import Style from './logValue.less';
 
   export let origData: any;
   export let style: string = '';
@@ -30,6 +32,14 @@
       isInited = true;
     }
   }
+
+  onMount(() => {
+    Style.use();
+  });
+
+  onDestroy(() => {
+    Style.unuse();
+  });
 </script>
 
 {#if dataKey !== undefined}<i class="vc-log-key" class:vc-log-key-symbol={keyType === 'symbol'} class:vc-log-key-private={keyType === 'private'}>{tool.getVisibleText(dataKey)}</i>:{/if} <i class="vc-log-val vc-log-val-{valueType}" class:vc-log-val-haskey={dataKey !== undefined} style="{style}">
@@ -39,41 +49,3 @@
     {dataValue}
   {/if}
 </i>
-
-<style lang="less">
-// keys
-.vc-log-key {
-  color: var(--VC-CODE-KEY-FG);
-}
-.vc-log-key-private {
-  color: var(--VC-CODE-PRIVATE-KEY-FG);
-}
-
-// values
-.vc-log-val {
-  white-space: pre-line;
-}
-.vc-log-val-function {
-  color: var(--VC-CODE-FUNC-FG);
-  font-style: italic !important;
-}
-.vc-log-val-bigint {
-  color: var(--VC-CODE-FUNC-FG);
-}
-.vc-log-val-number,
-.vc-log-val-boolean {
-  color: var(--VC-CODE-NUMBER-FG);
-}
-.vc-log-val-string.vc-log-val-haskey {
-  color: var(--VC-CODE-STR-FG);
-  white-space: normal;
-}
-.vc-log-val-null,
-.vc-log-val-undefined,
-.vc-log-val-uninvocatable {
-  color: var(--VC-CODE-NULL-FG);
-}
-.vc-log-val-symbol {
-  color: var(--VC-CODE-STR-FG);
-}
-</style>

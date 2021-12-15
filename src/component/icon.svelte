@@ -1,5 +1,16 @@
 <script lang="ts">
+  import { onMount, onDestroy } from 'svelte';
+  import Style from './icon.less';
+
   export let name: 'delete' | 'clear' | 'copy' | 'edit' | 'success' | 'done' | 'cancel';
+
+  onMount(() => {
+    Style.use();
+  });
+
+  onDestroy(() => {
+    Style.unuse();
+  });
 </script>
 
 <i class="vc-icon" on:click>
@@ -35,35 +46,3 @@
     <svg class="vc-icon-refresh" viewBox="0 0 1024 1024" width="200" height="200"><path d="M863.424 603.424q0 2.848-0.576 4-36.576 153.152-153.152 248.288t-273.152 95.136q-83.424 0-161.44-31.424t-139.136-89.728l-73.728 73.728q-10.848 10.848-25.728 10.848t-25.728-10.848-10.848-25.728v-256q0-14.848 10.848-25.728t25.728-10.848h256q14.848 0 25.728 10.848t10.848 25.728-10.848 25.728l-78.272 78.272q40.576 37.728 92 58.272t106.848 20.576q76.576 0 142.848-37.152t106.272-102.272q6.272-9.728 30.272-66.848 4.576-13.152 17.152-13.152h109.728q7.424 0 12.864 5.44t5.44 12.864z m14.304-457.152v256q0 14.848-10.848 25.728t-25.728 10.848h-256q-14.848 0-25.728-10.848t-10.848-25.728 10.848-25.728l78.848-78.848q-84.576-78.272-199.424-78.272-76.576 0-142.848 37.152t-106.272 102.272q-6.272 9.728-30.272 66.848-4.576 13.152-17.152 13.152H28.576q-7.424 0-12.864-5.44t-5.44-12.864v-4q37.152-153.152 154.272-248.288t274.272-95.136q83.424 0 162.272 31.712t140 89.44l74.272-73.728q10.848-10.848 25.728-10.848t25.728 10.848 10.848 25.728z"></path></svg>
   {/if} -->
 </i>
-
-<style lang="less">
-  .vc-icon {
-    word-break: normal;
-    white-space: normal;
-    overflow: visible;
-
-    svg {
-      fill: var(--VC-FG-2);
-      height: 1em;
-      width: 1em;
-      vertical-align: -0.11em;
-    }
-    .vc-icon-delete {
-      vertical-align: -0.11em;
-    }
-    .vc-icon-copy {
-      height: 1.1em;
-      width: 1.1em;
-      vertical-align: -0.16em;
-    }
-    .vc-icon-suc {
-      fill: var(--VC-TEXTGREEN);
-      height: 1.1em;
-      width: 1.1em;
-      vertical-align: -0.16em;
-    }
-    // .vc-icon-add {
-    //   vertical-align: -0.16em;
-    // }
-  }
-</style>

@@ -1,0 +1,27 @@
+@import "../../styles/var.less";
+
+// tabbar
+.vc-tabbar {
+  border-bottom: 1px solid var(--VC-FG-3);
+  overflow-x: auto;
+  height: (39em / @font);
+  width: auto;
+  white-space: nowrap;
+
+  .vc-tab {
+    display: inline-block;
+    line-height: (39em / @font);
+    padding: 0 (15em / @font);
+    border-right: 1px solid var(--VC-FG-3);
+    text-decoration: none;
+    color: var(--VC-FG-0);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+  .vc-tab:active {
+    background-color: rgba(0,0,0,0.15);
+  }
+  .vc-tab.vc-actived {
+    background-color: var(--VC-BG-1);
+  }
+}

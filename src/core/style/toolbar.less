@@ -1,0 +1,59 @@
+@import "../../styles/var.less";
+
+// toolbar
+.vc-toolbar {
+  border-top: 1px solid var(--VC-FG-3);
+  line-height: (39em / @font);
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  -moz-box-orient: horizontal;
+  -moz-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+
+  .vc-tool {
+    display: none;
+    font-style: normal;
+    text-decoration: none;
+    color: var(--VC-FG-0);
+    width: 50%;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -moz-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    text-align: center;
+    position: relative;
+    -webkit-touch-callout: none;
+  }
+  .vc-tool.vc-toggle,
+  .vc-tool.vc-global-tool {
+    display: block;
+  }
+
+  .vc-tool:active {
+    background-color: rgba(0,0,0,0.15);
+  }
+  .vc-tool:after {
+    content: " ";
+    position: absolute;
+    top: (7em / @font);
+    bottom: (7em / @font);
+    right: 0;
+    border-left: 1px solid var(--VC-FG-3);
+  }
+
+  .vc-tool-last:after {
+    border: none;
+  }
+}

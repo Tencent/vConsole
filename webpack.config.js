@@ -41,20 +41,11 @@ module.exports = (env, argv) => {
           ],
         },
         {
-          test: /\.html$/,
-          use: [
-            {
-              loader: 'html-loader',
-              options: { minimize: false },
-            },
-          ],
-        },
-        {
           test: /\.(less|css)$/i,
           use: [
             {
               loader: 'style-loader',
-              options: { injectType: 'lazySingletonStyleTag' },
+              options: { injectType: 'lazyStyleTag' },
             },
             { loader: 'css-loader' },
             {
@@ -79,7 +70,7 @@ module.exports = (env, argv) => {
                   dev: isDev,
                   accessors: true,
                 },
-                emitCss: false,
+                emitCss: true,
                 hotReload: false,
               },
             },
@@ -106,6 +97,16 @@ module.exports = (env, argv) => {
           extractComments: false,
         }),
       ],
+      // splitChunks: {
+      //   cacheGroups: {
+      //     styles: {
+      //       name: "styles",
+      //       type: "css/mini-extract",
+      //       chunks: "all",
+      //       enforce: true,
+      //     },
+      //   },
+      // },
     },
     watchOptions: {
       ignored: ['**/node_modules'],

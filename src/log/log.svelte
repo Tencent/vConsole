@@ -1,11 +1,12 @@
 <script lang="ts">
-  // import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { isMatchedFilterText } from './logTool';
   // import { logStore } from './log.store';
   import { VConsoleLogStore as Store } from './log.store';
   import LogRow from './logRow.svelte';
   import LogCommand from './logCommand.svelte';
-  import type { IConsoleLogMethod, IVConsoleLog } from './log.model';
+  import Style from './log.less';
+  import type { IConsoleLogMethod } from './log.model';
 
   export let pluginId: string = 'default';
   export let showCmd: boolean = false;
@@ -22,6 +23,14 @@
       // (window as any)._vcOrigConsole.log('log.svelte update', pluginId);
     }
   }
+
+  onMount(() => {
+    Style.use();
+  });
+
+  onDestroy(() => {
+    Style.unuse();
+  });
 
   const onFilterText = (e) => {
     filterText = e.detail.filterText || '';
@@ -50,11 +59,3 @@
   {/if}
 
 </div>
-
-<style lang="less">
-@import "../styles/var.less";
-
-.vc-logs-has-cmd {
-  padding-bottom: (80em / @font);
-}
-</style>

@@ -1,4 +1,4 @@
-// import MutationObserver from 'mutation-observer'
+import MutationObserver from 'mutation-observer'
 import { get } from 'svelte/store';
 import { VConsoleSveltePlugin } from '../lib/sveltePlugin';
 import ElementComp from './element.svelte';
@@ -18,14 +18,15 @@ export class VConsoleElementPlugin extends VConsoleSveltePlugin {
     super(id, name, ElementComp, renderProps);
   }
 
-  onShow() {
+  public onShow() {
     if (this.isInited) {
       return;
     }
     this._init();
   }
 
-  onRemove() {
+  public onRemove() {
+    super.onRemove();
     if (this.isInited) {
       this.observer.disconnect();
       this.isInited = false;
@@ -34,7 +35,7 @@ export class VConsoleElementPlugin extends VConsoleSveltePlugin {
     }
   }
 
-  onAddTool(callback) {
+  public onAddTool(callback) {
     const toolList = [
       {
         name: 'Expand',
