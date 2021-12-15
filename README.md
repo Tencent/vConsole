@@ -4,7 +4,10 @@ vConsole
 ---
 A lightweight, extendable front-end developer tool for mobile web page.
 
-vConsole is the official debugging tool for WeChat Miniprograms.
+vConsole is framework-free, you can use it in Vue or React or any other framework application.
+
+Now vConsole is the official debugging tool for WeChat Miniprograms.
+
 
 
 ## Features
@@ -32,7 +35,7 @@ See [Tutorial](./doc/tutorial.md) for more usage details.
 
 For installation, there are 2 primary ways of adding vConsole to a project:
 
-Method 1: Using npm (Recommanded)
+#### Method 1: Using npm (Recommanded)
 
 ```bash
 $ npm install vconsole
@@ -52,7 +55,7 @@ console.log('Hello world');
 vConsole.destroy();
 ```
 
-Method 2: Using CDN in HTML:
+#### Method 2: Using CDN in HTML:
 
 ```html
 <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
@@ -62,6 +65,10 @@ Method 2: Using CDN in HTML:
 </script>
 ```
 
+Available CDN:
+
+- https://unpkg.com/vconsole@latest/dist/vconsole.min.js
+- https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js
 
 
 ## Preview
