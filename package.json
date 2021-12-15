@@ -13,7 +13,6 @@
   "scripts": {
     "build": "webpack --mode=production --progress",
     "build:typings": "tsc --build tsconfig.type.json",
-    "build:typings:TODO": "dts-bundle-generator --no-banner=true -o dist/vconsole.min.d.ts src/vconsole.ts",
     "build:dev": "webpack --mode=development --progress",
     "watch": "webpack --mode=development --watch --progress",
     "serve": "webpack serve --config webpack.serve.config --progress",
@@ -46,7 +45,6 @@
     "babel-plugin-add-module-exports": "^1.0.4",
     "chai": "^4.3.4",
     "css-loader": "^5.2.4",
-    "dts-bundle-generator": "^5.9.0",
     "json-loader": "^0.5.7",
     "less": "^4.1.1",
     "less-loader": "^8.1.1",

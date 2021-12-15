@@ -1,5 +1,5 @@
 const { JSDOM } = require('jsdom');
-const VConsole = require('../dist/vconsole.min');
+const VConsole = require('../');
 const tool = VConsole.tool;
 
 const { window } = new JSDOM(`...`);
