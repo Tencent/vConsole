@@ -11,6 +11,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Refactor(Core)` *Remove* `vConsole.(tabList | activedTab | $dom)` properties.
 - `Refactor(Plugin)` *Rename* `vConsole.showTab(pluginID)` to `vConsole.showPlugin(pluginID)`.
 - `Refactor(Plugin)` *Change* callback option `{ data, onClick }` of plugin event `addTopBar`: `onClick` method will receive 2 arguments (which was 0 before): `(event: Event, data?: any) => boolean`, which `data` is the above option's `data` field.
+- `Feat(Core)`: Remove helper functions `vConsole.tool` and `vConsole.$`.
 
 **Common Updates:**
 
@@ -22,6 +23,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Feat(Element)` Improve UX, selected node will be highlighted and applied to Expand/Collapse action.
 - `Feat(Style)` Style tags will be loaded into `<head>` after vConsole initialization, and removed after destruction.
 - `Refactor(Storage)` Improve UX.
+- `Fix(Network)` Throw error when `Fetch` get an error. (issue #458)
 
 
 ## 3.9.5 (2021-11-10)

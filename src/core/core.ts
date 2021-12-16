@@ -48,11 +48,7 @@ class VConsole {
   protected compInstance: SvelteComponent;
   protected pluginList: { [id: string]: VConsolePlugin } = {}; // plugin instance
 
-  // export helper functions to public
-  public tool = tool;
-
   // export static class
-  public static tool = tool;
   public static VConsolePlugin = VConsolePlugin;
   public static VConsoleLogPlugin = VConsoleLogPlugin;
   public static VConsoleDefaultPlugin = VConsoleDefaultPlugin;
