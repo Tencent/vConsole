@@ -1,6 +1,7 @@
 import { writable, get } from 'svelte/store';
 import * as tool from '../lib/tool';
 import { VConsoleModel } from '../lib/model';
+import { contentStore } from '../core/core.model';
 import { getLogDatasWithFormatting } from './logTool';
 import { VConsoleLogStore as Store } from './log.store';
 
@@ -338,6 +339,7 @@ export class VConsoleLogModel extends VConsoleModel {
       store.logList.push(log);
       return store;
     });
+    contentStore.updateTime();
   }
 
   protected _limitLogListLength() {

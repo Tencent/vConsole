@@ -1,11 +1,10 @@
 <script lang="ts">
   import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-  import query from '../lib/query';
   import * as tool from '../lib/tool';
   import { default as SwitchButton } from './switchButton.svelte';
-  import type { IVConsoleTopbarOptions, IVConsoleToolbarOptions } from '../lib/plugin';
-  // import Style from '!style-loader!css-loader!less-loader!babel-loader!svelte-loader!./core.svelte';
+  import { contentStore } from './core.model';
   import Style from './core.less';
+  import type { IVConsoleTopbarOptions, IVConsoleToolbarOptions } from '../lib/plugin';
 
   /*************************************
    * Public properties
@@ -20,6 +19,7 @@
   }
 
   export let theme = '';
+  export let disableScrolling = false;
   export let show = false;
   export let showSwitchButton = true;
   export let switchButtonPosition = { x: 0, y: 0 };
@@ -35,10 +35,13 @@
 	const dispatch = createEventDispatcher();
   let preventContentMove = false;
   let divContent: HTMLElement;
+  let unsubscribe: ReturnType<typeof contentStore.subscribe>;
   let fontSize = '';
   let showMain = false;
   let showPanel = false;
   let showMask = false;
+  let isInBottom = true;
+  let preivousContentUpdateTime = 0;
 
   $: {
     if (show === true) {
@@ -49,6 +52,7 @@
       // set 10ms delay to fix confict between display and transition
       setTimeout(() => {
         showMain = true;
+        autoScrollToBottom();
       }, 10);
     } else {
       showMain = false;
@@ -77,13 +81,38 @@
         fontSize = 13 * dpr + 'px';
       }
     }
+    // style
     Style.use && Style.use();
     // console.log('core.svelte onMount', Style);
+
+    unsubscribe = contentStore.subscribe((store) => {
+      if (!show) { return; }
+      if (preivousContentUpdateTime !== store.updateTime) {
+        preivousContentUpdateTime = store.updateTime;
+        autoScrollToBottom();
+      }
+    });
   });
 
   onDestroy(() => {
     Style.unuse && Style.unuse();
+    unsubscribe && unsubscribe();
   });
+
+
+  /*************************************
+   * Methods
+   *************************************/
+
+  const scrollToBottom = () => {
+    if (!divContent) { return; }
+    divContent.scrollTop = divContent.scrollHeight - divContent.offsetHeight;
+  };
+  const autoScrollToBottom = () => {
+    if (!disableScrolling && isInBottom) {
+      scrollToBottom();
+    }
+  };
 
 
   /*************************************
@@ -125,31 +154,32 @@
     }
   };
   const onContentTouchStart = (e) => {
-    let top = divContent.scrollTop,
-        totalScroll = divContent.scrollHeight,
-        currentScroll = top + divContent.offsetHeight;
-      if (top === 0) {
-        // when content is on the top,
-        // reset scrollTop to lower position to prevent iOS apply scroll action to background
-        divContent.scrollTop = 1;
-        // however, when content's height is less than its container's height,
-        // scrollTop always equals to 0 (it is always on the top),
-        // so we need to prevent scroll event manually
-        if (divContent.scrollTop === 0) {
-          if (!query.hasClass(e.target, 'vc-cmd-input')) { // skip input
-            preventContentMove = true;
-          }
-        }
-      } else if (currentScroll === totalScroll) {
-        // when content is on the bottom,
-        // do similar processing
-        divContent.scrollTop = top - 1;
-        if (divContent.scrollTop === top) {
-          if (!query.hasClass(e.target, 'vc-cmd-input')) {
-            preventContentMove = true;
-          }
+    const top = divContent.scrollTop,
+          totalScroll = divContent.scrollHeight,
+          currentScroll = top + divContent.offsetHeight;
+    if (top === 0) {
+      // when content is on the top,
+      // reset scrollTop to lower position to prevent iOS apply scroll action to background
+      divContent.scrollTop = 1;
+      // however, when content's height is less than its container's height,
+      // scrollTop always equals to 0 (it is always on the top),
+      // so we need to prevent scroll event manually
+      if (divContent.scrollTop === 0) {
+        if (e.target.classList && !e.target.classList.contains('vc-cmd-input')) { // skip input
+          preventContentMove = true;
         }
       }
+    } else if (currentScroll === totalScroll) {
+      // when content is on the bottom,
+      // do similar processing
+      divContent.scrollTop = top - 1;
+      if (divContent.scrollTop === top) {
+        if (e.target.classList && !e.target.classList.contains('vc-cmd-input')) {
+          preventContentMove = true;
+        }
+      }
+    }
+    // (window as any)._vcOrigConsole.log('preventContentMove', preventContentMove);
   };
   const onContentTouchMove = (e) => {
     if (preventContentMove) {
@@ -158,6 +188,15 @@
   };
   const onContentTouchEnd = (e) => {
     preventContentMove = false;
+  };
+  const onContentScroll = (e) => {
+    if (!show) { return; }
+    if (divContent.scrollTop + divContent.offsetHeight >= divContent.scrollHeight - 50) {
+      isInBottom = true;
+    } else {
+      isInBottom = false;
+    }
+    // (window as any)._vcOrigConsole.log('onContentScroll', isInBottom);
   };
 </script>
 
@@ -209,6 +248,7 @@
       on:touchstart={onContentTouchStart}
       on:touchmove={onContentTouchMove}
       on:touchend={onContentTouchEnd}
+      on:scroll={onContentScroll}
     >
       {#each Object.entries(pluginList) as [pluginId, plugin]}
         <div

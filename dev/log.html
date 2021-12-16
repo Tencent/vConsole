@@ -7,17 +7,6 @@
   <title>vConsole: Log</title>
   <link href="./lib/weui.min.css" rel="stylesheet"/>
   <link href="./lib/demo.css" rel="stylesheet"/>
-  <style>
-    .section {
-      padding: 0 0 12px;
-    }
-    .section .hd {
-      text-align: center;
-      font-size: 18px;
-      line-height: 2;
-      color: #225fba;
-    }
-  </style>
 
   <!-- <script src="../dist/vconsole.min.js"></script> -->
   <!-- <script src="https://unpkg.com/vconsole/dist/vconsole.min.js"></script> -->
@@ -62,6 +51,7 @@
       <div class="hd">Dev</div>
 
       <a onclick="observeMutation()" href="javascript:;" class="weui_btn weui_btn_default">Observe Mutation</a>
+      <a onclick="scrolling()" href="javascript:;" class="weui_btn weui_btn_default">Scrolling</a>
     </div>
   </div>
 </body>
@@ -74,7 +64,7 @@ window.vConsole = new window.VConsole({
   maxLogNumber: 25,
   // disableLogScrolling: true,
   // theme: 'dark',
-  defaultPlugins: ['system'],
+  // defaultPlugins: ['system'],
   onReady: function() {
     console.log('vConsole: onReady');
   },
@@ -325,5 +315,18 @@ function observeMutation() {
     observerStarted = false;
     observer.disconnect();
   }
+}
+
+function scrolling() {
+  vConsole.setOption('maxLogNumber', 500);
+  let n = 0
+  let t = setInterval(() => {
+    n++;
+    if (n > 500) {
+      clearInterval(t);
+      vConsole.setOption('maxLogNumber', 25);
+    }
+    console.log('scrolling', n);
+  }, 150);
 }
 </script>

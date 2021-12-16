@@ -13,7 +13,6 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
   public isReady: boolean = false;
   public isShow: boolean = false;
   public isInBottom: boolean = true; // whether the panel is in the bottom
-  protected storeUnsubscriber: Function;
 
   constructor(id: string, name: string,) {
     super(id, name, LogComp, { pluginId: id, filterType: 'all' });

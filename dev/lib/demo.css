@@ -37,3 +37,13 @@ html, body {
 .weui_extra_area a {
   color: #61749B;
 }
+
+.section {
+  padding: 0 0 12px;
+}
+.section .hd {
+  text-align: center;
+  font-size: 18px;
+  line-height: 2;
+  color: #225fba;
+}

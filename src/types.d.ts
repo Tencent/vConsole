@@ -1,3 +1,5 @@
+declare var __VERSION__: string;
+
 declare module '*.html' {
   const _: string;
   export default _;

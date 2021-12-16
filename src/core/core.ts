@@ -13,13 +13,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole core class
  */
 
-import { SvelteComponent } from 'svelte';
+import type { SvelteComponent } from 'svelte';
 
 import * as tool from '../lib/tool';
 import $ from '../lib/query';
-
-// import Style from './core.less';
-// import './core.less';
 
 import { default as CoreCompClass } from './core.svelte';
 
@@ -44,7 +41,6 @@ declare interface VConsoleOptions {
 const VCONSOLE_ID = '#__vconsole';
 
 class VConsole {
-  // @ts-ignore
   public version: string = __VERSION__;
   public isInited: boolean;
   public option: VConsoleOptions = {};
@@ -54,7 +50,6 @@ class VConsole {
 
   // export helper functions to public
   public tool = tool;
-  public $ = $;
 
   // export static class
   public static tool = tool;
@@ -72,18 +67,10 @@ class VConsole {
       return;
     }
 
-    // create style tag
-    // Style.use && Style.use();
-    // console.log('core.ts Style', Style);
-
     this.isInited = false;
     this.option = {
       defaultPlugins: ['system', 'network', 'element', 'storage']
     };
-
-    // export helper functions to public
-    this.tool = tool;
-    this.$ = $;
 
     // merge options
     if (tool.isObject(opt)) {
@@ -125,9 +112,8 @@ class VConsole {
   }
 
   /**
-  * add built-in plugins
-  * @private
-  */
+   * Add built-in plugins.
+   */
   private _addBuiltInPlugins() {
     // add default log plugin
     this.addPlugin(new VConsoleDefaultPlugin('default', 'Log'));
@@ -154,9 +140,8 @@ class VConsole {
   }
 
   /**
-  * init view component
-  * @private
-  */
+   * Init svelte component.
+   */
   private _initComponent() {
     if (! $.one(VCONSOLE_ID)) {
       const switchX = <any>tool.getStorage('switch_x') * 1;
@@ -187,23 +172,24 @@ class VConsole {
       });
     }
 
-    // set theme
-    this._updateTheme();
+    // set options into component
+    this._updateComponentByOptions();
   }
 
-  /**
-  * Update theme
-  * @private
-  */
-  private _updateTheme() {
+  private _updateComponentByOptions() {
     if (!this.compInstance) {
       return;
     }
-    let theme = this.option.theme;
-    if (theme !== 'light' && theme !== 'dark') {
-      theme = ''; // use system theme
+
+    if (this.compInstance.theme !== this.option.theme) {
+      let theme = this.option.theme;
+      theme = theme !== 'light' && theme !== 'dark' ? '' : theme; // empty string = use system theme
+      this.compInstance.theme = theme;
     }
-    this.compInstance.theme = theme;
+
+    if (this.compInstance.disableScrolling !== this.option.disableLogScrolling) {
+      this.compInstance.disableScrolling = !!this.option.disableLogScrolling;
+    }
   }
 
   /**
@@ -239,8 +225,8 @@ class VConsole {
   }
 
   /**
-  * trigger a vConsole.option event
-  */
+   * Trigger a `vConsole.option` event.
+   */
   public triggerEvent(eventName: string, param?: any) {
     eventName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1);
     if (tool.isFunction(this.option[eventName])) {
@@ -249,9 +235,8 @@ class VConsole {
   }
 
   /**
-  * init a plugin
-  * @private
-  */
+   * Init a plugin.
+   */
   private _initPlugin<T extends VConsolePlugin>(plugin: T) {
     plugin.vConsole = this;
     this.compInstance.pluginList[plugin.id] = {
@@ -312,9 +297,8 @@ class VConsole {
   }
 
   /**
-  * trigger an event for each plugin
-  * @private
-  */
+   * Trigger an event for each plugin/
+   */
   private _triggerPluginsEvent(eventName: string) {
     for (let id in this.pluginList) {
       if (this.pluginList[id].isReady) {
@@ -335,11 +319,8 @@ class VConsole {
   }
 
   /**
-  * add a new plugin
-  * @public
-  * @param object VConsolePlugin object
-  * @return boolean
-  */
+   * Add a new plugin.
+   */
   public addPlugin(plugin: VConsolePlugin) {
     // ignore this plugin if it has already been installed
     if (this.pluginList[plugin.id] !== undefined) {
@@ -357,11 +338,8 @@ class VConsole {
   }
 
   /**
-  * remove a plugin
-  * @public
-  * @param string pluginID
-  * @return boolean
-  */
+   * Remove a plugin.
+   */
   public removePlugin(pluginID: string) {
     pluginID = (pluginID + '').toLowerCase();
     const plugin = this.pluginList[pluginID];
@@ -389,9 +367,8 @@ class VConsole {
   }
 
   /**
-  * show console panel
-  * @public
-  */
+   * Show console panel.
+   */
   public show() {
     if (!this.isInited) {
       return;
@@ -401,9 +378,8 @@ class VConsole {
   }
 
   /**
-  * hide console panel
-  * @public
-  */
+   * Hide console panel.
+   */
   public hide() {
     if (!this.isInited) {
       return;
@@ -413,9 +389,8 @@ class VConsole {
   }
 
   /**
-  * show switch button
-  * @public
-  */
+   * Show switch button
+   */
   public showSwitch() {
     if (!this.isInited) {
       return;
@@ -424,8 +399,8 @@ class VConsole {
   }
 
   /**
-  * hide switch button
-  */
+   * Hide switch button.
+   */
   public hideSwitch() {
     if (!this.isInited) {
       return;
@@ -434,9 +409,8 @@ class VConsole {
   }
 
   /**
-  * show a plugin panel
-  * @public
-  */
+   * Show a plugin panel.
+   */
   public showPlugin(pluginId: string) {
     if (!this.isInited) {
       return;
@@ -448,29 +422,27 @@ class VConsole {
   }
 
   /**
-  * update option(s)
-  * @public
-  */
+   * Update option(s).
+   */
   public setOption(keyOrObj: any, value?: any) {
     if (tool.isString(keyOrObj)) {
       this.option[keyOrObj] = value;
       this._triggerPluginsEvent('updateOption');
-      this._updateTheme();
+      this._updateComponentByOptions();
     } else if (tool.isObject(keyOrObj)) {
       for (let k in keyOrObj) {
         this.option[k] = keyOrObj[k];
       }
       this._triggerPluginsEvent('updateOption');
-      this._updateTheme();
+      this._updateComponentByOptions();
     } else {
       console.debug('The first parameter of vConsole.setOption() must be a string or an object.');
     }
   }
 
   /**
-  * uninstall vConsole
-  * @public
-  */
+   * Remove vConsole.
+   */
   public destroy() {
     if (!this.isInited) {
       return;
@@ -482,7 +454,6 @@ class VConsole {
     }
     // remove component
     this.compInstance.$destroy();
-    // Style.unuse && Style.unuse();
 
     // reverse isInited when destroyed
     this.isInited = false;

@@ -1,6 +1,7 @@
 import { writable, get } from 'svelte/store';
 import * as tool from '../lib/tool';
 import { VConsoleModel } from '../lib/model';
+import { contentStore } from '../core/core.model';
  
 export class VConsoleNetworkRequestItem {
   id: string                = '';
@@ -83,7 +84,8 @@ export class VConsoleNetworkModel extends VConsoleModel {
   private updateRequest(id: string, data: VConsoleNetworkRequestItem | Object) {
     // update item
     const reqList = get(requestList);
-    const item = reqList[id] || new VConsoleNetworkRequestItem(id);
+    const hasItem = !!reqList[id];
+    const item = hasItem ? reqList[id] : new VConsoleNetworkRequestItem(id);
     for (let key in data) {
       item[key] = data[key];
     }
@@ -92,6 +94,9 @@ export class VConsoleNetworkModel extends VConsoleModel {
       return reqList;
     });
     // console.log(item);
+    if (!hasItem) {
+      contentStore.updateTime();
+    }
   }
 
   /**
