@@ -214,6 +214,8 @@ function getFetch500() {
     return data.text();
   }).then((data) => {
     console.log('Fetch Data:', data);
+  }).catch((e) => {
+    console.error('Fetch Error:', e);
   });
 }
 

@@ -408,6 +408,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
         // fix ios<11 https://github.com/github/fetch/issues/504
         const response = res.clone();
         _fetchReponse = response.clone();
+        // (window as any)._vcOrigConsole.log('_fetch', _fetchReponse);
 
         item.endTime = +new Date();
         item.costTime = item.endTime - (item.startTime || item.endTime);
@@ -458,9 +459,10 @@ export class VConsoleNetworkModel extends VConsoleModel {
         that.updateRequest(id, item);
 
         return _fetchReponse;
-      }).catch(() => {
+      }).catch((e) => {
         // mock finally
         that.updateRequest(id, item);
+        throw e;
       });
       // ios<11 finally undefined
       // .finally(() => {
