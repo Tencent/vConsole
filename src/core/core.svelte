@@ -222,7 +222,7 @@
             class="vc-tab"
             class:vc-actived={plugin.id === activedPluginId}
             id="__vc_tab_{plugin.id}"
-            on:click={() => onTapTabbar(plugin.id)}
+            on:touchend={() => onTapTabbar(plugin.id)}
           >{plugin.name}</a>
         {/if}
       {/each}
@@ -235,7 +235,7 @@
             class="vc-toptab vc-topbar-{plugin.id} {item.className}"
             class:vc-toggle={plugin.id === activedPluginId}
             class:vc-actived={item.actived}
-            on:click={(e) => onTapTopbar(e, plugin.id, i)}
+            on:touchend={(e) => onTapTopbar(e, plugin.id, i)}
           >{item.name}</i>
         {/each}
       {/each}
@@ -267,7 +267,7 @@
             class="vc-tool vc-tool-{plugin.id}"
             class:vc-global-tool={item.global}
             class:vc-toggle={plugin.id === activedPluginId}
-            on:click={(e) => onTapToolbar(e, plugin.id, i)}
+            on:touchend={(e) => onTapToolbar(e, plugin.id, i)}
           >{item.name}</i>
         {/each}
       {/each}
