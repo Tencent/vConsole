@@ -43,7 +43,7 @@ $ npm install vconsole
 ```
 
 ```javascript
-import VConsole from 'vconsole';
+import { VConsole } from 'vconsole';
 
 const vConsole = new VConsole();
 // or init with options
@@ -111,7 +111,6 @@ vConsole:
 
  - [Tutorial](./doc/tutorial.md)
  - [Public Properties & Methods](./doc/public_properties_methods.md)
- - [Helper Functions](./doc/helper_functions.md)
 
 Plugin:
 

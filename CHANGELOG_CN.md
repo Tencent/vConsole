@@ -1,5 +1,31 @@
 [English](./CHANGELOG.md) | 简体中文
 
+## 3.10.0 (2021-12-17)
+
+> 这个版本中，我们重构了大部分核心逻辑，并且使用 Svelte 作为所有面板的视图层模板引擎。  
+> 这带来了一些重大变化（Breaking changes），少数属性和方法无法保证向下兼容。  
+> 如果你是 vConsole 插件开发者，应该关注这些变化。
+
+**Breaking Changes:**
+
+- `Refactor(Core|Log|Network|Element)` 使用 Svelte 作为所有视图的模板引擎。
+- `Refactor(Core)` **删除** `vConsole.(tabList | activedTab | $dom)` 属性。
+- `Refactor(Plugin)` **重命名** `vConsole.showTab(pluginID)` 为 `vConsole.showPlugin(pluginID)`。
+- `Refactor(Plugin)` **更新**插件事件 `addTopBar` 的配置参数 `{ data, onClick }`： `onClick` 会接收 2 个参数（之前是 0 个）： `(event: Event, data?: any) => boolean`，其中 `data` 为上述配置参数的 `data` 字段。
+- `Feat(Core)` **删除**辅助函数 `vConsole.tool` 和 `vConsole.$`。
+
+**Common Updates:**
+
+- `Feat(Log)` 支持展示对象键值为 `Symbol` 类型的键值对。
+- `Feat(Log)` 命令行支持多级关键字提示。
+- `Feat(Log)` 支持使用 `%s, %d, %o` 来格式化展示字符串，并且优化了 `%c` 的 CSS 样式逻辑。
+- `Feat(Log)` 对存在大量键值的对象或数组，加入翻页逻辑以提升渲染性能，每 50 一页。
+- `Feat(Network)` Request 的属性值支持复制。
+- `Feat(Element)` 提升交互体验，选中的节点将会被高亮，并且展开/收起（Expand/Coolapse）基于选中的节点来进行。
+- `Feat(Style)` 样式标签会在 vConsole 初始化后才注入 `<head>` 中，并在 vConsole 销毁后会自动移除。
+- `Refactor(Storage)` 优化了部分交互体验。
+- `Fix(Network)` 当 `Fetch` 发生 Error 时，会 throw 到外部，以符合标准实现。 (issue #458)
+
 ## 3.9.5 (2021-11-10)
 
 - `Style(Log)` 支持 `BigInt` 类型并更新 `Symbol` 类型的样式。

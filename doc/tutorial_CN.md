@@ -3,41 +3,47 @@
 使用教程
 ==============================
 
-## 安装
+## 上手
 
-### 1.下载模块
+#### 使用 NPM 安装（推荐）
 
-下载 vConsole 的[最新版本](https://github.com/WechatFE/vConsole/releases/latest)。
-
-或者使用 `npm` 安装：
-
+```bash
+$ npm install vconsole
 ```
-npm install vconsole
-```
-
-然后复制 `dist/vconsole.min.js` 到自己的项目中。
-
-### 2.引入模块
-
-(1) 如果未使用 AMD/CMD 规范，可直接在 HTML 中引入 vConsole 模块。为了便于后续扩展，建议在 `<head>` 中引入：
-
-```html
-<head>
-  <script src="path/to/vconsole.min.js"></script>
-  <script>
-    var vConsole = new VConsole();
-  </script>
-</head>
-```
-
-(2) 如果使用了 AMD/CMD 规范，可在 module 内使用 `require()` 引入模块：
 
 ```javascript
-var VConsole = require('path/to/vconsole.min.js');
-var vConsole = new VConsole();
+import { VConsole } from 'vconsole';
+
+const vConsole = new VConsole();
+// 或者使用配置参数进行初始化
+const vConsole = new VConsole({ maxLogNumber: 1000 });
+
+// 调用 console 方法输出日志
+console.log('Hello world');
+
+// 完成调试后，可销毁 vConsole
+vConsole.destroy();
 ```
 
-请注意，`VConsole` 只是 vConsole 的原型，而非一个已实例化的对象。所以在手动 `new` 实例化之前，vConsole 不会被插入到网页中。
+> 请注意，`VConsole` 只是 vConsole 的原型，而非一个已实例化的对象。  
+> 所以在手动 `new` 实例化之前，vConsole 不会被插入到网页中。
+
+或者，你可以用 CDN 来引入 vConsole：
+
+```html
+<script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
+<script>
+  // VConsole 会自动挂载到 `window.VConsole`
+  var vConsole = new window.VConsole();
+</script>
+```
+
+可用的 CDN：
+
+- https://unpkg.com/vconsole@latest/dist/vconsole.min.js
+- https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js
+
+
 
 
 ## 使用方法
@@ -89,35 +95,11 @@ console.error('bar'); // 红底红字
 支持以下 `console` 方法：
 
 ```javascript
+console.clear();        // 清空所有日志
 console.time('foo');    // 启动名为 foo 的计时器
 console.timeEnd('foo'); // 停止 foo 计时器并输出经过的时间
 ```
 
-
-### Object/Array 结构化展示
-
-支持打印 Object 或 Array 变量，会以结构化 JSON 形式输出（并折叠）：
-
-```javascript
-var obj = {};
-obj.foo = 'bar';
-console.log(obj);
-/*
-Object
-{
-  foo: "bar"
-}
-*/
-```
-
-### 多态
-
-支持传入多个参数，会以空格隔开：
-
-```javascript
-var uid = 233;
-console.log('UserID:', uid); // 打印出 UserID: 233
-```
 
 
 ### 样式
@@ -130,7 +112,22 @@ console.log('%c FOO', 'font-weight:bold', 'bar'); // FOO bar
 console.log('%c Foo %c bar', 'color:red'); // Foo %c bar
 ```
 
-只有第一个参数支持 `%c` 格式，一旦出现 `%c` 格式，后续的字符串参数将作为 HTML style 样式来替换 `%c`；未被替换的 `%c`、剩余的参数，将作为默认日志照常输出。
+> 只有第一个参数支持 `%c` 格式，一旦出现 `%c` 格式，后续的字符串参数将作为 HTML style 样式来替换 `%c`；未被替换的 `%c`、剩余的参数，将作为默认日志照常输出。
+
+
+### 使用字符串替换
+
+可使用 `%s, %d, %o` 来格式化输出。
+
+- `%s`：输出为字符串。非字符串对象会被转换成字符串。
+- `%d`：输出为数字。
+- `%o`：输出为对象。可以点击展开对象详情。
+
+```javascript
+console.log('Hi %s, Im %s', 'Foo', 'Bar'); // Hi Foo, Im Bar
+console.log('I had %d cakes', 3); // I had 3 cakes
+console.log('The %o is large', obj); // The [[obj]] is large
+```
 
 
 

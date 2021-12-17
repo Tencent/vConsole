@@ -18,6 +18,8 @@ vConsole 是框架无关的，可以在 Vue、React 或其他任何框架中使�
 - 手动执行 JS 命令行
 - 自定义插件
 
+详情可参考下方的截图。
+
 
 
 ## 版本说明
@@ -43,7 +45,7 @@ $ npm install vconsole
 Import 并初始化后，即可使用 `console.log` 功能，如 Chrome devtools 上一样。
 
 ```javascript
-import VConsole from 'vconsole';
+import { VConsole } from 'vconsole';
 
 const vConsole = new VConsole();
 // 或者使用配置参数来初始化，详情见文档
@@ -78,7 +80,30 @@ vConsole.destroy();
 
 [http://wechatfe.github.io/vconsole/demo.html](http://wechatfe.github.io/vconsole/demo.html)
 
-![](./doc/snapshot/panel_log.jpg) ![](./doc/snapshot/panel_network.jpg) ![](./doc/snapshot/panel_element.jpg) ![](./doc/snapshot/panel_storage.jpg)
+
+
+# 截图
+
+|   |   |
+|---|---|
+| **概览**: |   |
+| 浅色主题 | 暗色主题 |
+| ![](./doc/screenshot/overview_light.jpg) | ![](./doc/screenshot/overview_dark.jpg) |
+| **Log 面板**: |   |
+| Log 样式 | 命令行 |
+| ![](./doc/screenshot/plugin_log_types.jpg) | ![](./doc/screenshot/plugin_log_command.jpg) |
+| **System 面板**: |   |
+| Performance 信息 | 输出到不同的 log 面板 |
+| ![](./doc/screenshot/plugin_system.jpg) | `console.log('[system]', '输出到system面板')` |
+| **Network 面板**: |   |
+| 请求、回包的详情 |   |
+| ![](./doc/screenshot/plugin_network.jpg) |   |
+| **Element 面板**: |   |
+| 展示 HTML 对象结构 |   |
+| ![](./doc/screenshot/plugin_element.jpg) |   |
+| **Storage 面板**: |   |
+| 添加、编辑、删除、复制 Cookies / LocalStorage / SessionStorage |   |
+| ![](./doc/screenshot/plugin_storage.jpg) |   |
 
 
 
@@ -89,7 +114,6 @@ vConsole 本体：
 
  - [使用教程](./doc/tutorial_CN.md)
  - [公共属性及方法](./doc/public_properties_methods_CN.md)
- - [辅助函数](./doc/helper_functions_CN.md)
 
 插件：
 
