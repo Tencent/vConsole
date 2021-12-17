@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Dev: Plugin</title>
+  <title>vConsole: Custom Plugin</title>
   <link href="./lib/weui.min.css" rel="stylesheet"/>
   <link href="./lib/demo.css" rel="stylesheet"/>
 
@@ -16,6 +16,7 @@
     <a onclick="newGlobalToolButton()" href="javascript:;" class="weui_btn weui_btn_default">newGlobalToolButton</a>
     <a onclick="newTabUseJQuery()" href="javascript:;" class="weui_btn weui_btn_default">newTabUseJQuery</a>
     <a onclick="newTabUseDOM()" href="javascript:;" class="weui_btn weui_btn_default">newTabUseDOM</a>
+    <a onclick="removePlugin()" href="javascript:;" class="weui_btn weui_btn_default">removePlugin</a>
   </div>
 </body>
 </html>
@@ -116,6 +117,14 @@ function newTabUseDOM() {
   });
   vConsole.addPlugin(tab);
   console.info('newTabUseDOM() End');
+}
+
+const pluginList = ['default', 'system', 'network', 'element', 'storage'];
+function removePlugin() {
+  console.info('removePlugin() Start');
+  const id = pluginList.pop();
+  vConsole.removePlugin(id);
+  console.info('removePlugin() End');
 }
 
 </script>

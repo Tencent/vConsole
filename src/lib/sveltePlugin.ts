@@ -2,29 +2,39 @@ import VConsolePlugin from './plugin';
 import { SvelteComponent } from 'svelte';
 
 export class VConsoleSveltePlugin<T extends {} = {}> extends VConsolePlugin {
-  Comp: typeof SvelteComponent;
-  comp?: SvelteComponent;
+  CompClass: typeof SvelteComponent;
+  compInstance?: SvelteComponent;
   initialProps: T;
-  $dom: HTMLElement;
+
   constructor(
     id: string,
     name: string,
-    Comp: typeof SvelteComponent,
-    renderProps: T
+    CompClass: typeof SvelteComponent,
+    initialProps: T
   ) {
     super(id, name);
-    this.Comp = Comp;
-    this.initialProps = renderProps;
+    this.CompClass = CompClass;
+    this.initialProps = initialProps;
   }
+
+  onReady() {
+    this.isReady = true;
+  }
+
   onRenderTab(callback) {
-    this.$dom = document.createElement('div');
-    this.comp = new this.Comp({
-      target: this.$dom,
+    const $container = document.createElement('div');
+    this.compInstance = new this.CompClass({
+      target: $container,
       props: this.initialProps,
     });
-    callback(this.$dom);
+    // console.log('onRenderTab', this.compInstance);
+    callback($container.firstElementChild);
   }
-  onRemove() {}
-}
 
-export default VConsoleSveltePlugin;
+  onRemove() {
+    if (this.compInstance) {
+      this.compInstance.$destroy();
+    }
+  }
+
+}

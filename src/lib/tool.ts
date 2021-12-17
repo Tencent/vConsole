@@ -39,24 +39,22 @@ export function getDate(time: number) {
 }
 
 /**
- * determines whether the passed value is a specific type
- * @param any value
- * @return boolean
+ * Determine whether a value is of a specific type.
  */
 export function isNumber(value) {
-  return Object.prototype.toString.call(value) == '[object Number]';
+  return Object.prototype.toString.call(value) === '[object Number]';
 }
 export function isBigInt(value) {
-  return Object.prototype.toString.call(value) == '[object BigInt]';
+  return typeof value === 'bigint';
 }
 export function isString(value) {
-  return Object.prototype.toString.call(value) == '[object String]';
+  return typeof value === 'string';
 }
 export function isArray(value) {
-  return Object.prototype.toString.call(value) == '[object Array]';
+  return Object.prototype.toString.call(value) === '[object Array]';
 }
 export function isBoolean(value) {
-  return Object.prototype.toString.call(value) == '[object Boolean]';
+  return typeof value === 'boolean';
 }
 export function isUndefined(value) {
   return value === undefined;
@@ -65,11 +63,11 @@ export function isNull(value) {
   return value === null;
 }
 export function isSymbol(value) {
-  return Object.prototype.toString.call(value) == '[object Symbol]';
+  return typeof value === 'symbol';
 }
 export function isObject(value) {
   return (
-    Object.prototype.toString.call(value) == '[object Object]'
+    Object.prototype.toString.call(value) === '[object Object]'
     ||
     // if it isn't a primitive value, then it is a common object
     (
@@ -86,17 +84,17 @@ export function isObject(value) {
   );
 }
 export function isFunction(value) {
-  return Object.prototype.toString.call(value) == '[object Function]';
+  return typeof value === 'function';
 }
 export function isElement(value) {
   return (
     typeof HTMLElement === 'object' ? value instanceof HTMLElement : //DOM2
-      value && typeof value === "object" && value !== null && value.nodeType === 1 && typeof value.nodeName==="string"
+      value && typeof value === 'object' && value !== null && value.nodeType === 1 && typeof value.nodeName === 'string'
   );
 }
 export function isWindow(value) {
-  var toString = Object.prototype.toString.call(value);
-  return toString == '[object global]' || toString == '[object Window]' || toString == '[object DOMWindow]';
+  const name = Object.prototype.toString.call(value);
+  return name === '[object Window]' || name === '[object DOMWindow]' || name === '[object global]';
 }
 
 /**
@@ -104,6 +102,18 @@ export function isWindow(value) {
  */
 export function getPrototypeName(value) {
   return <string>Object.prototype.toString.call(value).replace(/\[object (.*)\]/, '$1');
+}
+
+const _getObjNamePattern = /(function|class) ([^ \{\()}]{1,})[\(| ]/;
+/**
+ * Get an object's constructor name.
+ */
+export function getObjName(obj) {
+  // const constructorName = obj?.constructor?.name;
+  // return constructorName || <string>Object.prototype.toString.call(obj).replace('[object ', '').replace(']', '');
+  if (obj === null || obj === undefined) { return ''; }
+  const results = _getObjNamePattern.exec(obj?.constructor?.toString() || '');
+  return (results && results.length > 1) ? results[2] : '';
 }
 
 /**
@@ -130,82 +140,160 @@ export function isPlainObject(obj) {
 }
 
 
+const _htmlEncodePatterns = /[<>&" ]/g;
+const _htmlEncodeReplacer = (c: string) => {
+  return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', ' ': '&nbsp;' }[c];
+};
 /**
- * HTML encode a string
- * @param string text
- * @return string
+ * Escape HTML to XSS-safe text.
  */
-export function htmlEncode(text: string) {
+export function htmlEncode(text: string | number) {
   // return document.createElement('a').appendChild( document.createTextNode(text) ).parentNode.innerHTML;
-  return String(text).replace(/[<>&" ]/g, (c) => {
-    return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', ' ': '&nbsp;' }[c];
-  });
+  if (typeof text !== 'string' && typeof text !== 'number') { return text; }
+  return String(text).replace(_htmlEncodePatterns, _htmlEncodeReplacer);
 }
 
 
+const _visibleTextPatterns = /[\n\t]/g;
+const _visibleTextReplacer = (c: string) => {
+  return { '\n': '\\n', '\t': '\\t' }[c];
+};
 /**
- * Change invisible characters to visible characters
+ * Convert a text's invisible characters to visible characters.
  */
-export function invisibleTextEncode(text: string) {
-  return String(text).replace(/[\n\t]/g, (c) => {
-    return { '\n': '\\n', '\t': '\\t' }[c];
-  });
+export function getVisibleText(text: string) {
+  if (typeof text !== 'string') { return text; }
+  return String(text).replace(_visibleTextPatterns, _visibleTextReplacer);
 }
 
 
-/**
- * Simple JSON stringify, stringify top level key-value
- */
-export function SimpleJSONStringify(stringObject) {
-  if (!isObject(stringObject) && !isArray(stringObject)) {
-    return JSONStringify(stringObject);
+type ISafeJSONStringifyOption = { ret: string, maxDepth: number, keyMaxLen: number, circularFinder: (val: any) => any };
+const _safeJSONStringifyCircularFinder = () => {
+  const seen = new WeakSet();
+  return (value: any) => {
+    if (typeof(value) === 'object' && value !== null) {
+      if (seen.has(value)) {
+        return true;
+      }
+      seen.add(value);
+    }
+    return false;
+  };
+};
+const _safeJSONStringifyFlatValue = (value: any, maxLen = 0) => {
+  let str = '';
+  if (isString(value)) {
+    const len = value.length;
+    if (maxLen > 0 && len > maxLen) {
+      value = subString(value, maxLen) + `...(${getBytesText(getStringBytes(value))})`;
+    }
+    str += '"' + getVisibleText(value) + '"';
+  } else if (isSymbol(value)) {
+    str += String(value).replace(/^Symbol\((.*)\)$/i, 'Symbol("$1")');
+  } else if (isFunction(value)) {
+    str += (value.name || 'function') + '()';
+  } else if (isBigInt(value)) {
+    str += String(value) + 'n';
+  } else {
+    // str += JSONStringify(value);
+    str += String(value);
+  }
+  return str;
+};
+// use depth first traversal
+const _safeJSONStringify = (obj, opt: ISafeJSONStringifyOption, _curDepth = 0) => {
+  if (!isObject(obj) && !isArray(obj)) {
+    opt.ret += _safeJSONStringifyFlatValue(obj, opt.keyMaxLen);
+    return;
+  }
+
+  const isCircular = opt.circularFinder(obj);
+  if (isCircular) {
+    if (isArray(obj)) {
+      opt.ret += '(Circular Array)';
+    } else if (isObject) {
+      opt.ret += `(Circular ${obj.constructor?.name || 'Object'})`;
+    }
+    return;
   }
 
   let prefix = '{', suffix = '}';
-  if (isArray(stringObject)) {
+  if (isArray(obj)) {
     prefix = '[';
-    suffix = ']'
+    suffix = ']';
   }
-  let str = prefix;
-  const keys = getObjAllKeys(stringObject);
+  opt.ret += prefix;
+  const keys = getEnumerableKeys(obj);
   for (let i = 0; i < keys.length; i ++) {
     const key = keys[i];
-    const value = stringObject[key];
+    // (window as any)._console.log('for key:', key, _curDepth);
+    // handle key
     try {
-      // key
-      if (!isArray(stringObject)) {
+      if (!isArray(obj)) {
         if (isObject(key) || isArray(key) || isSymbol(key)) {
-          str += Object.prototype.toString.call(key);
+          opt.ret += Object.prototype.toString.call(key);
         } else {
-          str += key;
+          opt.ret += key;
         }
-        str += ': ';
-      }
-
-      // value
-      if (isArray(value)) {
-        str += 'Array(' + value.length + ')';
-      } else if (isSymbol(value)) {
-        str += String(value);
-      } else if (isObject(value) || isFunction(value)) {
-        str += Object.prototype.toString.call(value);
-      } else {
-        // str += JSONStringify(value);
-        str += String(value);
-      }
-      if (i < keys.length - 1) {
-        str += ', ';
+        opt.ret += ': ';
       }
     } catch (e) {
+      // cannot stringify `key`, skip this key-value pair
       continue;
     }
+
+    // handle value
+    try {
+      const value = obj[key];
+      if (isArray(value)) {
+        if (opt.maxDepth > -1 && _curDepth >= opt.maxDepth) {
+          opt.ret += 'Array(' + value.length + ')';
+        } else {
+          _safeJSONStringify(value, opt, _curDepth + 1);
+        }
+      } else if (isObject(value)) {
+        if (opt.maxDepth > -1 && _curDepth >= opt.maxDepth) {
+          // opt.ret += Object.prototype.toString.call(value);
+          opt.ret += (value.constructor?.name || 'Object') + ' {}';
+        } else {
+          _safeJSONStringify(value, opt, _curDepth + 1);
+        }
+      } else {
+        // opt.ret += JSONStringify(value);
+        opt.ret += _safeJSONStringifyFlatValue(value, opt.keyMaxLen);
+      }
+
+    } catch (e) {
+      // cannot stringify `value`, use a default text
+      opt.ret += '(...)';
+    }
+
+    if (opt.keyMaxLen > 0 && opt.ret.length >= opt.keyMaxLen * 10) {
+      opt.ret += ', (...)';
+      break;
+    }
+    if (i < keys.length - 1) {
+      opt.ret += ', ';
+    }
   }
-  str += suffix;
-  return str;
+  opt.ret += suffix;
+};
+/**
+ * A safe `JSON.stringify` method. 
+ */
+export function safeJSONStringify(obj, maxDepth = -1, keyMaxLen = -1) {
+  const opt = {
+    ret: '',
+    maxDepth,
+    keyMaxLen,
+    circularFinder: _safeJSONStringifyCircularFinder(),
+  };
+  _safeJSONStringify(obj, opt);
+  return opt.ret;
 }
 
 /**
- * rewrite JSON.stringify, catch unknown exception 
+ * Call original `JSON.stringify` and catch unknown exceptions.
  */
 export function JSONStringify(value: any, replacer?: (this: any, key: string, value: any) => any, space?: string | number) {
   let stringifyResult: string;
@@ -238,59 +326,72 @@ export function getBytesText(bytes: number) {
   return bytes + ' B';
 }
 
-export function subString(str: string, len: number) {    
-  const r = /[^\x00-\xff]/g; 
-  let m: number;  
+const _subStringPattern = /[^\x00-\xff]/g
+export function subString(str: string, len: number) {
+  let m: number;
 
-  if (str.replace(r, '**').length > len) {
-    m = Math.floor(len / 2);  
+  if (str.replace(_subStringPattern, '**').length > len) {
+    m = Math.floor(len / 2);
 
-    for (let i = m, l = str.length; i < l; i++) {    
-      const sub = str.substr(0, i);
-      if (sub.replace(r, '**').length >= len) {    
-        return sub; 
-      }    
-    } 
+    for (let i = m, l = str.length; i < l; i++) {
+      const sub = str.substring(0, i);
+      if (sub.replace(_subStringPattern, '**').length >= len) {
+        return sub;
+      }
+    }
   }
 
   return str;
 }
 
-export function circularReplacer() {
-  const seen = [];
-  return (key, value) => {
-    if (typeof(value) === 'object' && value !== null) {
-      if (seen.indexOf(value) >= 0) {
-        return '[Circular]';
-      }
-      seen.push(value);
-    }
-    return value;
-  };
+const _sortArrayCompareFn = <T extends string>(a: T, b: T) => {
+  return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
+};
+/**
+ * Sore an `string[]` by string.
+ */
+export function sortArray(arr: string[]) {
+  return arr.sort(_sortArrayCompareFn);
 }
 
 /**
- * get an object's all keys ignore whether they are not enumerable
+ * Get enumerable keys of an object or array.
  */
-export function getObjAllKeys(obj) {
+export function getEnumerableKeys(obj) {
   if (!isObject(obj) && !isArray(obj)) {
     return [];
   }
-  const keys = [];
-  for (let k in obj) {
-    // typeof `k` may be `string | number | symbol`
-    keys.push(k);
+  return Object.keys(obj);
+}
+
+
+/**
+ * Get enumerable and non-enumerable keys of an object or array.
+ */
+export function getEnumerableAndNonEnumerableKeys(obj) {
+  if (!isObject(obj) && !isArray(obj)) {
+    return [];
   }
-  return keys.sort((a, b) => {
-    return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
-  });
+  return Object.getOwnPropertyNames(obj);
 }
 
 /**
- * get an object's prototype name
+ * Get non-enumerable keys of an object or array.
  */
-export function getObjName(obj) {
-  return <string>Object.prototype.toString.call(obj).replace('[object ', '').replace(']', '');
+export function getNonEnumerableKeys(obj) {
+  const enumKeys = getEnumerableKeys(obj);
+  const enumAndNonEnumKeys = getEnumerableAndNonEnumerableKeys(obj);
+  return enumAndNonEnumKeys.filter((key) => {
+    const i = enumKeys.indexOf(key);
+    return i === -1;
+  });
+}
+
+export function getSymbolKeys(obj) {
+  if (!isObject(obj) && !isArray(obj)) {
+    return [];
+  }
+  return Object.getOwnPropertySymbols(obj);
 }
 
 /**
@@ -309,4 +410,12 @@ export function getStorage(key: string) {
   }
   key = 'vConsole_' + key;
   return localStorage.getItem(key);
+}
+
+
+/**
+ * Generate a 6-digit unique string with prefix `"__vc_" + ${prefix}`
+ */
+export function getUniqueID(prefix: string = '') {
+  return '__vc_' + prefix + Math.random().toString(36).substring(2, 8);
 }

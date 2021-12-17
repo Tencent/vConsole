@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dev: Network</title>
+  <title>vConsole: Network</title>
   <link href="./lib/weui.min.css" rel="stylesheet"/>
   <link href="./lib/demo.css" rel="stylesheet"/>
 
@@ -12,34 +12,59 @@
 </head>
 <body ontouchstart>
   <div class="page">
-    <a onclick="getAjax()" href="javascript:;" class="weui_btn weui_btn_default">getAjax</a>
-    <a onclick="postAjax()" href="javascript:;" class="weui_btn weui_btn_default">postAjax</a>
-    <a onclick="getFetch()" href="javascript:;" class="weui_btn weui_btn_default">getFetch</a>
-    <a onclick="fetchIOSLowBug()" href="javascript:;" class="weui_btn weui_btn_default">fetchIOSLowBug</a>
-    <a onclick="getFetchSimple()" href="javascript:;" class="weui_btn weui_btn_default">getFetch(simple)</a>
-    <a onclick="postFetch()" href="javascript:;" class="weui_btn weui_btn_default">postFetch</a>
-    <a onclick="postFetchByRequest()" href="javascript:;" class="weui_btn weui_btn_default">postFetchByRequest</a>
-    <a onclick="getFetchText()" href="javascript:;" class="weui_btn weui_btn_default">getFetchText</a>
-    <a onclick="postImage()" href="javascript:;" class="weui_btn weui_btn_default">postImage</a>
-    <a onclick="sendBeacon()" href="javascript:;" class="weui_btn weui_btn_default">sendBeacon</a>
-    <a onclick="axiosRequest('GET')" href="javascript:;" class="weui_btn weui_btn_default">getAxios</a>
-    <a onclick="optionsXHR()" href="javascript:;" class="weui_btn weui_btn_default">optionsXHR</a>
-    <a onclick="optionsFetch()" href="javascript:;" class="weui_btn weui_btn_default">optionsFetch</a>
-    <a onclick="loadImgError()" href="javascript:;" class="weui_btn weui_btn_default">loadImgError</a>
-    <a onclick="loadScriptError()" href="javascript:;" class="weui_btn weui_btn_default">loadScriptError</a>
-    <a onclick="loadVideoError()" href="javascript:;" class="weui_btn weui_btn_default">loadVideoError</a>
-    <a onclick="loadLinkError()" href="javascript:;" class="weui_btn weui_btn_default">loadLinkError</a>
-    <a onclick="loadAudioError()" href="javascript:;" class="weui_btn weui_btn_default">loadAudioError</a>
+    <div class="section">
+      <div class="hd">XMLHttpRequest</div>
+
+      <a onclick="getAjax()" href="javascript:;" class="weui_btn weui_btn_default">GET XHR</a>
+      <a onclick="postAjax()" href="javascript:;" class="weui_btn weui_btn_default">POST XHR</a>
+      <a onclick="optionsXHR()" href="javascript:;" class="weui_btn weui_btn_default">OPTIONS XHR</a>
+    </div>
+
+    <div class="section">
+      <div class="hd">Fetch</div>
+
+      <a onclick="getFetch()" href="javascript:;" class="weui_btn weui_btn_default">GET Fetch</a>
+      <a onclick="getFetchSimple()" href="javascript:;" class="weui_btn weui_btn_default">GET Fetch (simple)</a>
+      <a onclick="getFetchText()" href="javascript:;" class="weui_btn weui_btn_default">GET Fetch Text</a>
+      <a onclick="getFetch500()" href="javascript:;" class="weui_btn weui_btn_default">GET Fetch 500</a>
+      <a onclick="postFetch()" href="javascript:;" class="weui_btn weui_btn_default">POST Fetch</a>
+      <a onclick="postFetchByRequest()" href="javascript:;" class="weui_btn weui_btn_default">POST Fetch Using XHR</a>
+      <a onclick="optionsFetch()" href="javascript:;" class="weui_btn weui_btn_default">OPTIONS Fetch</a>
+      <a onclick="fetchIOSLowBug()" href="javascript:;" class="weui_btn weui_btn_default">Fetch iOS LowBug</a>
+    </div>
+
+    <div class="section">
+      <div class="hd">Others</div>
+
+      <a onclick="sendBeacon()" href="javascript:;" class="weui_btn weui_btn_default">sendBeacon</a>
+      <a onclick="axiosRequest('GET')" href="javascript:;" class="weui_btn weui_btn_default">Axios: GET</a>
+      <a onclick="scrolling()" href="javascript:;" class="weui_btn weui_btn_default">Scrolling</a>
+    </div>
+
+    <div class="section">
+      <div class="hd">Resources</div>
+
+      <a onclick="postImage()" href="javascript:;" class="weui_btn weui_btn_default">POST Image</a>
+      <a onclick="loadImgError()" href="javascript:;" class="weui_btn weui_btn_default">Load Img Error</a>
+      <a onclick="loadScriptError()" href="javascript:;" class="weui_btn weui_btn_default">Load Script Error</a>
+      <a onclick="loadVideoError()" href="javascript:;" class="weui_btn weui_btn_default">Load Video Error</a>
+      <a onclick="loadLinkError()" href="javascript:;" class="weui_btn weui_btn_default">Load Link Error</a>
+      <a onclick="loadAudioError()" href="javascript:;" class="weui_btn weui_btn_default">Load Audio Error</a>
+    </div>
   </div>
 </body>
 </html>
 
 <script>
-window.vConsole = new window.VConsole({
+const vConsole = new window.VConsole({
   maxLogNumber: 1000,
+  // defaultPlugins: ['system', 'network'],
   // disableLogScrolling: true,
   onReady: function() {
     console.log('vConsole is ready.');
+    setTimeout(() => {
+      vConsole.showPlugin('network');
+    }, 100);
   }
 });
 
@@ -48,13 +73,12 @@ window.vConsole = new window.VConsole({
 // }, 300);
 
 function postAjax() {
-  console.info('postAjax() Start, response should be logged after End');
   const xhr = new XMLHttpRequest();
   xhr.onload = () => {
-    console.log('postAjax Response:', JSON.parse(xhr.response));
+    console.log('post XHR Response:', JSON.parse(xhr.response));
   };
   xhr.onerror = () => {
-    console.log('postAjax Error');
+    console.log('post XHR Error');
   };
   xhr.onreadystatechange = () => {
     console.log('onreadystatechange', `readyState=${xhr.readyState}`, `status=${xhr.status}`);
@@ -67,27 +91,23 @@ function postAjax() {
     '<xss0>': '<xss1> XSS Attack!'
   });
   // xhr.send(JSON.stringify({foo: 'bar', id: Math.random(), '<xss0>': '<xss1> XSS Attack!'}));
-  console.info('postAjax() End');
 }
 
 function getAjax() {
-  console.info('getAjax() Start, response should be logged after End');
   const url = window.location.origin + '/dev/data/success.json?method=xhrGet&id=' + Math.random() + '&<xss0>';
   const xhr = new XMLHttpRequest();
   xhr.open('GET', url);
   xhr.setRequestHeader('custom-header', 'foobar');
   xhr.send();
   xhr.onload = () => {
-    console.log('getAjax Response:', JSON.parse(xhr.response));
+    console.log('get XHR Response:', JSON.parse(xhr.response));
   };
   xhr.onerror = () => {
-    console.log('getAjax Error');
+    console.log('get XHR Error');
   };
-  console.info('getAjax() End');
 }
 
 function getFetch() {
-  console.info('getFetch() Start, response should be logged after End');
   window.fetch('./data/success.json?method=fetchGet&id=' + Math.random(), {
     method: 'GET',
     headers: {
@@ -97,14 +117,12 @@ function getFetch() {
   }).then((data) => {
     return data.json();
   }).then((data) => {
-    console.log('getFetch Response:', data);
+    console.log('get Fetch Response:', data);
   });
-  console.info('getFetch() End');
 }
 
 function fetchIOSLowBug() {
   // need ios<11 to test
-  console.info('fetchIOSLowBug() Start, response should be logged after End');
   window.fetch('./data/success.json?method=fetchGet&id=' + Math.random(), {
     method: 'GET',
     headers: {
@@ -118,23 +136,19 @@ function fetchIOSLowBug() {
   }).catch((err) => {
     console.error('fetchIOSLowBug bug!!!:', err);
   });
-  console.info('fetchIOSLowBug() End');
 }
 
 
 function getFetchSimple() {
-  console.info('getFetchSimple() Start, response should be logged after End');
   window.fetch('./data/success.json?type=fetchGet&id=' + Math.random()).then((data) => {
     return data.json();
   }).then((data) => {
     console.log('getFetchSimple Response:', data);
   });
-  console.info('getFetchSimple() End');
 }
 
 function postFetch() {
-  console.info('postFetch() Start, response should be logged after End');
-  window.fetch('./data/success.json?method=fetchPost', {
+  window.fetch('./data/success.json?method=fetchPost&<xss2>x=<xss2>', {
     method: 'POST',
     body: { foo: 'bar', id: Math.random(), type: 'fetch' },
     // body: new Blob([new ArrayBuffer(233)], { type: 'image/png' }),
@@ -148,15 +162,13 @@ function postFetch() {
   }).then((data) => {
     return data.json();
   }).then((data) => {
-    console.log('postFetch Response:', data);
+    console.log('post Fetch Response:', data);
   }).catch((error) => {
-    console.error('postFetch Error:', error);
+    console.error('post Fetch Error:', error);
   });
-  console.info('postFetch() End');
 }
 
 function postFetchByRequest() {
-  console.info('postFetchByRequest() Start, response should be logged after End');
   const headers = new Headers();
   headers.append('custom-header', 'foobar');
   // headers.append('content-type', 'application/json');
@@ -174,12 +186,9 @@ function postFetchByRequest() {
   }).catch((error) => {
     console.error('postFetchByRequest Error:', error);
   });
-  console.info('postFetchByRequest() End');
 }
 
-
 function getFetchText() {
-  console.info('getFetchText() Start, response should be logged after End');
   window.fetch('./data/success.txt?type=fetchGet&id=' + Math.random(), {
     method: 'GET',
     headers: {
@@ -191,7 +200,23 @@ function getFetchText() {
   }).then((data) => {
     console.log('getFetchText Response:', data);
   });
-  console.info('getFetchText() End');
+}
+
+function getFetch500() {
+  window.fetch('./data/success.txt?type=fetchGet&s=500&id=' + Math.random(), {
+    method: 'GET',
+    headers: {
+      'custom-header': 'foobar',
+      'content-type': 'application/json'
+    },
+  }).then((data) => {
+    console.log('Fetch Response:', data);
+    return data.text();
+  }).then((data) => {
+    console.log('Fetch Data:', data);
+  }).catch((e) => {
+    console.error('Fetch Error:', e);
+  });
 }
 
 function postImage() {
@@ -290,6 +315,17 @@ function optionsFetch() {
     console.error('optionsFetch Error:', error);
   });
   console.info('optionsFetch() End');
+}
+
+function scrolling() {
+  let n = 0
+  let t = setInterval(() => {
+    n++;
+    if (n > 500) {
+      clearInterval(t);
+    }
+    getAjax();
+  }, 150);
 }
 
 function loadImgError() {

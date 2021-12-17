@@ -1,6 +1,32 @@
 [English](./CHANGELOG.md) | 简体中文
 
-#### 3.9.5 (2021-11-10)
+## 3.10.0 (2021-12-17)
+
+> 这个版本中，我们重构了大部分核心逻辑，并且使用 Svelte 作为所有面板的视图层模板引擎。  
+> 这带来了一些重大变化（Breaking changes），少数属性和方法无法保证向下兼容。  
+> 如果你是 vConsole 插件开发者，应该关注这些变化。
+
+**Breaking Changes:**
+
+- `Refactor(Core|Log|Network|Element)` 使用 Svelte 作为所有视图的模板引擎。
+- `Refactor(Core)` **删除** `vConsole.(tabList | activedTab | $dom)` 属性。
+- `Refactor(Plugin)` **重命名** `vConsole.showTab(pluginID)` 为 `vConsole.showPlugin(pluginID)`。
+- `Refactor(Plugin)` **更新**插件事件 `addTopBar` 的配置参数 `{ data, onClick }`： `onClick` 会接收 2 个参数（之前是 0 个）： `(event: Event, data?: any) => boolean`，其中 `data` 为上述配置参数的 `data` 字段。
+- `Feat(Core)` **删除**辅助函数 `vConsole.tool` 和 `vConsole.$`。
+
+**Common Updates:**
+
+- `Feat(Log)` 支持展示对象键值为 `Symbol` 类型的键值对。
+- `Feat(Log)` 命令行支持多级关键字提示。
+- `Feat(Log)` 支持使用 `%s, %d, %o` 来格式化展示字符串，并且优化了 `%c` 的 CSS 样式逻辑。
+- `Feat(Log)` 对存在大量键值的对象或数组，加入翻页逻辑以提升渲染性能，每 50 一页。
+- `Feat(Network)` Request 的属性值支持复制。
+- `Feat(Element)` 提升交互体验，选中的节点将会被高亮，并且展开/收起（Expand/Coolapse）基于选中的节点来进行。
+- `Feat(Style)` 样式标签会在 vConsole 初始化后才注入 `<head>` 中，并在 vConsole 销毁后会自动移除。
+- `Refactor(Storage)` 优化了部分交互体验。
+- `Fix(Network)` 当 `Fetch` 发生 Error 时，会 throw 到外部，以符合标准实现。 (issue #458)
+
+## 3.9.5 (2021-11-10)
 
 - `Style(Log)` 支持 `BigInt` 类型并更新 `Symbol` 类型的样式。
 - `Refactor(Style)` 在 vConsole 初始化时再懒加载 style 标签（而非 import 后就加载）。
@@ -12,12 +38,12 @@
 - `Chore` 转换 Svelte 代码产物到 ES5 标准，以避免 ES6 引发的构建问题。 (issue #468)
 
 
-#### 3.9.4 (2021-10-26)
+## 3.9.4 (2021-10-26)
 
 - `Refactor(Global)` 为 `VConsole` 类的方法参数添加 Typescript 声明.
 
 
-#### 3.9.3 (2021-10-22)
+## 3.9.3 (2021-10-22)
 
 - `Fix(Network)` 修复未完成初始化时调用 `setOption()` 导致的 `Cannot read property 'setAttribute' of null`错误。 (PR #453 by @Zhangstring)
 - `Fix(Network)` 修复 iOS < 11 时产生的 `Fetch` 错误. (PR #457 by @zimv)
@@ -25,14 +51,14 @@
 - `Chore` 从 Git 版本控制中移除 `./dist` 目录。
 
 
-#### 3.9.1 (2021-07-27)
+## 3.9.1 (2021-07-27)
 
 - `Fix(Log)` 修正命令行输入框样式。 (PR #437 by @FredZeng)
 - `Fix(Storage)` 修复由 `globalThis` 引起的报错。 (issue #438 #439)
 - `Chore` 修复由 Svelte 引起的 `const` `let` 报错。 (PR #440 by @dellyoung)
 
 
-#### 3.9.0 (2021-07-16)
+## 3.9.0 (2021-07-16)
 
 - `Feat(Log)` 显示 audio 资源加载失败的报错。 (PR #419 by @zimv)
 - `Feat(Storage)` 重写 Storage 面板，现支持添加/编辑/删除内容。 (PR #429 by @ManiaciaChao)
@@ -47,7 +73,7 @@
 - `Chore` 修复执行 `yarn serve` 的报错。 (issue #424)
 
 
-#### 3.8.1 (2021-06-24)
+## 3.8.1 (2021-06-24)
 
 - `Fix(Log)` 不再合并包含 object 或 array 的重复日志，以避免合并结构相同但取值不同的对象。
 - `Fix(Log)` 修复日志过滤器（Filter）在点选日志类型 tab 后不生效的问题。
@@ -56,14 +82,14 @@
 - `Refactor(Log)` 转换 Log 和 System 面板为 `.ts` 文件。
 
 
-#### 3.8.0 (2021-06-23)
+## 3.8.0 (2021-06-23)
 
 - `Feat(Log)` 新增显示资源（image/video/link/script）加载失败报错。 (PR #411 by @zimv)
 - `Chore` 新增 Webpack 配置 `target: ['web', 'es5']` 以避免兼容性问题。 (issue #404)
 - `Fix(Network)` 修复 `new URL('x', undefined)` 第二参数为 `undefined` 时的报错。 (PR #409 by @moonkop)
 
 
-#### 3.7.0 (2021-05-27)
+## 3.7.0 (2021-05-27)
 
 - `Feat(Storage)` 对于大体积 value 先展示预览值，以避免堵塞渲染。 (issue #300)
 - `Feat(Storage)` 新增复制按钮、删除按钮。
@@ -73,12 +99,12 @@
 - `Fix(Network)` 修复 `Content-Type` 为空时导致的报错。
 
 
-#### 3.6.1 (2021-05-24)
+## 3.6.1 (2021-05-24)
 
 - `Fix(Network)` 修复 "Invalid base URL" 错误。 (PR #402)
 
 
-#### 3.6.0 (2021-05-21)
+## 3.6.0 (2021-05-21)
 
 - `Feat(Log)` 新增输出 `unhandledrejection` 类型日志。 (PR #389 by @zimv)
 - `Feat(Network)` 新增支持展示 `navigator.sendBeacon()` 的网络请求。 (PR #383 by @cola119)
@@ -89,7 +115,7 @@
 - `Fix(Element)` 修复当 element 的 `attributes` 或 `characterData` 变化时 element 被嵌套渲染的问题。 (issue #399)
 
 
-#### 3.5.2 (2021-05-13)
+## 3.5.2 (2021-05-13)
 
 - `Chore` 升级到 Webpack5，并升级所有 NPM packages 到最新版本。
 - `Fix(Global)` 修复因 `selection` 选区引起的点击事件无效问题。
@@ -97,13 +123,13 @@
 - `Fix(Log)` 修复 XSS 漏洞。
 
 
-#### 3.5.1 (2021-05-07)
+## 3.5.1 (2021-05-07)
 
 - `Chore(Babel)` 修复由 `catch` 写法引起的 babel-loader 构建问题。 (PR #392 by @myl0204)
 - `Fix(Network)` 修复语法笔误。 (PR #388 by @xovel)
 
 
-#### 3.5.0 (2021-04-28)
+## 3.5.0 (2021-04-28)
 
 - `Feature(Log)` 新增复制单行日志的能力。 (by @akai)
 - `Feature(Plugin)` 新第三方插件 [vconsole-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsole-devtools)。 (by @Zippowxk)
@@ -113,7 +139,7 @@
 - `Fix(Network)` 修复 `disableLogScrolling` 参数在 Network 面板中不生效的问题。 (issue #282, #379)
 
 
-#### V3.4.1 (2021-04-09)
+## v3.4.1 (2021-04-09)
 
 - `Feature(Global)` 新增 `setSwitchPosition(x, y)` 方法以更新开关按钮的位置，见 [Public Properties & Methods](./doc/public_properties_methods_CN.md)。
 - `Perf(Global)` 添加 `Symbol` polyfill。(issue #361)
@@ -123,7 +149,7 @@
 - `Fix(Network)` 修复 XSS 漏洞。
 
 
-#### V3.4.0 (2021-01-14)
+## v3.4.0 (2021-01-14)
 
 - `Feature(Global)` 支持暗黑模式，配置项 `vConsole.option.theme` 见 [Public Properties & Methods](./doc/public_properties_methods_CN.md)。(by @progrape)
 - `Feature(Global)` 开关按钮加入拖拽安全区，避免遮挡全面屏手机底部操作区。(issue #353)
@@ -144,7 +170,7 @@
 - `Chore` 更新 Webpack DevServer 的配置项。(by @QinZhen001)
 
 
-#### V3.3.4 (2019-08-19)
+## v3.3.4 (2019-08-19)
 
 - `Feature(Log)` 增加 `%c` 以支持自定义日志样式，详情见 [使用教程](./doc/tutorial_CN.md)。
 - `Feature(Plugin)` 增加 `VConsole.VConsoleLogPlugin` 等 `VConsole.VConsole*` 内置插件在 `VConsole` class 上的挂载。
@@ -153,7 +179,7 @@
 - `Perf(Global)` 在 `window DOMContentLoaded` 而不是 `window load` 时显示 vConsole。
 
 
-#### V3.3.2 (2019-07-04)
+## v3.3.2 (2019-07-04)
 
 - `Feature(Global)` 增加 TypeScript 声明文件。（by @jas0ncn）
 - `Fix(Global)` 修复开关按钮拖动后位置不对的问题。（by @rexschuang）
@@ -161,13 +187,13 @@
 - `Fix(Log)` 不在列表底部时避免自动滚动。（by @ele828）
 
 
-#### V3.3.0 (2019-02-02)
+## v3.3.0 (2019-02-02)
 
 - `Feature(Log)` 新增自动合并相同日志的能力。频繁输出相同日志时不再会被刷屏。
 - `Fix(Log)` 修复格式化日志（如 `console.log('[foo]', 'bar')`）无法显示到 Log 面板的问题。
 
 
-#### V3.2.2 (2019-01-17)
+## v3.2.2 (2019-01-17)
 
 - `Feature` 新增控制台输入提示。 (by @65147400)
 - `Feature` 支持 SessionStorage。 (by @hkc452)
@@ -179,7 +205,7 @@
 - `Perf` 增加底部安全区域，适配 iPhone X 等全面屏。 (by @dingyi1993)
 
 
-#### V3.2.0 (2018-04-10)
+## v3.2.0 (2018-04-10)
 
 - `Feature` 支持 `console.time()` 及 `console.timeEnd()`。
 - `Feature` 新增 `disableLogScrolling` 配置项（`vConsole.option`），用于禁止新日志引起的自动滚动到底部。
@@ -188,7 +214,7 @@
 - `Fix` 修复 "Uncaught InvalidStateError" 错误。 (by @fireyy)
 
 
-#### V3.1.0 (2017-12-27)
+## v3.1.0 (2017-12-27)
 
 - `Feature` 新增 `vConsole.showSwitch()` 及 `vConsole.hideSwitch()` 方法，请查阅[公共属性及方法](./doc/public_properties_methods_CN.md)。
 - `Feature` 新增 `onReady` 及 `onClearLog` 回调方法，位于 `vConsole.option`。
@@ -197,7 +223,7 @@
 - `Fix` 修复 iOS8 或其它低版本系统中的 `Symbol` 错误。
 
 
-#### V3.0.0 (2017-09-27)
+## v3.0.0 (2017-09-27)
 
 基础：
 
@@ -229,21 +255,21 @@ Network 插件：
 
 
 
-## V2.x.x
+## v2.x.x
 
-#### V2.5.2 (2016-12-27)
+## v2.5.2 (2016-12-27)
 
 - `Fix` 捕获执行自定义命令行时发生的错误。
 
 
-#### V2.5.1 (2016-10-18)
+## v2.5.1 (2016-10-18)
 
 - `Fix` 修复一些情况下的 `scrollHeight` 错误。
 - `Fix` 修正 iOS 8 下的 flex 布局问题。
 - `Perf` 性能增强。
 
 
-#### V2.5.0 (2016-09-28)
+## v2.5.0 (2016-09-28)
 
 - `Feature` 新增 `vConsole.removePlugin()` 方法，请查阅[公共属性及方法](./doc/public_properties_methods_CN.md)。
 - `Feature` 新增 `remove` 插件事件，请查阅[插件：Event 事件列表](./doc/plugin_event_list_CN.md)。
@@ -251,7 +277,7 @@ Network 插件：
 - `Fix` 修正 `window.onerror()` 内的函数调用笔误。
 
 
-#### V2.4.0 (2016-08-31)
+## v2.4.0 (2016-08-31)
 
 - `Feature` 新增 `addTopBar` 插件事件，请查阅[插件：Event 事件列表](./doc/plugin_event_list_CN.md)。
 - `Feature` 新增日志类型筛选功能。
@@ -261,32 +287,32 @@ Network 插件：
 - `Fix` 在某些特殊情况中，开关按钮将不会再被定位出页面外。
 
 
-#### V2.3.1 (2016-08-16)
+## v2.3.1 (2016-08-16)
 
 - `Fix` 删除 V2.3.0 中的 `tap` 事件，恢复为 `click` 事件（依旧支持快速响应），以避免冲突。
 - `Perf` 删除 System tab 中的 `now` 项目并新增 `navigationStart` 时间戳。
 
 
-#### V2.3.0 (2016-08-15)
+## v2.3.0 (2016-08-15)
 
 - `Feature` 支持逐级展开 Object 或 Array 的子元素。
 - `Feature` 支持显示 Object 内的不可枚举属性。
 - `Perf` 支持在 vConsole 的 DOM 容器内使用 `tap` 事件以代替 `click` 事件。
 
 
-#### V2.2.1 (2016-08-08)
+## v2.2.1 (2016-08-08)
 
 - `Feature` 在 System 面板中添加完整的 performance timing 测速点。
 - `Perf` 在 README 中新增第三方插件列表。
 
 
-#### V2.2.0 (2016-07-13)
+## v2.2.0 (2016-07-13)
 
 - `Feature` 新增 `vConsole.version` 属性，以获取当前版本号。
 - `Feature` 新增 `XMLHttpRequest` 的 `xhr._noVConsole` 属性，以控制一个网络请求是否显示在 Network tab 中。
 
 
-#### v2.1.0 (2016-06-29)
+## v2.1.0 (2016-06-29)
 
 - `Feature` 新增 `vConsole.tool` 及 `vConsole.$` 辅助函数，请查阅[辅助函数](./doc/helper_functions_CN.md)。
 - `Feature` 公开部分 vConsole 的属性及方法，请查阅[公共属性及方法](./doc/public_properties_methods_CN.md)。
@@ -294,7 +320,7 @@ Network 插件：
 - `Fix` 修复当 `xhr.readyState < 4` 时读取 `xhr.status` 可能导致错误的问题。
 
 
-#### v2.0.1 (2016-06-16)
+## v2.0.1 (2016-06-16)
 
 - `Fix` 修复 vConsole 可能无法运行在 X5 内核浏览器的问题。
 - `Fix` 修复某些设备不支持 `localStorage` 的问题。
@@ -302,7 +328,7 @@ Network 插件：
 - `Perf` 优化在 Android 设备下的 UI 表现。
 
 
-#### v2.0.0 (2016-06-05)
+## v2.0.0 (2016-06-05)
 
 - `Feature` 完全重构，支持自定义插件，请查阅[插件：入门](./doc/plugin_getting_started_CN.md)。
 - `Feature` 支持手动输入、执行命令行。
@@ -318,17 +344,17 @@ Network 插件：
 
 # v1.x.x
 
-#### v1.3.0 (2016-05-20)
+## v1.3.0 (2016-05-20)
 
 - `Feature` 支持拖拽右下角开关。
 - `Fix` 修复异步加载导致初始化失败的问题。
 
-#### v1.2.1 (2016-05-16)
+## v1.2.1 (2016-05-16)
 
 - `Fix` 修复发送 POST 请求时丢失数据的问题。
 
 
-#### v1.2.0 (2016-05-11)
+## v1.2.0 (2016-05-11)
 
 - `Feature` 新增网络面板，可展示 AJAX 请求。
 - `Feature` 废弃 `vConsole.ready()` 方法。
@@ -337,24 +363,24 @@ Network 插件：
 - `Perf` 优化 UI 体验。
 
 
-#### v1.1.0 (2016-05-06)
+## v1.1.0 (2016-05-06)
 
 - `Feature` 支持 `window.onerror()` 的异常信息捕获。
 - `Feature` 支持 `[default|system|...]` 日志格式，将 log 输出到指定面板。
 
 
-#### v1.0.5 (2016-04-29)
+## v1.0.5 (2016-04-29)
 
 - `Fix` 修复 webpack 编译失败的问题。
 - `Fix` 修复打印 HTML 字符串可能导致的 XSS 问题。
 
 
-#### v1.0.4 (2016-04-28)
+## v1.0.4 (2016-04-28)
 
 - `Fix` 修复 `package.json` 的 main 路径。
 - `Perf` 优化 example 的 demo 页面。
 
 
-#### v1.0.2 (2016-04-27)
+## v1.0.2 (2016-04-27)
 
 - 初始发布。

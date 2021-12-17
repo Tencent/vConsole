@@ -14,9 +14,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
  */
 
 import { isArray } from './tool';
-import Mito from './mito';
 
-const mito = new Mito();
 const $ = {
 
   /**
@@ -150,11 +148,6 @@ const $ = {
     }
     return $el;
   },
-
-  /**
-   * simply render a HTML template
-   */
-  render: mito.render,
 };
 
 

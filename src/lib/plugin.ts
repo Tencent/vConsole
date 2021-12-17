@@ -8,16 +8,32 @@ http://opensource.org/licenses/MIT
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 */
+import { getUniqueID } from '../lib/tool';
 
-declare type VConsolePluginEvent = (data?: any) => void;
+export type IVConsolePluginEvent = (data?: any) => void;
+
+export interface IVConsoleTopbarOptions {
+  name: string;
+  className: string;
+  actived?: boolean;
+  data?: { [key: string]: string };
+  onClick?: (e: Event, data?: any) => any;
+}
+
+export interface IVConsoleToolbarOptions {
+  name: string;
+  global?: boolean;
+  data?: { [key: string]: string };
+  onClick?: (e: Event, data?: any) => any;
+}
 
 /**
  * vConsole Plugin Class
  */
 
-class VConsolePlugin {
+export class VConsolePlugin {
   public isReady: boolean = false;
-  public eventList: { [eventName: string]: VConsolePluginEvent };
+  public eventList: { [eventName: string]: IVConsolePluginEvent };
   protected _id: string;
   protected _name: string;
   protected _vConsole: any;
@@ -67,7 +83,7 @@ class VConsolePlugin {
    * @param string
    * @param function
    */
-  public on(eventName: string, callback: VConsolePluginEvent) {
+  public on(eventName: string, callback: IVConsolePluginEvent) {
     this.eventList[eventName] = callback;
     return this;
   }
@@ -90,7 +106,7 @@ class VConsolePlugin {
   }
 
   protected getUniqueID(prefix: string = '') {
-    return '__vc_' + prefix + Math.random().toString(36).substring(2, 8);
+    return getUniqueID(prefix);
   }
 
 } // END class

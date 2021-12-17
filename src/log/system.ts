@@ -1,35 +1,13 @@
-/*
-Tencent is pleased to support the open source community by making vConsole available.
+import { VConsoleLogPlugin } from './log';
 
-Copyright (C) 2017 THL A29 Limited, a Tencent company. All rights reserved.
+export class VConsoleSystemPlugin extends VConsoleLogPlugin {
 
-Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
-http://opensource.org/licenses/MIT
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-*/
-
-/**
- * vConsole System Tab
- */
-
-import VConsoleLogTab from './log';
-import tplTabbox from './tabbox_system.html';
-
-class VConsoleSystemTab extends VConsoleLogTab {
-
-  constructor(...args) {
-    super(...args);
-    this.tplTabbox = tplTabbox;
-    this.allowUnformattedLog = false; // only logs begin with `[system]` can be displayed
-  }
-
-  onInit() {
-    super.onInit();
+  public onReady() {
+    super.onReady();
     this.printSystemInfo();
   }
 
-  printSystemInfo() {
+  public printSystemInfo() {
   	// print system info
     const ua = navigator.userAgent;
     let logMsg: string[] = [];
@@ -127,6 +105,6 @@ class VConsoleSystemTab extends VConsoleLogTab {
     }, 0);
   }
 
-} // END class
+}
 
-export default VConsoleSystemTab;
+export default VConsoleSystemPlugin;

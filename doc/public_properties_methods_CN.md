@@ -16,7 +16,7 @@ vConsole 提供一些公共属性字段、函数方法，以便开发插件。
 例子：
 
 ```javascript
-vConsole.version // => "3.4.0"
+vConsole.version // => "3.10.0"
 ```
 
 
@@ -46,42 +46,6 @@ vConsole.setOption('maxLogNumber', 5000);
 // 或者：
 vConsole.setOption({maxLogNumber: 5000});
 ```
-
-
-### vConsole.activedTab
-
-当前激活的 tab 的 plugin id。
-
-- 只读
-- 类型：string
-- 默认值："default"
-
-例子：
-
-```javascript
-vConsole.activedTab // => "system"
-```
-
-
-### vConsole.tabList
-
-已安装的 tab 的 plugin id 列表。
-
-- 只读
-- 类型：array(string)
-
-例子：
-
-```javascript
-vConsole.tabList // => ["default", "system"]
-```
-
-
-### vConsole.$dom
-
-vConsole 的 HTML element。
-
-- 类型：HTMLDivElement
 
 
 
@@ -180,14 +144,14 @@ vConsole.removePlugin('my_plugin');
 ```
 
 
-### vConsole.showTab(pluginID)
+### vConsole.showPlugin(pluginID)
 
-根据 plugin id 激活显示一个 tab。
+根据 plugin id 激活显示一个面板。
 
-此方法会触发先前激活态 tab 的 `hide` 事件，并触发当前激活态 tab 的 `show` 事件。
+此方法会触发先前激活态面板的 `hide` 事件，并触发当前激活态面板的 `show` 事件。
 
 ##### 参数：
-- (required) pluginID: 字符串，tab 的 plugin id。
+- (required) pluginID: 字符串，面板的 plugin id。
 
 ##### 返回：
 - 无
@@ -195,7 +159,7 @@ vConsole.removePlugin('my_plugin');
 ##### 例子：
 
 ```javascript
-vConsole.showTab("system"); // 显示 System tab
+vConsole.showPlugin("system"); // 显示 System 面板
 ```
 
 

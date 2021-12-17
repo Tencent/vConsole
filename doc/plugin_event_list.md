@@ -47,12 +47,13 @@ Trigger while vConsole trying to add new tab buttons which are under the tab bar
 
 A tab button is an object with properties:
 
-Property | | | |
+Property |         |         |        |
 ------- | ------- | ------- | -------
-name | string | required | The display name of the button.
-data | object | optional | The dataset of the button, key-value format.
+name      | string | required | The display name of the button.
+data      | object | optional | Custom data of the button, key-value format.
 className | string | optional | The className of the button.
-onClick | function | required | A callback function when user click the button. The target button will automatically be added actived style after this callback unless it returns `false`.
+actived   | boolean | optional | Button's actived style.
+onClick   | (event, data) => boolean | required | A callback function when user click the button. The target button will automatically be added actived style after this callback unless it returns `false`.
 
 ##### Example:
 
@@ -64,10 +65,10 @@ myPlugin.on('addTopBar', function(callback) {
 		name: 'Apple',
 		className: '',
 		data: {type: 'apple'},
-		onClick: function() {
-			if (type != this.dataset.type) {
+		onClick: function(event, data) {
+			if (type != data.type) {
 				// `this` points to current button
-				type = this.dataset.type;
+				type = data.type;
 			} else {
 				return false;
 			}
@@ -77,8 +78,8 @@ myPlugin.on('addTopBar', function(callback) {
 		name: 'Orange',
 		className: '',
 		data: {type: 'orange'},
-		onClick: function() {
-			type = this.dataset.type;
+		onClick: function(event, data) {
+			type = data.type;
 		}
 	}
 	});
@@ -96,11 +97,12 @@ Trigger while vConsole trying to add new tool buttons for a plugin. This event w
 
 A tool button is an object with properties:
 
-Property | | | |
+Property |         |         |         |
 ------- | ------- | ------- | -------
-name | string | required | The display name of the button.
-global | boolean | optional, default `false` | When `false`, the button will be hidden while switching to other tab. When `true`, the button will be available to all tabs.
-onClick | function | required | A callback function when user click the button.
+name      | string | required | The display name of the button.
+data      | object | optional | Custom data of the button, key-value format.
+global    | boolean | optional, default `false` | When `false`, the button will be hidden while switching to other tab. When `true`, the button will be available to all tabs.
+onClick   | (event, data) => void | required | A callback function when user click the button.
 
 ##### Example:
 
@@ -110,7 +112,8 @@ myPlugin.on('addTool', function(callback) {
 	toolList.push({
 		name: 'Reload',
 		global: false,
-		onClick: function(e) {
+		data: {},
+		onClick: function(event, data) {
 			location.reload();
 		}
 	});

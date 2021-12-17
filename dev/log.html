@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <title>Test: Log</title>
+  <title>vConsole: Log</title>
   <link href="./lib/weui.min.css" rel="stylesheet"/>
   <link href="./lib/demo.css" rel="stylesheet"/>
 
@@ -13,22 +13,46 @@
 </head>
 <body ontouchstart>
   <div id="page" class="page">
-    <a onclick="formattedLog()" href="javascript:;" class="weui_btn weui_btn_default">formattedLog</a>
-    <a onclick="styledLog()" href="javascript:;" class="weui_btn weui_btn_default">styledLog</a>
-    <a onclick="normalObject()" href="javascript:;" class="weui_btn weui_btn_default">normalObject</a>
-    <a onclick="circularObject()" href="javascript:;" class="weui_btn weui_btn_default">circularObject</a>
-    <a onclick="circularArray()" href="javascript:;" class="weui_btn weui_btn_default">circularArray</a>
-    <a onclick="largeObject()" href="javascript:;" class="weui_btn weui_btn_default">largeObject</a>
-    <a onclick="smallArray()" href="javascript:;" class="weui_btn weui_btn_default">smallArray</a>
-    <a onclick="symbolObject()" href="javascript:;" class="weui_btn weui_btn_default">symbolObject</a>
-    <a onclick="repeatLog()" href="javascript:;" class="weui_btn weui_btn_default">repeatLog</a>
-    <a onclick="windowError()" href="javascript:;" class="weui_btn weui_btn_default">window.error</a>
-    <a onclick="promiseReject()" href="javascript:;" class="weui_btn weui_btn_default">promiseReject</a>
-    <a onclick="xssLog()" href="javascript:;" class="weui_btn weui_btn_default">XSS: Log</a>
-    <a onclick="xssStorage()" href="javascript:;" class="weui_btn weui_btn_default">XSS: Storage</a>
-    <a onclick="changeTheme('dark')" href="javascript:;" class="weui_btn weui_btn_default">Theme:dark</a>
-    <a onclick="changeTheme('light')" href="javascript:;" class="weui_btn weui_btn_default">Theme:light</a>
-    <a onclick="changeTheme('')" href="javascript:;" class="weui_btn weui_btn_default">Theme:auto</a>
+    <div class="section">
+      <div class="hd">Object</div>
+
+      <a onclick="(() => console.log('Hello vConsole!'))()" href="javascript:;" class="weui_btn weui_btn_default">A Simple String</a>
+      <a onclick="normalObject()" href="javascript:;" class="weui_btn weui_btn_default">Common Object</a>
+      <a onclick="largeObject()" href="javascript:;" class="weui_btn weui_btn_default">Large Object</a>
+      <a onclick="circularObject()" href="javascript:;" class="weui_btn weui_btn_default">Circular Object & Array</a>
+      <a onclick="proxyObject()" href="javascript:;" class="weui_btn weui_btn_default">Proxy Object</a>
+    </div>
+
+    <div class="section">
+      <div class="hd">Common Log</div>
+
+      <a onclick="allDataTypes()" href="javascript:;" class="weui_btn weui_btn_default">All Data Types</a>
+      <a onclick="logTypes()" href="javascript:;" class="weui_btn weui_btn_default">Log/Info/Debug/Warn/Error</a>
+      <a onclick="differentPanelLog()" href="javascript:;" class="weui_btn weui_btn_default">Output to Different Panels</a>
+    </div>
+
+    <div class="section">
+      <div class="hd">Behavior</div>
+
+      <a onclick="formattingLog()" href="javascript:;" class="weui_btn weui_btn_default">Formatting Logs</a>
+      <a onclick="repeatLog()" href="javascript:;" class="weui_btn weui_btn_default">Repeated Logs</a>
+      <a onclick="maxLogNumber()" href="javascript:;" class="weui_btn weui_btn_default">Reach maxLogNumber</a>
+    </div>
+
+    <div class="section">
+      <div class="hd">Exception</div>
+
+      <a onclick="windowError()" href="javascript:;" class="weui_btn weui_btn_default">window.error</a>
+      <a onclick="promiseReject()" href="javascript:;" class="weui_btn weui_btn_default">Promise Reject</a>
+      <a onclick="xssLog()" href="javascript:;" class="weui_btn weui_btn_default">XSS Log</a>
+    </div>
+
+    <div class="section">
+      <div class="hd">Dev</div>
+
+      <a onclick="observeMutation()" href="javascript:;" class="weui_btn weui_btn_default">Observe Mutation</a>
+      <a onclick="scrolling()" href="javascript:;" class="weui_btn weui_btn_default">Scrolling</a>
+    </div>
   </div>
 </body>
 </html>
@@ -37,15 +61,16 @@
 import '../dist/vconsole.min.js';
 
 window.vConsole = new window.VConsole({
-  maxLogNumber: 1000,
+  maxLogNumber: 25,
   // disableLogScrolling: true,
   // theme: 'dark',
+  // defaultPlugins: ['system'],
   onReady: function() {
-    console.log('vConsole is ready.');
+    console.log('vConsole: onReady');
   },
   onClearLog: function() {
-    console.log('on clearLog');
-  }
+    console.log('vConsole: onClearLog');
+  },
 });
 </script>
 
@@ -55,110 +80,187 @@ window.vConsole = new window.VConsole({
 //   console.log('[system]', Math.random());
 // }, 300);
 
-function formattedLog() {
-  console.info('formattedLog() Start');
-  console.log('[default]', 'This log should be shown in Log tab.');
-  console.log('[default]', 'Switch to System tab to see next log.');
-  console.log('[system]', 'This log should be shown in System tab.');
-  console.log('[foobar]', 'This log should be shown in Log tab.');
-  console.info('formattedLog() End');
+// make a prototype chain
+class FooBaseBaseClass {
+
+}
+class FooBaseClass extends FooBaseBaseClass {
+  constructor() {
+    super();
+    this.name = 'base';
+  }
+}
+class FooClass extends FooBaseClass {
+  constructor() {
+    super();
+    this.bar = 'foo';
+  }
 }
 
-function styledLog() {
-  console.info('styledLog() Start');
-  console.log('%c red %c blue %c log.', 'color:red', 'color:blue', 'font-weight:bold', 'Use %c format.');
-  console.info('styledLog() End');
+// make a global object
+var aa = {
+  ba: {
+    ca: 1,
+    cb: 2,
+    cc: 3,
+  },
+  bb: {
+    cd: 4,
+    ce: 5,
+  },
+  bc: [1, 2, 3],
+};
+
+function differentPanelLog() {
+  console.log('[default]', 'This log should be shown in Log panel.');
+  console.log('[DEFAULT]', 'Switch to System tab to see next log.');
+  console.log('[system]', 'This log should be shown in System panel.');
+  console.log('[foobar]', 'This log should be shown in Log panel. (No "foobar" plugin.)');
+}
+
+function formattingLog() {
+  console.log('%c red,%c blue, %c bold.', 'color:red', 'color:blue', 'font-weight:bold', '(Use %c format)');
+  console.log('%c %c Continuous styling, only blue is applied.', 'color:red', 'color:blue', '(Use %c format)');
+  console.log('Invalid styling format %c will be %c ignored.', {color:'blue'}, '"/>xss', 'font-weight:bold', '(Use %c format)');
+  console.log('Hi %s, Im %s!', 'Foo', 'Bar', '(Use %s format)');
+  console.log('Force an object, %s, to be output as a string!', new FooClass, '(Use %s format)');
+  console.log('Today is the %d day of this week.', (new Date).getDay() + 1, '(Use %d format)');
+  console.log('Inline an object, %o, in a string.', new FooClass, '(Use %o format)');
 }
 
 function normalObject() {
-  console.info('normalObject() Start');
-  console.log('A normal JSON:', {
+  const obj = {
     number: 233,
-    string: 'Hello world',
+    string: 'Hi you!\nFoo\t<b>bar!!</b>',
     boolean: true,
-    symbol: Symbol('foo'),
-    bigint: 99999999999n,
+    symbolValue: Symbol('foo'),
+    bigint: 98979695949n,
     obj: {foo: 'bar'},
     array: [8, 7, 6],
-    func: function(a) { alert('b'); }
-  });
-  console.info('normalObject() End');
-}
-
-function circularArray() {
-  console.info('circularArray() Start');
-  var arr = [];
-  arr[0] = 'foo';
-  arr[1] = arr;
-  console.log('A circular structure array:', arr);
-  console.info('circularArray() End');
+    undefined: undefined,
+    func: function foo(a) { alert('b'); },
+    class: FooClass,
+    classInstance: new FooClass(),
+  };
+  obj[Symbol('symbolKey')] = 'The key is a symbol.';
+  console.log('A common object:', obj);
+  // console.log(obj.classInstance);
+  // console.log(obj.classInstance.__proto__);
+  // console.log(Object.getPrototypeOf(obj.classInstance));
 }
 
 function circularObject() {
-  console.info('circularArray() Start');
-  var obj = {
-    foo: 'bar'
+  class NestObj { }
+  const nest = new NestObj();
+  nest.self = nest;
+  const obj = {
+    foo: 'bar',
+    nest: nest,
   };
   obj.self = obj;
   obj.next = {};
   obj.next.next = obj.next;
   obj.next.self = obj;
-  console.log('A circular structure JSON:', obj);
-  console.info('circularObject() End');
+  console.log('A cyclically referenced object:', obj);
+
+  const arr = [];
+  arr[0] = 'foo';
+  arr[1] = arr;
+  console.log('A cyclically referenced array:', arr);
 }
 
 function largeObject() {
-  console.info('largeObject() Start');
-  var obj = {},
-      max = 500;
-  for (var i=1; i<=max; i++) {
-    obj[ 'key_' + i ] = Math.random();
+  const obj = {
+    window: window,
+    longList: [],
+  };
+  for (let i = 0; i < 300; i++) {
+    obj.longList.push(i + 1);
   }
-  console.log(max + ' keys:', obj);
-  console.info('largeObject() End');
+  console.log('largeObject', obj);
+  // setInterval(() => { console.log(Math.random()); }, 100);
 }
 
-function smallArray() {
-  console.info('smallArray() Start');
-  var arr = [0,1,2,3,4,5,6,7,8,9,10,11];
-  console.log(arr);
-  console.info('smallArray() End');
+function proxyObject() {
+  const obj = {
+    // foo: 'bar',
+  };
+  let warnCount = 0;
+  const p = new Proxy(obj, {
+    ownKeys(target) {
+      const keys = Reflect.ownKeys(target);
+      if (warnCount < 10000) {
+        warnCount++;
+        // window._vcOrigConsole.warn('Access to a proxy object\'s keys.', warnCount);
+        console.warn('Access to a proxy object\'s keys.');
+      }
+      return keys;
+      // return [];
+    },
+  }); 
+  console.log('A proxy object:', p); 
 }
 
-function symbolObject() {
-  console.info('symbolObject() Start');
-  var sym = Symbol('Foo');
-  console.log(sym);
-  console.info('symbolObject() End');
+function allDataTypes(aa, bb, cc) {
+  console.log('String:', 'The first line;\nThe second line.', '<b>A HTML tag line.</b>');
+  console.log('Number:', 65535);
+  console.log('BigInt:', 99987654321n);
+  console.log('Boolean:', true, false);
+  console.log('Null:', null);
+  console.log('Undefined:', undefined);
+  console.log('Symbol:', Symbol('Foo'));
+  console.log('Array:', [0,1,2,3,4,5,6,7,8,9,10,11]);
+  console.log('Object:', {'foo': 'bar'});
+  console.log('Function:', allDataTypes);
+  console.log('Class:', FooClass);
+  console.log('ClassInstance:', new FooClass);
+}
+
+function logTypes() {
+  console.log('console.log()');
+  console.info('console.info()');
+  console.debug('console.debug()');
+  console.warn('console.warn()');
+  console.error('console.error()');
 }
 
 function repeatLog() {
   console.log('repeatLog() Start');
-  var a = {a: {b: 1}};
-  var count = 0;
-  var timer = setInterval(() => {
+  const a = {a: {b: 1}};
+  const e = new Error();
+  const f = function(){};
+  let count = 0;
+  let timer = setInterval(() => {
     count ++;
-    console.log('repeat', 'foo bar', function(){});
-    if (count >= 10) {
+    console.log('repeat', 'foo bar', f);
+    if (count > 10) {
       clearInterval(timer);
 
-      console.log('repeat', a);
-      console.log('repeat', a);
+      console.warn('repeat warn', a);
+      console.warn('repeat warn', a);
+      console.warn('repeat warn', a);
+      console.error('repeat error', e);
+      console.error('repeat error', e);
       console.log('repeatLog() End');
     }
   }, 50);
 }
 
+function maxLogNumber() {
+  let n = 0;
+  setInterval(() => {
+    n++;
+    console.log('Log:', n);
+  }, 100);
+}
+
 function windowError() {
-  console.info('windowError() Start');
-  console.log(Error);
+  console.log(new Error('Hello Error!'));
   a.b = 1;
-  console.info('windowError() End');
 }
 
 function promiseReject() {
-  console.info('promiseReject() Start');
-  Promise.reject('reject string');
+  Promise.reject('reject a string');
   Promise.reject(new Error('reject an Error'));
   Promise.reject({message: 'reject an object'});
   Promise.reject(666).then((result) => {
@@ -166,39 +268,65 @@ function promiseReject() {
   }, (result) => {
     console.log('rejected', result);
   });
-  setTimeout(() => {
-    console.info('promiseReject() End');
-  }, 0)
 }
 
 function xssLog() {
-  console.info('xssLog() Start');
   const arr = [
     "-->\tyo\n'\"/><iframe>",
     ["-->\tyo\n'\"/><iframe>"]
   ];
   const obj = {
     'key': 'foo\nbar\tyoo',
-    "-->\tyo\n'\"/><iframe>": "-->\n'\"/><iframe>"
+    "-->\tyo\n'\"/><div>": "-->\n'\"/><iframe>"
   };
   console.log('XSS str:', "-->\tyo\n'\"/><iframe>");
   console.log(arr);
   console.log(obj);
-  console.info('xssLog() End');
 }
 
-function xssStorage() {
-  console.info('xssStorage() Start');
-  localStorage.setItem("-->\tyo\n'\"/><iframe>", "-->\tyo\n'\"/><iframe>");
-  sessionStorage.setItem("-->\tyo\n'\"/><iframe>", "-->\tyo\n'\"/><iframe>");
-  document.cookie = "foo=-->\tyo";
-  console.info('xssStorage() End');
+let observerStarted = false;
+const observer = new MutationObserver((mutations) => {
+  for (let i = 0; i < mutations.length; i++) {
+    const mutation = mutations[i];
+    switch (mutation.type) {
+      case 'childList':
+        window._vcOrigConsole.log(mutation.type, 'add:'+mutation.addedNodes.length, 'remove:'+mutation.removedNodes.length, mutation.target);
+        break;
+      case 'characterData':
+        window._vcOrigConsole.log(mutation.type, 'old:'+mutation.oldValue, mutation.target);
+        break;
+      case 'attributes':
+        let newValue = mutation.target.attributes[mutation.attributeName]?.value;
+        window._vcOrigConsole.log(mutation.type, 'name:'+mutation.attributeName, 'old:'+mutation.oldValue, 'new:'+newValue, mutation.target);
+        break;
+    }
+  }
+});
+function observeMutation() {
+  if (observerStarted === false) {
+    observerStarted = true;
+    observer.observe(document.documentElement, {
+      attributes: true,
+      childList: true,
+      characterData: true,
+      subtree: true
+    });
+  } else {
+    observerStarted = false;
+    observer.disconnect();
+  }
 }
 
-function changeTheme(theme) {
-  console.info('changeTheme() Start');
-  window.vConsole.setOption('theme', theme);
-  console.log('Current Theme:', theme || 'auto');
-  console.info('changeTheme() End');
+function scrolling() {
+  vConsole.setOption('maxLogNumber', 500);
+  let n = 0
+  let t = setInterval(() => {
+    n++;
+    if (n > 500) {
+      clearInterval(t);
+      vConsole.setOption('maxLogNumber', 25);
+    }
+    console.log('scrolling', n);
+  }, 150);
 }
 </script>

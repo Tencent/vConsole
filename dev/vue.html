@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <title>Test: Vue</title>
+  <title>vConsole: in Vue</title>
   <link href="./lib/weui.min.css" rel="stylesheet"/>
   <link href="./lib/demo.css" rel="stylesheet"/>
 
@@ -72,19 +72,24 @@ const appOptions = {
   },
   watch: {
     'book.title': function (newVal, oldVal) {
-      console.log(newVal, oldVal, this);
+      console.log('book.title', newVal, oldVal, this);
     },
   },
   mounted() {
-    console.log('mounted', this);
+    // console.log('mounted', this);
     // console.log('Vue', Vue);
     // console.log('Window', window);
     // console.log(this.$route);
-    setInterval(() => {
+    // console.log(this.book);
+    setTimeout(() => {
+      // console.log(window.vueApp);
+      console.log(typeof window.vueVm);
+    }, 100);
+    // setInterval(() => {
       // this.book.title = Math.random();
       // console.log(this);
       // this.axios('POST');
-    }, 300);
+    // }, 300);
   },
   methods: {
     axios(method) {

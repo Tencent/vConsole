@@ -3,41 +3,47 @@ English | [简体中文](./tutorial_CN.md)
 Tutorial
 ==============================
 
-## Installation
+## Getting Started
 
-### 1. Download
 
-Download the [latest release](https://github.com/WechatFE/vConsole/releases/latest) of vConsole.
+#### Install using npm (Recommanded)
 
-Or, install via `npm` :
-
+```bash
+$ npm install vconsole
 ```
-npm install vconsole
-```
-
-Then save `dist/vconsole.min.js` to your project.
-
-### 2. Import
-
-(1) Under non-AMD/CMD rule, insert vConsole into `<head>`. To support further features, insert vConsole into `<head>` rather than `</body>` is a better choice.
-
-```html
-<head>
-  <script src="path/to/vconsole.min.js"></script>
-  <script>
-    var vConsole = new VConsole();
-  </script>
-</head>
-```
-
-(2) Under AMD/CMD rule, use `require()` to import vConsole.
 
 ```javascript
-var VConsole = require('path/to/vconsole.min.js');
-var vConsole = new VConsole();
+import { VConsole } from 'vconsole';
+
+const vConsole = new VConsole();
+// or init with options
+const vConsole = new VConsole({ maxLogNumber: 1000 });
+
+// call `console` methods as usual
+console.log('Hello world');
+
+// remove it when you finish debugging
+vConsole.destroy();
 ```
 
-Notice that `VConsole` is the prototype of vConsole. So vConsole panel will not be inserted into your page until you `new` it manually.
+> Notice that `VConsole` is the prototype of vConsole.  
+> So vConsole panel will not be inserted into your page until you `new` it manually.
+
+Otherwise, you can use CDN to import vConsole:
+
+```html
+<script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
+<script>
+  // VConsole will be exported to `window.VConsole` by default.
+  var vConsole = new window.VConsole();
+</script>
+```
+
+Available CDN:
+
+- https://unpkg.com/vconsole@latest/dist/vconsole.min.js
+- https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js
+
 
 
 ## Usage
@@ -63,7 +69,7 @@ vConsole.setOption({maxLogNumber: 5000});
 ```
 
 
-### Print logs
+### Output logs
 
 Use the methods of `console` to print logs, just like what you do at desktop browsers:
 
@@ -74,9 +80,9 @@ console.log('Hello World');
 When vConsole is not loaded, logs will be printed to native console. After importing vConsole, logs will be printed to both front-end console and native console.
 
 
-### Styles
+### Log methods
 
-5 types of log method are supported, with different styles:
+5 types of log methods are supported, with different styles:
 
 ```javascript
 console.log('foo');   // black word, white bakcground
@@ -92,39 +98,13 @@ console.error('bar'); // red word, pink background
 Supported `console` methods:
 
 ```javascript
+console.clear();        // Clear all logs
 console.time('foo');    // start a timer named "foo"
 console.timeEnd('foo'); // stop "foo" timer and print the elapsed time
 ```
 
 
-### Formatted object / array
-
-Object or Array variable will be printed as formatted JSON:
-
-```javascript
-var obj = {};
-obj.foo = 'bar';
-console.log(obj);
-/*
-Object
-{
-  foo: "bar"
-}
-*/
-```
-
-
-### Polymorphic
-
-Multiple arguments are supported, each variable will be divided by a space:
-
-```javascript
-var uid = 233;
-console.log('UserID:', uid); // UserID: 233
-```
-
-
-### Styled log
+### Styling log output
 
 Use `%c` to add style to logs:
 
@@ -134,18 +114,33 @@ console.log('%c FOO', 'font-weight:bold', 'bar'); // FOO bar
 console.log('%c Foo %c bar', 'color:red'); // Foo %c bar
 ```
 
-Note that only first parameter support `%c` format, and the following parameter(s) will be used as HTML style to fill `%c`, and the remain `%c` or parameters will be shown as normal logs.
+> Note that only first parameter support `%c` format, and the following parameter(s) will be used as HTML style to fill `%c`, and the remain `%c` or parameters will be shown as normal string.
 
+
+### Using string substitutions
+
+Use `%s, %d, %o` to output log with formatting.
+
+- `%s`: Output as a string. Non-string objects will be converted into strings.
+- `%d`: Output as a number.
+- `%o`: Output as an object. You can clickthe object name to open more information about it.
+
+```javascript
+console.log('Hi %s, Im %s', 'Foo', 'Bar'); // Hi Foo, Im Bar
+console.log('I had %d cakes', 3); // I had 3 cakes
+console.log('The %o is large', obj); // The [[obj]] is large
+```
 
 
 ### Special format
 
-Use `[system]` as the first parameter to print logs to System tab:
+Use `[system]` as the first parameter to output logs to System panel:
 
 ```javascript
-console.log('[system]', 'foo'); // 'foo' will be printed to System tab
-console.log('[system] bar'); // this log will show in Log tab instead of System tab
+console.log('[system]', 'foo'); // 'foo' will be printed to System panel
+console.log('[system] bar'); // this log will show in Log tab instead of System panel
 ```
+
 
 
 ## Built-in Plugins

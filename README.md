@@ -1,32 +1,49 @@
 English | [简体中文](./README_CN.md)
 
 vConsole
-==============================
-[![npm version](https://badge.fury.io/js/vconsole.svg)](https://badge.fury.io/js/vconsole)
-
+---
 A lightweight, extendable front-end developer tool for mobile web page.
+
+vConsole is framework-free, you can use it in Vue or React or any other framework application.
+
+Now vConsole is the official debugging tool for WeChat Miniprograms.
+
 
 
 ## Features
 
-- View console logs
-- View network requests
-- View document elements
-- View Cookies, LocalStorage and SessionStorage
+- Logs: `console.log|info|error|...`
+- Network: `XMLHttpRequest`, `Fetch`, `sendBeacon`
+- Element: HTML elements tree
+- Storage: `Cookies`, `LocalStorage`, `SessionStorage`
 - Execute JS command manually
-- Custom plugin
+- Custom plugins
+
+For details, please see the screenshots below.
 
 
-## Usage
+## Release Notes
 
-Method 1: Using npm (Recommanded)
+Latest version: [![npm version](https://img.shields.io/npm/v/vconsole/latest.svg)](https://www.npmjs.com/package/vconsole)
+
+Detailed release notes for each version are available on [Changelog](./CHANGELOG.md).
+
+
+
+## Guide
+
+See [Tutorial](./doc/tutorial.md) for more usage details.
+
+For installation, there are 2 primary ways of adding vConsole to a project:
+
+#### Method 1: Using npm (Recommanded)
 
 ```bash
 $ npm install vconsole
 ```
 
 ```javascript
-import VConsole from 'vconsole';
+import { VConsole } from 'vconsole';
 
 const vConsole = new VConsole();
 // or init with options
@@ -39,26 +56,53 @@ console.log('Hello world');
 vConsole.destroy();
 ```
 
-Method 2: Using unpkg CDN in HTML:
+#### Method 2: Using CDN in HTML:
 
 ```html
-<script src="https://unpkg.com/vconsole/dist/vconsole.min.js"></script>
+<script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
 <script>
   // VConsole will be exported to `window.VConsole` by default.
   var vConsole = new window.VConsole();
 </script>
 ```
 
-See [Tutorial](./doc/tutorial.md) for more usage details.
+Available CDN:
+
+- https://unpkg.com/vconsole@latest/dist/vconsole.min.js
+- https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js
 
 
 ## Preview
 
-![](./doc/snapshot/qrcode.png)
-
 [http://wechatfe.github.io/vconsole/demo.html](http://wechatfe.github.io/vconsole/demo.html)
 
-![](./doc/snapshot/panel_log.jpg) ![](./doc/snapshot/panel_network.jpg) ![](./doc/snapshot/panel_element.jpg) ![](./doc/snapshot/panel_storage.jpg)
+![](./doc/screenshot/qrcode.png)
+
+
+
+# Screenshots
+
+|   |   |
+|---|---|
+| **Overview**: |   |
+| Light theme | Dark theme |
+| ![](./doc/screenshot/overview_light.jpg) | ![](./doc/screenshot/overview_dark.jpg) |
+| **Log Panel**: |   |
+| Log styling | Command line |
+| ![](./doc/screenshot/plugin_log_types.jpg) | ![](./doc/screenshot/plugin_log_command.jpg) |
+| **System Panel**: |   |
+| Performance info | Output logs to different panel |
+| ![](./doc/screenshot/plugin_system.jpg) | `console.log('[system]', 'output to system panel.')` |
+| **Network Panel**: |   |
+| Request details |   |
+| ![](./doc/screenshot/plugin_network.jpg) |   |
+| **Element Panel**: |   |
+| Realtime HTML elements structure |   |
+| ![](./doc/screenshot/plugin_element.jpg) |   |
+| **Storage Panel**: |   |
+| Add, edit, delete or copy Cookies / LocalStorage / SessionStorage |   |
+| ![](./doc/screenshot/plugin_storage.jpg) |   |
+
 
 
 ## Documentation
@@ -67,7 +111,6 @@ vConsole:
 
  - [Tutorial](./doc/tutorial.md)
  - [Public Properties & Methods](./doc/public_properties_methods.md)
- - [Helper Functions](./doc/helper_functions.md)
 
 Plugin:
 
@@ -85,16 +128,12 @@ Plugin:
  - [vconsole-outputlog-plugin](https://github.com/sunlanda/vconsole-outputlog-plugin)
  - [vite-plugin-vconsole](https://github.com/vadxq/vite-plugin-vconsole)
 
-## Changelog
-
-[CHANGELOG.md](./CHANGELOG.md)
-
 
 ## Feedback
 
 QQ Group: 497430533
 
-![](./doc/snapshot/qq_group.png)
+![](./doc/screenshot/qq_group.png)
 
 
 ## License

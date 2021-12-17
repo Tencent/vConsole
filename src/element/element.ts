@@ -1,310 +1,205 @@
-/*
-Tencent is pleased to support the open source community by making vConsole available.
-
-Copyright (C) 2017 THL A29 Limited, a Tencent company. All rights reserved.
-
-Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
-http://opensource.org/licenses/MIT
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-*/
+import MutationObserver from 'mutation-observer'
+import { get } from 'svelte/store';
+import { VConsoleSveltePlugin } from '../lib/sveltePlugin';
+import ElementComp from './element.svelte';
+import { rootNode, activedNode } from './element.model';
+import type { IVConsoleNode } from './element.model';
 
 /**
- * vConsole Element Tab
+ * vConsole Element Panel
  */
+export class VConsoleElementPlugin extends VConsoleSveltePlugin {
+  protected isInited = false;
+  protected observer: MutationObserver;
+  protected nodeMap: WeakMap<Node, IVConsoleNode>;
+  // protected activedNode: IVConsoleNode;
 
-import MutationObserver from 'mutation-observer'
-import Style from './style.less';
-import VConsolePlugin from '../lib/plugin';
-import tplTabbox from './tabbox.html';
-import NodeView from './node_view';
-
-// import * as tool from '../lib/tool.ts';
-import $ from '../lib/query';
-
-class VConsoleElementsTab extends VConsolePlugin {
-  isInited: boolean;
-  node: {};
-  $tabbox: Element;
-  nodes: any[];
-  activedElem: Element;
-  observer: any;
-
-  constructor(...args) {
-    super(...args);
-    const that = this;
-
-    // create style tag
-    Style.use();
-
-    that.isInited = false;
-    that.node = {};
-    that.$tabbox = $.render(tplTabbox, {});
-    that.nodes = [];
-    that.activedElem = null; // actived by user
-
-    that.observer = new MutationObserver(function(mutations) {
-      for (let i=0; i<mutations.length; i++) {
-        let mutation = mutations[i];
-        if (that._isInVConsole(mutation.target)) {
-          continue;
-        }
-        that.onMutation(mutation);
-      }
-    });
+  constructor(id: string, name: string, renderProps = { }) {
+    super(id, name, ElementComp, renderProps);
   }
 
-  onRenderTab(callback) {
-    callback(this.$tabbox);
-  }
-
-  onAddTool(callback) {
-    const that = this;
-    const toolList = [{
-      name: 'Expand',
-      global: false,
-      onClick: function(e) {
-        if (that.activedElem) {
-          if (!$.hasClass(that.activedElem, 'vc-toggle')) {
-            // $.addClass(that.activedElem, 'vc-toggle');
-            $.one('.vcelm-node', that.activedElem).click();
-          } else {
-            for (let i=0; i<that.activedElem.childNodes.length; i++) {
-              const $child = <Element>that.activedElem.childNodes[i];
-              if ($.hasClass($child, 'vcelm-l') && !$.hasClass($child, 'vcelm-noc') && !$.hasClass($child, 'vc-toggle')) {
-                $.one('.vcelm-node', $child).click();
-                break;
-              }
-            }
-          }
-        }
-      }
-    }, {
-      name: 'Collapse',
-      global: false,
-      onClick: function(e) {
-        if (that.activedElem) {
-          if ($.hasClass(that.activedElem, 'vc-toggle')) {
-            $.one('.vcelm-node', that.activedElem).click();
-          } else {
-            if (that.activedElem.parentNode && $.hasClass(<Element>that.activedElem.parentNode, 'vcelm-l')) {
-              $.one('.vcelm-node', <Element>that.activedElem.parentNode).click();
-            }
-          }
-        }
-      }
-    }];
-    callback(toolList);
-  }
-
-  onShow() {
+  public onShow() {
     if (this.isInited) {
       return;
     }
+    this._init();
+  }
+
+  public onRemove() {
+    super.onRemove();
+    if (this.isInited) {
+      this.observer.disconnect();
+      this.isInited = false;
+      this.nodeMap = undefined;
+      rootNode.set(undefined);
+    }
+  }
+
+  public onAddTool(callback) {
+    const toolList = [
+      {
+        name: 'Expand',
+        global: false,
+        onClick: (e) => {
+          this._expandActivedNode();
+        },
+      },
+      {
+        name: 'Collapse',
+        global: false,
+        onClick: (e) => {
+          this._collapseActivedNode();
+        },
+      },
+    ];
+    callback(toolList);
+  }
+
+  protected _init() {
     this.isInited = true;
+    this.nodeMap = new WeakMap();
 
-    this.node = this.getNode(document.documentElement);
-    // console.log(this.node);
+    // init nodes
+    const root = this._generateVNode(document.documentElement);
+    root._isExpand = true;
+    activedNode.set(root);
+    rootNode.set(root);
 
-    // render root view
-    let $rootView = this.renderView(this.node, $.one('.vc-log', this.$tabbox));
-    // auto open first level
-    let $node = $.one('.vcelm-node', $rootView);
-    // Before Android WebView 4.4, click is only defined on buttons and inputs
-    $node && $node.click && $node.click();
+
+    // listen component
+    this.compInstance.$on('toggleNode', (e) => {
+      // console.log('activedNode event', e)
+      activedNode.set(e.detail.node);
+    });
+
+    // init observer
+    this.observer = new MutationObserver((mutations) => {
+      for (let i = 0; i < mutations.length; i++) {
+        const mutation = mutations[i];
+        if (this._isInVConsole(mutation.target as Element)) {
+          continue;
+        }
+        this._handleMutation(mutation);
+      }
+    });
 
     // start observing
-    let config = {
+    this.observer.observe(document.documentElement, {
       attributes: true,
       childList: true,
       characterData: true,
       subtree: true
-    };
-    this.observer.observe(document.documentElement, config);
+    });
   }
 
-  onRemove() {
-    this.observer.disconnect();
-  }
-
-  // handle mutation
-  onMutation(mutation) {
+  protected _handleMutation(mutation: MutationRecord) {
     // console.log(mutation.type, mutation);
     switch (mutation.type) {
       case 'childList':
         if (mutation.removedNodes.length > 0) {
-          this.onChildRemove(mutation);
+          this._onChildRemove(mutation);
         }
         if (mutation.addedNodes.length > 0) {
-          this.onChildAdd(mutation);
+          this._onChildAdd(mutation);
         }
         break;
       case 'attributes':
-        this.onAttributesChange(mutation);
+        this._onAttributesChange(mutation);
         break;
       case 'characterData':
-        this.onCharacterDataChange(mutation);
+        this._onCharacterDataChange(mutation);
         break;
       default:
         break;
     }
   }
 
-  onChildRemove(mutation) {
-    let $parent = mutation.target,
-        parentNode = $parent.__vconsole_node;
+  protected _onChildRemove(mutation: MutationRecord) {
+    const parentNode = this.nodeMap.get(mutation.target);
     if (!parentNode) {
       return;
     }
-    for (let i=0; i<mutation.removedNodes.length; i++) {
-      let $target = mutation.removedNodes[i],
-          node = $target.__vconsole_node;
-      if (!node) {
-        continue;
+    for (let i = 0; i < mutation.removedNodes.length; i++) {
+      const childNode = this.nodeMap.get(mutation.removedNodes[i]);
+      if (!childNode) { continue; }
+      // find child node and remove it from parent
+      for (let j = 0; j < parentNode.childNodes.length; j++) {
+        if (parentNode.childNodes[j] === childNode) {
+          parentNode.childNodes.splice(j, 1);
+          break;
+        }
       }
-      // remove view
-      if (node.view) {
-        node.view.parentNode.removeChild(node.view);
-      }
+      this.nodeMap.delete(mutation.removedNodes[i]);
     }
-    // update parent node
-    this.getNode($parent);
+    this._refreshStore();
   }
 
-  onChildAdd(mutation) {
-    let $parent = mutation.target,
-        parentNode = $parent.__vconsole_node;
-    // console.log('parentNode', parentNode)
+  protected _onChildAdd(mutation: MutationRecord) {
+    const parentNode = this.nodeMap.get(mutation.target);
     if (!parentNode) {
       return;
     }
-    // update parent node
-    this.getNode($parent);
-    // update parent view
-    if (parentNode.view) {
-      $.removeClass(parentNode.view, 'vcelm-noc');
-    }
-    for (let i=0; i<mutation.addedNodes.length; i++) {
-      let $target = mutation.addedNodes[i],
-          node = $target.__vconsole_node; // added right now
-      // console.log('node:', node)
-      if (!node) {
-        continue;
-      }
-      // create view
-      if (mutation.nextSibling !== null) {
-        // insert before it's sibling
-        let siblingNode = mutation.nextSibling.__vconsole_node;
-        if (siblingNode.view) {
-          this.renderView(node, siblingNode.view, 'insertBefore');
+    for (let i = 0; i < mutation.addedNodes.length; i++) {
+      const newRealNode = mutation.addedNodes[i];
+      const newNode = this._generateVNode(newRealNode);
+      // Find a next sibling "supported node", then append newNode after it.
+      // A "supported node" is an element node.
+      let nextNode: IVConsoleNode = undefined;
+      do {
+        if (newRealNode.nextSibling === null) {
+          break;
         }
+        if (newRealNode.nodeType === Node.ELEMENT_NODE) {
+          nextNode = this.nodeMap.get(newRealNode.nextSibling) || undefined;
+        }
+      } while (nextNode === undefined);
+      if (nextNode === undefined) {
+        // newNode is the lastChild
+        parentNode.childNodes.push(newNode);
       } else {
-        // append to parent view
-        if (parentNode.view) {
-          if (parentNode.view.lastChild) {
-            // insert before last child, eg: </tag>
-            this.renderView(node, parentNode.view.lastChild, 'insertBefore');
-          } else {
-            this.renderView(node, parentNode.view);
+        // newNode should be inserted before nextNode
+        for (let j = 0; j < parentNode.childNodes.length; j++) {
+          if (parentNode.childNodes[j] === nextNode) {
+            parentNode.childNodes.splice(j, 0, newNode);
+            break;
           }
         }
       }
     }
+    this._refreshStore();
   }
 
-  onAttributesChange(mutation) {
-    let node = mutation.target.__vconsole_node;
-    if (!node) {
-      return;
-    }
-    // update node
-    node = this.getNode(mutation.target);
-    // update view
-    if (node.view) {
-      this.renderView(node, node.view, 'replace');
-    }
+  protected _onAttributesChange(mutation: MutationRecord) {
+    this._updateVNodeAttributes(mutation.target);
+    this._refreshStore();
   }
 
-  onCharacterDataChange(mutation) {
-    let node = mutation.target.__vconsole_node;
-    if (!node) {
-      return;
-    }
-    // update node
-    node = this.getNode(mutation.target);
-    // update view
-    if (node.view) {
-      this.renderView(node, node.view, 'replace');
-    }
+  protected _onCharacterDataChange(mutation: MutationRecord) {
+    const node = this.nodeMap.get(mutation.target);
+    node.textContent = mutation.target.textContent;
+    this._refreshStore();
   }
 
-  renderView(node, $related, renderMethod?: 'replace' | 'insertBefore') {
-    const that = this;
-    let $view = (new NodeView(node)).get();
-    // connect to node
-    node.view = $view;
-    // expand
-    $.delegate($view, 'click', '.vcelm-node', function(event) {
-      event.stopPropagation();
-      let $parent = this.parentNode;
-      if ($.hasClass($parent, 'vcelm-noc')) {
-        return;
-      }
-      that.activedElem = $parent;
-      if ($.hasClass($parent, 'vc-toggle')) {
-        $.removeClass($parent, 'vc-toggle');
-      } else {
-        $.addClass($parent, 'vc-toggle');
-      }
-      // render child views
-      let childIdx = -1;
-      for (let i=0; i<$parent.children.length; i++) {
-        let $child = $parent.children[i];
-        if (!$.hasClass($child, 'vcelm-l')) {
-          // not a child view, skip
-          continue;
-        }
-        childIdx++;
-        if ($child.children.length > 0) {
-          // already been rendered, skip
-          continue;
-        }
-        if (!node.childNodes[childIdx]) {
-          // cannot find related node, hide it
-          $child.style.display = 'none';
-          continue;
-        }
-        that.renderView(node.childNodes[childIdx], $child, 'replace');
-      }
-    });
-    // output to page
-    switch (renderMethod) {
-      case 'replace':
-        $related.parentNode.replaceChild($view, $related);
-        break;
-      case 'insertBefore':
-        $related.parentNode.insertBefore($view, $related);
-        break;
-      default:
-        $related.appendChild($view);
-        break;
-    }
-    return $view;
-  }
-
-  // convert an element to a simple object
-  getNode(elem) {
-    if (this._isIgnoredElement(elem)) {
+  /**
+   * Generate an VNode for rendering views. VNode will be updated if existing.
+   * VNode will be stored in a WeakMap.
+   */
+  protected _generateVNode(elem: Node) {
+    if (this._isIgnoredNode(elem)) {
       return undefined;
     }
 
-    let node = elem.__vconsole_node || {};
-
-    // basic node info
-    node.nodeType = elem.nodeType;
-    node.nodeName = elem.nodeName;
-    node.tagName = elem.tagName || '';
-    node.textContent = '';
+    const node: IVConsoleNode = {
+      nodeType: elem.nodeType,
+      nodeName: elem.nodeName.toLowerCase(),
+      textContent: '',
+      id: '',
+      className: '',
+      attributes: [],
+      childNodes: [],
+    };
+    this.nodeMap.set(elem, node);
+    
     if (
       node.nodeType == elem.TEXT_NODE || 
       node.nodeType == elem.DOCUMENT_TYPE_NODE
@@ -312,24 +207,11 @@ class VConsoleElementsTab extends VConsolePlugin {
       node.textContent = elem.textContent;
     }
 
-    // attrs
-    node.id = elem.id || '';
-    node.className = elem.className || '';
-    node.attributes = [];
-    if (elem.hasAttributes && elem.hasAttributes()) {
-      for (let i=0; i<elem.attributes.length; i++) {
-        node.attributes.push({
-          name: elem.attributes[i].name,
-          value: elem.attributes[i].value || ''
-        });
-      }
-    }
-
     // child nodes
-    node.childNodes = [];
     if (elem.childNodes.length > 0) {
-      for (let i=0; i<elem.childNodes.length; i++) {
-        let child = this.getNode(elem.childNodes[i]);
+      node.childNodes = [];
+      for (let i = 0; i < elem.childNodes.length; i++) {
+        const child = this._generateVNode(elem.childNodes[i]);
         if (!child) {
           continue;
         }
@@ -337,12 +219,71 @@ class VConsoleElementsTab extends VConsolePlugin {
       }
     }
 
-    // save node to element for further actions
-    elem.__vconsole_node = node;
+    // attributes
+    this._updateVNodeAttributes(elem);
+
     return node;
   }
 
-  _isIgnoredElement(elem) {
+  protected _updateVNodeAttributes(elem: Node) {
+    const node = this.nodeMap.get(elem);
+    if (elem instanceof Element) {
+      node.id = elem.id || '';
+      node.className = elem.className || '';
+      // attrs
+      if (elem.hasAttributes && elem.hasAttributes()) {
+        node.attributes = [];
+        for (let i = 0; i < elem.attributes.length; i++) {
+          node.attributes.push({
+            name: elem.attributes[i].name,
+            value: elem.attributes[i].value || '',
+          });
+        }
+      }
+    }
+  }
+
+  /**
+   * Expand the actived node.
+   * If the node is collapsed, expand it.
+   * If the node is expanded, expand it's child nodes.
+   */
+  protected _expandActivedNode() {
+    const node = get(activedNode);
+    if (!node._isExpand) {
+      node._isExpand = true;
+    } else {
+      for (let i = 0; i < node.childNodes.length; i++) {
+        node.childNodes[i]._isExpand = true;
+      }
+    }
+    this._refreshStore();
+  }
+
+  /**
+   * Collapse the actived node.
+   * If the node is expanded, and has expanded child nodes, collapse it's child nodes.
+   * If the node is expanded, and has no expanded child node, collapse it self.
+   * If the node is collapsed, do nothing.
+   */
+  protected _collapseActivedNode() {
+    const node = get(activedNode);
+    if (node._isExpand) {
+      let hasExpandedChild = false;
+      for (let i = 0; i < node.childNodes.length; i++) {
+        if (node.childNodes[i]._isExpand) {
+          hasExpandedChild = true;
+          node.childNodes[i]._isExpand = false;
+        }
+      }
+      if (!hasExpandedChild) {
+        node._isExpand = false;
+      }
+      this._refreshStore();
+    }
+  }
+
+  protected _isIgnoredNode(elem: Node) {
     // empty or line-break text
     if (elem.nodeType == elem.TEXT_NODE) {
       if (elem.textContent.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$|\n+/g, '') == '') { // trim
@@ -352,17 +293,19 @@ class VConsoleElementsTab extends VConsolePlugin {
     return false;
   }
 
-  _isInVConsole(elem) {
+  protected _isInVConsole(elem: Element) {
     let target = elem;
-    while (target != undefined) {
+    while (target !== undefined) {
       if (target.id == '__vconsole') {
         return true;
       }
-      target = target.parentNode || undefined;
+      target = target.parentElement || undefined;
     }
     return false;
   }
 
-} // END class
-
-export default VConsoleElementsTab;
+  protected _refreshStore() {
+    // update store data
+    rootNode.update((node) => node);
+  }
+}

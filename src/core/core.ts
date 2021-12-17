@@ -13,24 +13,21 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * vConsole core class
  */
 
+import type { SvelteComponent } from 'svelte';
+
 import * as tool from '../lib/tool';
 import $ from '../lib/query';
 
-import Style from './core.less';
-import tpl from './core.html';
-import tplTabbar from './tabbar.html';
-import tplTabbox from './tabbox.html';
-import tplTopBarItem from './topbar_item.html';
-import tplToolItem from './tool_item.html';
+import { default as CoreCompClass } from './core.svelte';
 
 // built-in plugins
-import VConsolePlugin from '../lib/plugin';
-import VConsoleLogPlugin from '../log/log';
-import VConsoleDefaultPlugin from '../log/default';
-import VConsoleSystemPlugin from '../log/system';
-import VConsoleNetworkPlugin from '../network/network';
-import VConsoleElementPlugin from '../element/element';
-import VConsoleStoragePlugin from '../storage/storage';
+import { VConsolePlugin, IVConsoleTopbarOptions } from '../lib/plugin';
+import { VConsoleLogPlugin } from '../log/log';
+import { VConsoleDefaultPlugin } from '../log/default';
+import { VConsoleSystemPlugin } from '../log/system';
+import { VConsoleNetworkPlugin } from '../network/network';
+import { VConsoleElementPlugin } from '../element/element';
+import { VConsoleStoragePlugin } from '../storage/storage';
 
 declare interface VConsoleOptions {
   defaultPlugins?: ('system' | 'network' | 'element' | 'storage')[];
@@ -44,27 +41,12 @@ declare interface VConsoleOptions {
 const VCONSOLE_ID = '#__vconsole';
 
 class VConsole {
-  public version: string;
-  public $dom: HTMLElement;
+  public version: string = __VERSION__;
   public isInited: boolean;
   public option: VConsoleOptions = {};
 
-  protected activedTab: string;
-  protected tabList: any[];
-  protected pluginList: {};
-  protected switchPos: {
-    hasMoved: boolean; // exclude click event
-    x: number; // right
-    y: number; // bottom
-    startX: number;
-    startY: number;
-    endX: number;
-    endY: number;
-  };
-
-  // export helper functions to public
-  public tool = tool;
-  public $ = $;
+  protected compInstance: SvelteComponent;
+  protected pluginList: { [id: string]: VConsolePlugin } = {}; // plugin instance
 
   // export static class
   public static VConsolePlugin = VConsolePlugin;
@@ -80,37 +62,11 @@ class VConsole {
       console.debug('vConsole is already exists.');
       return;
     }
-    const that = this;
-
-    // create style tag
-    Style.use();
-
-    // @ts-ignore
-    this.version = __VERSION__;
-    this.$dom = null;
 
     this.isInited = false;
     this.option = {
       defaultPlugins: ['system', 'network', 'element', 'storage']
     };
-
-    this.activedTab = '';
-    this.tabList = [];
-    this.pluginList = {};
-
-    this.switchPos = {
-      hasMoved: false, // exclude click event
-      x: 0, // right
-      y: 0, // bottom
-      startX: 0,
-      startY: 0,
-      endX: 0,
-      endY: 0
-    };
-
-    // export helper functions to public
-    this.tool = tool;
-    this.$ = $;
 
     // merge options
     if (tool.isObject(opt)) {
@@ -123,14 +79,12 @@ class VConsole {
     this._addBuiltInPlugins();
 
     // try to init
-    let _onload = function() {
-      if (that.isInited) {
+    const _onload = () => {
+      if (this.isInited) {
         return;
       }
-      that._render();
-      // that._mockTap();
-      that._bindEvent();
-      that._autoRun();
+      this._initComponent();
+      this._autoRun();
     };
     if (document !== undefined) {
       if (document.readyState === 'loading') {
@@ -141,7 +95,7 @@ class VConsole {
     } else {
       // if document does not exist, wait for it
       let _timer;
-      let _pollingDocument = function() {
+      const _pollingDocument = () => {
         if (!!document && document.readyState == 'complete') {
           _timer && clearTimeout(_timer);
           _onload();
@@ -154,9 +108,8 @@ class VConsole {
   }
 
   /**
-  * add built-in plugins
-  * @private
-  */
+   * Add built-in plugins.
+   */
   private _addBuiltInPlugins() {
     // add default log plugin
     this.addPlugin(new VConsoleDefaultPlugin('default', 'Log'));
@@ -164,16 +117,17 @@ class VConsole {
     // add other built-in plugins according to user's config
     const list = this.option.defaultPlugins;
     const plugins = {
-      'system': {proto: VConsoleSystemPlugin, name: 'System'},
-      'network': {proto: VConsoleNetworkPlugin, name: 'Network'},
-      'element': {proto: VConsoleElementPlugin, name: 'Element'},
-      'storage': {proto: VConsoleStoragePlugin, name: 'Storage'}
+      // 'default': { proto: VConsoleSystemPlugin, name: 'Log' },
+      'system': { proto: VConsoleSystemPlugin, name: 'System' },
+      'network': { proto: VConsoleNetworkPlugin, name: 'Network' },
+      'element': { proto: VConsoleElementPlugin, name: 'Element' },
+      'storage': { proto: VConsoleStoragePlugin, name: 'Storage' }
     };
     if (!!list && tool.isArray(list)) {
-      for (let i=0; i<list.length; i++) {
-        let tab = plugins[list[i]];
-        if (!!tab) {
-          this.addPlugin(new tab.proto(list[i], tab.name));
+      for (let i = 0; i < list.length; i++) {
+        const pluginConf = plugins[list[i]];
+        if (!!pluginConf) {
+          this.addPlugin(new pluginConf.proto(list[i], pluginConf.name));
         } else {
           console.debug('Unrecognized default plugin ID:', list[i]);
         }
@@ -182,277 +136,64 @@ class VConsole {
   }
 
   /**
-  * render panel DOM
-  * @private
-  */
-  private _render() {
+   * Init svelte component.
+   */
+  private _initComponent() {
     if (! $.one(VCONSOLE_ID)) {
-      const e = document.createElement('div');
-      e.innerHTML = tpl;
-      document.documentElement.insertAdjacentElement('beforeend', e.children[0]);
+      const switchX = <any>tool.getStorage('switch_x') * 1;
+      const switchY = <any>tool.getStorage('switch_y') * 1;
+
+      this.compInstance = new CoreCompClass({
+        target: document.documentElement,
+        props: {
+          switchButtonPosition: {
+            x: switchX,
+            y: switchY,
+          },
+        },
+      });
+      // console.log('core.ts compInstance', this.compInstance);
+
+      // bind events
+      this.compInstance.$on('show', (e) => {
+        if (e.detail.show) {
+          this.show();
+        } else {
+          this.hide();
+        }
+      });
+      this.compInstance.$on('changePanel', (e) => {
+        const pluginId = e.detail.pluginId;
+        this.showPlugin(pluginId);
+      });
     }
-    this.$dom = $.one(VCONSOLE_ID);
 
-    // reposition switch button
-    const switchX = <any>tool.getStorage('switch_x') * 1,
-          switchY = <any>tool.getStorage('switch_y') * 1;
-    this.setSwitchPosition(switchX, switchY);
-
-    // modify font-size
-    const dpr = window.devicePixelRatio || 1;
-    const viewportEl = document.querySelector('[name="viewport"]');
-    if (viewportEl) {
-      const viewportContent = viewportEl.getAttribute('content') || '';
-      const initialScale = viewportContent.match(/initial\-scale\=\d+(\.\d+)?/);
-      const scale = initialScale ? parseFloat(initialScale[0].split('=')[1]) : 1;
-      if (scale < 1) {
-        this.$dom.style.fontSize = 13 * dpr + 'px';
-      }
-    }
-
-    // remove from less to present transition effect
-    $.one('.vc-mask', this.$dom).style.display = 'none';
-
-    // set theme
-    this._updateTheme();
+    // set options into component
+    this._updateComponentByOptions();
   }
 
-  /**
-  * Update theme
-  * @private
-  */
-  private _updateTheme() {
-    if (!this.$dom) {
+  private _updateComponentByOptions() {
+    if (!this.compInstance) {
       return;
     }
-    let theme = this.option.theme;
-    if (theme !== 'light' && theme !== 'dark') {
-      theme = ''; // use system theme
-    }
-    this.$dom.setAttribute('data-theme', theme);
-  }
 
-  public setSwitchPosition(switchX: number, switchY: number) {
-    const $switch = $.one('.vc-switch', this.$dom);
-    [switchX, switchY] = this._getSwitchButtonSafeAreaXY($switch, switchX, switchY);
-    this.switchPos.x = switchX;
-    this.switchPos.y = switchY;
-    $switch.style.right = switchX + 'px';
-    $switch.style.bottom = switchY + 'px';
-    tool.setStorage('switch_x', switchX + '');
-    tool.setStorage('switch_y', switchY + '');
+    if (this.compInstance.theme !== this.option.theme) {
+      let theme = this.option.theme;
+      theme = theme !== 'light' && theme !== 'dark' ? '' : theme; // empty string = use system theme
+      this.compInstance.theme = theme;
+    }
+
+    if (this.compInstance.disableScrolling !== this.option.disableLogScrolling) {
+      this.compInstance.disableScrolling = !!this.option.disableLogScrolling;
+    }
   }
 
   /**
-  * Get an safe [x, y] position for switch button
-  * @private
-  */
-  private _getSwitchButtonSafeAreaXY($switch: HTMLElement, x: number, y: number) {
-    const docWidth = Math.max(document.documentElement.offsetWidth, window.innerWidth);
-    const docHeight = Math.max(document.documentElement.offsetHeight, window.innerHeight);
-    // check edge
-    if (x + $switch.offsetWidth > docWidth) {
-      x = docWidth - $switch.offsetWidth;
-    }
-    if (y + $switch.offsetHeight > docHeight) {
-      y = docHeight - $switch.offsetHeight;
-    }
-    if (x < 0) { x = 0; }
-    if (y < 20) { y = 20; } // safe area for iOS Home indicator
-    return [x, y];
+   * Update the position of Switch button.
+   */
+  public setSwitchPosition(x: number, y: number) {
+    this.compInstance.switchButtonPosition = { x, y };
   }
-
-  /**
-  * simulate tap event by touchstart & touchend
-  * @private
-  */
-  private _mockTap() {
-    let tapTime = 700, // maximun tap interval
-        tapBoundary = 10; // max tap move distance
-
-    let lastTouchStartTime,
-        touchstartX,
-        touchstartY,
-        touchHasMoved = false,
-        targetElem = null;
-
-    this.$dom.addEventListener('touchstart', function(e) { // todo: if double click
-      if (lastTouchStartTime === undefined) {
-        const touch = e.targetTouches[0];
-        const target = <Element>e.target;
-        touchstartX = touch.pageX;
-        touchstartY = touch.pageY;
-        lastTouchStartTime = e.timeStamp;
-        targetElem = (target.nodeType === Node.TEXT_NODE ? target.parentNode : target);
-      }
-    }, false);
-
-    this.$dom.addEventListener('touchmove', function(e) {
-      const touch = e.changedTouches[0];
-      if (Math.abs(touch.pageX - touchstartX) > tapBoundary || Math.abs(touch.pageY - touchstartY) > tapBoundary) {
-        touchHasMoved = true;
-      }
-    });
-
-    this.$dom.addEventListener('touchend', function(e) {
-      // move and time within limits, manually trigger `click` event
-      if (touchHasMoved === false && e.timeStamp - lastTouchStartTime < tapTime && targetElem != null) {
-        let tagName = targetElem.tagName.toLowerCase(),
-            needFocus = false,
-            hasSelection = false;
-        switch (tagName) {
-          case 'textarea': // focus
-            needFocus = true; break;
-          case 'input':
-            switch (targetElem.type) {
-              case 'button':
-              case 'checkbox':
-              case 'file':
-              case 'image':
-              case 'radio':
-              case 'submit':
-                needFocus = false; break;
-              default:
-                needFocus = !targetElem.disabled && !targetElem.readOnly;
-            }
-          default:
-            break;
-        }
-        if (typeof window.getSelection === 'function') {
-          const selection = getSelection();
-          if (selection.rangeCount && selection.type === 'range') { // type: None|Caret|Range
-            hasSelection = true;
-          }
-        }
-        if (needFocus) {
-          targetElem.focus();
-        } else if (!hasSelection) {
-          e.preventDefault(); // prevent click 300ms later
-        }
-
-        if (!targetElem.disabled && !targetElem.readOnly) {
-          const touch = e.changedTouches[0];
-          const event = document.createEvent('MouseEvents');
-          event.initMouseEvent('click', true, true, window, 1, touch.screenX, touch.screenY, touch.clientX, touch.clientY, false, false, false, false, 0, null);
-          event.initEvent('click', true, true);
-          targetElem.dispatchEvent(event);
-        }
-      }
-
-      // reset values
-      lastTouchStartTime = undefined;
-      touchHasMoved = false;
-      targetElem = null;
-    }, false);
-  }
-  /**
-  * bind DOM events
-  * @private
-  */
-  private _bindEvent() {
-    const that = this;
-
-    // drag & drop switch button
-    const $switch = $.one('.vc-switch', that.$dom);
-    $.bind($switch, 'touchstart', function(e) {
-      that.switchPos.startX = e.touches[0].pageX;
-      that.switchPos.startY = e.touches[0].pageY;
-      that.switchPos.hasMoved = false;
-    });
-    $.bind($switch, 'touchend', function(e) {
-      if (!that.switchPos.hasMoved) {
-        return;
-      }
-      that.switchPos.startX = 0;
-      that.switchPos.startY = 0;
-      that.switchPos.hasMoved = false;
-      that.setSwitchPosition(that.switchPos.endX, that.switchPos.endY);
-    });
-    $.bind($switch, 'touchmove', function(e) {
-      if (e.touches.length <= 0) {
-        return;
-      }
-      const offsetX = e.touches[0].pageX - that.switchPos.startX,
-            offsetY = e.touches[0].pageY - that.switchPos.startY;
-      let x = Math.floor(that.switchPos.x - offsetX),
-          y = Math.floor(that.switchPos.y - offsetY);
-      [x, y] = that._getSwitchButtonSafeAreaXY($switch, x, y);
-      $switch.style.right = x + 'px';
-      $switch.style.bottom = y + 'px';
-      that.switchPos.endX = x;
-      that.switchPos.endY = y;
-      that.switchPos.hasMoved = true;
-      e.preventDefault();
-    });
-
-    // show console panel
-    $.bind($.one('.vc-switch', that.$dom), 'click', function() {
-      that.show();
-    });
-
-    // hide console panel
-    $.bind($.one('.vc-hide', that.$dom), 'click', function() {
-      that.hide();
-    });
-
-    // hide console panel when tap background mask
-    $.bind($.one('.vc-mask', that.$dom), 'click', function(e) {
-      if (e.target != $.one('.vc-mask')) {
-        return false;
-      }
-      that.hide();
-    });
-
-    // show tab box
-    $.delegate($.one('.vc-tabbar', that.$dom), 'click', '.vc-tab', function(e) {
-      let tabName = this.dataset.tab;
-      if (tabName == that.activedTab) {
-        return;
-      }
-      that.showTab(tabName);
-    });
-
-    // disable background scrolling
-    let $content = $.one('.vc-content', that.$dom);
-    let preventMove = false;
-    $.bind($content, 'touchstart', function (e) {
-      let top = $content.scrollTop,
-          totalScroll = $content.scrollHeight,
-          currentScroll = top + $content.offsetHeight;
-      if (top === 0) {
-        // when content is on the top,
-        // reset scrollTop to lower position to prevent iOS apply scroll action to background
-        $content.scrollTop = 1;
-        // however, when content's height is less than its container's height,
-        // scrollTop always equals to 0 (it is always on the top),
-        // so we need to prevent scroll event manually
-        if ($content.scrollTop === 0) {
-          if (!$.hasClass(e.target, 'vc-cmd-input')) { // skip input
-            preventMove = true;
-          }
-        }
-      } else if (currentScroll === totalScroll) {
-        // when content is on the bottom,
-        // do similar processing
-        $content.scrollTop = top - 1;
-        if ($content.scrollTop === top) {
-          if (!$.hasClass(e.target, 'vc-cmd-input')) {
-            preventMove = true;
-          }
-        }
-      }
-    });
-
-    $.bind($content, 'touchmove', function (e) {
-      if (preventMove) {
-        e.preventDefault();
-      }
-    });
-
-    $.bind($content, 'touchend', function (e) {
-      preventMove = false;
-    });
-  };
 
   /**
   * auto run after initialization
@@ -466,17 +207,22 @@ class VConsole {
       this._initPlugin(this.pluginList[id]);
     }
 
-    // show first tab
-    if (this.tabList.length > 0) {
-      this.showTab(this.tabList[0]);
-    }
+    // show first plugin
+    this._showFirstPluginWhenEmpty();
 
     this.triggerEvent('ready');
   }
 
+  private _showFirstPluginWhenEmpty() {
+    const pluginIds = Object.keys(this.pluginList);
+    if (this.compInstance.activedPluginId === '' && pluginIds.length > 0) {
+      this.showPlugin(pluginIds[0]);
+    }
+  }
+
   /**
-  * trigger a vConsole.option event
-  */
+   * Trigger a `vConsole.option` event.
+   */
   public triggerEvent(eventName: string, param?: any) {
     eventName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1);
     if (tool.isFunction(this.option[eventName])) {
@@ -485,87 +231,60 @@ class VConsole {
   }
 
   /**
-  * init a plugin
-  * @private
-  */
-  private _initPlugin(plugin: VConsolePlugin) {
-    let that = this;
+   * Init a plugin.
+   */
+  private _initPlugin<T extends VConsolePlugin>(plugin: T) {
     plugin.vConsole = this;
+    this.compInstance.pluginList[plugin.id] = {
+      id: plugin.id,
+      name: plugin.name,
+      hasTabPanel: false,
+      topbarList: [],
+      toolbarList: [],
+    };
+    this.compInstance.pluginList = this.compInstance.pluginList;
     // start init
     plugin.trigger('init');
     // render tab (if it is a tab plugin then it should has tab-related events)
-    plugin.trigger('renderTab', function(tabboxHTML) {
-      // add to tabList
-      that.tabList.push(plugin.id);
+    plugin.trigger('renderTab', (tabboxHTML) => {
       // render tabbar
-      let $tabbar = $.render(tplTabbar, {id: plugin.id, name: plugin.name});
-      $.one('.vc-tabbar', that.$dom).insertAdjacentElement('beforeend', $tabbar);
+      this.compInstance.pluginList[plugin.id].hasTabPanel = true;
       // render tabbox
-      let $tabbox = $.render(tplTabbox, {id: plugin.id});
       if (!!tabboxHTML) {
         if (tool.isString(tabboxHTML)) {
-          $tabbox.innerHTML += tabboxHTML;
+          this.compInstance.divContentInner.innerHTML += tabboxHTML;
         } else if (tool.isFunction(tabboxHTML.appendTo)) {
-          tabboxHTML.appendTo($tabbox);
+          tabboxHTML.appendTo(this.compInstance.divContentInner);
         } else if (tool.isElement(tabboxHTML)) {
-          $tabbox.insertAdjacentElement('beforeend', tabboxHTML);
+          this.compInstance.divContentInner.insertAdjacentElement('beforeend', tabboxHTML);
         }
       }
-      $.one('.vc-content', that.$dom).insertAdjacentElement('beforeend', $tabbox);
     });
     // render top bar
-    plugin.trigger('addTopBar', function(btnList) {
-      if (!btnList) {
-        return;
-      }
-      let $topbar = $.one('.vc-topbar', that.$dom);
-      for (let i=0; i<btnList.length; i++) {
-        let item = btnList[i];
-        let $item = <HTMLElement>$.render(tplTopBarItem, {
+    plugin.trigger('addTopBar', (btnList: IVConsoleTopbarOptions[]) => {
+      if (!btnList) { return; }
+      for (let i = 0; i < btnList.length; i++) {
+        const item = btnList[i];
+        this.compInstance.pluginList[plugin.id].topbarList.push({
           name: item.name || 'Undefined',
           className: item.className || '',
-          pluginID: plugin.id
+          actived: !!item.actived,
+          data: item.data,
+          onClick: item.onClick,
         });
-        if (item.data) {
-          for (let k in item.data) {
-            $item.dataset[k] = item.data[k];
-          }
-        }
-        if (tool.isFunction(item.onClick)) {
-          $.bind($item, 'click', function(e) {
-            let enable = item.onClick.call($item);
-            if (enable === false) {
-              // do nothing
-            } else {
-              $.removeClass($.all('.vc-topbar-' + plugin.id), 'vc-actived');
-              $.addClass($item, 'vc-actived');
-            }
-          });
-        }
-        $topbar.insertAdjacentElement('beforeend', $item);
       }
     });
     // render tool bar
-    plugin.trigger('addTool', function(toolList) {
-      if (!toolList) {
-        return;
-      }
-      let $defaultBtn = $.one('.vc-tool-last', that.$dom);
-      for (let i=0; i<toolList.length; i++) {
-        let item = toolList[i];
-        let $item = $.render(tplToolItem, {
+    plugin.trigger('addTool', (toolList) => {
+      if (!toolList) { return; }
+      for (let i = 0; i<  toolList.length; i++) {
+        const item = toolList[i];
+        this.compInstance.pluginList[plugin.id].toolbarList.push({
           name: item.name || 'Undefined',
-          pluginID: plugin.id
+          global: !!item.global,
+          data: item.data,
+          onClick: item.onClick,
         });
-        if (item.global == true) {
-          $.addClass($item, 'vc-global-tool');
-        }
-        if (tool.isFunction(item.onClick)) {
-          $.bind($item, 'click', function(e) {
-            item.onClick.call($item);
-          });
-        }
-        $defaultBtn.parentNode.insertBefore($item, $defaultBtn);
       }
     });
     // end init
@@ -574,9 +293,8 @@ class VConsole {
   }
 
   /**
-  * trigger an event for each plugin
-  * @private
-  */
+   * Trigger an event for each plugin/
+   */
   private _triggerPluginsEvent(eventName: string) {
     for (let id in this.pluginList) {
       if (this.pluginList[id].isReady) {
@@ -586,224 +304,152 @@ class VConsole {
   }
 
   /**
-  * trigger an event by plugin's name
+  * trigger an event by plugin's id
   * @private
   */
-  private _triggerPluginEvent(pluginName: string, eventName: string) {
-    let plugin = this.pluginList[pluginName];
+  private _triggerPluginEvent(pluginId: string, eventName: string) {
+    const plugin = this.pluginList[pluginId];
     if (!!plugin && plugin.isReady) {
       plugin.trigger(eventName);
     }
   }
 
   /**
-  * add a new plugin
-  * @public
-  * @param object VConsolePlugin object
-  * @return boolean
-  */
+   * Add a new plugin.
+   */
   public addPlugin(plugin: VConsolePlugin) {
     // ignore this plugin if it has already been installed
     if (this.pluginList[plugin.id] !== undefined) {
-      console.debug('Plugin ' + plugin.id + ' has already been added.');
+      console.debug('Plugin `' + plugin.id + '` has already been added.');
       return false;
     }
     this.pluginList[plugin.id] = plugin;
     // init plugin only if vConsole is ready
     if (this.isInited) {
       this._initPlugin(plugin);
-      // if it's the first plugin, show it by default
-      if (this.tabList.length == 1) {
-        this.showTab(this.tabList[0]);
-      }
+      // if it's the only plugin, show it by default
+      this._showFirstPluginWhenEmpty();
     }
     return true;
   }
 
   /**
-  * remove a plugin
-  * @public
-  * @param string pluginID
-  * @return boolean
-  */
+   * Remove a plugin.
+   */
   public removePlugin(pluginID: string) {
     pluginID = (pluginID + '').toLowerCase();
-    let plugin = this.pluginList[pluginID];
+    const plugin = this.pluginList[pluginID];
     // skip if is has not been installed
     if (plugin === undefined) {
-      console.debug('Plugin ' + pluginID + ' does not exist.');
+      console.debug('Plugin `' + pluginID + '` does not exist.');
       return false;
     }
     // trigger `remove` event before uninstall
     plugin.trigger('remove');
-    // the plugin will not be initialized before vConsole is ready,
-    // so the plugin does not need to handle DOM-related actions in this case
-    if (this.isInited) {
-      let $tabbar = $.one('#__vc_tab_' + pluginID);
-      $tabbar && $tabbar.parentNode.removeChild($tabbar);
-      // remove topbar
-      let $topbar = $.all('.vc-topbar-' + pluginID, this.$dom);
-      for (let i=0; i<$topbar.length; i++) {
-        $topbar[i].parentNode.removeChild($topbar[i]);
-      }
-      // remove content
-      let $content = $.one('#__vc_log_' + pluginID);
-      $content && $content.parentNode.removeChild($content);
-      // remove tool bar
-      let $toolbar = $.all('.vc-tool-' + pluginID, this.$dom);
-      for (let i=0; i<$toolbar.length; i++) {
-        $toolbar[i].parentNode.removeChild($toolbar[i]);
-      }
-    }
-    // remove plugin from list
-    let index = this.tabList.indexOf(pluginID);
-    if (index > -1) {
-      this.tabList.splice(index, 1);
-    }
     try {
       delete this.pluginList[pluginID];
+      delete this.compInstance.pluginList[pluginID];
     } catch (e) {
       this.pluginList[pluginID] = undefined;
+      this.compInstance.pluginList[pluginID] = undefined;
     }
+    this.compInstance.pluginList = this.compInstance.pluginList;
     // show the first plugin by default
-    if (this.activedTab == pluginID) {
-      if (this.tabList.length > 0) {
-        this.showTab(this.tabList[0]);
-      }
+    if (this.compInstance.activedPluginId == pluginID) {
+      this.compInstance.activedPluginId = '';
+      this._showFirstPluginWhenEmpty();
     }
     return true;
   }
 
   /**
-  * show console panel
-  * @public
-  */
+   * Show console panel.
+   */
   public show() {
     if (!this.isInited) {
       return;
     }
-    let that = this;
-    // before show console panel,
-    // trigger a transitionstart event to make panel's property 'display' change from 'none' to 'block'
-    let $panel = $.one('.vc-panel', this.$dom);
-    $panel.style.display = 'block';
-
-    // set 10ms delay to fix confict between display and transition
-    setTimeout(function() {
-      $.addClass(that.$dom, 'vc-toggle');
-      that._triggerPluginsEvent('showConsole');
-      let $mask = $.one('.vc-mask', that.$dom);
-      $mask.style.display = 'block';
-    }, 10);
+    this.compInstance.show = true;
+    this._triggerPluginsEvent('showConsole');
   }
 
   /**
-  * hide console panel
-  * @public
-  */
+   * Hide console panel.
+   */
   public hide() {
     if (!this.isInited) {
       return;
     }
-    $.removeClass(this.$dom, 'vc-toggle');
-    setTimeout(() => {
-      // panel will be hidden by CSS transition in 0.3s
-      $.one('.vc-mask', this.$dom).style.display = 'none';
-      $.one('.vc-panel', this.$dom).style.display = 'none';
-    }, 330);
+    this.compInstance.show = false;
     this._triggerPluginsEvent('hideConsole');
   }
 
   /**
-  * show switch button
-  * @public
-  */
+   * Show switch button
+   */
   public showSwitch() {
     if (!this.isInited) {
       return;
     }
-    let $switch = $.one('.vc-switch', this.$dom);
-    $switch.style.display = 'block';
+    this.compInstance.showSwitchButton = true;
   }
 
   /**
-  * hide switch button
-  */
+   * Hide switch button.
+   */
   public hideSwitch() {
     if (!this.isInited) {
       return;
     }
-    let $switch = $.one('.vc-switch', this.$dom);
-    $switch.style.display = 'none';
+    this.compInstance.showSwitchButton = false;
   }
 
   /**
-  * show a tab
-  * @public
-  */
-  public showTab(tabID: string) {
+   * Show a plugin panel.
+   */
+  public showPlugin(pluginId: string) {
     if (!this.isInited) {
       return;
     }
-    let $logbox = $.one('#__vc_log_' + tabID);
-    // set actived status
-    $.removeClass($.all('.vc-tab', this.$dom), 'vc-actived');
-    $.addClass($.one('#__vc_tab_' + tabID), 'vc-actived');
-    $.removeClass($.all('.vc-logbox', this.$dom), 'vc-actived');
-    $.addClass($logbox, 'vc-actived');
-    // show topbar
-    let $curTopbar = $.all('.vc-topbar-' + tabID, this.$dom);
-    $.removeClass($.all('.vc-toptab', this.$dom), 'vc-toggle');
-    $.addClass($curTopbar, 'vc-toggle');
-    if ($curTopbar.length > 0) {
-      $.addClass($.one('.vc-content', this.$dom), 'vc-has-topbar');
-    } else {
-      $.removeClass($.one('.vc-content', this.$dom), 'vc-has-topbar');
-    }
-    // show toolbar
-    $.removeClass($.all('.vc-tool', this.$dom), 'vc-toggle');
-    $.addClass($.all('.vc-tool-' + tabID, this.$dom), 'vc-toggle');
     // trigger plugin event
-    this.activedTab && this._triggerPluginEvent(this.activedTab, 'hide');
-    this.activedTab = tabID;
-    this._triggerPluginEvent(this.activedTab, 'show');
+    this.compInstance.activedPluginId && this._triggerPluginEvent(this.compInstance.activedPluginId, 'hide');
+    this.compInstance.activedPluginId = pluginId;
+    this._triggerPluginEvent(this.compInstance.activedPluginId, 'show');
   }
 
   /**
-  * update option(s)
-  * @public
-  */
+   * Update option(s).
+   */
   public setOption(keyOrObj: any, value?: any) {
     if (tool.isString(keyOrObj)) {
       this.option[keyOrObj] = value;
       this._triggerPluginsEvent('updateOption');
-      this._updateTheme();
+      this._updateComponentByOptions();
     } else if (tool.isObject(keyOrObj)) {
       for (let k in keyOrObj) {
         this.option[k] = keyOrObj[k];
       }
       this._triggerPluginsEvent('updateOption');
-      this._updateTheme();
+      this._updateComponentByOptions();
     } else {
       console.debug('The first parameter of vConsole.setOption() must be a string or an object.');
     }
   }
 
   /**
-  * uninstall vConsole
-  * @public
-  */
+   * Remove vConsole.
+   */
   public destroy() {
     if (!this.isInited) {
       return;
     }
     // remove plugins
-    let IDs = Object.keys(this.pluginList);
-    for (let i = IDs.length - 1; i >= 0; i--) {
-      this.removePlugin(IDs[i]);
+    const pluginIds = Object.keys(this.pluginList);
+    for (let i = pluginIds.length - 1; i >= 0; i--) {
+      this.removePlugin(pluginIds[i]);
     }
-    // remove DOM
-    this.$dom.parentNode.removeChild(this.$dom);
+    // remove component
+    this.compInstance.$destroy();
 
     // reverse isInited when destroyed
     this.isInited = false;

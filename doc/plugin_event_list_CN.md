@@ -57,10 +57,11 @@ myPlugin.on('renderTab', function(callback) {
 
 Property | | | |
 ------- | ------- | ------- | -------
-name | string | 必填 | 按钮展示的名字。
-data | object | 选填 | 按钮的 dataset，key-value 格式。
+name      | string | 必填 | 按钮展示的名字。
+data      | object | 选填 | 按钮的自定义数据，key-value 格式。
 className | string | 选填 | 按钮的 className。
-onClick | function | 必填 | 点击按钮时的回调函数。触发回调后，除非回调函数返回 `false`，此按钮将自动变为选中的样式。
+actived   | boolean | optional | 按钮是否处在选中样式。
+onClick   | (event, data) => boolean | 必填 | 点击按钮时的回调函数。触发回调后，除非回调函数返回 `false`，此按钮将自动变为选中的样式。
 
 ##### 例子：
 
@@ -72,10 +73,10 @@ myPlugin.on('addTopBar', function(callback) {
 		name: 'Apple',
 		className: '',
 		data: {type: 'apple'},
-		onClick: function() {
-			if (type != this.dataset.type) {
+		onClick: function(event, data) {
+			if (type != data.type) {
 				// `this` 指向当前按钮
-				type = this.dataset.type;
+				type = data.type;
 			} else {
 				return false;
 			}
@@ -85,8 +86,8 @@ myPlugin.on('addTopBar', function(callback) {
 		name: 'Orange',
 		className: '',
 		data: {type: 'orange'},
-		onClick: function() {
-			type = this.dataset.type;
+		onClick: function(event, data) {
+			type = data.type;
 		}
 	}
 	});
@@ -106,11 +107,12 @@ myPlugin.on('addTopBar', function(callback) {
 
 tool 按钮的参数为：
 
-Property | | | |
+Property |         |         |         |
 ------- | ------- | ------- | -------
-name | string | 必填 | 按钮展示的名字。
-global | boolean | 选填，默认 `false` | `false` 时，当切换到别的 tab 后，按钮就会被隐藏；`true` 时，按钮变成全局可见。
-onClick | function() | 必填 | 点击按钮时的回调函数。
+name      | string | 必填 | 按钮展示的名字。
+data      | object | 选填 | 按钮的自定义数据，key-value 格式。
+global    | boolean | 选填，默认 `false` | `false` 时，当切换到别的 tab 后，按钮就会被隐藏；`true` 时，按钮变成全局可见。
+onClick   | (event, data) => void | 必填 | 点击按钮时的回调函数。
 
 ##### 例子：
 
@@ -120,7 +122,7 @@ myPlugin.on('addTool', function(callback) {
 	toolList.push({
 		name: 'Reload',
 		global: false,
-		onClick: function(e) {
+		onClick: function(event, data) {
 			location.reload();
 		}
 	});
