@@ -19,6 +19,7 @@ Now vConsole is the official debugging tool for WeChat Miniprograms.
 - Execute JS command manually
 - Custom plugins
 
+For details, please see the screenshots below.
 
 
 ## Release Notes
@@ -73,11 +74,35 @@ Available CDN:
 
 ## Preview
 
-![](./doc/snapshot/qrcode.png)
-
 [http://wechatfe.github.io/vconsole/demo.html](http://wechatfe.github.io/vconsole/demo.html)
 
-![](./doc/snapshot/panel_log.jpg) ![](./doc/snapshot/panel_network.jpg) ![](./doc/snapshot/panel_element.jpg) ![](./doc/snapshot/panel_storage.jpg)
+![](./doc/screenshot/qrcode.png)
+
+
+
+# Screenshots
+
+|   |   |
+|---|---|
+| **Overview**: |   |
+| Light theme | Dark theme |
+| ![](./doc/screenshot/overview_light.jpg) | ![](./doc/screenshot/overview_dark.jpg) |
+| **Log Panel**: |   |
+| Log styling | Command line |
+| ![](./doc/screenshot/plugin_log_types.jpg) | ![](./doc/screenshot/plugin_log_command.jpg) |
+| **System Panel**: |   |
+| Performance info | Output logs to different panel |
+| ![](./doc/screenshot/plugin_system.jpg) | `console.log('[system]', 'output to system panel.')` |
+| **Network Panel**: |   |
+| Request details |   |
+| ![](./doc/screenshot/plugin_network.jpg) |   |
+| **Element Panel**: |   |
+| Realtime HTML elements structure |   |
+| ![](./doc/screenshot/plugin_element.jpg) |   |
+| **Storage Panel**: |   |
+| Add, edit, delete or copy Cookies / LocalStorage / SessionStorage |   |
+| ![](./doc/screenshot/plugin_storage.jpg) |   |
+
 
 
 ## Documentation
@@ -109,7 +134,7 @@ Plugin:
 
 QQ Group: 497430533
 
-![](./doc/snapshot/qq_group.png)
+![](./doc/screenshot/qq_group.png)
 
 
 ## License
