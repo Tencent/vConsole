@@ -14,17 +14,18 @@ module.exports = (env, argv) => {
     devServer: {
       host: '0.0.0.0',
       port: 9191,
-      disableHostCheck: true,
-      contentBase: contentBase,
-      openPage: 'dev/index.html',
-      historyApiFallback: true,
-      noInfo: true,
-      overlay: true,
-      open: true,
+      open: 'dev/index.html',
       hot: true,
-      inline: true,
-      before(app) {
-        app.all('*', (req, res) => {
+      allowedHosts: 'all',
+      historyApiFallback: true,
+      client: {
+        overlay: true,
+      },
+      static: [
+        { directory: contentBase, },
+      ],
+      onBeforeSetupMiddleware(devServer) {
+        devServer.app.all('*', (req, res) => {
           const delay = req.query.t || Math.ceil(Math.random() * 100);
           setTimeout(() => {
             res.status(req.query.s || 200);
