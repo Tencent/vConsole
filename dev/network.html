@@ -140,7 +140,7 @@ function fetchIOSLowBug() {
 
 
 function getFetchSimple() {
-  window.fetch('./data/success.json?type=fetchGet&id=' + Math.random()).then((data) => {
+  window.fetch('./data/large.json?type=fetchGet&id=' + Math.random()).then((data) => {
     return data.json();
   }).then((data) => {
     console.log('getFetchSimple Response:', data);

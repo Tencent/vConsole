@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.10.1 (2021-12-xx)
+
+- `Feat(Network)` Pretty output format for JSON response. (issue #486)
+
+
 ## 3.10.0 (2021-12-17)
 
 > In this version, we refactored a lot of core logic, and used Svelte as the rendering engine for all views.  
