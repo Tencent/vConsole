@@ -70,16 +70,17 @@
    *************************************/
 
   onMount(() => {
-    // modify font-size
-    const dpr = window.devicePixelRatio || 1;
-    const viewportEl = document.querySelector('[name="viewport"]');
-    if (viewportEl) {
-      const viewportContent = viewportEl.getAttribute('content') || '';
+    // modify font-size to prevent scaling
+    // const dpr = window.devicePixelRatio || 1;
+    const viewportEl = document.querySelectorAll('[name="viewport"]');
+    if (viewportEl && viewportEl[0]) {
+      const viewportContent = viewportEl[viewportEl.length - 1].getAttribute('content') || '';
       const initialScale = viewportContent.match(/initial\-scale\=\d+(\.\d+)?/);
       const scale = initialScale ? parseFloat(initialScale[0].split('=')[1]) : 1;
-      if (scale < 1) {
-        fontSize = 13 * dpr + 'px';
+      if (scale !== 1) {
+        fontSize = Math.floor(1 / scale * 13) + 'px';
       }
+      // console.log(scale, fontSize);
     }
     // style
     Style.use && Style.use();
