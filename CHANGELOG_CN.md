@@ -1,9 +1,10 @@
 [English](./CHANGELOG.md) | 简体中文
 
-## 3.10.1 (2021-12-xx)
+## 3.10.1-rc (2021-12-??)
 
 - `Feat(Network)` 格式化输出 response 中的 JSON 内容。 (issue #486)
 - `Fix(Style)` 当 `initial-scale !== 1` 时，避免面板随页面缩放大小。
+- `Fix(Core)` 修复 PC 模式下点击面板按钮无效的问题。 (issue #487)
 
 
 ## 3.10.0 (2021-12-17)

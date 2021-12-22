@@ -1,9 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-## 3.10.1 (2021-12-xx)
+## 3.10.1-rc (2021-12-??)
 
 - `Feat(Network)` Pretty output format for JSON response. (issue #486)
 - `Fix(Style)` Avoid panel scaling with the web page When `initial-scale !== 1`.
+- `Fix(Core)` Fix the issue that clicking the panel button does not work in PC mode. (issue #487)
 
 
 ## 3.10.0 (2021-12-17)
