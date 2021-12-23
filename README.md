@@ -82,27 +82,74 @@ Available CDN:
 
 # Screenshots
 
-|   |   |
-|---|---|
-| **Overview**: |   |
-| Light theme | Dark theme |
-| ![](./doc/screenshot/overview_light.jpg) | ![](./doc/screenshot/overview_dark.jpg) |
-| **Log Panel**: |   |
-| Log styling | Command line |
-| ![](./doc/screenshot/plugin_log_types.jpg) | ![](./doc/screenshot/plugin_log_command.jpg) |
-| **System Panel**: |   |
-| Performance info | Output logs to different panel |
-| ![](./doc/screenshot/plugin_system.jpg) | `console.log('[system]', 'output to system panel.')` |
-| **Network Panel**: |   |
-| Request details |   |
-| ![](./doc/screenshot/plugin_network.jpg) |   |
-| **Element Panel**: |   |
-| Realtime HTML elements structure |   |
-| ![](./doc/screenshot/plugin_element.jpg) |   |
-| **Storage Panel**: |   |
-| Add, edit, delete or copy Cookies / LocalStorage / SessionStorage |   |
-| ![](./doc/screenshot/plugin_storage.jpg) |   |
+### Overview
 
+<details>
+  <summary>Light theme</summary>
+
+![](./doc/screenshot/overview_light.jpg)
+</details>
+
+<details>
+  <summary>Dark theme</summary>
+
+![](./doc/screenshot/overview_dark.jpg)
+</details>
+
+### Log Panel
+
+<details>
+  <summary>Log styling</summary>
+
+![](./doc/screenshot/plugin_log_types.jpg)
+</details>
+
+<details>
+  <summary>Command line</summary>
+
+![](./doc/screenshot/plugin_log_command.jpg)
+</details>
+
+### System Panel
+
+<details>
+  <summary>Performance info</summary>
+
+![](./doc/screenshot/plugin_system.jpg)
+</details>
+
+<details>
+  <summary>Output logs to different panel</summary>
+
+```javascript
+console.log('output to Log panel.')
+console.log('[system]', 'output to System panel.')
+```
+</details>
+
+### Network Panel
+
+<details>
+  <summary>Request details</summary>
+
+![](./doc/screenshot/plugin_network.jpg)
+</details>
+
+### Element Panel
+
+<details>
+  <summary>Realtime HTML elements structure</summary>
+
+![](./doc/screenshot/plugin_element.jpg)
+</details>
+
+### Storage Panel
+
+<details>
+  <summary>Add, edit, delete or copy Cookies / LocalStorage / SessionStorage</summary>
+
+![](./doc/screenshot/plugin_storage.jpg)
+</details>
 
 
 ## Documentation
