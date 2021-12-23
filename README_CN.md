@@ -45,7 +45,7 @@ $ npm install vconsole
 Import 并初始化后，即可使用 `console.log` 功能，如 Chrome devtools 上一样。
 
 ```javascript
-import { VConsole } from 'vconsole';
+import VConsole from 'vconsole';
 
 const vConsole = new VConsole();
 // 或者使用配置参数来初始化，详情见文档

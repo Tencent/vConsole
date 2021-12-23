@@ -12,7 +12,7 @@ $ npm install vconsole
 ```
 
 ```javascript
-import { VConsole } from 'vconsole';
+import VConsole from 'vconsole';
 
 const vConsole = new VConsole();
 // 或者使用配置参数进行初始化

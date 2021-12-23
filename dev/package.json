@@ -8,6 +8,7 @@
   "author": "Maiz",
   "license": "MIT",
   "dependencies": {
-    "jsdom": "^19.0.0"
+    "jsdom": "^19.0.0",
+    "vconsole": "file:../"
   }
 }

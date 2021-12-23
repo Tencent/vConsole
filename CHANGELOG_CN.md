@@ -1,5 +1,10 @@
 [English](./CHANGELOG.md) | 简体中文
 
+## 3.11.0-rc (202?-??-??)
+
+- `Feat(Global)` 支持自定义挂载点，配置项 `vConsole.option.target` 见 [公共属性及方法](./doc/public_properties_methods_CN.md)。 (issue #455)
+
+
 ## 3.10.1 (2021-12-23)
 
 - `Feat(Network)` 格式化输出 response 中的 JSON 内容。 (issue #486)

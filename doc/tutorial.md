@@ -13,7 +13,7 @@ $ npm install vconsole
 ```
 
 ```javascript
-import { VConsole } from 'vconsole';
+import VConsole from 'vconsole';
 
 const vConsole = new VConsole();
 // or init with options

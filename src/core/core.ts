@@ -30,6 +30,7 @@ import { VConsoleElementPlugin } from '../element/element';
 import { VConsoleStoragePlugin } from '../storage/storage';
 
 declare interface VConsoleOptions {
+  target?: string | HTMLElement;
   defaultPlugins?: ('system' | 'network' | 'element' | 'storage')[];
   maxLogNumber?: number;
   theme?: '' | 'dark' | 'light';
@@ -40,7 +41,7 @@ declare interface VConsoleOptions {
 
 const VCONSOLE_ID = '#__vconsole';
 
-class VConsole {
+export class VConsole {
   public version: string = __VERSION__;
   public isInited: boolean;
   public option: VConsoleOptions = {};
@@ -143,8 +144,17 @@ class VConsole {
       const switchX = <any>tool.getStorage('switch_x') * 1;
       const switchY = <any>tool.getStorage('switch_y') * 1;
 
+      let target: HTMLElement;
+      if (typeof this.option.target === 'string') {
+        target = document.querySelector(this.option.target);
+      } else if (this.option.target instanceof HTMLElement) {
+        target = this.option.target;
+      }
+      if (! (target instanceof HTMLElement)) {
+        target = document.documentElement;
+      }
       this.compInstance = new CoreCompClass({
-        target: document.documentElement,
+        target,
         props: {
           switchButtonPosition: {
             x: switchX,
