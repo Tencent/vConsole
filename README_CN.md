@@ -76,9 +76,9 @@ vConsole.destroy();
 
 ## 手机预览
 
-![](./doc/snapshot/qrcode.png)
-
 [http://wechatfe.github.io/vconsole/demo.html](http://wechatfe.github.io/vconsole/demo.html)
+
+![](./doc/screenshot/qrcode.png)
 
 
 
