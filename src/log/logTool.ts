@@ -2,8 +2,8 @@ import * as tool from '../lib/tool';
 import type { IVConsoleLog, IVConsoleLogData } from './log.model';
 
 const getPreviewText = (val: any) => {
-  const json = tool.safeJSONStringify(val, 0);
-  let preview = json.substr(0, 36);
+  const json = tool.safeJSONStringify(val, { maxDepth: 0 });
+  let preview = json.substring(0, 36);
   let ret = tool.getObjName(val);
   if (json.length > 36) {
     preview += '...';

@@ -1,5 +1,14 @@
 [English](./CHANGELOG.md) | 简体中文
 
+## 3.10.1 (2021-12-23)
+
+- `Feat(Network)` 格式化输出 response 中的 JSON 内容。 (issue #486)
+- `Fix(Style)` 当 `initial-scale !== 1` 时，避免面板随页面缩放大小。
+- `Fix(Core)` 修复 PC 模式下点击面板按钮无效的问题。 (issue #487)
+- `Fix(Network)` 当 Query/Payload/Headers 是对象或数组时，展示为结构化的 JSON 格式而非 `[object Object]`。
+- `Fix(Network)` 当某些情况下 XHR 对象被复用时，避免多次覆盖XHR对象的 `onreadystatechange` 以造成错误。 (issue #214)
+
+
 ## 3.10.0 (2021-12-17)
 
 > 这个版本中，我们重构了大部分核心逻辑，并且使用 Svelte 作为所有面板的视图层模板引擎。  

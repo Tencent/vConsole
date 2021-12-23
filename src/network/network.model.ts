@@ -129,8 +129,8 @@ export class VConsoleNetworkModel extends VConsoleModel {
       (<any>XMLReq)._method = method;
       (<any>XMLReq)._url = url;
 
-      // mock onreadystatechange
-      const _onreadystatechange = XMLReq.onreadystatechange || function() {};
+      // mock onReadyStateChange
+      const _onreadystatechange = (<any>XMLReq)._origOnreadystatechange || XMLReq.onreadystatechange || function() {};
       const onreadystatechange = function() {
 
         const reqList = get(requestList);
@@ -205,7 +205,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
             if (tool.isString(XMLReq.response)) {
               try {
                 item.response = JSON.parse(XMLReq.response);
-                item.response = tool.safeJSONStringify(item.response, 10, 500000);
+                item.response = tool.safeJSONStringify(item.response, { maxDepth: 10, keyMaxLen: 500000, pretty: true });
               } catch (e) {
                 // not a JSON string
                 item.response = XMLReq.response;
@@ -217,7 +217,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
 
           case 'json':
             if (typeof XMLReq.response !== 'undefined') {
-              item.response = tool.safeJSONStringify(XMLReq.response, 10, 500000);
+              item.response = tool.safeJSONStringify(XMLReq.response, { maxDepth: 10, keyMaxLen: 500000, pretty: true });
             }
             break;
 
@@ -237,6 +237,8 @@ export class VConsoleNetworkModel extends VConsoleModel {
         return _onreadystatechange.apply(XMLReq, arguments);
       };
       XMLReq.onreadystatechange = onreadystatechange;
+      // when the XHR object is reused, we can still call the original function while it is overwrote. (issue #214)
+      (<any>XMLReq)._origOnreadystatechange = _onreadystatechange;
 
       // some 3rd-libraries will change XHR's default function
       // so we use a timer to avoid lost tracking of readyState
@@ -441,7 +443,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
             try {
               // try to parse response as JSON
               item.response = JSON.parse(responseBody);
-              item.response = tool.safeJSONStringify(item.response, 10, 500000);
+              item.response = tool.safeJSONStringify(item.response, { maxDepth: 10, keyMaxLen: 500000, pretty: true });
             } catch (e) {
               // not real JSON, use 'text' as default type
               item.response = responseBody;

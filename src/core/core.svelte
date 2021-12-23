@@ -70,16 +70,17 @@
    *************************************/
 
   onMount(() => {
-    // modify font-size
-    const dpr = window.devicePixelRatio || 1;
-    const viewportEl = document.querySelector('[name="viewport"]');
-    if (viewportEl) {
-      const viewportContent = viewportEl.getAttribute('content') || '';
+    // modify font-size to prevent scaling
+    // const dpr = window.devicePixelRatio || 1;
+    const viewportEl = document.querySelectorAll('[name="viewport"]');
+    if (viewportEl && viewportEl[0]) {
+      const viewportContent = viewportEl[viewportEl.length - 1].getAttribute('content') || '';
       const initialScale = viewportContent.match(/initial\-scale\=\d+(\.\d+)?/);
       const scale = initialScale ? parseFloat(initialScale[0].split('=')[1]) : 1;
-      if (scale < 1) {
-        fontSize = 13 * dpr + 'px';
+      if (scale !== 1) {
+        fontSize = Math.floor(1 / scale * 13) + 'px';
       }
+      // console.log(scale, fontSize);
     }
     // style
     Style.use && Style.use();
@@ -222,7 +223,7 @@
             class="vc-tab"
             class:vc-actived={plugin.id === activedPluginId}
             id="__vc_tab_{plugin.id}"
-            on:touchend={() => onTapTabbar(plugin.id)}
+            on:click={() => onTapTabbar(plugin.id)}
           >{plugin.name}</a>
         {/if}
       {/each}
@@ -235,7 +236,7 @@
             class="vc-toptab vc-topbar-{plugin.id} {item.className}"
             class:vc-toggle={plugin.id === activedPluginId}
             class:vc-actived={item.actived}
-            on:touchend={(e) => onTapTopbar(e, plugin.id, i)}
+            on:click={(e) => onTapTopbar(e, plugin.id, i)}
           >{item.name}</i>
         {/each}
       {/each}
@@ -267,7 +268,7 @@
             class="vc-tool vc-tool-{plugin.id}"
             class:vc-global-tool={item.global}
             class:vc-toggle={plugin.id === activedPluginId}
-            on:touchend={(e) => onTapToolbar(e, plugin.id, i)}
+            on:click={(e) => onTapToolbar(e, plugin.id, i)}
           >{item.name}</i>
         {/each}
       {/each}

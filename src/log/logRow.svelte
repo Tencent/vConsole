@@ -31,7 +31,7 @@
     try {
       for (let i = 0; i < log.data.length; i++) {
         // Only copy up to 10 levels of object depth and single key size up to 10KB
-        text.push(tool.safeJSONStringify(log.data[i].origData, 10, 10000));
+        text.push(tool.safeJSONStringify(log.data[i].origData, { maxDepth: 10, keyMaxLen: 10000, pretty: false }));
       }
     } catch (e) {
       // do nothing

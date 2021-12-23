@@ -16,7 +16,8 @@
       <div class="hd">XMLHttpRequest</div>
 
       <a onclick="getAjax()" href="javascript:;" class="weui_btn weui_btn_default">GET XHR</a>
-      <a onclick="postAjax()" href="javascript:;" class="weui_btn weui_btn_default">POST XHR</a>
+      <a onclick="postAjax()" href="javascript:;" class="weui_btn weui_btn_default">POST XHR (Data: Object)</a>
+      <a onclick="postAjax('json')" href="javascript:;" class="weui_btn weui_btn_default">POST XHR (Data: JSON String)</a>
       <a onclick="optionsXHR()" href="javascript:;" class="weui_btn weui_btn_default">OPTIONS XHR</a>
     </div>
 
@@ -72,7 +73,7 @@ const vConsole = new window.VConsole({
 //   postAjax();
 // }, 300);
 
-function postAjax() {
+function postAjax(postType) {
   const xhr = new XMLHttpRequest();
   xhr.onload = () => {
     console.log('post XHR Response:', JSON.parse(xhr.response));
@@ -83,13 +84,20 @@ function postAjax() {
   xhr.onreadystatechange = () => {
     console.log('onreadystatechange', `readyState=${xhr.readyState}`, `status=${xhr.status}`);
   };
-  xhr.open('POST', './data/large.json?method=fetchPost&c=中文');
-  xhr.send({
+
+  let postData = {
     foo: 'bar',
+    book: { id: 123, type: 'comic', uid: [4,5,6,7,8] },
     id: `${Math.random()}${Math.random()}${Math.random()}${Math.random()}${Math.random()}${Math.random()}`,
     type: 'xhr',
     '<xss0>': '<xss1> XSS Attack!'
-  });
+  };
+  if (postType === 'json') {
+    postData = JSON.stringify(postData);
+  }
+  console.log('post data:', postData);
+  xhr.open('POST', './data/large.json?method=fetchPost&c=中文');
+  xhr.send(postData);
   // xhr.send(JSON.stringify({foo: 'bar', id: Math.random(), '<xss0>': '<xss1> XSS Attack!'}));
 }
 
@@ -140,7 +148,7 @@ function fetchIOSLowBug() {
 
 
 function getFetchSimple() {
-  window.fetch('./data/success.json?type=fetchGet&id=' + Math.random()).then((data) => {
+  window.fetch('./data/large.json?type=fetchGet&id=' + Math.random()).then((data) => {
     return data.json();
   }).then((data) => {
     console.log('getFetchSimple Response:', data);

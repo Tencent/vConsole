@@ -76,34 +76,82 @@ vConsole.destroy();
 
 ## 手机预览
 
-![](./doc/snapshot/qrcode.png)
-
 [http://wechatfe.github.io/vconsole/demo.html](http://wechatfe.github.io/vconsole/demo.html)
+
+![](./doc/screenshot/qrcode.png)
 
 
 
 # 截图
 
-|   |   |
-|---|---|
-| **概览**: |   |
-| 浅色主题 | 暗色主题 |
-| ![](./doc/screenshot/overview_light.jpg) | ![](./doc/screenshot/overview_dark.jpg) |
-| **Log 面板**: |   |
-| Log 样式 | 命令行 |
-| ![](./doc/screenshot/plugin_log_types.jpg) | ![](./doc/screenshot/plugin_log_command.jpg) |
-| **System 面板**: |   |
-| Performance 信息 | 输出到不同的 log 面板 |
-| ![](./doc/screenshot/plugin_system.jpg) | `console.log('[system]', '输出到system面板')` |
-| **Network 面板**: |   |
-| 请求、回包的详情 |   |
-| ![](./doc/screenshot/plugin_network.jpg) |   |
-| **Element 面板**: |   |
-| 展示 HTML 对象结构 |   |
-| ![](./doc/screenshot/plugin_element.jpg) |   |
-| **Storage 面板**: |   |
-| 添加、编辑、删除、复制 Cookies / LocalStorage / SessionStorage |   |
-| ![](./doc/screenshot/plugin_storage.jpg) |   |
+### 概览
+
+<details>
+  <summary>浅色主题</summary>
+
+![](./doc/screenshot/overview_light.jpg)
+</details>
+
+<details>
+  <summary>深色主题</summary>
+
+![](./doc/screenshot/overview_dark.jpg)
+</details>
+
+### Log 面板
+
+<details>
+  <summary>Log 样式</summary>
+
+![](./doc/screenshot/plugin_log_types.jpg)
+</details>
+
+<details>
+  <summary>命令行</summary>
+
+![](./doc/screenshot/plugin_log_command.jpg)
+</details>
+
+### System 面板
+
+<details>
+  <summary>Performance 信息</summary>
+
+![](./doc/screenshot/plugin_system.jpg)
+</details>
+
+<details>
+  <summary>输入日志到不同的 log 面板</summary>
+
+```javascript
+console.log('output to Log panel.')
+console.log('[system]', 'output to System panel.')
+```
+</details>
+
+### Network 面板
+
+<details>
+  <summary>请求、回包的详情</summary>
+
+![](./doc/screenshot/plugin_network.jpg)
+</details>
+
+### Element 面板
+
+<details>
+  <summary>查看 HTML 对象结构</summary>
+
+![](./doc/screenshot/plugin_element.jpg)
+</details>
+
+### Storage 面板
+
+<details>
+  <summary>添加、编辑、删除、复制 Cookies / LocalStorage / SessionStorage</summary>
+
+![](./doc/screenshot/plugin_storage.jpg)
+</details>
 
 
 

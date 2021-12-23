@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
+  import * as tool from '../lib/tool';
   import IconCopy from '../component/iconCopy.svelte';
   import { requestList } from './network.model';
   import Style from './network.less';
@@ -23,6 +24,13 @@
     unsubscribe();
     Style.unuse();
   });
+
+  const prettyStringify = (value: any) => {
+    if (tool.isObject(value) || tool.isArray(value)) {
+      return tool.safeJSONStringify(value, { maxDepth: 10, keyMaxLen: 10000, pretty: true });
+    }
+    return value;
+  };
 </script>
 
 <div class="vc-table">
@@ -75,7 +83,7 @@
             {#each Object.entries(req.header) as [key, item]}
             <div class="vc-table-row vc-left-border vc-small">
               <div class="vc-table-col vc-table-col-2">{key}</div>
-              <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{item}</div>
+              <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{prettyStringify(item)}</div>
             </div>
             {/each}
           </div>
@@ -91,7 +99,7 @@
             {#each Object.entries(req.requestHeader) as [key, item]}
             <div class="vc-table-row vc-left-border vc-small">
               <div class="vc-table-col vc-table-col-2">{key}</div>
-              <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{item}</div>
+              <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{prettyStringify(item)}</div>
             </div>
             {/each}
           </div>
@@ -107,7 +115,7 @@
             {#each Object.entries(req.getData) as [key, item]}
             <div class="vc-table-row vc-left-border vc-small">
               <div class="vc-table-col vc-table-col-2">{key}</div>
-              <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{item}</div>
+              <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{prettyStringify(item)}</div>
             </div>
             {/each}
           </div>
@@ -128,7 +136,7 @@
               {#each Object.entries(req.postData) as [key, item]}
               <div class="vc-table-row vc-left-border vc-small">
                 <div class="vc-table-col vc-table-col-2">{key}</div>
-                <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{item}</div>
+                <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{prettyStringify(item)}</div>
               </div>
               {/each}
             {/if}

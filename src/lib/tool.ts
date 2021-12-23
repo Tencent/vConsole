@@ -167,7 +167,13 @@ export function getVisibleText(text: string) {
 }
 
 
-type ISafeJSONStringifyOption = { ret: string, maxDepth: number, keyMaxLen: number, circularFinder: (val: any) => any };
+type ISafeJSONStringifyOption = {
+  ret: string,
+  maxDepth: number,
+  keyMaxLen: number,
+  pretty: boolean,
+  circularFinder: (val: any) => any,
+};
 const _safeJSONStringifyCircularFinder = () => {
   const seen = new WeakSet();
   return (value: any) => {
@@ -217,16 +223,27 @@ const _safeJSONStringify = (obj, opt: ISafeJSONStringifyOption, _curDepth = 0) =
     return;
   }
 
+  let prettySpace = '', prettyWrap = '';
+  if (opt.pretty) {
+    for (let i = 0; i <= _curDepth; i++) {
+      prettySpace += '  ';
+    }
+    prettyWrap = '\n';
+  }
+
   let prefix = '{', suffix = '}';
   if (isArray(obj)) {
     prefix = '[';
     suffix = ']';
   }
-  opt.ret += prefix;
+  opt.ret += prefix + prettyWrap;
+
   const keys = getEnumerableKeys(obj);
   for (let i = 0; i < keys.length; i ++) {
     const key = keys[i];
     // (window as any)._console.log('for key:', key, _curDepth);
+    opt.ret += prettySpace;
+
     // handle key
     try {
       if (!isArray(obj)) {
@@ -275,21 +292,23 @@ const _safeJSONStringify = (obj, opt: ISafeJSONStringifyOption, _curDepth = 0) =
     if (i < keys.length - 1) {
       opt.ret += ', ';
     }
+    opt.ret += prettyWrap;
   }
-  opt.ret += suffix;
+  opt.ret += prettySpace.substring(0, prettySpace.length - 2) + suffix;
 };
 /**
  * A safe `JSON.stringify` method. 
  */
-export function safeJSONStringify(obj, maxDepth = -1, keyMaxLen = -1) {
-  const opt = {
+export function safeJSONStringify(obj, opt: { maxDepth?: number, keyMaxLen?: number, pretty?: boolean } = { maxDepth: -1, keyMaxLen: -1, pretty: false, }) {
+  const option: ISafeJSONStringifyOption = Object.assign({
     ret: '',
-    maxDepth,
-    keyMaxLen,
+    maxDepth: -1,
+    keyMaxLen: -1,
+    pretty: false,
     circularFinder: _safeJSONStringifyCircularFinder(),
-  };
-  _safeJSONStringify(obj, opt);
-  return opt.ret;
+  }, opt);
+  _safeJSONStringify(obj, option);
+  return option.ret;
 }
 
 /**
