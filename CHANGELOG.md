@@ -6,6 +6,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix(Style)` Avoid panel scaling with the web page When `initial-scale !== 1`.
 - `Fix(Core)` Fix the issue that clicking the panel button does not work in PC mode. (issue #487)
 - `Fix(Network)` Display formatted JSON instead of `[object Object]` when Query/Payload/Headers is an object or array.
+- `Fix(Network)` Avoid overwriting `onreadystatechange` of XHR objects multiple times when XHR objects are reused in some cases. (issue #214)
 
 
 ## 3.10.0 (2021-12-17)

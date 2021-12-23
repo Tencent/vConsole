@@ -129,8 +129,8 @@ export class VConsoleNetworkModel extends VConsoleModel {
       (<any>XMLReq)._method = method;
       (<any>XMLReq)._url = url;
 
-      // mock onreadystatechange
-      const _onreadystatechange = XMLReq.onreadystatechange || function() {};
+      // mock onReadyStateChange
+      const _onreadystatechange = (<any>XMLReq)._origOnreadystatechange || XMLReq.onreadystatechange || function() {};
       const onreadystatechange = function() {
 
         const reqList = get(requestList);
@@ -237,6 +237,8 @@ export class VConsoleNetworkModel extends VConsoleModel {
         return _onreadystatechange.apply(XMLReq, arguments);
       };
       XMLReq.onreadystatechange = onreadystatechange;
+      // when the XHR object is reused, we can still call the original function while it is overwrote. (issue #214)
+      (<any>XMLReq)._origOnreadystatechange = _onreadystatechange;
 
       // some 3rd-libraries will change XHR's default function
       // so we use a timer to avoid lost tracking of readyState
