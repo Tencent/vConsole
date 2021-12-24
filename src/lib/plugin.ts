@@ -11,6 +11,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 import { getUniqueID } from '../lib/tool';
 
 export type IVConsolePluginEvent = (data?: any) => void;
+export type IVConsolePluginEventName = 'init' | 'renderTab' | 'addTopBar' | 'addTool' | 'ready' | 'remove' | 'updateOption' | 'showConsole' | 'hideConsole' | 'show' | 'hide';
 
 export interface IVConsoleTopbarOptions {
   name: string;
@@ -28,12 +29,11 @@ export interface IVConsoleToolbarOptions {
 }
 
 /**
- * vConsole Plugin Class
+ * vConsole Plugin Base Class
  */
-
 export class VConsolePlugin {
   public isReady: boolean = false;
-  public eventList: { [eventName: string]: IVConsolePluginEvent };
+  public eventMap: Map<IVConsolePluginEventName, IVConsolePluginEvent> = new Map();
   protected _id: string;
   protected _name: string;
   protected _vConsole: any;
@@ -43,16 +43,16 @@ export class VConsolePlugin {
     this.id = id;
     this.name = name;
     this.isReady = false;
-    
-    this.eventList = {};
   }
 
   get id() {
     return this._id;
   }
-  set id(value) {
-    if (!value) {
-      throw 'Plugin ID cannot be empty';
+  set id(value: string) {
+    if (typeof value !== 'string') {
+      throw '[vConsole] Plugin ID must be a string.';
+    } else if (!value) {
+      throw '[vConsole] Plugin ID cannot be empty.';
     }
     this._id = value.toLowerCase();
   }
@@ -60,9 +60,11 @@ export class VConsolePlugin {
   get name() {
     return this._name;
   }
-  set name(value) {
-    if (!value) {
-      throw 'Plugin name cannot be empty';
+  set name(value: string) {
+    if (typeof value !== 'string') {
+      throw '[vConsole] Plugin name must be a string.';
+    } else if (!value) {
+      throw '[vConsole] Plugin name cannot be empty.';
     }
     this._name = value;
   }
@@ -72,29 +74,30 @@ export class VConsolePlugin {
   }
   set vConsole(value) {
     if (!value) {
-      throw 'vConsole cannot be empty';
+      throw '[vConsole] vConsole cannot be empty';
     }
     this._vConsole = value;
   }
 
   /**
-   * register an event
+   * Register an event
    * @public
-   * @param string
-   * @param function
+   * @param IVConsolePluginEventName
+   * @param IVConsolePluginEvent
    */
-  public on(eventName: string, callback: IVConsolePluginEvent) {
-    this.eventList[eventName] = callback;
+  public on(eventName: IVConsolePluginEventName, callback: IVConsolePluginEvent) {
+    this.eventMap.set(eventName, callback);
     return this;
   }
 
   /**
-   * trigger an event
+   * Trigger an event.
    */
-  public trigger(eventName: string, data?: any) {
-    if (typeof this.eventList[eventName] === 'function') {
+  public trigger(eventName: IVConsolePluginEventName, data?: any) {
+    const targetEvent = this.eventMap.get(eventName);
+    if (typeof targetEvent === 'function') {
       // registered by `.on()` method
-      this.eventList[eventName].call(this, data);
+      targetEvent.call(this, data);
     } else {
       // registered by `.onXxx()` method
       const method = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1);

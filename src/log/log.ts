@@ -1,4 +1,5 @@
 import { VConsoleSveltePlugin } from '../lib/sveltePlugin';
+import { PluginExport } from '../lib/pluginExport';
 import LogComp from './log.svelte';
 import { VConsoleLogModel } from './log.model';
 import type { IConsoleLogMethod } from './log.model';
@@ -17,6 +18,7 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
   constructor(id: string, name: string,) {
     super(id, name, LogComp, { pluginId: id, filterType: 'all' });
     this.module.bindPlugin(id);
+    this.provideExport();
   }
 
   public onReady() {
@@ -27,6 +29,7 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
   public onRemove() {
     super.onRemove();
     this.module.unbindPlugin(this.id);
+    this.removeExport();
   }
 
   public onAddTopBar(callback: Function) {
@@ -66,6 +69,24 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
     if (this.vConsole.option.maxLogNumber !== this.module.maxLogNumber) {
       this.module.maxLogNumber = Number(this.vConsole.option.maxLogNumber) || MAX_LOG_NUMBER;
     }
+  }
+
+  protected provideExport() {
+    const methods: { [key: string]: Function } = {};
+    this.module.LOG_METHODS.map((method) => {
+      methods[method] = (...args) => {
+        args.unshift('[' + this.id + ']');
+        this.module.addLog({ type: method, origData: args, }, { noOrig: true });
+      }
+    });
+    methods.clear = () => {
+      this.module.clearPluginLog(this.id);
+    };
+    PluginExport.provide(this.id === 'default' ? 'log' : this.id, methods);
+  }
+
+  protected removeExport() {
+    PluginExport.remove(this.id === 'default' ? 'log' : this.id);
   }
 }
 
