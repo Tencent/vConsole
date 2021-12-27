@@ -9,6 +9,8 @@ http://opensource.org/licenses/MIT
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 */
 import { getUniqueID } from '../lib/tool';
+import { VConsolePluginExporter } from './pluginExporter';
+import type { VConsole } from '../core/core';
 
 export type IVConsolePluginEvent = (data?: any) => void;
 export type IVConsolePluginEventName = 'init' | 'renderTab' | 'addTopBar' | 'addTool' | 'ready' | 'remove' | 'updateOption' | 'showConsole' | 'hideConsole' | 'show' | 'hide';
@@ -34,9 +36,10 @@ export interface IVConsoleToolbarOptions {
 export class VConsolePlugin {
   public isReady: boolean = false;
   public eventMap: Map<IVConsolePluginEventName, IVConsolePluginEvent> = new Map();
+  public exporter?: VConsolePluginExporter;
   protected _id: string;
   protected _name: string;
-  protected _vConsole: any;
+  protected _vConsole: VConsole;
   
   constructor(...args);
   constructor(id: string, name = 'newPlugin') {
@@ -72,11 +75,12 @@ export class VConsolePlugin {
   get vConsole() {
     return this._vConsole || undefined;
   }
-  set vConsole(value) {
+  set vConsole(value: VConsole) {
     if (!value) {
       throw '[vConsole] vConsole cannot be empty';
     }
     this._vConsole = value;
+    this.bindExporter();
   }
 
   /**
@@ -88,6 +92,10 @@ export class VConsolePlugin {
   public on(eventName: IVConsolePluginEventName, callback: IVConsolePluginEvent) {
     this.eventMap.set(eventName, callback);
     return this;
+  }
+
+  public onRemove() {
+    this.unbindExporter();
   }
 
   /**
@@ -106,6 +114,21 @@ export class VConsolePlugin {
       }
     }
     return this;
+  }
+
+  protected bindExporter() {
+    if (!this._vConsole || !this.exporter) {
+      return;
+    }
+    const id = this.id === 'default' ? 'log' : this.id;
+    this._vConsole[id] = this.exporter;
+  }
+
+  protected unbindExporter() {
+    const id = this.id === 'default' ? 'log' : this.id;
+    if (this._vConsole && this._vConsole[id]) {
+      this._vConsole[id] = undefined;
+    }
   }
 
   protected getUniqueID(prefix: string = '') {
