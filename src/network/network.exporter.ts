@@ -1,9 +1,6 @@
 import { VConsolePluginExporter } from '../lib/pluginExporter';
 import { VConsoleNetworkModel } from './network.model';
-import { RequestItemHelper, VConsoleNetworkRequestItem, VConsoleNetworkRequestItemProxy } from './requestItem';
-// import type { VConsoleNetworkRequestItem } from './requestItem';
-
-
+import { VConsoleNetworkRequestItem, VConsoleNetworkRequestItemProxy } from './requestItem';
 
 export class VConsoleNetworkExporter extends VConsolePluginExporter {
   public model: VConsoleNetworkModel = VConsoleNetworkModel.getSingleton(VConsoleNetworkModel, 'VConsoleNetworkModel');
@@ -23,20 +20,7 @@ export class VConsoleNetworkExporter extends VConsolePluginExporter {
     this.model.updateRequest(id, item);
   }
 
-  protected completeDate(item: VConsoleNetworkRequestItem) {
-    if (!item.name) {
-      item.name = item.url?.replace(new RegExp('[/]*$'), '').split('/').pop() || 'Unknown';
-    }
-    item.method = item.method || 'GET';
-    item.statusText = item.statusText || String(item.status) || 'Unknown';
-    item.readyState = item.readyState || 0;
-    item.requestType = item.requestType || 'custom';
-    if (!item.costTime && item.endTime) {
-      item.costTime = item.endTime - item.startTime;
-    }
-    item.responseType = item.responseType || '';
-    // if (item.response) {
-    //   RequestItemHelper.updateResonseByResponseType(item, item.response);
-    // }
+  public clear() {
+    this.model.clearLog();
   }
 }
