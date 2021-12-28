@@ -3,6 +3,7 @@
 ## 3.11.0-rc (202?-??-??)
 
 - `Feat(Global)` 支持自定义挂载点，配置项 `vConsole.option.target` 见 [公共属性及方法](./doc/public_properties_methods_CN.md)。 (issue #455)
+- `Fix(Element)` 修复由于新增 Comment 节点导致的死循环问题。 (issue #491)
 
 
 ## 3.10.1 (2021-12-23)

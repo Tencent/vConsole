@@ -3,6 +3,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 ## 3.11.0-rc (202?-??-??)
 
 - `Feat(Global)` Support custom mount target, see `vConsole.option.target` in [Public Properties & Methods](./doc/public_properties_methods.md). (issue #455)
+- `Fix(Element)` Fix the infinite loop problem caused by the newly added Comment node. (issue #491)
 
 
 ## 3.10.1 (2021-12-23)
