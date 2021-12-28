@@ -1,12 +1,15 @@
 import { VConsoleSveltePlugin } from '../lib/sveltePlugin';
 import NetworkComp from './network.svelte';
 import { VConsoleNetworkModel } from './network.model';
+import { VConsoleNetworkExporter } from './network.exporter';
 
 export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
-  protected module: VConsoleNetworkModel = VConsoleNetworkModel.getSingleton(VConsoleNetworkModel, 'VConsoleNetworkModel');
+  public model: VConsoleNetworkModel = VConsoleNetworkModel.getSingleton(VConsoleNetworkModel, 'VConsoleNetworkModel');
+  public exporter: VConsoleNetworkExporter;
 
   constructor(id: string, name: string, renderProps = { }) {
     super(id, name, NetworkComp, renderProps);
+    this.exporter = new VConsoleNetworkExporter(id);
   }
 
   public onAddTool(callback) {
@@ -14,7 +17,7 @@ export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
       name: 'Clear',
       global: false,
       onClick: (e) => {
-        this.module.clearLog();
+        this.model.clearLog();
       }
     }];
     callback(toolList);
@@ -22,8 +25,8 @@ export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
 
   public onRemove() {
     super.onRemove();
-    if (this.module) {
-      this.module.unMock();
+    if (this.model) {
+      this.model.unMock();
     }
   }
 }

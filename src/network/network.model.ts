@@ -2,31 +2,9 @@ import { writable, get } from 'svelte/store';
 import * as tool from '../lib/tool';
 import { VConsoleModel } from '../lib/model';
 import { contentStore } from '../core/core.model';
- 
-export class VConsoleNetworkRequestItem {
-  id: string                = '';
-  name: string              = '';
-  method: string            = '';
-  url: string               = '';
-  status: number | string   = 0;
-  statusText: string        = '';
-  readyState: XMLHttpRequest['readyState'] = 0;
-  header: { [key: string]: string } = null; // response header
-  responseType: XMLHttpRequest['responseType'];
-  requestType: 'xhr' | 'fetch' | 'ping';
-  requestHeader: HeadersInit = null;
-  response: any;
-  startTime: number         = 0;
-  endTime: number           = 0;
-  costTime: number          = 0;
-  getData: { [key: string]: string } = null;
-  postData: { [key: string]: string } | string = null;
-  actived: boolean          = false;
+import { VConsoleNetworkRequestItem, RequestItemHelper } from './requestItem';
+import type { VConsoleRequestMethod } from './requestItem';
 
-  constructor(id: string) {
-    this.id = id;
-  }
-}
 
 /**
  * Network Store
@@ -52,7 +30,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
     this.mockSendBeacon();
   }
 
-  unMock() {
+  public unMock() {
     // recover original functions
     if (window.XMLHttpRequest) {
       window.XMLHttpRequest.prototype.open = this._xhrOpen;
@@ -72,37 +50,37 @@ export class VConsoleNetworkModel extends VConsoleModel {
     }
   }
 
-  clearLog() {
+  public clearLog() {
     // remove list
     requestList.set({});
   }
 
   /**
-    * add or update a request item by request ID
-    * @private
-    */
-  private updateRequest(id: string, data: VConsoleNetworkRequestItem | Object) {
-    // update item
+   * Add or update a request item by request ID.
+   */
+  public updateRequest(id: string, data: VConsoleNetworkRequestItem) {
     const reqList = get(requestList);
     const hasItem = !!reqList[id];
-    const item = hasItem ? reqList[id] : new VConsoleNetworkRequestItem(id);
-    for (let key in data) {
-      item[key] = data[key];
+    if (hasItem) {
+      // force re-assign to ensure that the value is updated
+      const item = reqList[id];
+      for (let key in data) {
+        item[key] = data[key];
+      }
     }
     requestList.update((reqList) => {
-      reqList[id] = item;
+      reqList[id] = data;
       return reqList;
     });
-    // console.log(item);
     if (!hasItem) {
       contentStore.updateTime();
     }
   }
 
   /**
-    * mock XMLHttpRequest
-    * @private
-    */
+   * mock XMLHttpRequest
+   * @private
+   */
   private mockXHR() {
     const _XMLHttpRequest = window.XMLHttpRequest;
     if (!_XMLHttpRequest) { return; }
@@ -120,21 +98,18 @@ export class VConsoleNetworkModel extends VConsoleModel {
       const XMLReq: XMLHttpRequest = this;
       const args = [].slice.call(arguments),
             method = args[0],
-            url = args[1],
-            id = tool.getUniqueID();
+            url = args[1];
+      const item = new VConsoleNetworkRequestItem();
       let timer = null;
 
       // may be used by other functions
-      (<any>XMLReq)._requestID = id;
+      (<any>XMLReq)._requestID = item.id;
       (<any>XMLReq)._method = method;
       (<any>XMLReq)._url = url;
 
       // mock onReadyStateChange
       const _onreadystatechange = (<any>XMLReq)._origOnreadystatechange || XMLReq.onreadystatechange || function() {};
       const onreadystatechange = function() {
-
-        const reqList = get(requestList);
-        const item = reqList[id] || new VConsoleNetworkRequestItem(id);
 
         // update status
         item.readyState = XMLReq.readyState;
@@ -198,41 +173,10 @@ export class VConsoleNetworkModel extends VConsoleModel {
         }
 
         // update response by responseType
-        switch (XMLReq.responseType) {
-          case '':
-          case 'text':
-            // try to parse JSON
-            if (tool.isString(XMLReq.response)) {
-              try {
-                item.response = JSON.parse(XMLReq.response);
-                item.response = tool.safeJSONStringify(item.response, { maxDepth: 10, keyMaxLen: 500000, pretty: true });
-              } catch (e) {
-                // not a JSON string
-                item.response = XMLReq.response;
-              }
-            } else if (typeof XMLReq.response !== 'undefined') {
-              item.response = Object.prototype.toString.call(XMLReq.response);
-            }
-            break;
-
-          case 'json':
-            if (typeof XMLReq.response !== 'undefined') {
-              item.response = tool.safeJSONStringify(XMLReq.response, { maxDepth: 10, keyMaxLen: 500000, pretty: true });
-            }
-            break;
-
-          case 'blob':
-          case 'document':
-          case 'arraybuffer':
-          default:
-            if (typeof XMLReq.response !== 'undefined') {
-              item.response = Object.prototype.toString.call(XMLReq.response);
-            }
-            break;
-        }
+        item.response = RequestItemHelper.genResonseByResponseType(item.responseType, item.response);
 
         if (!(<any>XMLReq)._noVConsole) {
-          that.updateRequest(id, item);
+          that.updateRequest(item.id, item);
         }
         return _onreadystatechange.apply(XMLReq, arguments);
       };
@@ -272,34 +216,14 @@ export class VConsoleNetworkModel extends VConsoleModel {
       const XMLReq: XMLHttpRequest = this;
       const args = [].slice.call(arguments),
             data = args[0];
-      const { _requestID = tool.getUniqueID(), _url, _method } = <any>XMLReq;
+      const { _requestID, _url, _method } = <any>XMLReq;
 
       const reqList = get(requestList);
-      const item = reqList[_requestID] || new VConsoleNetworkRequestItem(_requestID);
+      const item = reqList[_requestID] || new VConsoleNetworkRequestItem();
       item.method = _method ? _method.toUpperCase() : 'GET';
-
-      let query = _url ? _url.split('?') : []; // a.php?b=c&d=?e => ['a.php', 'b=c&d=', 'e']
       item.url = _url || '';
-      item.name = query.shift() || ''; // => ['b=c&d=', 'e']
-      item.name = item.name.replace(new RegExp('[/]*$'), '').split('/').pop() || '';
-
-      if (query.length > 0) {
-        item.name += '?' + query;
-        item.getData = {};
-        query = query.join('?'); // => 'b=c&d=?e'
-        query = query.split('&'); // => ['b=c', 'd=?e']
-        for (let q of query) {
-          q = q.split('=');
-          try {
-            item.getData[ q[0] ] = decodeURIComponent(q[1]);
-          } catch (e) {
-            // "URIError: URI malformed" will be thrown when `q[1]` contains "%", so just use raw data
-            // @issue #470
-            // @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Malformed_URI
-            item.getData[ q[0] ] = q[1];
-          }
-        }
-      }
+      item.name = item.url.replace(new RegExp('[/]*$'), '').split('/').pop() || '';
+      item.getData = RequestItemHelper.genGetDataByUrl(item.url, {});
 
       if (item.method == 'POST') {
 
@@ -324,7 +248,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
       }
 
       if (!(<any>XMLReq)._noVConsole) {
-        that.updateRequest(_requestID, item);
+        that.updateRequest(item.id, item);
       }
 
       return _send.apply(XMLReq, args);
@@ -333,9 +257,9 @@ export class VConsoleNetworkModel extends VConsoleModel {
   };
 
   /**
-    * mock fetch request
-    * @private
-    */
+   * mock fetch request
+   * @private
+   */
   private mockFetch() {
     const _fetch = window.fetch;
     if (!_fetch) { return; }
@@ -343,12 +267,8 @@ export class VConsoleNetworkModel extends VConsoleModel {
     this._fetch = _fetch;
 
     (<any>window).fetch = (input: RequestInfo, init?: RequestInit) => {
-      const id = tool.getUniqueID();
-      const item = new VConsoleNetworkRequestItem(id);
-      requestList.update((reqList) => {
-        reqList[id] = item;
-        return reqList;
-      });
+      const item = new VConsoleNetworkRequestItem();
+      this.updateRequest(item.id, item);
       let url: URL,
           method = 'GET',
           requestHeader: HeadersInit = null;
@@ -365,8 +285,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
         requestHeader = (<Request>input).headers;
       }
 
-      item.id = id;
-      item.method = method;
+      item.method = <VConsoleRequestMethod>method;
       item.requestType = 'fetch';
       item.requestHeader = requestHeader;
       item.url = url.toString();
@@ -438,32 +357,15 @@ export class VConsoleNetworkModel extends VConsoleModel {
 
       }).then((responseBody) => {
         // save response body
-        switch (item.responseType) {
-          case 'json':
-            try {
-              // try to parse response as JSON
-              item.response = JSON.parse(responseBody);
-              item.response = tool.safeJSONStringify(item.response, { maxDepth: 10, keyMaxLen: 500000, pretty: true });
-            } catch (e) {
-              // not real JSON, use 'text' as default type
-              item.response = responseBody;
-              item.responseType = 'text';
-            }
-            break;
-
-          case 'text':
-          default:
-            item.response = responseBody;
-            break;
-        }
+        item.response = RequestItemHelper.genResonseByResponseType(item.responseType, responseBody);
 
         // mock finally
-        that.updateRequest(id, item);
+        that.updateRequest(item.id, item);
 
         return _fetchReponse;
       }).catch((e) => {
         // mock finally
-        that.updateRequest(id, item);
+        that.updateRequest(item.id, item);
         throw e;
       });
       // ios<11 finally undefined
@@ -475,9 +377,9 @@ export class VConsoleNetworkModel extends VConsoleModel {
   }
 
   /**
-    * mock navigator.sendBeacon
-    * @private
-    */
+   * mock navigator.sendBeacon
+   * @private
+   */
   private mockSendBeacon() {
     const _sendBeacon = window.navigator.sendBeacon;
     if (!_sendBeacon) { return; }
@@ -493,15 +395,10 @@ export class VConsoleNetworkModel extends VConsoleModel {
     };
 
     window.navigator.sendBeacon = (urlString: string, data?: BodyInit) => {
-      const id = tool.getUniqueID();
-      const item = new VConsoleNetworkRequestItem(id);
-      requestList.update((reqList) => {
-        reqList[id] = item;
-        return reqList;
-      });
+      const item = new VConsoleNetworkRequestItem();
+      this.updateRequest(item.id, item);
 
       const url = that.getURL(urlString);
-      item.id = id;
       item.method = 'POST';
       item.url = urlString;
       item.name = (url.pathname.split('/').pop() || '') + url.search;
@@ -519,12 +416,12 @@ export class VConsoleNetworkModel extends VConsoleModel {
       item.postData = that.getFormattedBody(data);
 
       if (!item.startTime) {
-        item.startTime = (+new Date());
+        item.startTime = Date.now();
       }
 
       const isSuccess = _sendBeacon.call(window.navigator, urlString, data);
       if (isSuccess) {
-        item.endTime = +new Date();
+        item.endTime = Date.now();
         item.costTime = item.endTime - (item.startTime || item.endTime);
         item.status = 0;
         item.statusText = 'Sent';
@@ -533,7 +430,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
         item.status = 500;
         item.statusText = 'Unknown';
       }
-      that.updateRequest(id, item);
+      that.updateRequest(item.id, item);
       return isSuccess;
     };
   }

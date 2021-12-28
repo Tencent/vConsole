@@ -33,7 +33,8 @@ import { VConsoleElementPlugin } from '../element/element';
 import { VConsoleStoragePlugin } from '../storage/storage';
 
 // built-in plugin exporters
-import { VConsoleLogExporter } from '../log/logExporter';
+import { VConsoleLogExporter } from '../log/log.exporter';
+import { VConsoleNetworkExporter } from '../network/network.exporter';
 
 declare interface VConsoleOptions {
   target?: string | HTMLElement;
@@ -55,9 +56,10 @@ export class VConsole {
   protected compInstance: SvelteComponent;
   protected pluginList: { [id: string]: VConsolePlugin } = {}; // plugin instance
 
-  // Export plugin methods. Instance will be new at `onInit()`.
+  // Export plugin methods
   public log: VConsoleLogExporter;
   public system: VConsoleLogExporter;
+  public network: VConsoleNetworkExporter;
 
   // export static class
   public static VConsolePlugin = VConsolePlugin;
