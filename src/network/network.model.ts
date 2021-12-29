@@ -219,7 +219,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
     window.XMLHttpRequest.prototype.send = function() {
       const XMLReq: XMLHttpRequest = this;
       const args = [].slice.call(arguments),
-            data = args[0];
+            data: XMLHttpRequestBodyInit = args[0];
       const { _requestID, _url, _method } = <any>XMLReq;
 
       const reqList = get(requestList);
@@ -228,28 +228,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
       item.url = _url || '';
       item.name = item.url.replace(new RegExp('[/]*$'), '').split('/').pop() || '';
       item.getData = RequestItemHelper.genGetDataByUrl(item.url, {});
-
-      if (item.method == 'POST') {
-
-        // save POST data
-        if (tool.isString(data)) {
-          try { // '{a:1}' => try to parse as json
-            item.postData = JSON.parse(data);
-          } catch (e) { // 'a=1&b=2' => try to parse as query
-            const arr = data.split('&');
-            item.postData = {};
-            for (let q of arr) {
-              q = q.split('=');
-              item.postData[ q[0] ] = q[1];
-            }
-          }
-        } else if (tool.isPlainObject(data)) {
-          item.postData = data;
-        } else {
-          item.postData = '[object Object]';
-        }
-
-      }
+      item.postData = that.getFormattedBody(data);
 
       if (!(<any>XMLReq)._noVConsole) {
         that.updateRequest(item.id, item);
@@ -318,13 +297,16 @@ export class VConsoleNetworkModel extends VConsoleModel {
       }
 
       // save POST data
-      if (item.method === 'POST') {
-        if (tool.isString(input)) { // when `input` is a string
-          item.postData = that.getFormattedBody(init.body);
-        } else { // when `input` is a `Request` object
-          // cannot get real type of request's body, so just display "[object Object]"
-          item.postData = '[object Object]';
-        }
+      // if (item.method === 'POST') {
+      //   if (tool.isString(input)) { // when `input` is a string
+      //     item.postData = that.getFormattedBody(init.body);
+      //   } else { // when `input` is a `Request` object
+      //     // cannot get real type of request's body, so just display "[object Object]"
+      //     item.postData = '[object Object]';
+      //   }
+      // }
+      if (init.body) {
+        item.postData = that.getFormattedBody(init.body);
       }
 
       const request = tool.isString(input) ? url.toString() : input;
@@ -442,28 +424,33 @@ export class VConsoleNetworkModel extends VConsoleModel {
   private getFormattedBody(body?: BodyInit) {
     if (!body) { return null; }
     let ret: string | { [key: string]: string } = null;
-    const type = tool.getPrototypeName(body);
-    switch (type) {
-      case 'String':
-        try {
-          // try to parse as JSON
-          ret = JSON.parse(<string>body);
-        } catch (e) {
-          // not a json, return original string
-          ret = <string>body;
-        }
-        break;
 
-      case 'URLSearchParams':
-        ret = {};
-        for (const [key, value] of <URLSearchParams>body) {
-          ret[key] = value;
+    if (typeof body === 'string') {
+      try { // '{a:1}' => try to parse as json
+        ret = JSON.parse(body);
+      } catch (e) { // 'a=1&b=2' => try to parse as query
+        const arr = body.split('&');
+        if (arr.length === 1) { // not a query, parse as original string
+          ret = body;
+        } else { // 'a=1&b=2&c' => parse as query
+          ret = {};
+          for (let q of arr) {
+            const kv = q.split('=');
+            ret[ kv[0] ] = kv[1] === undefined ? 'undefined' : kv[1];
+          }
         }
-        break;
-
-      default:
-        ret = `[object ${type}]`;
-        break;
+      }
+    } else if (tool.isIterable(body)) {
+      // FormData or URLSearchParams or Array
+      ret = {};
+      for (const [key, value] of <FormData | URLSearchParams>body) {
+        ret[key] = typeof value === 'string' ? value : '[object Object]';
+      }
+    } else if (tool.isPlainObject(body)) {
+      ret = <any>body;
+    } else {
+      const type = tool.getPrototypeName(body);
+      ret = `[object ${type}]`;
     }
     return ret;
   }

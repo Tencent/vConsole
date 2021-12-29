@@ -328,11 +328,20 @@ function axiosRequest(method) {
 
 function optionsXHR() {
   console.info('optionsXHR() Start');
-  const url = window.location.origin + '/dev/data/a.json?method=optionsXHR&s=500&id=' + Math.random() + '&<xss0>';
+  const url = window.location.origin + '/dev/success.json?method=optionsXHR&s=200&id=' + Math.random() + '&<xss0>';
   const xhr = new XMLHttpRequest();
+
+  let postData = {
+    foo: 'bar',
+    book: { id: 123, type: 'comic', uid: [4,5,6,7,8] },
+    id: `${Math.random()}${Math.random()}${Math.random()}${Math.random()}${Math.random()}${Math.random()}`,
+    type: 'xhr',
+    '<xss0>': '<xss1> XSS Attack!'
+  };
+
   xhr.open('OPTIONS', url);
   xhr.setRequestHeader('custom-header', 'foobar');
-  xhr.send();
+  xhr.send(postData);
   xhr.onload = () => {
     console.log('optionsXHR Response:', xhr.response);
   };
@@ -344,8 +353,9 @@ function optionsXHR() {
 
 function optionsFetch() {
   console.info('optionsFetch() Start');
-  window.fetch('./data/a.json?method=optionsFetch&s=403&t=300', {
+  window.fetch('./data/a.json?method=optionsFetch&s=203&t=300', {
     method: 'OPTIONS',
+    body: { foo: 'bar', id: Math.random(), type: 'fetch', 'method': 'put', },
   }).then((data) => {
     console.log('optionsFetch Response:', data);
   }).catch((error) => {
