@@ -16,6 +16,9 @@ export const requestList = writable<{ [id: string]: VConsoleNetworkRequestItem }
  * Network Model
  */
 export class VConsoleNetworkModel extends VConsoleModel {
+  public maxNetworkNumber: number = 1000;
+  protected itemCounter: number = 0;
+
   private _xhrOpen: XMLHttpRequest['open'] = undefined; // the origin function
   private _xhrSend: XMLHttpRequest['send'] = undefined;
   private _xhrSetRequestHeader: XMLHttpRequest['setRequestHeader'] = undefined;
@@ -74,6 +77,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
     });
     if (!hasItem) {
       contentStore.updateTime();
+      this.limitListLength();
     }
   }
 
@@ -473,6 +477,30 @@ export class VConsoleNetworkModel extends VConsoleModel {
       return new URL(urlString);
     } else {
       return new URL(urlString, window.location.href);
+    }
+  }
+
+  protected limitListLength() {
+    // update list length every N rounds
+    const N = 10;
+    this.itemCounter++;
+    if (this.itemCounter % N !== 0) {
+      return;
+    }
+    this.itemCounter = 0;
+
+    const list = get(requestList);
+    const keys = Object.keys(list);
+    if (keys.length > this.maxNetworkNumber - N) {
+      requestList.update((store) => {
+        // delete N more logs for performance
+        const deleteKeys = keys.splice(0, keys.length - this.maxNetworkNumber + N);
+        for (let i = 0; i < deleteKeys.length; i++) {
+          store[deleteKeys[i]] = undefined;
+          delete store[deleteKeys[i]];
+        }
+        return store;
+      });
     }
   }
 

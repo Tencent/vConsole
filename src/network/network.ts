@@ -3,6 +3,8 @@ import NetworkComp from './network.svelte';
 import { VConsoleNetworkModel } from './network.model';
 import { VConsoleNetworkExporter } from './network.exporter';
 
+const MAX_NETWORK_NUMBER = 1000;
+
 export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
   public model: VConsoleNetworkModel = VConsoleNetworkModel.getSingleton(VConsoleNetworkModel, 'VConsoleNetworkModel');
   public exporter: VConsoleNetworkExporter;
@@ -10,6 +12,11 @@ export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
   constructor(id: string, name: string, renderProps = { }) {
     super(id, name, NetworkComp, renderProps);
     this.exporter = new VConsoleNetworkExporter(id);
+  }
+
+  public onReady() {
+    super.onReady();
+    this.onUpdateOption();
   }
 
   public onAddTool(callback) {
@@ -27,6 +34,12 @@ export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
     super.onRemove();
     if (this.model) {
       this.model.unMock();
+    }
+  }
+
+  public onUpdateOption() {
+    if (this.vConsole.option.maxNetworkNumber !== this.model.maxNetworkNumber) {
+      this.model.maxNetworkNumber = Number(this.vConsole.option.maxNetworkNumber) || MAX_NETWORK_NUMBER;
     }
   }
 }

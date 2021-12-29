@@ -41,6 +41,7 @@
       <a onclick="sendBeacon()" href="javascript:;" class="weui_btn weui_btn_default">sendBeacon</a>
       <a onclick="axiosRequest('GET')" href="javascript:;" class="weui_btn weui_btn_default">Axios: GET</a>
       <a onclick="scrolling()" href="javascript:;" class="weui_btn weui_btn_default">Scrolling</a>
+      <a onclick="crossDomain()" href="javascript:;" class="weui_btn weui_btn_default">Cross Domain</a>
     </div>
 
     <div class="section">
@@ -354,11 +355,13 @@ function optionsFetch() {
 }
 
 function scrolling() {
+  vConsole.setOption('maxNetworkNumber', 60);
   let n = 0
   let t = setInterval(() => {
     n++;
     if (n > 500) {
       clearInterval(t);
+      vConsole.setOption('maxNetworkNumber', 25);
     }
     getAjax();
   }, 150);
@@ -411,6 +414,16 @@ function callExportUpdate() {
 
 function callExportClear() {
   vConsole.network.clear();
+}
+
+function crossDomain() {
+  const res = window.fetch('http://baidu.com/?foo=bar', {
+    method: 'GET',
+  }).then((data) => {
+    console.log('crossDomain() Response:', data);
+  }).catch((error) => {
+    console.error('crossDomain() Error:', error);
+  });
 }
 
 function loadImgError() {

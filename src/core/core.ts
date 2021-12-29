@@ -40,6 +40,7 @@ declare interface VConsoleOptions {
   target?: string | HTMLElement;
   defaultPlugins?: ('system' | 'network' | 'element' | 'storage')[];
   maxLogNumber?: number;
+  maxNetworkNumber?: number;
   theme?: '' | 'dark' | 'light';
   disableLogScrolling?: boolean;
   onReady?: () => void;

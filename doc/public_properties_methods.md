@@ -33,6 +33,7 @@ defaultPlugins        | Array    | true     | ['system', 'network', 'element', '
 onReady               | Function | true     |                                             | Trigger after vConsole is inited and default plugins is loaded.
 onClearLog            | Function | true     |                                             | Trigger after click "Clear" button in Log and System panel.
 maxLogNumber          | Number   | true     | 1000                                        | Overflow logs will be removed from log panels.
+maxNetworkNumber      | Number   | true     | 1000                                        | Overflow requests will be removed from Netowrk panel.
 disableLogScrolling   | Boolean  | true     |                                             | If `false`, panel will not scroll to bottom while printing new logs.
 theme                 | String   | true     | 'light'                                     | Theme mode, 'light' | 'dark'.
 target                | String, HTMLElement | true | `document.documentElement`           | An HTMLElement or CSS selector string to render to.

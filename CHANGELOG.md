@@ -2,7 +2,8 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 ## 3.11.0-rc (202?-??-??)
 
-- `Feat(Global)` Support custom mount target, see `vConsole.option.target` in [Public Properties & Methods](./doc/public_properties_methods.md). (issue #455)
+- `Feat(Global)` Add new option `vConsole.option.target` to specify custom mount target, see [Public Properties & Methods](./doc/public_properties_methods.md). (issue #455)
+- `Feat(Network)` Add new option `vConsole.option.maxNetworkNumber` to limit request number, see [Public Properties & Methods](./doc/public_properties_methods.md). (issue #492)
 - `Fix(Element)` Fix the infinite loop problem caused by the newly added Comment node. (issue #491)
 
 
