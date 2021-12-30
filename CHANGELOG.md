@@ -1,6 +1,6 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-## 3.11.0-rc (202?-??-??)
+## 3.11.0 (2021-12-30)
 
 - `Feat(Global)` Add new option `vConsole.option.target` to specify custom mount target, see [Public Properties & Methods](./doc/public_properties_methods.md). (issue #455)
 - `Feat(Log)` Add new methods: `vConsole.log.log()|info()|...`, `vConsole.log.clear()`, see [Builtin Plugin: Properties & Methods](./doc/plugin_properties_methods.md).

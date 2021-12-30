@@ -1,6 +1,6 @@
 [English](./CHANGELOG.md) | 简体中文
 
-## 3.11.0-rc (202?-??-??)
+## 3.11.0 (2021-12-30)
 
 - `Feat(Global)` 支持自定义挂载点，配置项 `vConsole.option.target` 见 [公共属性及方法](./doc/public_properties_methods_CN.md)。 (issue #455)
 - `Feat(Log)` 新增插件方法 `vConsole.log.log()|info()|...`、`vConsole.log.clear()`，见 [内置插件：属性及方法](./doc/plugin_properties_methods_CN.md)。
