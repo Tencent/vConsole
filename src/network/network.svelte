@@ -68,26 +68,10 @@
               <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{req.method}</div>
             </div>
             <div class="vc-table-row vc-left-border vc-small">
-              <div class="vc-table-col vc-table-col-2">Type</div>
+              <div class="vc-table-col vc-table-col-2">Request Type</div>
               <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{req.requestType}</div>
             </div>
           </div>
-          {#if (req.header !== null)}
-          <div>
-            <dl class="vc-table-row vc-left-border">
-              <dt class="vc-table-col vc-table-col-title">
-                Response Headers
-                <i class="vc-table-row-icon"><IconCopy content={req.header} /></i>
-              </dt>
-            </dl>
-            {#each Object.entries(req.header) as [key, item]}
-            <div class="vc-table-row vc-left-border vc-small">
-              <div class="vc-table-col vc-table-col-2">{key}</div>
-              <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{prettyStringify(item)}</div>
-            </div>
-            {/each}
-          </div>
-          {/if}
           {#if (req.requestHeader !== null)}
           <div>
             <dl class="vc-table-row vc-left-border">
@@ -140,6 +124,22 @@
               </div>
               {/each}
             {/if}
+          </div>
+          {/if}
+          {#if (req.header !== null)}
+          <div>
+            <dl class="vc-table-row vc-left-border">
+              <dt class="vc-table-col vc-table-col-title">
+                Response Headers
+                <i class="vc-table-row-icon"><IconCopy content={req.header} /></i>
+              </dt>
+            </dl>
+            {#each Object.entries(req.header) as [key, item]}
+            <div class="vc-table-row vc-left-border vc-small">
+              <div class="vc-table-col vc-table-col-2">{key}</div>
+              <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{prettyStringify(item)}</div>
+            </div>
+            {/each}
           </div>
           {/if}
           <div>

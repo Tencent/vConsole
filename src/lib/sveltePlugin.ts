@@ -32,6 +32,7 @@ export class VConsoleSveltePlugin<T extends {} = {}> extends VConsolePlugin {
   }
 
   onRemove() {
+    super.onRemove && super.onRemove();
     if (this.compInstance) {
       this.compInstance.$destroy();
     }

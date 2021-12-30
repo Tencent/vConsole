@@ -1,6 +1,7 @@
 import { VConsoleSveltePlugin } from '../lib/sveltePlugin';
 import LogComp from './log.svelte';
 import { VConsoleLogModel } from './log.model';
+import { VConsoleLogExporter } from './log.exporter';
 import type { IConsoleLogMethod } from './log.model';
 
 const MAX_LOG_NUMBER = 1000;
@@ -9,24 +10,25 @@ const MAX_LOG_NUMBER = 1000;
  * vConsole Log Plugin (base class).
  */
 export class VConsoleLogPlugin extends VConsoleSveltePlugin {
-  public module: VConsoleLogModel = VConsoleLogModel.getSingleton(VConsoleLogModel, 'VConsoleLogModel');
+  public model: VConsoleLogModel = VConsoleLogModel.getSingleton(VConsoleLogModel, 'VConsoleLogModel');
   public isReady: boolean = false;
   public isShow: boolean = false;
   public isInBottom: boolean = true; // whether the panel is in the bottom
 
   constructor(id: string, name: string,) {
     super(id, name, LogComp, { pluginId: id, filterType: 'all' });
-    this.module.bindPlugin(id);
+    this.model.bindPlugin(id);
+    this.exporter = new VConsoleLogExporter(id);
   }
 
   public onReady() {
     super.onReady();
-    this.module.maxLogNumber = Number(this.vConsole.option.maxLogNumber) || MAX_LOG_NUMBER;
+    this.model.maxLogNumber = Number(this.vConsole.option.maxLogNumber) || MAX_LOG_NUMBER;
   }
 
   public onRemove() {
     super.onRemove();
-    this.module.unbindPlugin(this.id);
+    this.model.unbindPlugin(this.id);
   }
 
   public onAddTopBar(callback: Function) {
@@ -55,7 +57,7 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
       name: 'Clear',
       global: false,
       onClick: (e) => {
-        this.module.clearPluginLog(this.id);
+        this.model.clearPluginLog(this.id);
         this.vConsole.triggerEvent('clearLog');
       }
     }];
@@ -63,8 +65,8 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
   }
 
   public onUpdateOption() {
-    if (this.vConsole.option.maxLogNumber !== this.module.maxLogNumber) {
-      this.module.maxLogNumber = Number(this.vConsole.option.maxLogNumber) || MAX_LOG_NUMBER;
+    if (this.vConsole.option.maxLogNumber !== this.model.maxLogNumber) {
+      this.model.maxLogNumber = Number(this.vConsole.option.maxLogNumber) || MAX_LOG_NUMBER;
     }
   }
 }

@@ -1,7 +1,7 @@
 English | [简体中文](./tutorial_CN.md)
 
 Tutorial
-==============================
+===
 
 ## Getting Started
 
@@ -44,7 +44,7 @@ Available CDN:
 - https://unpkg.com/vconsole@latest/dist/vconsole.min.js
 - https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js
 
-
+---
 
 ## Usage
 
@@ -68,6 +68,8 @@ vConsole.setOption('maxLogNumber', 5000);
 vConsole.setOption({maxLogNumber: 5000});
 ```
 
+---
+
 
 ### Output logs
 
@@ -77,8 +79,15 @@ Use the methods of `console` to print logs, just like what you do at desktop bro
 console.log('Hello World');
 ```
 
-When vConsole is not loaded, logs will be printed to native console. After importing vConsole, logs will be printed to both front-end console and native console.
+When vConsole is not loaded, logs will be printed to browser console. After importing vConsole, logs will be printed to both vConsole panel and browser console.
 
+If you want to print logs to vConsole panel only, try [Log plugin methods](./plugin_properties_methods.md):
+
+```javascript
+vConsole.log.log('Hello world');
+```
+
+---
 
 ### Log methods
 
@@ -92,6 +101,7 @@ console.warn('foo');  // orange word, yellow background
 console.error('bar'); // red word, pink background
 ```
 
+---
 
 ### Other methods
 
@@ -102,6 +112,8 @@ console.clear();        // Clear all logs
 console.time('foo');    // start a timer named "foo"
 console.timeEnd('foo'); // stop "foo" timer and print the elapsed time
 ```
+
+---
 
 
 ### Styling log output
@@ -116,6 +128,7 @@ console.log('%c Foo %c bar', 'color:red'); // Foo %c bar
 
 > Note that only first parameter support `%c` format, and the following parameter(s) will be used as HTML style to fill `%c`, and the remain `%c` or parameters will be shown as normal string.
 
+---
 
 ### Using string substitutions
 
@@ -131,6 +144,7 @@ console.log('I had %d cakes', 3); // I had 3 cakes
 console.log('The %o is large', obj); // The [[obj]] is large
 ```
 
+---
 
 ### Special format
 
@@ -141,21 +155,27 @@ console.log('[system]', 'foo'); // 'foo' will be printed to System panel
 console.log('[system] bar'); // this log will show in Log tab instead of System panel
 ```
 
-
+---
 
 ## Built-in Plugins
 
 ### Network
 
-All `XMLHttpRequest` requests will be displayed in Network tab by default.
+All `XMLHttpRequest | fetch | sendBeacon` requests will be logged in Network panel by default.
 
-To prevent the display, add `_noVConsole = true` to XHR object:
+To prevent logging, add `_noVConsole = true` to XHR object:
 
 ```javascript
 var xhr = new XMLHttpRequest();
-xhr._noVConsole = true; // now this request would not be displayed in tab
+xhr._noVConsole = true; // now this request would not be logged in panel
 xhr.open("GET", 'http://example.com/');
 xhr.send();
+```
+
+If you want to print custom request logs, try [Network plugin methods](./plugin_properties_methods.md):
+
+```javascript
+vConsole.network.add(...);
 ```
 
 

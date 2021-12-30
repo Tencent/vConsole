@@ -3,6 +3,11 @@
 ## 3.11.0-rc (202?-??-??)
 
 - `Feat(Global)` 支持自定义挂载点，配置项 `vConsole.option.target` 见 [公共属性及方法](./doc/public_properties_methods_CN.md)。 (issue #455)
+- `Feat(Log)` 新增插件方法 `vConsole.log.log()|info()|...`、`vConsole.log.clear()`，见 [内置插件：属性及方法](./doc/plugin_properties_methods_CN.md)。
+- `Feat(Network)` 新增插件方法 `vConsole.network.add()|update()`、`vConsole.network.clear()`，见 [内置插件：属性及方法](./doc/plugin_properties_methods_CN.md)。
+- `Feat(Network)` 支持限制请求数量，配置项 `vConsole.option.maxNetworkNumber`见 [公共属性及方法](./doc/public_properties_methods_CN.md)。 (issue #492)
+- `Fix(Network)` 在所有 HTTP Methods 中都会展示 Request Payload，而非仅限于 POST。 (issue #493)
+- `Fix(Element)` 修复由于新增 Comment 节点导致的死循环问题。 (issue #491)
 
 
 ## 3.10.1 (2021-12-23)

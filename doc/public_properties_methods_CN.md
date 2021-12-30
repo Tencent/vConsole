@@ -32,7 +32,8 @@ vConsole.version // => "3.11.0"
 defaultPlugins        | Array    | true     | ['system', 'network', 'element', 'storage'] | 需要自动初始化并加载的内置插件。 
 onReady               | Function | true     |                                             | 回调方法，当 vConsole 完成初始化并加载完内置插件后触发。
 onClearLog            | Function | true     |                                             | 回调方法，点击 Log 或 System 面板的 "Clear" 按钮后出发。
-maxLogNumber          | Number   | true     | 1000                                        | 超出上限的日志会被自动清除。
+maxLogNumber          | Number   | true     | 1000                                        | 超出数量上限的日志会被自动清除。
+maxNetworkNumber      | Number   | true     | 1000                                        | 超出数量上限的请求记录会被自动清除。
 disableLogScrolling   | Boolean  | true     |                                             | 若为 `false`，有新日志时面板将不会自动滚动到底部。
 theme                 | String   | true     | 'light'                                     | 主题颜色，可选值为 'light' | 'dark'。
 target                | String, HTMLElement | true | `document.documentElement`           | 挂载到的节点，可为 HTMLElement 或 CSS selector。

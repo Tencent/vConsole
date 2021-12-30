@@ -27,6 +27,7 @@
       <a onclick="getFetch()" href="javascript:;" class="weui_btn weui_btn_default">GET Fetch</a>
       <a onclick="getFetchSimple()" href="javascript:;" class="weui_btn weui_btn_default">GET Fetch (simple)</a>
       <a onclick="getFetchText()" href="javascript:;" class="weui_btn weui_btn_default">GET Fetch Text</a>
+      <a onclick="getFetchJsonText()" href="javascript:;" class="weui_btn weui_btn_default">GET Fetch JSON Text</a>
       <a onclick="getFetch500()" href="javascript:;" class="weui_btn weui_btn_default">GET Fetch 500</a>
       <a onclick="postFetch()" href="javascript:;" class="weui_btn weui_btn_default">POST Fetch</a>
       <a onclick="postFetchByRequest()" href="javascript:;" class="weui_btn weui_btn_default">POST Fetch Using XHR</a>
@@ -40,6 +41,15 @@
       <a onclick="sendBeacon()" href="javascript:;" class="weui_btn weui_btn_default">sendBeacon</a>
       <a onclick="axiosRequest('GET')" href="javascript:;" class="weui_btn weui_btn_default">Axios: GET</a>
       <a onclick="scrolling()" href="javascript:;" class="weui_btn weui_btn_default">Scrolling</a>
+      <a onclick="crossDomain()" href="javascript:;" class="weui_btn weui_btn_default">Cross Domain</a>
+    </div>
+
+    <div class="section">
+      <div class="hd">Exporter</div>
+
+      <a onclick="callExportAdd()" href="javascript:;" class="weui_btn weui_btn_default">vConsole.network.add()</a>
+      <a onclick="callExportUpdate()" href="javascript:;" class="weui_btn weui_btn_default">vConsole.network.update()</a>
+      <a onclick="callExportClear()" href="javascript:;" class="weui_btn weui_btn_default">vConsole.network.clear()</a>
     </div>
 
     <div class="section">
@@ -72,6 +82,11 @@ const vConsole = new window.VConsole({
 // setInterval(() => {
 //   postAjax();
 // }, 300);
+
+function showPanel() {
+  vConsole.showPlugin('network');
+  vConsole.show();
+}
 
 function postAjax(postType) {
   const xhr = new XMLHttpRequest();
@@ -197,7 +212,7 @@ function postFetchByRequest() {
 }
 
 function getFetchText() {
-  window.fetch('./data/success.txt?type=fetchGet&id=' + Math.random(), {
+  window.fetch('./data/string.txt?type=fetchGet&id=' + Math.random(), {
     method: 'GET',
     headers: {
       'custom-header': 'foobar',
@@ -207,6 +222,20 @@ function getFetchText() {
     return data.text();
   }).then((data) => {
     console.log('getFetchText Response:', data);
+  });
+}
+
+function getFetchJsonText() {
+  window.fetch('./data/json.txt?type=fetchGet&id=' + Math.random(), {
+    method: 'GET',
+    headers: {
+      'custom-header': 'foobar',
+      'content-type': 'application/json'
+    },
+  }).then((data) => {
+    return data.text();
+  }).then((data) => {
+    console.log('getFetchJsonText Response:', data);
   });
 }
 
@@ -299,11 +328,20 @@ function axiosRequest(method) {
 
 function optionsXHR() {
   console.info('optionsXHR() Start');
-  const url = window.location.origin + '/dev/data/a.json?method=optionsXHR&s=500&id=' + Math.random() + '&<xss0>';
+  const url = window.location.origin + '/dev/success.json?method=optionsXHR&s=200&id=' + Math.random() + '&<xss0>';
   const xhr = new XMLHttpRequest();
+
+  let postData = {
+    foo: 'bar',
+    book: { id: 123, type: 'comic', uid: [4,5,6,7,8] },
+    id: `${Math.random()}${Math.random()}${Math.random()}${Math.random()}${Math.random()}${Math.random()}`,
+    type: 'xhr',
+    '<xss0>': '<xss1> XSS Attack!'
+  };
+
   xhr.open('OPTIONS', url);
   xhr.setRequestHeader('custom-header', 'foobar');
-  xhr.send();
+  xhr.send(postData);
   xhr.onload = () => {
     console.log('optionsXHR Response:', xhr.response);
   };
@@ -315,8 +353,9 @@ function optionsXHR() {
 
 function optionsFetch() {
   console.info('optionsFetch() Start');
-  window.fetch('./data/a.json?method=optionsFetch&s=403&t=300', {
+  window.fetch('./data/a.json?method=optionsFetch&s=203&t=300', {
     method: 'OPTIONS',
+    body: { foo: 'bar', id: Math.random(), type: 'fetch', 'method': 'put', },
   }).then((data) => {
     console.log('optionsFetch Response:', data);
   }).catch((error) => {
@@ -326,14 +365,75 @@ function optionsFetch() {
 }
 
 function scrolling() {
+  vConsole.setOption('maxNetworkNumber', 60);
   let n = 0
   let t = setInterval(() => {
     n++;
     if (n > 500) {
       clearInterval(t);
+      vConsole.setOption('maxNetworkNumber', 25);
     }
     getAjax();
   }, 150);
+}
+
+let item = null;
+function callExportAdd() {
+  item = vConsole.network.add({
+    url: 'https://foo.bar.com/hello/world.json?aaa=bbb',
+    status: 100,
+    method: 'PUT',
+    requestHeader: {
+      'foobar': 'yes',
+    },
+    getData: {
+      'ccc': 'ddd',
+    },
+    postData: {
+      'eee': 'fff',
+    },
+  });
+  showPanel()
+}
+
+function callExportUpdate() {
+  if (!item) {
+    callExportAdd();
+  }
+  item.status = 110;
+  item.endTime = Date.now();
+  item.responseType = 'json';
+  item.response = {
+    foo: 'bar',
+    rand: Math.random(),
+  };
+  item.header = {
+    'barfoo': 'no',
+  };
+  item.getData.zzz = 'yyy';
+  vConsole.network.update(item.id, item);
+  setTimeout(() => {
+    item.status = 200;
+    item.response = {
+      foo2: 'bar2',
+    };
+    vConsole.network.update(item.id, item);
+  }, 2000);
+  showPanel()
+}
+
+function callExportClear() {
+  vConsole.network.clear();
+}
+
+function crossDomain() {
+  const res = window.fetch('http://baidu.com/?foo=bar', {
+    method: 'GET',
+  }).then((data) => {
+    console.log('crossDomain() Response:', data);
+  }).catch((error) => {
+    console.error('crossDomain() Error:', error);
+  });
 }
 
 function loadImgError() {

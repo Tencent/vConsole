@@ -1,13 +1,15 @@
 [English](./README.md) | 简体中文
 
 vConsole
----
+===
+
 一个轻量、可拓展、针对手机网页的前端开发者调试面板。
 
 vConsole 是框架无关的，可以在 Vue、React 或其他任何框架中使用。
 
 现在 vConsole 是微信小程序的官方调试工具。
 
+---
 
 ## 功能特性
 
@@ -20,7 +22,7 @@ vConsole 是框架无关的，可以在 Vue、React 或其他任何框架中使�
 
 详情可参考下方的截图。
 
-
+---
 
 ## 版本说明
 
@@ -28,7 +30,7 @@ vConsole 是框架无关的，可以在 Vue、React 或其他任何框架中使�
 
 每个版本的详细说明请参阅 [Changelog](./CHANGELOG_CN.md)。
 
-
+---
 
 ## 上手
 
@@ -73,6 +75,7 @@ vConsole.destroy();
 - https://unpkg.com/vconsole@latest/dist/vconsole.min.js
 - https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js
 
+---
 
 ## 手机预览
 
@@ -80,9 +83,9 @@ vConsole.destroy();
 
 ![](./doc/screenshot/qrcode.png)
 
+---
 
-
-# 截图
+## 截图
 
 ### 概览
 
@@ -153,7 +156,7 @@ console.log('[system]', 'output to System panel.')
 ![](./doc/screenshot/plugin_storage.jpg)
 </details>
 
-
+---
 
 ## 文档
 
@@ -162,14 +165,15 @@ vConsole 本体：
 
  - [使用教程](./doc/tutorial_CN.md)
  - [公共属性及方法](./doc/public_properties_methods_CN.md)
+ - [内置插件：属性及方法](./doc/plugin_properties_methods_CN.md)
 
-插件：
+自定义插件：
 
  - [插件：入门](./doc/plugin_getting_started_CN.md)
  - [插件：编写插件](./doc/plugin_building_a_plugin_CN.md)
  - [插件：Event 事件列表](./doc/plugin_event_list_CN.md)
 
-
+---
 
 ## 第三方插件列表
 
@@ -180,15 +184,15 @@ vConsole 本体：
  - [vconsole-outputlog-plugin](https://github.com/sunlanda/vconsole-outputlog-plugin)
  - [vite-plugin-vconsole](https://github.com/vadxq/vite-plugin-vconsole)
 
-
+---
 
 ## 交流反馈
 
 QQ 群：497430533
 
-![](./doc/snapshot/qq_group.png)
+![](./doc/screenshot/qq_group.png)
 
-
+---
 
 ## License
 

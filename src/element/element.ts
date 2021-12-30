@@ -93,9 +93,10 @@ export class VConsoleElementPlugin extends VConsoleSveltePlugin {
   }
 
   protected _handleMutation(mutation: MutationRecord) {
-    // console.log(mutation.type, mutation);
+    // (window as any)._vcOrigConsole.log(mutation.type);
     switch (mutation.type) {
       case 'childList':
+        // (window as any)._vcOrigConsole.log(mutation.removedNodes.length, mutation.removedNodes, mutation.addedNodes.length, mutation.addedNodes);
         if (mutation.removedNodes.length > 0) {
           this._onChildRemove(mutation);
         }
@@ -142,16 +143,21 @@ export class VConsoleElementPlugin extends VConsoleSveltePlugin {
     for (let i = 0; i < mutation.addedNodes.length; i++) {
       const newRealNode = mutation.addedNodes[i];
       const newNode = this._generateVNode(newRealNode);
+      if (!newNode) {
+        continue;
+      }
       // Find a next sibling "supported node", then append newNode after it.
       // A "supported node" is an element node.
       let nextNode: IVConsoleNode = undefined;
+      let nextRealNode = newRealNode;
       do {
-        if (newRealNode.nextSibling === null) {
+        if (nextRealNode.nextSibling === null) {
           break;
         }
-        if (newRealNode.nodeType === Node.ELEMENT_NODE) {
-          nextNode = this.nodeMap.get(newRealNode.nextSibling) || undefined;
+        if (nextRealNode.nodeType === Node.ELEMENT_NODE) {
+          nextNode = this.nodeMap.get(nextRealNode.nextSibling) || undefined;
         }
+        nextRealNode = nextRealNode.nextSibling;
       } while (nextNode === undefined);
       if (nextNode === undefined) {
         // newNode is the lastChild
@@ -285,10 +291,12 @@ export class VConsoleElementPlugin extends VConsoleSveltePlugin {
 
   protected _isIgnoredNode(elem: Node) {
     // empty or line-break text
-    if (elem.nodeType == elem.TEXT_NODE) {
-      if (elem.textContent.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$|\n+/g, '') == '') { // trim
+    if (elem.nodeType === elem.TEXT_NODE) {
+      if (elem.textContent.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$|\n+/g, '') === '') { // trim
         return true;
       }
+    } else if (elem.nodeType === elem.COMMENT_NODE) {
+      return true;
     }
     return false;
   }

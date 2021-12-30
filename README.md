@@ -1,14 +1,15 @@
 English | [简体中文](./README_CN.md)
 
 vConsole
----
+===
+
 A lightweight, extendable front-end developer tool for mobile web page.
 
 vConsole is framework-free, you can use it in Vue or React or any other framework application.
 
 Now vConsole is the official debugging tool for WeChat Miniprograms.
 
-
+---
 
 ## Features
 
@@ -21,6 +22,7 @@ Now vConsole is the official debugging tool for WeChat Miniprograms.
 
 For details, please see the screenshots below.
 
+---
 
 ## Release Notes
 
@@ -28,7 +30,7 @@ Latest version: [![npm version](https://img.shields.io/npm/v/vconsole/latest.svg
 
 Detailed release notes for each version are available on [Changelog](./CHANGELOG.md).
 
-
+---
 
 ## Guide
 
@@ -71,6 +73,7 @@ Available CDN:
 - https://unpkg.com/vconsole@latest/dist/vconsole.min.js
 - https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js
 
+---
 
 ## Preview
 
@@ -78,9 +81,9 @@ Available CDN:
 
 ![](./doc/screenshot/qrcode.png)
 
+---
 
-
-# Screenshots
+## Screenshots
 
 ### Overview
 
@@ -151,6 +154,7 @@ console.log('[system]', 'output to System panel.')
 ![](./doc/screenshot/plugin_storage.jpg)
 </details>
 
+---
 
 ## Documentation
 
@@ -158,13 +162,15 @@ vConsole:
 
  - [Tutorial](./doc/tutorial.md)
  - [Public Properties & Methods](./doc/public_properties_methods.md)
+ - [Builtin Plugin: Properties & Methods](./doc/plugin_properties_methods.md)
 
-Plugin:
+Custom Plugin:
 
  - [Plugin: Getting Started](./doc/plugin_getting_started.md)
  - [Plugin: Building a Plugin](./doc/plugin_building_a_plugin.md)
  - [Plugin: Event List](./doc/plugin_event_list.md)
 
+---
 
 ## Third-party Plugins
 
@@ -175,6 +181,7 @@ Plugin:
  - [vconsole-outputlog-plugin](https://github.com/sunlanda/vconsole-outputlog-plugin)
  - [vite-plugin-vconsole](https://github.com/vadxq/vite-plugin-vconsole)
 
+---
 
 ## Feedback
 
@@ -182,6 +189,7 @@ QQ Group: 497430533
 
 ![](./doc/screenshot/qq_group.png)
 
+---
 
 ## License
 

@@ -354,7 +354,7 @@ export class VConsoleLogModel extends VConsoleModel {
     const stores = Store.getAll();
     for (const id in stores) {
       stores[id].update((store) => {
-        if (store.logList.length > this.maxLogNumber) {
+        if (store.logList.length > this.maxLogNumber - N) {
           // delete N more logs for performance
           store.logList.splice(0, store.logList.length - this.maxLogNumber + N);
           // this.callOriginalConsole('info', 'delete', id, store[id].logList.length);

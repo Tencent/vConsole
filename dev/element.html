@@ -20,6 +20,7 @@
     <a onclick="_changeCharacterData()" href="javascript:;" class="weui_btn weui_btn_default">changeCharacterData</a>
     <a onclick="_removeChild()" href="javascript:;" class="weui_btn weui_btn_default">removeChild</a>
     <a onclick="_addChild()" href="javascript:;" class="weui_btn weui_btn_default">addChild</a>
+    <a onclick="_addChildComment()" href="javascript:;" class="weui_btn weui_btn_default">addChild: Comment</a>
   </div>
 </body>
 </html>
@@ -99,5 +100,17 @@ function _addChild() {
   vConsole.showPlugin('element');
   setTimeout(_do('body'), 1000);
   setTimeout(_do(divIdList[1], true), 2000);
+}
+
+function _addChildComment() {
+  setTimeout(() => {
+    const t = document.getElementById(divIdList[1]);
+    const d1 = document.createComment('Im a comment data.');
+    const d2 = document.createComment('You are a comment data.');
+    t.append(d1);
+    t.parentNode.insertBefore(d2, t);
+  }, 1000);
+  vConsole.show();
+  vConsole.showPlugin('element');
 }
 </script>

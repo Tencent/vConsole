@@ -96,6 +96,19 @@ export function isWindow(value) {
   const name = Object.prototype.toString.call(value);
   return name === '[object Window]' || name === '[object DOMWindow]' || name === '[object global]';
 }
+export function isIterable(value) {
+  if (
+    value === null
+    || value === undefined 
+    || typeof value === 'string'
+    || typeof value === 'boolean'
+    || typeof value === 'number'
+    || typeof value === 'function'
+    || typeof value === 'symbol'
+    || typeof value === 'bigint'
+  ) { return false; }
+  return typeof Symbol !== 'undefined' && typeof value[Symbol.iterator] === 'function';
+}
 
 /**
  * Get the prototype name of an object

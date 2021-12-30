@@ -48,6 +48,14 @@
     </div>
 
     <div class="section">
+      <div class="hd">Exporter</div>
+
+      <a onclick="callExportLog('log')" href="javascript:;" class="weui_btn weui_btn_default">vConsole.log.log()</a>
+      <a onclick="callExportLog('system')" href="javascript:;" class="weui_btn weui_btn_default">vConsole.system.log()</a>
+      <a onclick="callExportClear()" href="javascript:;" class="weui_btn weui_btn_default">vConsole.log.clear()</a>
+    </div>
+
+    <div class="section">
       <div class="hd">Dev</div>
 
       <a onclick="observeMutation()" href="javascript:;" class="weui_btn weui_btn_default">Observe Mutation</a>
@@ -284,6 +292,22 @@ function xssLog() {
   console.log('XSS str:', "-->\tyo\n'\"/><iframe>");
   console.log(arr);
   console.log(obj);
+}
+
+function callExportLog(name) {
+  vConsole[name].log(`The following logs`, `will not output to browser's console.\n`, `vConsole.${name}.log(...)`);
+  vConsole[name].info(`vConsole.${name}.info(...)`);
+  vConsole[name].debug(`vConsole.${name}.debug(...)`);
+  vConsole[name].warn(`vConsole.${name}.warn(...)`);
+  vConsole[name].error(`vConsole.${name}.error(...)`);
+  vConsole.showPlugin(name === 'log' ? 'default' : name);
+  vConsole.show();
+}
+
+function callExportClear() {
+  vConsole.log.clear();
+  vConsole.showPlugin('default');
+  vConsole.show();
 }
 
 let observerStarted = false;

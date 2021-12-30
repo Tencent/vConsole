@@ -56,7 +56,7 @@ export class VConsoleDefaultPlugin extends VConsoleLogPlugin {
       // print error stack info
       const hasStack = !!event.error && !!event.error.stack;
       const stackInfo = (hasStack && event.error.stack.toString()) || '';
-      this.module.addLog({
+      this.model.addLog({
         type: 'error',
         origData: [msg, stackInfo],
       }, { noOrig: true });
@@ -74,7 +74,7 @@ export class VConsoleDefaultPlugin extends VConsoleLogPlugin {
       // only catch resources error
       if (['link', 'video', 'script', 'img', 'audio'].indexOf(target.localName) > -1) {
         const src = target.href || target.src || target.currentSrc;
-        this.module.addLog({
+        this.model.addLog({
           type: 'error',
           origData: [`GET <${target.localName}> error: ${src}`],
         }, { noOrig: true });
@@ -103,7 +103,7 @@ export class VConsoleDefaultPlugin extends VConsoleLogPlugin {
           },
         ];
       }
-      this.module.addLog({
+      this.model.addLog({
         type: 'error',
         origData: args,
       }, { noOrig: true });

@@ -15,13 +15,16 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 import type { SvelteComponent } from 'svelte';
 
+// helper
 import * as tool from '../lib/tool';
 import $ from '../lib/query';
 
+// component
 import { default as CoreCompClass } from './core.svelte';
 
 // built-in plugins
-import { VConsolePlugin, IVConsoleTopbarOptions } from '../lib/plugin';
+import type { IVConsoleTopbarOptions, IVConsolePluginEventName } from '../lib/plugin';
+import { VConsolePlugin } from '../lib/plugin';
 import { VConsoleLogPlugin } from '../log/log';
 import { VConsoleDefaultPlugin } from '../log/default';
 import { VConsoleSystemPlugin } from '../log/system';
@@ -29,10 +32,15 @@ import { VConsoleNetworkPlugin } from '../network/network';
 import { VConsoleElementPlugin } from '../element/element';
 import { VConsoleStoragePlugin } from '../storage/storage';
 
+// built-in plugin exporters
+import { VConsoleLogExporter } from '../log/log.exporter';
+import { VConsoleNetworkExporter } from '../network/network.exporter';
+
 declare interface VConsoleOptions {
   target?: string | HTMLElement;
   defaultPlugins?: ('system' | 'network' | 'element' | 'storage')[];
   maxLogNumber?: number;
+  maxNetworkNumber?: number;
   theme?: '' | 'dark' | 'light';
   disableLogScrolling?: boolean;
   onReady?: () => void;
@@ -49,6 +57,11 @@ export class VConsole {
   protected compInstance: SvelteComponent;
   protected pluginList: { [id: string]: VConsolePlugin } = {}; // plugin instance
 
+  // Export plugin methods
+  public log: VConsoleLogExporter;
+  public system: VConsoleLogExporter;
+  public network: VConsoleNetworkExporter;
+
   // export static class
   public static VConsolePlugin = VConsolePlugin;
   public static VConsoleLogPlugin = VConsoleLogPlugin;
@@ -60,7 +73,7 @@ export class VConsole {
 
   constructor(opt?: VConsoleOptions) {
     if (!!$.one(VCONSOLE_ID)) {
-      console.debug('vConsole is already exists.');
+      console.debug('[vConsole] vConsole is already exists.');
       return;
     }
 
@@ -130,7 +143,7 @@ export class VConsole {
         if (!!pluginConf) {
           this.addPlugin(new pluginConf.proto(list[i], pluginConf.name));
         } else {
-          console.debug('Unrecognized default plugin ID:', list[i]);
+          console.debug('[vConsole] Unrecognized default plugin ID:', list[i]);
         }
       }
     }
@@ -162,7 +175,6 @@ export class VConsole {
           },
         },
       });
-      // console.log('core.ts compInstance', this.compInstance);
 
       // bind events
       this.compInstance.$on('show', (e) => {
@@ -206,9 +218,9 @@ export class VConsole {
   }
 
   /**
-  * auto run after initialization
-  * @private
-  */
+   * Auto run after initialization.
+   * @private
+   */
   private _autoRun() {
     this.isInited = true;
 
@@ -303,9 +315,9 @@ export class VConsole {
   }
 
   /**
-   * Trigger an event for each plugin/
+   * Trigger an event for each plugin.
    */
-  private _triggerPluginsEvent(eventName: string) {
+  private _triggerPluginsEvent(eventName: IVConsolePluginEventName) {
     for (let id in this.pluginList) {
       if (this.pluginList[id].isReady) {
         this.pluginList[id].trigger(eventName);
@@ -314,10 +326,10 @@ export class VConsole {
   }
 
   /**
-  * trigger an event by plugin's id
-  * @private
-  */
-  private _triggerPluginEvent(pluginId: string, eventName: string) {
+   * Trigger an event by plugin's id.
+   * @private
+   */
+  private _triggerPluginEvent(pluginId: string, eventName: IVConsolePluginEventName) {
     const plugin = this.pluginList[pluginId];
     if (!!plugin && plugin.isReady) {
       plugin.trigger(eventName);
@@ -330,7 +342,7 @@ export class VConsole {
   public addPlugin(plugin: VConsolePlugin) {
     // ignore this plugin if it has already been installed
     if (this.pluginList[plugin.id] !== undefined) {
-      console.debug('Plugin `' + plugin.id + '` has already been added.');
+      console.debug('[vConsole] Plugin `' + plugin.id + '` has already been added.');
       return false;
     }
     this.pluginList[plugin.id] = plugin;
@@ -351,7 +363,7 @@ export class VConsole {
     const plugin = this.pluginList[pluginID];
     // skip if is has not been installed
     if (plugin === undefined) {
-      console.debug('Plugin `' + pluginID + '` does not exist.');
+      console.debug('[vConsole] Plugin `' + pluginID + '` does not exist.');
       return false;
     }
     // trigger `remove` event before uninstall
@@ -421,6 +433,9 @@ export class VConsole {
     if (!this.isInited) {
       return;
     }
+    if (!this.pluginList[pluginId]) {
+      console.debug('[vConsole] Plugin `' + pluginId + '` does not exist.');
+    }
     // trigger plugin event
     this.compInstance.activedPluginId && this._triggerPluginEvent(this.compInstance.activedPluginId, 'hide');
     this.compInstance.activedPluginId = pluginId;
@@ -442,7 +457,7 @@ export class VConsole {
       this._triggerPluginsEvent('updateOption');
       this._updateComponentByOptions();
     } else {
-      console.debug('The first parameter of vConsole.setOption() must be a string or an object.');
+      console.debug('[vConsole] The first parameter of `vConsole.setOption()` must be a string or an object.');
     }
   }
 
