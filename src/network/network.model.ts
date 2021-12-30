@@ -70,6 +70,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
       for (let key in data) {
         item[key] = data[key];
       }
+      data = item;
     }
     requestList.update((reqList) => {
       reqList[id] = data;

@@ -1,7 +1,7 @@
 [English](./tutorial.md) | 简体中文
 
 使用教程
-==============================
+===
 
 ## 上手
 
@@ -44,7 +44,7 @@ vConsole.destroy();
 - https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js
 
 
-
+---
 
 ## 使用方法
 
@@ -66,6 +66,8 @@ vConsole.setOption('maxLogNumber', 5000);
 vConsole.setOption({maxLogNumber: 5000});
 ```
 
+---
+
 ### 打印日志
 
 与 PC 端打印 log 一致，可直接使用 `console.log()` 等方法直接打印日志：
@@ -76,6 +78,13 @@ console.log('Hello World');
 
 未加载 vConsole 模块时，`console.log()` 会直接打印到原生控制台中；加载 vConsole 后，日志会打印到页面前端+原生控制台。
 
+如果你希望日志仅输出到 vConsole 中，可使用[插件方法](./plugin_properties_methods_CN.md)：
+
+```javascript
+vConsole.log.log('Hello world');
+```
+
+---
 
 ### 日志类型
 
@@ -89,6 +98,7 @@ console.warn('foo');  // 黄底黄字
 console.error('bar'); // 红底红字
 ```
 
+---
 
 ### 其他方法
 
@@ -100,7 +110,7 @@ console.time('foo');    // 启动名为 foo 的计时器
 console.timeEnd('foo'); // 停止 foo 计时器并输出经过的时间
 ```
 
-
+---
 
 ### 样式
 
@@ -113,6 +123,9 @@ console.log('%c Foo %c bar', 'color:red'); // Foo %c bar
 ```
 
 > 只有第一个参数支持 `%c` 格式，一旦出现 `%c` 格式，后续的字符串参数将作为 HTML style 样式来替换 `%c`；未被替换的 `%c`、剩余的参数，将作为默认日志照常输出。
+
+
+---
 
 
 ### 使用字符串替换
@@ -129,7 +142,7 @@ console.log('I had %d cakes', 3); // I had 3 cakes
 console.log('The %o is large', obj); // The [[obj]] is large
 ```
 
-
+---
 
 ### 特殊格式
 
@@ -146,20 +159,27 @@ console.log('[system] bar'); // 这行日志会输出到 Log 面板而非 System
 console.log('[myplugin]', 'bar'); // 'myplugin' 为自定义面板插件的 id
 ```
 
+---
 
 ## 内置插件
 
-### Network 网络
+### Network 网络请求
 
-所有 `XMLHttpRequest` 请求都会被显示到 Network tab 中。
+所有 `XMLHttpRequest | fetch | sendBeacon` 请求都会被显示到 Network 面板中。
 
 若不希望一个请求显示在面板中，可添加属性 `_noVConsole = true` 到 XHR 对象中：
 
 ```javascript
 var xhr = new XMLHttpRequest();
 xhr._noVConsole = true; // 不会显示到 tab 中
-xhr.open("GET", 'http://example.com/');
+xhr.open('GET', 'http://example.com/');
 xhr.send();
+```
+
+如果你想展示自定义的 request 请求，可尝试 [Network 插件方法](./plugin_properties_methods_CN.md)：
+
+```javascript
+vConsole.network.add(...);
 ```
 
 

@@ -3,6 +3,8 @@ English | [简体中文](./CHANGELOG_CN.md)
 ## 3.11.0-rc (202?-??-??)
 
 - `Feat(Global)` Add new option `vConsole.option.target` to specify custom mount target, see [Public Properties & Methods](./doc/public_properties_methods.md). (issue #455)
+- `Feat(Log)` Add new methods: `vConsole.log.log()|info()|...`, `vConsole.log.clear()`, see [Builtin Plugin: Properties & Methods](./doc/plugin_properties_methods.md).
+- `Feat(Network)` Add new methods: `vConsole.network.add()|update()`, `vConsole.network.clear()`, see [Builtin Plugin: Properties & Methods](./doc/plugin_properties_methods.md).
 - `Feat(Network)` Add new option `vConsole.option.maxNetworkNumber` to limit request number, see [Public Properties & Methods](./doc/public_properties_methods.md). (issue #492)
 - `Fix(Network)` Display Request Payload for all HTTP methods, not just POST. (issue #493)
 - `Fix(Element)` Fix the infinite loop problem caused by the newly added Comment node. (issue #491)
