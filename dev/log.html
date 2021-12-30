@@ -295,7 +295,7 @@ function xssLog() {
 }
 
 function callExportLog(name) {
-  vConsole[name].log(`The following logs will not output to browser's console.\nvConsole.${name}.log(...)`);
+  vConsole[name].log(`The following logs`, `will not output to browser's console.\n`, `vConsole.${name}.log(...)`);
   vConsole[name].info(`vConsole.${name}.info(...)`);
   vConsole[name].debug(`vConsole.${name}.debug(...)`);
   vConsole[name].warn(`vConsole.${name}.warn(...)`);
