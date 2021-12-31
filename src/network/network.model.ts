@@ -306,7 +306,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
       //     item.postData = '[object Object]';
       //   }
       // }
-      if (init.body) {
+      if (init && init.body) {
         item.postData = that.getFormattedBody(init.body);
       }
 
