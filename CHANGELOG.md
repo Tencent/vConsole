@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.11.1-rc (2022-01-??)
+
+- `Fix(Network)` Fix `init.body` parameter problem. (issue #500)
+
+
 ## 3.11.0 (2021-12-30)
 
 - `Feat(Global)` Add new option `vConsole.option.target` to specify custom mount target, see [Public Properties & Methods](./doc/public_properties_methods.md). (issue #455)
