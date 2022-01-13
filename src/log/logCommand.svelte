@@ -198,13 +198,19 @@
   const onCmdBlur = () => {
     // clearPromptedList();
   };
+  const onCmdKeyDown = (e) => {
+    if (e.keyCode === 13) { // Enter
+      e.preventDefault();
+      onCmdSubmit();
+    }
+  };
   const onCmdKeyUp = (e) => {
-    promptedList = []
+    promptedList = [];
     const identifier = getLastIdentifier(e.target.value);
     autoCompleteBrackets(identifier, e.keyCode);
     updatePromptedList(identifier);
   };
-  const onCmdSubmit = (e) => {
+  const onCmdSubmit = () => {
     if (cmdValue !== '') {
       evalCommand(cmdValue);
     }
@@ -240,6 +246,7 @@
       placeholder="command..."
       bind:value={cmdValue}
       bind:this={cmdElement}
+      on:keydown="{onCmdKeyDown}"
       on:keyup={onCmdKeyUp}
       on:focus={onCmdFocus}
       on:blur={onCmdBlur}
