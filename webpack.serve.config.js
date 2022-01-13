@@ -15,7 +15,6 @@ module.exports = (env, argv) => {
       host: '0.0.0.0',
       port: 9191,
       open: 'dev/index.html',
-      hot: true,
       allowedHosts: 'all',
       historyApiFallback: true,
       client: {
