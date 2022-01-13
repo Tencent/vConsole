@@ -1,5 +1,11 @@
 [English](./CHANGELOG.md) | 简体中文
 
+## 3.11.1 (2022-01-13)
+
+- `Feat(Log)` 支持使用回车键提交命令行输入。 (issue #498)
+- `Fix(Network)` 修复 `init.body` 参数报错。 (issue #500)
+
+
 ## 3.11.0 (2021-12-30)
 
 - `Feat(Global)` 支持自定义挂载点，配置项 `vConsole.option.target` 见 [公共属性及方法](./doc/public_properties_methods_CN.md)。 (issue #455)

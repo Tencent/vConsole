@@ -1,6 +1,6 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-## 3.11.1-rc (2022-01-??)
+## 3.11.1 (2022-01-13)
 
 - `Feat(Log)` Support for submitting command input using the enter key. (issue #498)
 - `Fix(Network)` Fix `init.body` parameter problem. (issue #500)
