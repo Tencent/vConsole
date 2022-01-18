@@ -50,12 +50,13 @@ function setCookie() {
 function setDomainCookie() {
   console.info('setDomainCookie() Start');
   const expires = (new Date('2030-12-17T03:24:00')).toUTCString();
-  document.cookie = `foo1=bar1; expires=${expires}; path=/; domain=b.com;`
-  document.cookie = `foo2=bar2; expires=${expires}; path=/; domain=.b.com;`
-  document.cookie = `foo3=bar3; expires=${expires}; path=/; domain=a.b.com;`
-  document.cookie = `foo4=bar4; expires=${expires}; path=/; domain=.a.b.com;`
+  document.cookie = `d0=EmptyDomain; expires=${expires}; path=/;`
+  document.cookie = `d1=a.com; expires=${expires}; path=/; domain=a.com;`
+  document.cookie = `d2=.a.com; expires=${expires}; path=/; domain=.a.com;`
+  document.cookie = `d3=b.a.com; expires=${expires}; path=/; domain=b.a.com;`
+  document.cookie = `d4=.b.a.com; expires=${expires}; path=/; domain=.b.a.com;`
 
-  document.cookie = `foo1=bar1; expires=${expires}; path=/; domain=a.b.com;`
+  document.cookie = `d3=b.a.com/dev; expires=${expires}; path=/dev; domain=b.a.com;`
 
   setTimeout(() => {
     // clearCookieList();

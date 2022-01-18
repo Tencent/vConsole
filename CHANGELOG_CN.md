@@ -1,5 +1,11 @@
 [English](./CHANGELOG.md) | 简体中文
 
+## 3.11.2 (2022-01-??)
+
+- `Feat(Storage)` 增加 "Clear" 按钮以批量删除所有 storage。
+- `Fix(Storage)` 修复无法删除 cookies 的问题。 (issue #499)
+
+
 ## 3.11.1 (2022-01-13)
 
 - `Feat(Log)` 支持使用回车键提交命令行输入。 (issue #498)

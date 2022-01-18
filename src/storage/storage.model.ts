@@ -1,4 +1,4 @@
-import { CookieStorage } from 'cookie-storage';
+import { VConsoleCookieStorage } from './cookieStorage';
 import { VConsoleModel } from '../lib/model';
 
 interface IStorageItem {
@@ -6,7 +6,7 @@ interface IStorageItem {
   storage: Storage;
 }
 export class VConsoleStorageModel extends VConsoleModel {
-  protected cookiesStorage: CookieStorage = new CookieStorage();
+  protected cookiesStorage = new VConsoleCookieStorage();
   protected storages: IStorageItem[];
 
   /**
