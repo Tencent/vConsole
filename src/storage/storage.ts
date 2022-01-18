@@ -63,6 +63,20 @@ export class VConsoleStoragePlugin extends VConsoleSveltePlugin {
           this.compInstance.storages = this.model.getAllStorages();
         },
       },
+      {
+        name: 'Clear',
+        global: false,
+        onClick: () => {
+          const storages = this.model.getAllStorages();
+          for (const item of storages) {
+            if (item.name === this.compInstance.activedName) {
+              item.storage.clear();
+              this.compInstance.storages = this.compInstance.storages;
+              break;
+            }
+          }
+        },
+      },
     ];
     callback(btnList);
   }
