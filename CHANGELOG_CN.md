@@ -1,8 +1,8 @@
 [English](./CHANGELOG.md) | 简体中文
 
-## 3.11.2-rc (2022-01-??)
+## 3.11.2 (2022-01-20)
 
-- `Feat(Storage)` 增加 "Clear" 按钮以批量删除所有 storage。
+- `Feat(Storage)` 增加 "Clear" 按钮以批量删除所有 storage。 (issue #499)
 - `Fix(Storage)` 修复无法删除 cookies 的问题。 (issue #499)
 
 
