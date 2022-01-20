@@ -1,5 +1,11 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.11.2 (2022-01-20)
+
+- `Feat(Storage)` Added "Clear" button to batch delete all storage items. (issue #499)
+- `Fix(Storage)` Fix the issue that deleting cookies fails. (issue #499)
+
+
 ## 3.11.1 (2022-01-13)
 
 - `Feat(Log)` Support for submitting command input using the enter key. (issue #498)
