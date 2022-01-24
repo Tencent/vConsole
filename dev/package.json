@@ -10,5 +10,8 @@
   "dependencies": {
     "jsdom": "^19.0.0",
     "vconsole": "file:../"
+  },
+  "devDependencies": {
+    "ts-node": "^10.4.0"
   }
 }
