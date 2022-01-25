@@ -14,6 +14,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
  */
 
 import type { SvelteComponent } from 'svelte';
+import type { VConsoleOptions } from './options.interface';
 
 // helper
 import * as tool from '../lib/tool';
@@ -36,36 +37,6 @@ import { VConsoleStoragePlugin } from '../storage/storage';
 import { VConsoleLogExporter } from '../log/log.exporter';
 import { VConsoleNetworkExporter } from '../network/network.exporter';
 
-declare interface VConsoleOptions {
-  target?: string | HTMLElement;
-  defaultPlugins?: ('system' | 'network' | 'element' | 'storage')[];
-  theme?: '' | 'dark' | 'light';
-  disableLogScrolling?: boolean;
-  onReady?: () => void;
-
-  log?: {
-    maxLogNumber?: number,
-  },
-  network?: {
-    maxNetworkNumber?: number,
-  },
-  storage?: {
-    defaultStorages?: ('cookies' | 'localStorage' | 'sessionStorage')[],
-  },
-
-  /**
-   * @deprecated Since v3.12.0, use `log.maxLogNumber`.
-   */
-  maxLogNumber?: number;
-  /**
-   * @deprecated Since v3.12.0, use `network.maxNetworkNumber`.
-   */
-  maxNetworkNumber?: number;
-  /**
-   * @deprecated Since v3.12.0.
-   */
-  onClearLog?: () => void;
-}
 
 const VCONSOLE_ID = '#__vconsole';
 
@@ -321,9 +292,10 @@ export class VConsole {
     // render top bar
     plugin.trigger('addTopBar', (btnList: IVConsoleTopbarOptions[]) => {
       if (!btnList) { return; }
+      const topbarList = [];
       for (let i = 0; i < btnList.length; i++) {
         const item = btnList[i];
-        this.compInstance.pluginList[plugin.id].topbarList.push({
+        topbarList.push({
           name: item.name || 'Undefined',
           className: item.className || '',
           actived: !!item.actived,
@@ -331,19 +303,24 @@ export class VConsole {
           onClick: item.onClick,
         });
       }
+      this.compInstance.pluginList[plugin.id].topbarList = topbarList;
+      this.compInstance.pluginList = this.compInstance.pluginList;
     });
     // render tool bar
     plugin.trigger('addTool', (toolList) => {
       if (!toolList) { return; }
-      for (let i = 0; i<  toolList.length; i++) {
+      const list = [];
+      for (let i = 0; i < toolList.length; i++) {
         const item = toolList[i];
-        this.compInstance.pluginList[plugin.id].toolbarList.push({
+        list.push({
           name: item.name || 'Undefined',
           global: !!item.global,
           data: item.data,
           onClick: item.onClick,
         });
       }
+      this.compInstance.pluginList[plugin.id].toolbarList = list;
+      this.compInstance.pluginList = this.compInstance.pluginList;
     });
     // end init
     plugin.isReady = true;

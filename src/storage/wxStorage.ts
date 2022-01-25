@@ -1,10 +1,8 @@
-declare let wx: any;
-
-export class WxStorage {
+export class WxStorage implements Storage {
   private wxInstance;
 
   constructor(wxInstance?) {
-    this.wxInstance = wxInstance || wx;
+    this.wxInstance = wxInstance || (<any>window).wx;
     if (typeof Proxy !== 'undefined') {
       return new Proxy(this, wxStorageHandler);
     }
@@ -18,6 +16,11 @@ export class WxStorage {
     const info = this.callWx('getStorageInfoSync');
     const keys: string[] = !!info ? info.keys : [];
     return keys;
+  }
+
+  public key(index: number) {
+    const sortedKeys = Object.keys(this.keys).sort();
+    return index < sortedKeys.length ? sortedKeys[index] : null;
   }
 
   public getItem(key: string) {
@@ -82,7 +85,7 @@ const wxStorageHandler: ProxyHandler<WxStorage> = {
     return target.keys;
   },
   preventExtensions(_: WxStorage): boolean {
-    throw new TypeError('can\'t prevent extensions on this proxy object');
+    throw new TypeError('Can\'t prevent extensions on this proxy object.');
   },
   set(target: WxStorage, p: PropertyKey, value: any, _: any): boolean {
     target.setItem(p.toString(), value);

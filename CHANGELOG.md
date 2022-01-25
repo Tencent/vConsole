@@ -3,7 +3,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 ## 3.12.0 (2022-02-??)
 
 - `Feat(Core)` Add new options `storage.defaultStorages`, see [Public Properties & Methods](./doc/public_properties_methods.md).
-- `Feat(Core)` New way of using `vConsole.setOption`: `setOption('log.maxLogNumber', 20)` to set `maxLogNumber` field only, and `setOption({ log: { maxLogNumber: 20 }})` to overwrite `log` object.
+- `Feat(Core)` New way of using `vConsole.setOption()`: `setOption('log.maxLogNumber', 20)` to set `maxLogNumber` field only, and `setOption({ log: { maxLogNumber: 20 }})` to overwrite `log` object.
 - `Feat(Core)` Deprecated some options, see below.
 
 **Deprecated Options:**
