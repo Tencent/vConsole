@@ -31,22 +31,21 @@ Key                   | Type     | Optional | Default value                     
 --------------------- | -------- | -------- | ------------------------------------------- | -------------------
 defaultPlugins        | Array    | true     | ['system', 'network', 'element', 'storage'] | Listed built-in plugins will be inited and loaded into vConsole. 
 onReady               | Function | true     |                                             | Trigger after vConsole is inited and default plugins is loaded.
-onClearLog            | Function | true     |                                             | Trigger after click "Clear" button in Log and System panel.
-maxLogNumber          | Number   | true     | 1000                                        | Overflow logs will be removed from log panels.
-maxNetworkNumber      | Number   | true     | 1000                                        | Overflow requests will be removed from Netowrk panel.
 disableLogScrolling   | Boolean  | true     |                                             | If `false`, panel will not scroll to bottom while printing new logs.
 theme                 | String   | true     | 'light'                                     | Theme mode, 'light' | 'dark'.
 target                | String, HTMLElement | true | `document.documentElement`           | An HTMLElement or CSS selector string to render to.
+log.maxLogNumber      | Number   | true     | 1000                                        | Overflow logs will be removed from log panels.
+network.maxNetworkNumber | Number | true    | 1000                                        | Overflow requests will be removed from Netowrk panel.
 
 Example:
 
 ```javascript
 // get
 vConsole.option // => {...}
-// set
-vConsole.setOption('maxLogNumber', 5000);
-// or:
-vConsole.setOption({maxLogNumber: 5000});
+// set single key only
+vConsole.setOption('log.maxLogNumber', 5000);
+// overwrite 'log' object
+vConsole.setOption({ log: { maxLogNumber: 5000 } });
 ```
 
 

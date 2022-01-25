@@ -17,6 +17,7 @@
     <a onclick="toggleVConsole()" href="javascript:;" class="weui_btn weui_btn_default">vConsole: show/hide</a>
     <a onclick="toggleSwitch()" href="javascript:;" class="weui_btn weui_btn_default">Switch: show/hide</a>
     <a onclick="switchPosition()" href="javascript:;" class="weui_btn weui_btn_default">Switch: setPosition</a>
+    <a onclick="setOption()" href="javascript:;" class="weui_btn weui_btn_default">setOption</a>
     <a onclick="destroy()" href="javascript:;" class="weui_btn weui_btn_default">Destroy</a>
   </div>
 </body>
@@ -26,7 +27,7 @@
 import '../dist/vconsole.min.js';
 
 window.vConsole = new window.VConsole({
-  maxLogNumber: 1000,
+  // maxLogNumber: 1000,
   // disableLogScrolling: true,
   // theme: 'dark',
   onReady: function() {
@@ -82,6 +83,14 @@ function toggleSwitch() {
 function switchPosition() {
   vConsole.setSwitchPosition(20, 20);
   console.info('vConsole switch position:', 20, 20);
+}
+
+function setOption() {
+  vConsole.setOption('log.a.maxLogNumber', 20);
+  vConsole.setOption('log.maxLogNumber', 20);
+  vConsole.setOption({ network: { maxNetworkNumber: 30 }});
+  vConsole.setOption({ network: { b: 123 }}); // overwrite previous line
+  console.log(vConsole.option);
 }
 
 function destroy() {

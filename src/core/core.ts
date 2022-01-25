@@ -39,11 +39,31 @@ import { VConsoleNetworkExporter } from '../network/network.exporter';
 declare interface VConsoleOptions {
   target?: string | HTMLElement;
   defaultPlugins?: ('system' | 'network' | 'element' | 'storage')[];
-  maxLogNumber?: number;
-  maxNetworkNumber?: number;
   theme?: '' | 'dark' | 'light';
   disableLogScrolling?: boolean;
   onReady?: () => void;
+
+  log?: {
+    maxLogNumber?: number,
+  },
+  network?: {
+    maxNetworkNumber?: number,
+  },
+  storage?: {
+    defaultStorages?: ('cookies' | 'localStorage' | 'sessionStorage')[],
+  },
+
+  /**
+   * @deprecated Since v3.12.0, use `log.maxLogNumber`.
+   */
+  maxLogNumber?: number;
+  /**
+   * @deprecated Since v3.12.0, use `network.maxNetworkNumber`.
+   */
+  maxNetworkNumber?: number;
+  /**
+   * @deprecated Since v3.12.0.
+   */
   onClearLog?: () => void;
 }
 
@@ -79,7 +99,10 @@ export class VConsole {
 
     this.isInited = false;
     this.option = {
-      defaultPlugins: ['system', 'network', 'element', 'storage']
+      defaultPlugins: ['system', 'network', 'element', 'storage'],
+      log: {},
+      network: {},
+      storage: {},
     };
 
     // merge options
@@ -87,6 +110,19 @@ export class VConsole {
       for (let key in opt) {
         this.option[key] = opt[key];
       }
+    }
+
+    // check deprecated options
+    if (typeof this.option.maxLogNumber !== 'undefined') {
+      this.option.log.maxLogNumber = this.option.maxLogNumber;
+      console.debug('[vConsole] Deprecated option: `maxLogNumber`, use `log.maxLogNumber` instead.');
+    }
+    if (typeof this.option.onClearLog !== 'undefined') {
+      console.debug('[vConsole] Deprecated option: `onClearLog`.');
+    }
+    if (typeof this.option.maxNetworkNumber !== 'undefined') {
+      this.option.network.maxNetworkNumber = this.option.maxNetworkNumber;
+      console.debug('[vConsole] Deprecated option: `maxNetworkNumber`, use `network.maxNetworkNumber` instead.');
     }
 
     // add built-in plugins
@@ -444,10 +480,21 @@ export class VConsole {
 
   /**
    * Update option(s).
+   * @example `setOption('log.maxLogNumber', 20)`: set 'maxLogNumber' field only.
+   * @example `setOption({ log: { maxLogNumber: 20 }})`: overwrite 'log' object.
    */
   public setOption(keyOrObj: any, value?: any) {
-    if (tool.isString(keyOrObj)) {
-      this.option[keyOrObj] = value;
+    if (typeof keyOrObj === 'string') {
+      // parse `a.b = val` to `a: { b: val }`
+      const keys = keyOrObj.split('.');
+      let opt: any = this.option;
+      for (let i = 0; i < keys.length - 1; i++) {
+        if (opt[keys[i]] === undefined) {
+          opt[keys[i]] = {};
+        }
+        opt = opt[keys[i]];
+      }
+      opt[keys[keys.length - 1]] = value;
       this._triggerPluginsEvent('updateOption');
       this._updateComponentByOptions();
     } else if (tool.isObject(keyOrObj)) {
