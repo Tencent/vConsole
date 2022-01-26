@@ -37,9 +37,9 @@ export class VConsoleStorageModel extends VConsoleModel {
     if (window.sessionStorage && this.defaultStorages.indexOf('sessionStorage') > -1) {
       this.storages.push({ name: 'sessionStorage', storage: sessionStorage });
     }
-    if ((<any>window).wx && this.defaultStorages.indexOf('wxStorage') > -1) {
+    if (WxStorage.isWxEnv() && this.defaultStorages.indexOf('wxStorage') > -1) {
       if (!this.wxStorage) {
-        this.wxStorage = new WxStorage((<any>window).wx);
+        this.wxStorage = new WxStorage();
       }
       this.storages.push({ name: 'wxStorage', storage: this.wxStorage });
     }

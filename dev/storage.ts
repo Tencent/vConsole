@@ -5,7 +5,9 @@ const testWxStorage = () => {
     foo: 'bar',
     hello: 'world',
   };
-  const fakeWx = {
+  (<any>global).window = {};
+  (<any>global).window.__wxConfig = {};
+  (<any>global).window.wx = {
     getStorageSync(key: string) {
       return storageData[key];
     },
@@ -25,7 +27,7 @@ const testWxStorage = () => {
     },
   };
 
-  const wxStorage = new WxStorage(fakeWx);
+  const wxStorage = new WxStorage();
   console.log('getItem: foo =', wxStorage.getItem('foo'));
   wxStorage.setItem('aaa', 'bbb');
   console.log('setItem: aaa =', wxStorage.getItem('aaa'));

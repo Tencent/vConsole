@@ -1,11 +1,15 @@
 export class WxStorage implements Storage {
-  private wxInstance;
+  private isWx = false;
 
-  constructor(wxInstance?) {
-    this.wxInstance = wxInstance || (<any>window).wx;
+  constructor() {
+    this.isWx = WxStorage.isWxEnv();
     if (typeof Proxy !== 'undefined') {
       return new Proxy(this, wxStorageHandler);
     }
+  }
+
+  public static isWxEnv() {
+    return typeof window !== 'undefined' && (<any>window).__wxConfig && (<any>window).wx && (<any>window).wx.getStorageSync;
   }
 
   public get length() {
@@ -40,8 +44,8 @@ export class WxStorage implements Storage {
   }
 
   private callWx(method: string, ...args) {
-    if (typeof this.wxInstance !== 'undefined' && typeof this.wxInstance[method] === 'function') {
-      return this.wxInstance[method].call(this.wxInstance, ...args);
+    if (this.isWx && typeof (<any>window).wx[method] === 'function') {
+      return (<any>window).wx[method].call((<any>window).wx, ...args);
     }
     return undefined;
   }
