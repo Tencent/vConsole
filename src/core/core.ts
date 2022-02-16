@@ -53,7 +53,10 @@ export class VConsole {
   public system: VConsoleLogExporter;
   public network: VConsoleNetworkExporter;
 
-  // export static class
+  // Singleton instance
+  public static instance: VConsole;
+
+  // Export static classes
   public static VConsolePlugin = VConsolePlugin;
   public static VConsoleLogPlugin = VConsoleLogPlugin;
   public static VConsoleDefaultPlugin = VConsoleDefaultPlugin;
@@ -63,11 +66,12 @@ export class VConsole {
   public static VConsoleStoragePlugin = VConsoleStoragePlugin;
 
   constructor(opt?: VConsoleOptions) {
-    if (!!$.one(VCONSOLE_ID)) {
+    if (!!VConsole.instance && VConsole.instance instanceof VConsole) {
       console.debug('[vConsole] vConsole is already exists.');
-      return;
+      return VConsole.instance;
     }
 
+    VConsole.instance = this;
     this.isInited = false;
     this.option = {
       defaultPlugins: ['system', 'network', 'element', 'storage'],
@@ -503,6 +507,7 @@ export class VConsole {
 
     // reverse isInited when destroyed
     this.isInited = false;
+    VConsole.instance = undefined;
   }
 
 } // END class

@@ -3,8 +3,25 @@
 
 vConsole 提供一些公共属性字段、函数方法，以便开发插件。
 
-## 属性
+## 静态属性
 
+---
+
+### VConsole.instance
+
+获取当前已实例化后的 vConsole 对象，是一个单例对象。如果没有实例化过，将返回 `undefined`。
+
+---
+
+### VConsole.VConsolePlugin
+
+自定义插件的原型对象。具体用法见 [插件：入门](./plugin_getting_started_CN.md)。
+
+---
+
+## 实例属性
+
+---
 
 ### vConsole.version
 
@@ -19,6 +36,7 @@ vConsole 提供一些公共属性字段、函数方法，以便开发插件。
 vConsole.version // => "3.11.0"
 ```
 
+---
 
 ### vConsole.option
 
@@ -49,10 +67,11 @@ vConsole.setOption('log.maxLogNumber', 5000);
 vConsole.setOption({ log: { maxLogNumber: 5000 } });
 ```
 
-
+---
 
 ## 方法
 
+---
 
 ### vConsole.setOption(keyOrObj[, value])
 
@@ -73,6 +92,7 @@ vConsole.setOption('maxLogNumber', 5000);
 vConsole.setOption({maxLogNumber: 5000});
 ```
 
+---
 
 ### vConsole.setSwitchPosition(x, y)
 
@@ -91,6 +111,7 @@ vConsole.setOption({maxLogNumber: 5000});
 vConsole.setSwitchPosition(20, 20);
 ```
 
+---
 
 ### vConsole.destroy()
 
@@ -110,6 +131,7 @@ var vConsole = new VConsole();
 vConsole.destroy();
 ```
 
+---
 
 ### vConsole.addPlugin(plugin)
 
@@ -128,6 +150,7 @@ var myPlugin = new VConsolePlugin('my_plugin', 'My Plugin');
 vConsole.addPlugin(myPlugin);
 ```
 
+---
 
 ### vConsole.removePlugin(pluginID)
 
@@ -145,6 +168,7 @@ vConsole.addPlugin(myPlugin);
 vConsole.removePlugin('my_plugin');
 ```
 
+---
 
 ### vConsole.showPlugin(pluginID)
 
@@ -164,6 +188,7 @@ vConsole.removePlugin('my_plugin');
 vConsole.showPlugin("system"); // 显示 System 面板
 ```
 
+---
 
 ### vConsole.show()
 
@@ -181,6 +206,7 @@ vConsole.showPlugin("system"); // 显示 System 面板
 vConsole.show();
 ```
 
+---
 
 ### vConsole.hide()
 
@@ -198,6 +224,7 @@ vConsole.show();
 vConsole.hide();
 ```
 
+---
 
 ### vConsole.showSwitch()
 
@@ -215,6 +242,7 @@ vConsole.hide();
 vConsole.showSwitch();
 ```
 
+---
 
 ### vConsole.hideSwitch()
 
@@ -234,5 +262,6 @@ vConsole.showSwitch();
 vConsole.hideSwitch();
 ```
 
+---
 
 [返回索引](./a_doc_index_CN.md)

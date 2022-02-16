@@ -19,6 +19,7 @@
     <a onclick="switchPosition()" href="javascript:;" class="weui_btn weui_btn_default">Switch: setPosition</a>
     <a onclick="setOption()" href="javascript:;" class="weui_btn weui_btn_default">setOption</a>
     <a onclick="destroy()" href="javascript:;" class="weui_btn weui_btn_default">Destroy</a>
+    <a onclick="newVConsole()" href="javascript:;" class="weui_btn weui_btn_default">new VConsole</a>
   </div>
 </body>
 </html>
@@ -91,6 +92,12 @@ function setOption() {
   vConsole.setOption({ network: { maxNetworkNumber: 30 }});
   vConsole.setOption({ network: { b: 123 }}); // overwrite previous line
   console.log(vConsole.option);
+}
+
+function newVConsole() {
+  const vc = new window.VConsole();
+  window.vConsole = vc;
+  console.log('newVConsole:', vc);
 }
 
 function destroy() {

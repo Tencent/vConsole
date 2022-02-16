@@ -3,8 +3,26 @@ Public Properties & Methods
 
 Some useful vConsole properties and methods are available for plugin development.
 
-## Properties
+---
+## Static Properties
 
+---
+
+### VConsole.instance
+
+Get the current vConsole instance, which is a singleton instance. Returns `undefined` if it has not been instantiated.
+
+---
+
+### VConsole.VConsolePlugin
+
+The prototype of custom plugin. See [Plugin: Getting Started](./plugin_getting_started.md) for details.
+
+---
+
+## Instance Properties
+
+---
 
 ### vConsole.version
 
@@ -19,6 +37,7 @@ Example:
 vConsole.version // => "3.11.0"
 ```
 
+---
 
 ### vConsole.option
 
@@ -49,9 +68,11 @@ vConsole.setOption('log.maxLogNumber', 5000);
 vConsole.setOption({ log: { maxLogNumber: 5000 } });
 ```
 
+---
 
 ## Methods
 
+---
 
 ### vConsole.setOption(keyOrObj[, value])
 
@@ -72,6 +93,7 @@ vConsole.setOption('maxLogNumber', 5000);
 vConsole.setOption({maxLogNumber: 5000});
 ```
 
+---
 
 ### vConsole.setSwitchPosition(x, y)
 
@@ -90,6 +112,7 @@ Update the position of switch button.
 vConsole.setSwitchPosition(20, 20);
 ```
 
+---
 
 ### vConsole.destroy()
 
@@ -109,6 +132,7 @@ var vConsole = new VConsole();
 vConsole.destroy();
 ```
 
+---
 
 ### vConsole.addPlugin(plugin)
 
@@ -127,6 +151,7 @@ var myPlugin = new VConsolePlugin('my_plugin', 'My Plugin');
 vConsole.addPlugin(myPlugin);
 ```
 
+---
 
 ### vConsole.removePlugin(pluginID)
 
@@ -144,6 +169,7 @@ Remove an existing plugin.
 vConsole.removePlugin('my_plugin');
 ```
 
+---
 
 ### vConsole.showPlugin(pluginID)
 
@@ -163,6 +189,7 @@ Plugin event `hide` will be triggered for previous actived panel, and `show` for
 vConsole.showPlugin("system"); // show System panel
 ```
 
+---
 
 ### vConsole.show()
 
@@ -180,6 +207,7 @@ Show vConsole panel. This method will trigger plugin event `showConsole`.
 vConsole.show();
 ```
 
+---
 
 ### vConsole.hide()
 
@@ -197,6 +225,7 @@ Hide vConsole panel. This method will trigger plugin event `hideConsole`.
 vConsole.hide();
 ```
 
+---
 
 ### vConsole.showSwitch()
 
@@ -214,6 +243,7 @@ Show vConsole switch button.
 vConsole.showSwitch();
 ```
 
+---
 
 ### vConsole.hideSwitch()
 
@@ -233,5 +263,6 @@ After the button is hidden, the user will not be able to call vConsole manually.
 vConsole.hideSwitch();
 ```
 
+---
 
 [Back to Index](./a_doc_index.md)
