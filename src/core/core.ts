@@ -288,6 +288,7 @@ export class VConsole {
           this.compInstance.divContentInner.insertAdjacentElement('beforeend', tabboxHTML);
         }
       }
+      this.compInstance.pluginList = this.compInstance.pluginList;
     });
     // render top bar
     plugin.trigger('addTopBar', (btnList: IVConsoleTopbarOptions[]) => {

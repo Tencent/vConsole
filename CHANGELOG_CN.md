@@ -5,6 +5,7 @@
 - `Feat(Core)` 新增配置项 `storage.defaultStorages`，见 [公共属性及方法](./doc/public_properties_methods_CN.md)。
 - `Feat(Core)` 更新 `vConsole.setOption()` 用法：通过 `setOption('log.maxLogNumber', 20)` 来单独设置 `maxLogNumber` 字段，或通过 `setOption({ log: { maxLogNumber: 20 }})` 来覆盖 `log` 对象。
 - `Feat(Core)` 废弃一些配置项，参见下面。
+- `Fix(Plugin)` 修复插件事件 `renderTab` 没有渲染出视图的 bug。
 
 **废弃的配置项：**
 
