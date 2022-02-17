@@ -4,40 +4,26 @@ import { default as StorageComp } from './storage.svelte';
 
 export class VConsoleStoragePlugin extends VConsoleSveltePlugin {
   protected model = VConsoleStorageModel.getSingleton(VConsoleStorageModel, 'VConsoleStorageModel');
+  protected onAddTopBarCallback: Function;
 
   constructor(id: string, name: string, renderProps = { }) {
     super(id, name, StorageComp, renderProps);
   }
 
+  onInit() {
+    this.onUpdateOption();
+  }
+
   onShow() {
     this.compInstance.storages = this.model.getAllStorages();
     if (!this.compInstance.activedName) {
-      this.compInstance.activedName = this.compInstance.storages[0].name;
+      this.setDefaultActivedName();
     }
   }
 
   onAddTopBar(callback: Function) {
-    const storages = this.model.getAllStorages();
-    
-    const btnList = [];
-    for (let i = 0; i < storages.length; i++) {
-      const name = storages[i].name;
-      btnList.push({
-        name: name[0].toUpperCase() + name.substring(1),
-        data: {
-          name: name,
-        },
-        actived: i === 0,
-        onClick: (e: PointerEvent, data: { name: string }) => {
-          if (data.name === this.compInstance.activedName) {
-            return false;
-          }
-          this.compInstance.activedName = data.name;
-        }
-      });
-    }
-    btnList[0].className = 'vc-actived';
-    callback(btnList);
+    this.onAddTopBarCallback = callback;
+    this.updateTopBar();
   }
 
   onAddTool(callback: Function) {
@@ -79,5 +65,46 @@ export class VConsoleStoragePlugin extends VConsoleSveltePlugin {
       },
     ];
     callback(btnList);
+  }
+
+  public onUpdateOption() {
+    if (typeof this.vConsole.option.storage?.defaultStorages !== 'undefined' && this.vConsole.option.storage?.defaultStorages !== this.model.defaultStorages) {
+      this.model.defaultStorages = this.vConsole.option.storage?.defaultStorages || [];
+      this.model.updateEnabledStorages();
+      this.updateTopBar();
+      if (!!this.compInstance.activedName && this.model.defaultStorages.indexOf(this.compInstance.activedName) === -1) {
+        this.setDefaultActivedName();
+      }
+    }
+  }
+
+  protected setDefaultActivedName() {
+    this.compInstance.activedName = this.compInstance.storages[0]?.name || '';
+  }
+
+  protected updateTopBar() {
+    if (typeof this.onAddTopBarCallback !== 'function') {
+      return;
+    }
+    const storages = this.model.getAllStorages();
+    
+    const btnList = [];
+    for (let i = 0; i < storages.length; i++) {
+      const name = storages[i].name;
+      btnList.push({
+        name: name[0].toUpperCase() + name.substring(1),
+        data: {
+          name: name,
+        },
+        actived: i === 0,
+        onClick: (e: PointerEvent, data: { name: string }) => {
+          if (data.name === this.compInstance.activedName) {
+            return false;
+          }
+          this.compInstance.activedName = data.name;
+        }
+      });
+    }
+    this.onAddTopBarCallback(btnList);
   }
 }

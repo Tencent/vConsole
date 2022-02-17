@@ -14,6 +14,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
  */
 
 import type { SvelteComponent } from 'svelte';
+import type { VConsoleOptions } from './options.interface';
 
 // helper
 import * as tool from '../lib/tool';
@@ -36,16 +37,6 @@ import { VConsoleStoragePlugin } from '../storage/storage';
 import { VConsoleLogExporter } from '../log/log.exporter';
 import { VConsoleNetworkExporter } from '../network/network.exporter';
 
-declare interface VConsoleOptions {
-  target?: string | HTMLElement;
-  defaultPlugins?: ('system' | 'network' | 'element' | 'storage')[];
-  maxLogNumber?: number;
-  maxNetworkNumber?: number;
-  theme?: '' | 'dark' | 'light';
-  disableLogScrolling?: boolean;
-  onReady?: () => void;
-  onClearLog?: () => void;
-}
 
 const VCONSOLE_ID = '#__vconsole';
 
@@ -62,7 +53,10 @@ export class VConsole {
   public system: VConsoleLogExporter;
   public network: VConsoleNetworkExporter;
 
-  // export static class
+  // Singleton instance
+  public static instance: VConsole;
+
+  // Export static classes
   public static VConsolePlugin = VConsolePlugin;
   public static VConsoleLogPlugin = VConsoleLogPlugin;
   public static VConsoleDefaultPlugin = VConsoleDefaultPlugin;
@@ -72,14 +66,18 @@ export class VConsole {
   public static VConsoleStoragePlugin = VConsoleStoragePlugin;
 
   constructor(opt?: VConsoleOptions) {
-    if (!!$.one(VCONSOLE_ID)) {
+    if (!!VConsole.instance && VConsole.instance instanceof VConsole) {
       console.debug('[vConsole] vConsole is already exists.');
-      return;
+      return VConsole.instance;
     }
 
+    VConsole.instance = this;
     this.isInited = false;
     this.option = {
-      defaultPlugins: ['system', 'network', 'element', 'storage']
+      defaultPlugins: ['system', 'network', 'element', 'storage'],
+      log: {},
+      network: {},
+      storage: {},
     };
 
     // merge options
@@ -87,6 +85,19 @@ export class VConsole {
       for (let key in opt) {
         this.option[key] = opt[key];
       }
+    }
+
+    // check deprecated options
+    if (typeof this.option.maxLogNumber !== 'undefined') {
+      this.option.log.maxLogNumber = this.option.maxLogNumber;
+      console.debug('[vConsole] Deprecated option: `maxLogNumber`, use `log.maxLogNumber` instead.');
+    }
+    if (typeof this.option.onClearLog !== 'undefined') {
+      console.debug('[vConsole] Deprecated option: `onClearLog`.');
+    }
+    if (typeof this.option.maxNetworkNumber !== 'undefined') {
+      this.option.network.maxNetworkNumber = this.option.maxNetworkNumber;
+      console.debug('[vConsole] Deprecated option: `maxNetworkNumber`, use `network.maxNetworkNumber` instead.');
     }
 
     // add built-in plugins
@@ -281,13 +292,15 @@ export class VConsole {
           this.compInstance.divContentInner.insertAdjacentElement('beforeend', tabboxHTML);
         }
       }
+      this.compInstance.pluginList = this.compInstance.pluginList;
     });
     // render top bar
     plugin.trigger('addTopBar', (btnList: IVConsoleTopbarOptions[]) => {
       if (!btnList) { return; }
+      const topbarList = [];
       for (let i = 0; i < btnList.length; i++) {
         const item = btnList[i];
-        this.compInstance.pluginList[plugin.id].topbarList.push({
+        topbarList.push({
           name: item.name || 'Undefined',
           className: item.className || '',
           actived: !!item.actived,
@@ -295,19 +308,24 @@ export class VConsole {
           onClick: item.onClick,
         });
       }
+      this.compInstance.pluginList[plugin.id].topbarList = topbarList;
+      this.compInstance.pluginList = this.compInstance.pluginList;
     });
     // render tool bar
     plugin.trigger('addTool', (toolList) => {
       if (!toolList) { return; }
-      for (let i = 0; i<  toolList.length; i++) {
+      const list = [];
+      for (let i = 0; i < toolList.length; i++) {
         const item = toolList[i];
-        this.compInstance.pluginList[plugin.id].toolbarList.push({
+        list.push({
           name: item.name || 'Undefined',
           global: !!item.global,
           data: item.data,
           onClick: item.onClick,
         });
       }
+      this.compInstance.pluginList[plugin.id].toolbarList = list;
+      this.compInstance.pluginList = this.compInstance.pluginList;
     });
     // end init
     plugin.isReady = true;
@@ -444,10 +462,21 @@ export class VConsole {
 
   /**
    * Update option(s).
+   * @example `setOption('log.maxLogNumber', 20)`: set 'maxLogNumber' field only.
+   * @example `setOption({ log: { maxLogNumber: 20 }})`: overwrite 'log' object.
    */
   public setOption(keyOrObj: any, value?: any) {
-    if (tool.isString(keyOrObj)) {
-      this.option[keyOrObj] = value;
+    if (typeof keyOrObj === 'string') {
+      // parse `a.b = val` to `a: { b: val }`
+      const keys = keyOrObj.split('.');
+      let opt: any = this.option;
+      for (let i = 0; i < keys.length - 1; i++) {
+        if (opt[keys[i]] === undefined) {
+          opt[keys[i]] = {};
+        }
+        opt = opt[keys[i]];
+      }
+      opt[keys[keys.length - 1]] = value;
       this._triggerPluginsEvent('updateOption');
       this._updateComponentByOptions();
     } else if (tool.isObject(keyOrObj)) {
@@ -478,6 +507,7 @@ export class VConsole {
 
     // reverse isInited when destroyed
     this.isInited = false;
+    VConsole.instance = undefined;
   }
 
 } // END class

@@ -16,7 +16,7 @@ import VConsole from 'vconsole';
 
 const vConsole = new VConsole();
 // 或者使用配置参数进行初始化
-const vConsole = new VConsole({ maxLogNumber: 1000 });
+const vConsole = new VConsole({ theme: 'dark' });
 
 // 调用 console 方法输出日志
 console.log('Hello world');
@@ -61,9 +61,10 @@ var vConsole = new VConsole(option);
 使用 `setOption()` 来更新 `option`：
 
 ```javascript
-vConsole.setOption('maxLogNumber', 5000);
-// 或者：
-vConsole.setOption({maxLogNumber: 5000});
+// 设指定键值：
+vConsole.setOption('log.maxLogNumber', 5000);
+// 覆盖整个对象：
+vConsole.setOption({ log: { maxLogNumber: 5000 } });
 ```
 
 ---

@@ -3,10 +3,10 @@ Plugin: Getting Started
 
 A plugin allows you to:
 
-- add a new tab
-- add one or more tool button(s)
+- add a new panel.
+- add one or more top buttons (topBar) or bottom buttons (tool).
 
-You can customize the functions of the tab and buttons.
+You can customize the functions of the panel and buttons.
 
 
 ## Quick Start

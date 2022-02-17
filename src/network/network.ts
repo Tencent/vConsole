@@ -38,8 +38,8 @@ export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
   }
 
   public onUpdateOption() {
-    if (this.vConsole.option.maxNetworkNumber !== this.model.maxNetworkNumber) {
-      this.model.maxNetworkNumber = Number(this.vConsole.option.maxNetworkNumber) || MAX_NETWORK_NUMBER;
+    if (this.vConsole.option.network?.maxNetworkNumber !== this.model.maxNetworkNumber) {
+      this.model.maxNetworkNumber = Number(this.vConsole.option.network?.maxNetworkNumber) || MAX_NETWORK_NUMBER;
     }
   }
 }

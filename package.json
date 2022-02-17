@@ -1,6 +1,6 @@
 {
   "name": "vconsole",
-  "version": "3.11.2",
+  "version": "3.12.0",
   "description": "A lightweight, extendable front-end developer tool for mobile web page.",
   "homepage": "https://github.com/Tencent/vConsole",
   "files": [
@@ -28,7 +28,6 @@
     "url": "git+https://github.com/Tencent/vConsole.git"
   },
   "dependencies": {
-    "cookie-storage": "^6.1.0",
     "copy-text-to-clipboard": "^3.0.1",
     "core-js": "^3.11.0",
     "mutation-observer": "^1.0.3"

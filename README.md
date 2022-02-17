@@ -49,7 +49,7 @@ import VConsole from 'vconsole';
 
 const vConsole = new VConsole();
 // or init with options
-const vConsole = new VConsole({ maxLogNumber: 1000 });
+const vConsole = new VConsole({ theme: 'dark' });
 
 // call `console` methods as usual
 console.log('Hello world');

@@ -8,6 +8,7 @@ Documentation Index
 
  - [Tutorial](./tutorial.md)
  - [Public Properties & Methods](./public_properties_methods.md)
+ - [Buitin Plugin: Properties & Methods](./plugin_properties_methods.md)
 
 
 ## Plugin

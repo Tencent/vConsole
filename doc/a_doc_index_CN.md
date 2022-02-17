@@ -8,6 +8,7 @@
 
  - [使用教程](./tutorial_CN.md)
  - [公共属性及方法](./public_properties_methods_CN.md)
+ - [内置插件：属性及方法](./plugin_properties_methods_CN.md)
 
 
 ## Plugin 插件

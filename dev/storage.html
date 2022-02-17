@@ -16,6 +16,8 @@
     <a onclick="setDomainCookie()" href="javascript:;" class="weui_btn weui_btn_default">setDomainCookie</a>
     <a onclick="largeStorage()" href="javascript:;" class="weui_btn weui_btn_default">largeStorage</a>
     <a onclick="xssStorage()" href="javascript:;" class="weui_btn weui_btn_default">XSS</a>
+    <a onclick="defaultStoragesClear()" href="javascript:;" class="weui_btn weui_btn_default">defaultStorages: clear</a>
+    <a onclick="defaultStoragesAdd()" href="javascript:;" class="weui_btn weui_btn_default">defaultStorages: add</a>
   </div>
 </body>
 </html>
@@ -23,18 +25,17 @@
 <script type="module">
 import '../dist/vconsole.min.js';
 
-const vConsole = new window.VConsole({
-  maxLogNumber: 1000,
+window.vConsole = new window.VConsole({
   // disableLogScrolling: true,
+  storage: {
+    // defaultStorages: [],
+  },
   onReady: function() {
     console.log('vConsole is ready.');
     setTimeout(() => {
       vConsole.showPlugin('storage');
     }, 10);
   },
-  onClearLog: function() {
-    console.log('on clearLog');
-  }
 });
 </script>
 
@@ -126,7 +127,17 @@ function xssStorage() {
   console.info('xssStorage() Start');
   localStorage.setItem("-->\tyo\n'\"/><iframe>", "-->\tyo\n'\"/><iframe>");
   sessionStorage.setItem("-->\tyo\n'\"/><iframe>", "-->\tyo\n'\"/><iframe>");
-  document.cookie = "foo=-->\tyo";
+  document.cookie = encodeURIComponent('foo') + '=' + encodeURIComponent("-->\t1=yo");
+  document.cookie = encodeURIComponent('fooo') + '=' + escape('广州天河');
   console.info('xssStorage() End');
+}
+
+function defaultStoragesClear() {
+  vConsole.setOption('storage.defaultStorages', ['localStorage']);
+}
+
+function defaultStoragesAdd() {
+  window.wx = {};
+  vConsole.setOption('storage.defaultStorages', ['wxStorage', 'localStorage']);
 }
 </script>

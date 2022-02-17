@@ -17,7 +17,7 @@ import VConsole from 'vconsole';
 
 const vConsole = new VConsole();
 // or init with options
-const vConsole = new VConsole({ maxLogNumber: 1000 });
+const vConsole = new VConsole({ theme: 'dark' });
 
 // call `console` methods as usual
 console.log('Hello world');
@@ -63,9 +63,10 @@ See [Public Properties & Methods](./public_properties_methods.md) for definition
 Use `setOption()` to update `option`:
 
 ```javascript
-vConsole.setOption('maxLogNumber', 5000);
-// or:
-vConsole.setOption({maxLogNumber: 5000});
+// set single key only
+vConsole.setOption('log.maxLogNumber', 5000);
+// overwrite 'log' object
+vConsole.setOption({ log: { maxLogNumber: 5000 } });
 ```
 
 ---
@@ -168,7 +169,7 @@ To prevent logging, add `_noVConsole = true` to XHR object:
 ```javascript
 var xhr = new XMLHttpRequest();
 xhr._noVConsole = true; // now this request would not be logged in panel
-xhr.open("GET", 'http://example.com/');
+xhr.open('GET', 'http://example.com/');
 xhr.send();
 ```
 

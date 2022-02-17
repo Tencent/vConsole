@@ -69,7 +69,7 @@
 import '../dist/vconsole.min.js';
 
 window.vConsole = new window.VConsole({
-  maxLogNumber: 25,
+  log: { maxLogNumber: 25 },
   // target: '#page',
   // target: document.getElementById('page'),
   // disableLogScrolling: true,
@@ -77,9 +77,6 @@ window.vConsole = new window.VConsole({
   // defaultPlugins: ['system'],
   onReady: function() {
     console.log('vConsole: onReady');
-  },
-  onClearLog: function() {
-    console.log('vConsole: onClearLog');
   },
 });
 </script>
@@ -344,13 +341,16 @@ function observeMutation() {
 }
 
 function scrolling() {
-  vConsole.setOption('maxLogNumber', 500);
+  const m = 100;
+  vConsole.setOption('log.maxLogNumber', m);
   let n = 0
   let t = setInterval(() => {
     n++;
-    if (n > 500) {
+    if (n > m) {
+      vConsole.setOption('log.maxLogNumber', 25);
+    }
+    if (n > m + 10) {
       clearInterval(t);
-      vConsole.setOption('maxLogNumber', 25);
     }
     console.log('scrolling', n);
   }, 150);
