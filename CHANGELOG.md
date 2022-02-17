@@ -1,6 +1,6 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-## 3.12.0 (2022-02-??)
+## 3.12.0 (2022-02-17)
 
 - `Feat(Core)` Add new static property `VConsole.instance` to get the singleton instance.
 - `Feat(Core)` Add new options `storage.defaultStorages`, see [Public Properties & Methods](./doc/public_properties_methods.md).

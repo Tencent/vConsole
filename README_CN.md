@@ -51,7 +51,7 @@ import VConsole from 'vconsole';
 
 const vConsole = new VConsole();
 // 或者使用配置参数来初始化，详情见文档
-const vConsole = new VConsole({ maxLogNumber: 1000 });
+const vConsole = new VConsole({ theme: 'dark' });
 
 // 接下来即可照常使用 `console` 等方法
 console.log('Hello world');

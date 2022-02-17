@@ -1,4 +1,4 @@
-import { WxStorage } from '../src/storage/wxStorage';
+import { WxStorage } from '../src/storage/storage.wx';
 
 const testWxStorage = () => {
   let storageData: { [key: string]: any } = {

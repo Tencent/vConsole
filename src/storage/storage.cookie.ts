@@ -1,5 +1,3 @@
-// import { CookieStorage } from 'cookie-storage';
-// import type { CookieOptions } from 'cookie-storage/lib/cookie-options';
 import { GetProxyHandler } from './storage.proxy';
 
 export interface CookieOptions {
