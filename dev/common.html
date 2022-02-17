@@ -98,6 +98,7 @@ function newVConsole() {
   const vc = new window.VConsole();
   window.vConsole = vc;
   console.log('newVConsole:', vc);
+  console.log('VConsole.instance:',  window.VConsole.instance === vc, window.VConsole.instance);
 }
 
 function destroy() {

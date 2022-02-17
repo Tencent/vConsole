@@ -7,6 +7,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Feat(Core)` New way of using `vConsole.setOption()`: `setOption('log.maxLogNumber', 20)` to set `maxLogNumber` field only, and `setOption({ log: { maxLogNumber: 20 }})` to overwrite `log` object.
 - `Feat(Core)` Deprecated some options, see below.
 - `Fix(Plugin)` Fix the bug that event `renderTab` doesn't render plugin view.
+- `Fix(Storage)` Fix cookie parse error in some bad cases. (issue #508, #509)
 
 **Deprecated Options:**
 

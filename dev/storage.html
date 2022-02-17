@@ -127,7 +127,8 @@ function xssStorage() {
   console.info('xssStorage() Start');
   localStorage.setItem("-->\tyo\n'\"/><iframe>", "-->\tyo\n'\"/><iframe>");
   sessionStorage.setItem("-->\tyo\n'\"/><iframe>", "-->\tyo\n'\"/><iframe>");
-  document.cookie = "foo=-->\tyo";
+  document.cookie = encodeURIComponent('foo') + '=' + encodeURIComponent("-->\t1=yo");
+  document.cookie = encodeURIComponent('fooo') + '=' + escape('广州天河');
   console.info('xssStorage() End');
 }
 

@@ -1,6 +1,6 @@
 import type { VConsoleStorageOptions } from '../core/options.interface';
-import { VConsoleCookieStorage } from './cookieStorage';
-import { WxStorage } from './wxStorage';
+import { CookieStorage } from './storage.cookie';
+import { WxStorage, isWxEnv } from './storage.wx';
 import { VConsoleModel } from '../lib/model';
 
 interface IStorageItem {
@@ -9,7 +9,7 @@ interface IStorageItem {
 }
 export class VConsoleStorageModel extends VConsoleModel {
   public defaultStorages: VConsoleStorageOptions['defaultStorages'] = ['cookies', 'localStorage', 'sessionStorage'];
-  protected cookiesStorage: VConsoleCookieStorage;
+  protected cookiesStorage: CookieStorage;
   protected wxStorage: WxStorage;
   protected storages: IStorageItem[];
 
@@ -27,7 +27,7 @@ export class VConsoleStorageModel extends VConsoleModel {
     this.storages = [];
     if (document.cookie !== undefined && this.defaultStorages.indexOf('cookies') > -1) {
       if (!this.cookiesStorage) {
-        this.cookiesStorage = new VConsoleCookieStorage();
+        this.cookiesStorage = new CookieStorage();
       }
       this.storages.push({ name: 'cookies', storage: this.cookiesStorage });
     }
@@ -37,7 +37,7 @@ export class VConsoleStorageModel extends VConsoleModel {
     if (window.sessionStorage && this.defaultStorages.indexOf('sessionStorage') > -1) {
       this.storages.push({ name: 'sessionStorage', storage: sessionStorage });
     }
-    if (WxStorage.isWxEnv() && this.defaultStorages.indexOf('wxStorage') > -1) {
+    if (isWxEnv() && this.defaultStorages.indexOf('wxStorage') > -1) {
       if (!this.wxStorage) {
         this.wxStorage = new WxStorage();
       }
