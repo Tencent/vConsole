@@ -78,7 +78,6 @@ export class CookieStorage implements Storage {
    */
   public get keys() {
     const cookies = parseCookieString(getCookie());
-    console.log(cookies)
     return Object.keys(cookies).sort();
   }
 
