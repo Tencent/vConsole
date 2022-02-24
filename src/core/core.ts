@@ -53,9 +53,6 @@ export class VConsole {
   public system: VConsoleLogExporter;
   public network: VConsoleNetworkExporter;
 
-  // Singleton instance
-  public static instance: VConsole;
-
   // Export static classes
   public static VConsolePlugin = VConsolePlugin;
   public static VConsoleLogPlugin = VConsoleLogPlugin;
@@ -71,7 +68,6 @@ export class VConsole {
       return VConsole.instance;
     }
 
-    VConsole.instance = this;
     this.isInited = false;
     this.option = {
       defaultPlugins: ['system', 'network', 'element', 'storage'],
@@ -129,6 +125,29 @@ export class VConsole {
         }
       };
       _timer = setTimeout(_pollingDocument, 1);
+    }
+  }
+
+  /**
+   * Get singleton instance.
+   **/
+  public static get instance() {
+    return (<any>$.one(VCONSOLE_ID))?.__VCONSOLE_INSTANCE as VConsole;
+  }
+
+  /**
+   * Set singleton instance.
+   **/
+  public static set instance(value: VConsole | undefined) {
+    if (value !== undefined && !(value instanceof VConsole)) {
+      console.debug('[vConsole] Cannot set `VConsole.instance` because the value is not the instance of VConsole.');
+      return;
+    }
+    const $elm = $.one(VCONSOLE_ID);
+    if ($elm) {
+      (<any>$elm).__VCONSOLE_INSTANCE = value;
+    } else {
+      console.debug('[vConsole] Cannot set `VConsole.instance` because vConsole has not finished initializing yet.');
     }
   }
 
@@ -199,6 +218,9 @@ export class VConsole {
         const pluginId = e.detail.pluginId;
         this.showPlugin(pluginId);
       });
+
+      // bind vConsole instance
+      VConsole.instance = this;
     }
 
     // set options into component
@@ -497,6 +519,10 @@ export class VConsole {
     if (!this.isInited) {
       return;
     }
+    // reverse isInited when destroyed
+    this.isInited = false;
+    VConsole.instance = undefined;
+
     // remove plugins
     const pluginIds = Object.keys(this.pluginList);
     for (let i = pluginIds.length - 1; i >= 0; i--) {
@@ -504,10 +530,6 @@ export class VConsole {
     }
     // remove component
     this.compInstance.$destroy();
-
-    // reverse isInited when destroyed
-    this.isInited = false;
-    VConsole.instance = undefined;
   }
 
 } // END class
