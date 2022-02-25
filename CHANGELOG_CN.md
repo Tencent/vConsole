@@ -3,7 +3,7 @@
 ## 3.12.1 (2022-02-25)
 
 - `Fix(Core)` 修复当 VConsole 作为新模块 `import` 时 `VConsole.instance` 为空的问题。
-- `Chore(Typings)` 修复由外部依赖库引起的 TypeScript 类型声明错误问题。
+- `Chore(Core)` 修复由外部依赖库引起的 TypeScript 类型声明错误问题。
 
 
 ## 3.12.0 (2022-02-17)
