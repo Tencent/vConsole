@@ -1,10 +1,11 @@
 {
   "name": "vconsole",
-  "version": "3.12.0",
+  "version": "3.12.1",
   "description": "A lightweight, extendable front-end developer tool for mobile web page.",
   "homepage": "https://github.com/Tencent/vConsole",
   "files": [
     "dist/*",
+    "build/vendor.d.ts",
     "CHANGELOG*",
     "README*"
   ],
@@ -12,7 +13,7 @@
   "typings": "dist/vconsole.min.d.ts",
   "scripts": {
     "build": "webpack --mode=production --progress",
-    "build:typings": "tsc --build tsconfig.type.json",
+    "build:typings": "node ./build/build.typings.js",
     "build:dev": "webpack --mode=development --progress",
     "watch": "webpack --mode=development --watch --progress",
     "serve": "webpack serve --config webpack.serve.config --progress",

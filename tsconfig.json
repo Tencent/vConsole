@@ -16,5 +16,5 @@
 		},
 	},
   "include": ["src/**/*"],
-	"exclude": ["node_modules/*"],
+	"exclude": ["build/vendor.d.ts", "node_modules/*"],
 }
