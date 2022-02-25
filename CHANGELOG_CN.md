@@ -1,5 +1,11 @@
 [English](./CHANGELOG.md) | 简体中文
 
+## 3.12.1 (2022-02-25)
+
+- `Fix(Core)` 修复当 VConsole 作为新模块 `import` 时 `VConsole.instance` 为空的问题。
+- `Chore(Typings)` 修复由外部依赖库引起的 TypeScript 类型声明错误问题。
+
+
 ## 3.12.0 (2022-02-17)
 
 - `Feat(Core)` 新增静态属性 `VConsole.instance` 以获取实例化后的单例 vConsole 对象。

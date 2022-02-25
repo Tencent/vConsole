@@ -1,5 +1,11 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.12.1 (2022-02-25)
+
+- `Fix(Core)` Fix bug that `VConsole.instance` is empty when VConsole `import` as a new module.
+- `Chore(Core)` Fix type declaration errors caused by vendors.
+
+
 ## 3.12.0 (2022-02-17)
 
 - `Feat(Core)` Add new static property `VConsole.instance` to get the singleton instance.

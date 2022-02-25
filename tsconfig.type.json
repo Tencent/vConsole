@@ -4,7 +4,7 @@
     "declaration": true,
     // "declarationDir": "./dist/typings",
     "outFile": "dist/vconsole.min.d.ts",
-    "outDir": "./dist/typings",
+    "outDir": "./dist",
     "baseUrl": "./src",
     "rootDir": "./src",
     "moduleResolution": "node",
