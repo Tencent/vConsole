@@ -8,6 +8,7 @@
   border-bottom: 1px solid var(--VC-FG-3);
   word-break: break-word;
   position: relative;
+  display: flex;
 }
 
 // log type
@@ -30,26 +31,36 @@
 
 // copy icon
 .vc-logrow-icon {
-  float: right;
+  // float: right;
+  margin-left: auto;
+}
+
+// time
+.vc-log-time {
+  width: (80em / @font);
+  color: #777;
 }
 
 // repeat
-.vc-log-repeat {
-  // display: inline-block;
-  float: left;
+.vc-log-repeat i {
   margin-right: (4em / @font);
   padding: 0 (@fontSize / 2);
   color: #D7E0EF;
   background-color: #42597F;
   border-radius: (@fontSize / 1.5);
 }
-.vc-log-error .vc-log-repeat {
+.vc-log-error .vc-log-repeat i {
   color: #901818;
   background-color: var(--VC-RED);
 }
-.vc-log-warn .vc-log-repeat {
+.vc-log-warn .vc-log-repeat i {
   color: #987D20;
   background-color: #F4BD02;
+}
+
+// content
+.vc-log-content {
+  flex: 1;
 }
 
 // command input & output

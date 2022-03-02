@@ -1,5 +1,6 @@
 export interface VConsoleLogOptions {
   maxLogNumber?: number;
+  showTimestamps?: boolean;
 }
 
 export interface VConsoleNetworkOptions {

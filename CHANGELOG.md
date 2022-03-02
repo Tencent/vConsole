@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.13.0-rc (2022-03-??)
+
+- `Feat(Log)` Add new option `log.showTimestames`, see [Public Properties & Methods](./doc/public_properties_methods.md).
+
+
 ## 3.12.1 (2022-02-25)
 
 - `Fix(Core)` Fix bug that `VConsole.instance` is empty when VConsole `import` as a new module.

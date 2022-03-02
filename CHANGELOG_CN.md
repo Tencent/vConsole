@@ -1,5 +1,10 @@
 [English](./CHANGELOG.md) | 简体中文
 
+## 3.13.0-rc (2022-03-??)
+
+- `Feat(Log)` 新增配置项 `log.showTimestames`，见 [公共属性及方法](./doc/public_properties_methods_CN.md)。
+
+
 ## 3.12.1 (2022-02-25)
 
 - `Fix(Core)` 修复当 VConsole 作为新模块 `import` 时 `VConsole.instance` 为空的问题。

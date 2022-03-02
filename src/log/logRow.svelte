@@ -9,10 +9,27 @@
   import type { IVConsoleLog } from './log.model';
 
   export let log: IVConsoleLog;
+  export let showTimestamps: boolean = false;
 
-  // $: {
-  //   (window as any)._vcOrigConsole.log('logRow update', log._id, ...log.data);
-  // }
+  let isInited: boolean = false;
+  let logTime: string = '';
+
+  const pad = (num, size) => {
+    const s = '000' + num;
+    return s.substring(s.length - size);
+  };
+
+  $: {
+    // (window as any)._vcOrigConsole.log('logRow update', log._id, ...log.data);
+    if (!isInited) {
+      isInited = true;
+    }
+
+    if (showTimestamps && logTime === '') {
+      const d = new Date(log.date);
+      logTime = pad(d.getHours(), 2) + ':' + pad(d.getMinutes(), 2) + ':' + pad(d.getSeconds(), 2) + ':' + pad(d.getMilliseconds(), 3);
+    }
+  }
 
   onMount(() => {
     Style.use();
@@ -46,11 +63,11 @@
     class:vc-log-input={log.cmdType === 'input'}
     class:vc-log-output={log.cmdType === 'output'}
   >
-    <div class="vc-logrow-icon">
-      <IconCopy handler={onTapCopy} />
-    </div>
+    {#if showTimestamps}
+      <div class="vc-log-time">{logTime}</div>
+    {/if}
     {#if log.repeated}
-      <div class="vc-log-repeat">{log.repeated}</div>
+      <div class="vc-log-repeat"><i>{log.repeated}</i></div>
     {/if}
     <div class="vc-log-content">
       {#each log.data as logData, i (i)}
@@ -60,6 +77,9 @@
           <LogValue origData={logData.origData} style={logData.style} />
         {/if}
       {/each}
+    </div>
+    <div class="vc-logrow-icon">
+      <IconCopy handler={onTapCopy} />
     </div>
   </div>
 {/if}
