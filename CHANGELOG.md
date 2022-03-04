@@ -3,6 +3,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 ## 3.13.0-rc (2022-03-??)
 
 - `Feat(Log)` Add new option `log.showTimestames`, see [Public Properties & Methods](./doc/public_properties_methods.md).
+- `Fix(Core)` Use polyfill `click` event to prevent raw click event not working in some cases.
 
 
 ## 3.12.1 (2022-02-25)
