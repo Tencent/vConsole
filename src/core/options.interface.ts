@@ -7,8 +7,9 @@ export interface VConsoleNetworkOptions {
   maxNetworkNumber?: number;
 }
 
+export type VConsoleAvailableStorage = 'cookies' | 'localStorage' | 'sessionStorage' | 'wxStorage';
 export interface VConsoleStorageOptions {
-  defaultStorages?: ('cookies' | 'localStorage' | 'sessionStorage' | 'wxStorage')[];
+  defaultStorages?: VConsoleAvailableStorage[];
 }
 
 export interface VConsoleOptions {

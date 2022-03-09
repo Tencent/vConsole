@@ -12,6 +12,7 @@
     "@babel/preset-typescript"
   ],
   "plugins": [
+    "@babel/plugin-transform-runtime",
     ["@babel/plugin-proposal-class-properties", { "loose": true }],
     "@babel/plugin-transform-block-scoping",
     "@babel/plugin-proposal-export-namespace-from",

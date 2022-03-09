@@ -1,47 +1,145 @@
-import type { VConsoleStorageOptions } from '../core/options.interface';
+import { writable, get } from 'svelte/store';
+import { isWxEnv } from '../lib/tool';
+import type { VConsoleAvailableStorage } from '../core/options.interface';
 import { CookieStorage } from './storage.cookie';
-import { WxStorage, isWxEnv } from './storage.wx';
+import { WxStorage } from './storage.wx';
 import { VConsoleModel } from '../lib/model';
 
-interface IStorageItem {
-  name: string;
-  storage: Storage;
+export interface IStorage {
+  length: number;
+  key: (index: number) => string | null;
+  getItem: (key: string) => string | null | Promise<string | null>;
+  setItem: (key: string, data: any) => void | Promise<void>;
+  removeItem: (key: string) => void | Promise<void>;
+  clear: () => void | Promise<void>;
+  prepare?: () => Promise<boolean>;
 }
+
+/**
+ * Storage Store
+ */
+export const storageStore = {
+  updateTime: writable(0),
+  activedName: writable<VConsoleAvailableStorage>(null),
+  defaultStorages: writable<VConsoleAvailableStorage[]>(['cookies', 'localStorage', 'sessionStorage']),
+};
+
 export class VConsoleStorageModel extends VConsoleModel {
-  public defaultStorages: VConsoleStorageOptions['defaultStorages'] = ['cookies', 'localStorage', 'sessionStorage'];
-  protected cookiesStorage: CookieStorage;
-  protected wxStorage: WxStorage;
-  protected storages: IStorageItem[];
+  protected storage: Map<VConsoleAvailableStorage, IStorage> = new Map();
+
+  constructor() {
+    super();
+    storageStore.activedName.subscribe((value) => {
+      const defaultStorages = get(storageStore.defaultStorages);
+      if (defaultStorages.length > 0 && defaultStorages.indexOf(value) === -1) {
+        storageStore.activedName.set(defaultStorages[0]);
+      }
+    });
+    storageStore.defaultStorages.subscribe((list) => {
+      if (list.indexOf(get(storageStore.activedName)) === -1) {
+        storageStore.activedName.set(list[0]);
+      }
+      this.updateEnabledStorages();
+    });
+  }
+
+  public get activedStorage() {
+    return this.storage.get(get(storageStore.activedName));
+  }
+
+  public async getItem(key: string) {
+    if (!this.activedStorage) { return ''; }
+    return await this.promisify(this.activedStorage.getItem(key));
+  }
+
+  public async setItem(key: string, data: any) {
+    if (!this.activedStorage) { return; }
+    const ret = await this.promisify(this.activedStorage.setItem(key, data));
+    this.refresh();
+    return ret;
+  }
+
+  public async removeItem(key: string) {
+    if (!this.activedStorage) { return; }
+    const ret = await this.promisify(this.activedStorage.removeItem(key));
+    this.refresh();
+    return ret;
+  }
+
+  public async clear() {
+    if (!this.activedStorage) { return; }
+    const ret = await this.promisify(this.activedStorage.clear());
+    this.refresh();
+    return ret;
+  }
+
+  public refresh() {
+    storageStore.updateTime.set(Date.now());
+  }
 
   /**
-   * Get the singleton of storage list.
+   * Get key-value data.
    */
-  public getAllStorages() {
-    if (!this.storages) {
-      this.updateEnabledStorages();
+  public async getEntries() {
+    const storage = this.activedStorage;
+    if (!storage) {
+      return [];
     }
-    return this.storages;
+    if (typeof storage.prepare === 'function') {
+      await storage.prepare();
+    }
+    const list: [string, string][] = [];
+    for (let i = 0; i < storage.length; i++) {
+      const k = storage.key(i);
+      const v = await this.getItem(k);
+      list.push([k, v]);
+    }
+    return list;
   }
 
   public updateEnabledStorages() {
-    this.storages = [];
-    if (document.cookie !== undefined && this.defaultStorages.indexOf('cookies') > -1) {
-      if (!this.cookiesStorage) {
-        this.cookiesStorage = new CookieStorage();
+    const defaultStorages = get(storageStore.defaultStorages);
+    if (defaultStorages.indexOf('cookies') > -1) {
+      if (document.cookie !== undefined) {
+        this.storage.set('cookies', new CookieStorage());
       }
-      this.storages.push({ name: 'cookies', storage: this.cookiesStorage });
+    } else {
+      this.deleteStorage('cookies');
     }
-    if (window.localStorage && this.defaultStorages.indexOf('localStorage') > -1) {
-      this.storages.push({ name: 'localStorage', storage: localStorage });
-    }
-    if (window.sessionStorage && this.defaultStorages.indexOf('sessionStorage') > -1) {
-      this.storages.push({ name: 'sessionStorage', storage: sessionStorage });
-    }
-    if (isWxEnv() && this.defaultStorages.indexOf('wxStorage') > -1) {
-      if (!this.wxStorage) {
-        this.wxStorage = new WxStorage();
+    if (defaultStorages.indexOf('localStorage') > -1) {
+      if (window.localStorage) {
+        this.storage.set('localStorage', window.localStorage);
       }
-      this.storages.push({ name: 'wxStorage', storage: this.wxStorage });
+    } else {
+      this.deleteStorage('localStorage');
+    }
+    if (defaultStorages.indexOf('sessionStorage') > -1) {
+      if (window.sessionStorage) {
+        this.storage.set('sessionStorage', window.sessionStorage);
+      }
+    } else {
+      this.deleteStorage('sessionStorage');
+    }
+    if (defaultStorages.indexOf('wxStorage') > -1) {
+      if (isWxEnv()) {
+        this.storage.set('wxStorage', new WxStorage());
+      }
+    } else {
+      this.deleteStorage('wxStorage');
+    }
+  }
+
+  protected promisify<T extends string | void>(ret: T | Promise<T>) {
+    if (typeof ret === 'string' || ret === null || ret === undefined) {
+      return Promise.resolve(ret);
+    } else {
+      return ret;
+    }
+  }
+
+  protected deleteStorage(key: VConsoleAvailableStorage) {
+    if (this.storage.has(key)) {
+      this.storage.delete(key);
     }
   }
 }

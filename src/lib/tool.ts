@@ -451,3 +451,26 @@ export function getStorage(key: string) {
 export function getUniqueID(prefix: string = '') {
   return '__vc_' + prefix + Math.random().toString(36).substring(2, 8);
 }
+
+/**
+ * Determine whether it is inside a WeChat Miniprogram.
+ */
+export function isWxEnv() {
+  return typeof window !== 'undefined' && !!(<any>window).__wxConfig && !!(<any>window).wx && !!(<any>window).__virtualDOM__;
+}
+
+/**
+ * Call a WeChat Miniprogram method. E.g: `wx.getStorageSync()`.
+ */
+export function callWx(method: string, ...args) {
+  if (isWxEnv() && typeof (<any>window).wx[method] === 'function') {
+    try {
+      const ret = (<any>window).wx[method].call((<any>window).wx, ...args);
+      return ret;
+    } catch (e) {
+      console.debug(`[vConsole] Fail to call wx.${method}():`, e);
+      return undefined;
+    }
+  }
+  return undefined;
+}
