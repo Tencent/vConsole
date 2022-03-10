@@ -19,9 +19,9 @@ export class WxStorage implements IStorage {
    */
   public async prepare() {
     return new Promise<boolean>((resolve, reject) => {
-      callWx('getStorageInfoSync', {
+      callWx('getStorageInfo', {
         success: (res) => {
-          this.keys = !!res ? Object.keys(res.keys).sort() : [];
+          this.keys = !!res ? res.keys.sort() : [];
           this.currentSize = !!res ? res.currentSize : 0;
           this.limitSize = !!res ? res.limitSize : 0;
           resolve(true);
@@ -38,7 +38,15 @@ export class WxStorage implements IStorage {
       callWx('getStorage', {
         key,
         success(res) {
-          resolve(res);
+          let data: string = res.data;
+          if (typeof res.data === 'object') {
+            try {
+              data = JSON.stringify(res.data);
+            } catch (e) {
+              // do nothing
+            }
+          }
+          resolve(data);
         },
         fail(res) {
           reject(res);
