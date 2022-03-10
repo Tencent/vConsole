@@ -4,6 +4,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 - `Feat(Log)` Add new option `log.showTimestames`, see [Public Properties & Methods](./doc/public_properties_methods.md).
 - `Fix(Core)` Use polyfill `click` event to prevent raw click event not working in some cases.
+- `Fix(style)` Fix CSS transition failure in WeChat webview by using `bottom` instead of `transform`.
 - `Refactor(Storage)` Improve robustness.
 
 

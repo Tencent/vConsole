@@ -4,6 +4,8 @@
 
 - `Feat(Log)` 新增配置项 `log.showTimestames`，见 [公共属性及方法](./doc/public_properties_methods_CN.md)。
 - `Fix(Core)` 使用模拟的 `click` 事件以避免某些场景下原生 click 事件不生效的问题。
+- `Fix(style)` 修复微信 Webview 中的 CSS transition 失效的问题，通过使用 `bottom` 而非 `transform`。
+- `Refactor(Storage)` 提高健壮性。
 
 
 ## 3.12.1 (2022-02-25)
