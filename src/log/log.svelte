@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import { isMatchedFilterText } from './logTool';
-  // import { logStore } from './log.store';
   import { VConsoleLogStore as Store } from './log.store';
   import LogRow from './logRow.svelte';
   import LogCommand from './logCommand.svelte';
@@ -11,6 +10,7 @@
   export let pluginId: string = 'default';
   export let showCmd: boolean = false;
   export let filterType: 'all' | IConsoleLogMethod = 'all';
+  export let showTimestamps: boolean = false;
 
   let isInited: boolean = false;
   let filterText: string = '';
@@ -47,7 +47,7 @@
         // filterText
         (filterText === '' || isMatchedFilterText(log, filterText)
       )}
-        <LogRow log={log} />
+        <LogRow log={log} showTimestamps={showTimestamps} />
       {/if}
     {/each}
   {:else}

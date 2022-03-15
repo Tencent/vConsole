@@ -21,16 +21,19 @@
   min-height: 85%;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: -100%;
   z-index: 10002;
   background-color: var(--VC-BG-0);
-  -webkit-transition: -webkit-transform .3s;
-  transition: -webkit-transform .3s;
-  transition: transform .3s;
-  transition: transform .3s, -webkit-transform .3s;
+  // transition: -webkit-transform .3s;
+  // transition: transform .3s;
+  // transition: transform .3s, -webkit-transform .3s;
+  // -webkit-transition: -webkit-transform .3s;
 
-  -webkit-transform: translate(0, 100%);
-  transform: translate(0, 100%);
+  // transform: translate(0, 100%);
+  // -webkit-transform: translate(0, 100%);
+
+  // use `bottom` instead of `transform` to prevent animation fail in WeChat webview
+  transition: bottom .3s;
 }
 
 .vc-toggle {
@@ -45,8 +48,9 @@
   }
 
   .vc-panel {
-    -webkit-transform: translate(0, 0);
-    transform: translate(0, 0);
+    bottom: 0;
+    // -webkit-transform: translate(0, 0);
+    // transform: translate(0, 0);
   }
 }
 

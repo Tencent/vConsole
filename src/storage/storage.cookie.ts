@@ -1,4 +1,4 @@
-import { GetProxyHandler } from './storage.proxy';
+import type { IStorage } from './storage.model';
 
 export interface CookieOptions {
   path?: string | null;
@@ -59,13 +59,7 @@ const getCookie = () => {
 };
 
 
-export class CookieStorage implements Storage {
-
-  constructor() {
-    if (typeof Proxy !== 'undefined') {
-      return new Proxy(this, GetProxyHandler<CookieStorage>());
-    }
-  }
+export class CookieStorage implements IStorage {
 
   public get length() {
     return this.keys.length;
@@ -121,7 +115,7 @@ export class CookieStorage implements Storage {
 
   public clear() {
     // Deep clear all cookies.
-    const keys = Object.keys(this);
+    const keys = [...this.keys]; // use a copy of `this.keys` to prevent array changing dynamically
     for (let i = 0; i < keys.length; i++) {
       this.removeItem(keys[i]);
     }

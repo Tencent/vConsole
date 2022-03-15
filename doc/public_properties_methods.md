@@ -54,6 +54,7 @@ disableLogScrolling   | Boolean  | true     |                                   
 theme                 | String   | true     | 'light'                                     | Theme mode, 'light' | 'dark'.
 target                | String, HTMLElement | true | `document.documentElement`           | An HTMLElement or CSS selector string to render to.
 log.maxLogNumber      | Number   | true     | 1000                                        | Overflow logs will be removed from log panels.
+log.showTimestamps    | Boolean  | true     | false                                       | Display timestamps of logs.
 network.maxNetworkNumber | Number | true    | 1000                                        | Overflow requests will be removed from Netowrk panel.
 storage.defaultStorages  | Array  | true    | ['cookies', 'localStorage', 'sessionStorage'] | Listed storage(s) will be available in Storage panel.
 

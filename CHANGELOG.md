@@ -1,5 +1,14 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.13.0 (2022-03-15)
+
+- `Feat(Log)` Add new option `log.showTimestames`, see [Public Properties & Methods](./doc/public_properties_methods.md).
+- `Fix(Core)` Use polyfill `click` event to prevent raw click event not working in some cases.
+- `Fix(style)` Fix CSS transition failure in WeChat webview by using `bottom` instead of `transform`.
+- `Fix(Core)` Fix error when calling vConsole method in `onReady` callback. (issue #516)
+- `Refactor(Storage)` Improve robustness.
+
+
 ## 3.12.1 (2022-02-25)
 
 - `Fix(Core)` Fix bug that `VConsole.instance` is empty when VConsole `import` as a new module.
@@ -36,7 +45,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 ## 3.11.0 (2021-12-30)
 
-- `Feat(Global)` Add new option `vConsole.option.target` to specify custom mount target, see [Public Properties & Methods](./doc/public_properties_methods.md). (issue #455)
+- `Feat(Core)` Add new option `vConsole.option.target` to specify custom mount target, see [Public Properties & Methods](./doc/public_properties_methods.md). (issue #455)
 - `Feat(Log)` Add new methods: `vConsole.log.log()|info()|...`, `vConsole.log.clear()`, see [Builtin Plugin: Properties & Methods](./doc/plugin_properties_methods.md).
 - `Feat(Network)` Add new methods: `vConsole.network.add()|update()`, `vConsole.network.clear()`, see [Builtin Plugin: Properties & Methods](./doc/plugin_properties_methods.md).
 - `Feat(Network)` Add new option `vConsole.option.maxNetworkNumber` to limit request number, see [Public Properties & Methods](./doc/public_properties_methods.md). (issue #492)
@@ -84,7 +93,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 - `Style(Log)` Add support for `BigInt` and update `Symbol` log style.
 - `Refactor(Style)` Lazy load style tag when vConsole init.
-- `Fix(Global)` Use `this || self` as `globalObject` to prevent `self is not defined` error. (issue #441)
+- `Fix(Core)` Use `this || self` as `globalObject` to prevent `self is not defined` error. (issue #441)
 - `Fix(Log)` Fix `Cannot convert a Symbol value to a string` error when logged a `Symbol` value.
 - `Fix(Log)` Now commands and output logs can be copied.
 - `Fix(Network)` Fix `URIError` when decode URI fail. (issue #470)
@@ -94,7 +103,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 ## 3.9.4 (2021-10-26)
 
-- `Refactor(Global)` Add Typescript declaration to `VConsole` class.
+- `Refactor(Core)` Add Typescript declaration to `VConsole` class.
 
 
 ## 3.9.3 (2021-10-22)
@@ -117,7 +126,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Feat(Log)` Show audio loading error log. (PR #419 by @zimv)
 - `Feat(Storage)` Rewrite Storage panel, supports add/edit/delete storage items. (PR #429 by @ManiaciaChao)
 - `Feat(Plugin)` New third-party plugin [vite-plugin-vconsole](https://github.com/vadxq/vite-plugin-vconsole). (by @vadxq)
-- `Refactor(Global)` Use Svelte as template engine. (PR #429 by @ManiaciaChao)
+- `Refactor(Core)` Use Svelte as template engine. (PR #429 by @ManiaciaChao)
 - `Refactor(Core|Element)` Convert core file and Element panel to `.ts` file.
 - `Fix(Log)` Fix error when print object(s) with no `toJSON` method such as `Vue` instance. (PR #431 by @sillyhong)
 - `Fix(Network)` Fix error when url not starts with `http`. (issue #420)
@@ -147,7 +156,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 - `Feat(Storage)` Show preview value to prevent large raw value blocking rendering. (issue #300)
 - `Feat(Storage)` Add copy button and delete button.
-- `Feat(Global)` Use system theme color by default when init option `theme` is empty.
+- `Feat(Core)` Use system theme color by default when init option `theme` is empty.
 - `Refactor(Storage)` Convert Storage panel to `.ts` file.
 - `Fix(Network)` Use `forEach` instead of `.entries()` when traversing `headers`. (issue #404)
 - `Fix(Network)` Fix error when `Content-Type` is empty.
@@ -163,7 +172,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Feat(Log)` Print `unhandledrejection` log. (PR #389 by @zimv)
 - `Feat(Network)` Support `navigator.sendBeacon()` in Network panel. (PR #383 by @cola119)
 - `Feat(Network)` Display "Type" (Request Type) in "General", including `xhr|fetch|ping`.
-- `Refactor(Global)` Use TypeScript. Now Network panel is conveted to `.ts` file.
+- `Refactor(Core)` Use TypeScript. Now Network panel is conveted to `.ts` file.
 - `Fix(Network)` Recover original `window.fetch()` method when remove Network panel.
 - `Fix(Storage)` Fix issue that the cookie of the non-first-level domain cannot be deleted. (issue #398)
 - `Fix(Element)` Fix issue that elements are rendered as nested when `attributes` or `characterData` changed. (issue #399)
@@ -171,8 +180,8 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 ## 3.5.2 (2021-05-13)
 
-- `Chore(Global)` Update to Webpack5 and update all NPM packages to the latest version.
-- `Fix(Global)` Fix invalid click caused by wrong `selection`.
+- `Chore(Core)` Update to Webpack5 and update all NPM packages to the latest version.
+- `Fix(Core)` Fix invalid click caused by wrong `selection`.
 - `Fix(Log)` Delete `cachedLogs` when reached `maxLogNumber` limit.
 - `Fix(Log)` Fix XSS risk.
 
@@ -195,32 +204,32 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 ## v3.4.1 (2021-04-09)
 
-- `Feat(Global)` Add `setSwitchPosition(x, y)` method to update the position of switch button, see [Public Properties & Methods](./doc/public_properties_methods.md) for more details.
-- `Perf(Global)` Add `Symbol` polyfill. (issue #361)
-- `Fix(Global)` Update theme style after `setOption()`.
-- `Fix(Global)` Remove `transitionEnd` to prevent compatibility issues. (issue #364)
+- `Feat(Core)` Add `setSwitchPosition(x, y)` method to update the position of switch button, see [Public Properties & Methods](./doc/public_properties_methods.md) for more details.
+- `Perf(Core)` Add `Symbol` polyfill. (issue #361)
+- `Fix(Core)` Update theme style after `setOption()`.
+- `Fix(Core)` Remove `transitionEnd` to prevent compatibility issues. (issue #364)
 - `Fix(Network)` Fix `fetch` optional parameter `init`. (issue #363, #365)
 - `Fix(Network)` Fix XSS risks.
 
 
 ## v3.4.0 (2021-01-14)
 
-- `Feat(Global)` Add darkmode theme, see `vConsole.option.theme` in [Public Properties & Methods](./doc/public_properties_methods.md). (PR #307 by @progrape)
-- `Feat(Global)` Add safe area to switch button. (issue #353)
+- `Feat(Core)` Add darkmode theme, see `vConsole.option.theme` in [Public Properties & Methods](./doc/public_properties_methods.md). (PR #307 by @progrape)
+- `Feat(Core)` Add safe area to switch button. (issue #353)
 - `Feat(Log)` Auto move input cursor to the bracket after autocomplete command. (issue #293)
 - `Feat(System)` Add `Location` info to System tab. (issue #343)
 - `Feat(Network)` Add `fetch` log in Network tab. (by @weiqian93)
 - `Feat(Network)` Add Request Headers to Network tab.
 - `Feat(Network)` Use short URL and display parameters in Network tab. (issue #291)
 - `Feat(Plugin)` New third-party plugin [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats). (by @smackgg)
-- `Fix(Global)` The position of the switch button will be reset by mistake when clicked.
-- `Fix(Global)` Fix `document.documentElement.offsetHeight|offsetWidth` is unreliable in newer browsers. (PR #314 by @littlee)
-- `Fix(Global)` Prevent dispatchEvent for disabled or readOnly elements. (PR #314 by @norux)
-- `Fix(Global)` Fix nonce searching problem. (by @sunderls)
-- `Fix(Global)` Fix security issues. (#345 by @QiAnXinCodeSafe)
-- `Fix(Global)` Prevent "webkitStorageInfo deprecation" warning.
-- `Perf(Global)` Remove `Symbol`, `Array.from` polyfill. (issue #325, #275)
-- `Perf(Global)` Show all enumerable and unenumerable properties. (issue #327)
+- `Fix(Core)` The position of the switch button will be reset by mistake when clicked.
+- `Fix(Core)` Fix `document.documentElement.offsetHeight|offsetWidth` is unreliable in newer browsers. (PR #314 by @littlee)
+- `Fix(Core)` Prevent dispatchEvent for disabled or readOnly elements. (PR #314 by @norux)
+- `Fix(Core)` Fix nonce searching problem. (by @sunderls)
+- `Fix(Core)` Fix security issues. (#345 by @QiAnXinCodeSafe)
+- `Fix(Core)` Prevent "webkitStorageInfo deprecation" warning.
+- `Perf(Core)` Remove `Symbol`, `Array.from` polyfill. (issue #325, #275)
+- `Perf(Core)` Show all enumerable and unenumerable properties. (issue #327)
 - `Chore` Update Webpack DevServer option. (by @QinZhen001)
 
 
@@ -228,17 +237,17 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 - `Feat(Log)` Add `%c` log format to support custom log style, see [Tutorial](./doc/tutorial.md) for more details.
 - `Feat(Plugin)` Add `VConsole.VConsoleLogPlugin` (`VConsole.VConsole*` plugins etc.) to `VConsole` class.
-- `Fix(Global)` Fix a few minor issues. (#267 by @Molunerfinn, #272 by @domom)
+- `Fix(Core)` Fix a few minor issues. (#267 by @Molunerfinn, #272 by @domom)
 - `Fix(Storage)` Fix remove cookie fail when it is set path=/ or top domain. (#264 by @qianxinfeng)
-- `Perf(Global)` Display vConsole on `window DOMContentLoaded` instead of `window load`.
+- `Perf(Core)` Display vConsole on `window DOMContentLoaded` instead of `window load`.
 
 
 ## v3.3.2 (2019-07-04)
 
-- `Feat(Global)` Add TypeScript definition file. (by @jas0ncn)
+- `Feat(Core)` Add TypeScript definition file. (by @jas0ncn)
 - `Fix(Log)` Avoid scrolling to bottom when away from bottom edge. (by @ele828)
-- `Fix(Global)` Fix switch button position issue. (by @rexschuang)
-- `Fix(Global)` Fix a few minor issues. (by @stenders)
+- `Fix(Core)` Fix switch button position issue. (by @rexschuang)
+- `Fix(Core)` Fix a few minor issues. (by @stenders)
 
 
 ## v3.3.0 (2019-02-02)

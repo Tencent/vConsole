@@ -60,6 +60,7 @@
 
       <a onclick="observeMutation()" href="javascript:;" class="weui_btn weui_btn_default">Observe Mutation</a>
       <a onclick="scrolling()" href="javascript:;" class="weui_btn weui_btn_default">Scrolling</a>
+      <a onclick="showTimestamps()" href="javascript:;" class="weui_btn weui_btn_default">showTimestamps</a>
     </div>
   </div>
 </body>
@@ -69,7 +70,7 @@
 import '../dist/vconsole.min.js';
 
 window.vConsole = new window.VConsole({
-  log: { maxLogNumber: 25 },
+  log: { maxLogNumber: 25, showTimestamps: false },
   // target: '#page',
   // target: document.getElementById('page'),
   // disableLogScrolling: true,
@@ -354,5 +355,12 @@ function scrolling() {
     }
     console.log('scrolling', n);
   }, 150);
+}
+
+let showTime = false;
+function showTimestamps() {
+  showTime = !showTime;
+  vConsole.setOption('log.showTimestamps', showTime);
+  vConsole.show();
 }
 </script>

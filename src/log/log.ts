@@ -24,6 +24,7 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
   public onReady() {
     super.onReady();
     this.model.maxLogNumber = Number(this.vConsole.option.log?.maxLogNumber) || MAX_LOG_NUMBER;
+    this.compInstance.showTimestamps = !!this.vConsole.option.log?.showTimestamps;
   }
 
   public onRemove() {
@@ -67,6 +68,9 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
   public onUpdateOption() {
     if (this.vConsole.option.log?.maxLogNumber !== this.model.maxLogNumber) {
       this.model.maxLogNumber = Number(this.vConsole.option.log?.maxLogNumber) || MAX_LOG_NUMBER;
+    }
+    if (!!this.vConsole.option.log?.showTimestamps !== this.compInstance.showTimestamps) {
+      this.compInstance.showTimestamps = !!this.vConsole.option.log?.showTimestamps;
     }
   }
 }

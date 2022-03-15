@@ -1,6 +1,6 @@
 {
   "name": "vconsole",
-  "version": "3.12.1",
+  "version": "3.13.0",
   "description": "A lightweight, extendable front-end developer tool for mobile web page.",
   "homepage": "https://github.com/Tencent/vConsole",
   "files": [
@@ -29,6 +29,7 @@
     "url": "git+https://github.com/Tencent/vConsole.git"
   },
   "dependencies": {
+    "@babel/runtime": "^7.17.2",
     "copy-text-to-clipboard": "^3.0.1",
     "core-js": "^3.11.0",
     "mutation-observer": "^1.0.3"
@@ -39,6 +40,7 @@
     "@babel/plugin-proposal-export-namespace-from": "^7.12.13",
     "@babel/plugin-proposal-object-rest-spread": "^7.13.8",
     "@babel/plugin-transform-block-scoping": "^7.16.0",
+    "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.14.1",
     "@babel/preset-typescript": "^7.13.0",
     "babel-loader": "^8.2.2",

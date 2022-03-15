@@ -1,51 +1,99 @@
-import { GetProxyHandler } from './storage.proxy';
+import type { IStorage } from './storage.model';
+import { callWx } from '../lib/tool';
 
-export const isWxEnv = () => {
-  return typeof window !== 'undefined' && (<any>window).__wxConfig && (<any>window).wx && (<any>window).wx.getStorageSync;
-};
-
-export const callWx = (method: string, ...args) => {
-  if (isWxEnv() && typeof (<any>window).wx[method] === 'function') {
-    return (<any>window).wx[method].call((<any>window).wx, ...args);
-  }
-  return undefined;
-}
-
-export class WxStorage implements Storage {
-  constructor() {
-    if (typeof Proxy !== 'undefined') {
-      return new Proxy(this, GetProxyHandler<WxStorage>());
-    }
-  }
+export class WxStorage implements IStorage {
+  public keys: string[] = [];
+  public currentSize: number = 0;
+  public limitSize: number = 0;
 
   public get length() {
     return this.keys.length;
   }
 
-  public get keys() {
-    const info = callWx('getStorageInfoSync');
-    const keys: string[] = !!info ? info.keys : [];
-    return keys;
+  public key(index: number) {
+    return index < this.keys.length ? this.keys[index] : null;
   }
 
-  public key(index: number) {
-    const sortedKeys = Object.keys(this.keys).sort();
-    return index < sortedKeys.length ? sortedKeys[index] : null;
+  /**
+   * Prepare for async data.
+   */
+  public async prepare() {
+    return new Promise<boolean>((resolve, reject) => {
+      callWx('getStorageInfo', {
+        success: (res) => {
+          this.keys = !!res ? res.keys.sort() : [];
+          this.currentSize = !!res ? res.currentSize : 0;
+          this.limitSize = !!res ? res.limitSize : 0;
+          resolve(true);
+        },
+        fail() {
+          reject(false);
+        },
+      });
+    });
   }
 
   public getItem(key: string) {
-    return callWx('getStorageSync', key);
+    return new Promise<string>((resolve, reject) => {
+      callWx('getStorage', {
+        key,
+        success(res) {
+          let data: string = res.data;
+          if (typeof res.data === 'object') {
+            try {
+              data = JSON.stringify(res.data);
+            } catch (e) {
+              // do nothing
+            }
+          }
+          resolve(data);
+        },
+        fail(res) {
+          reject(res);
+        },
+      });
+    });
   }
 
   public setItem(key: string, data: any) {
-    return callWx('setStorageSync', key, data);
+    return new Promise<void>((resolve, reject) => {
+      callWx('setStorage', {
+        key,
+        data,
+        success(res) {
+          resolve(res);
+        },
+        fail(res) {
+          reject(res);
+        },
+      });
+    });
   }
 
   public removeItem(key: string) {
-    return callWx('removeStorageSync', key);
+    return new Promise<void>((resolve, reject) => {
+      callWx('removeStorage', {
+        key,
+        success(res) {
+          resolve(res);
+        },
+        fail(res) {
+          reject(res);
+        },
+      });
+    });
   }
 
   public clear() {
-    callWx('clearStorageSync');
+    return new Promise<void>((resolve, reject) => {
+      callWx('clearStorage', {
+        success(res) {
+          resolve(res);
+        },
+        fail(res) {
+          reject(res);
+        },
+      });
+    });
   }
 }

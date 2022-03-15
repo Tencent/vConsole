@@ -42,6 +42,7 @@
   let showMask = false;
   let isInBottom = true;
   let preivousContentUpdateTime = 0;
+  let cssTimer = null;
 
   $: {
     if (show === true) {
@@ -50,13 +51,15 @@
       showPanel = true;
       showMask = true;
       // set 10ms delay to fix confict between display and transition
-      setTimeout(() => {
+      cssTimer && clearTimeout(cssTimer);
+      cssTimer = setTimeout(() => {
         showMain = true;
         autoScrollToBottom();
       }, 10);
     } else {
       showMain = false;
-      setTimeout(() => {
+      cssTimer && clearTimeout(cssTimer);
+      cssTimer = setTimeout(() => {
         // panel will be hidden by CSS transition in 0.3s
         showPanel = false;
         showMask = false;
@@ -199,6 +202,82 @@
     }
     // (window as any)._vcOrigConsole.log('onContentScroll', isInBottom);
   };
+
+  /**
+   * Simulate click event by touchstart & touchend
+   */
+  const mockTapInfo = {
+    tapTime: 700, // maximun tap interval
+    tapBoundary: 10, // max tap move distance
+    lastTouchStartTime: 0,
+    touchstartX: 0,
+    touchstartY: 0,
+    touchHasMoved: false,
+    targetElem: null,
+  };
+  const mockTapEvent = {
+    touchStart(e) {
+      if (mockTapInfo.lastTouchStartTime === 0) {
+        const touch = e.targetTouches[0];
+        mockTapInfo.touchstartX = touch.pageX;
+        mockTapInfo.touchstartY = touch.pageY;
+        mockTapInfo.lastTouchStartTime = e.timeStamp;
+        mockTapInfo.targetElem = (e.target.nodeType === Node.TEXT_NODE ? e.target.parentNode : e.target);
+      }
+    },
+    touchMove(e) {
+      const touch = e.changedTouches[0];
+      if (Math.abs(touch.pageX - mockTapInfo.touchstartX) > mockTapInfo.tapBoundary || Math.abs(touch.pageY - mockTapInfo.touchstartY) > mockTapInfo.tapBoundary) {
+        mockTapInfo.touchHasMoved = true;
+      }
+    },
+    touchEnd(e) {
+      // move and time within limits, manually trigger `click` event
+      if (mockTapInfo.touchHasMoved === false && e.timeStamp - mockTapInfo.lastTouchStartTime < mockTapInfo.tapTime && mockTapInfo.targetElem != null) {
+        const tagName = mockTapInfo.targetElem.tagName.toLowerCase();
+        let needFocus = false;
+        switch (tagName) {
+          case 'textarea': // focus
+            needFocus = true; break;
+          case 'input':
+            switch (mockTapInfo.targetElem.type) {
+              case 'button':
+              case 'checkbox':
+              case 'file':
+              case 'image':
+              case 'radio':
+              case 'submit':
+                needFocus = false; break;
+              default:
+                needFocus = !mockTapInfo.targetElem.disabled && !mockTapInfo.targetElem.readOnly;
+            }
+          default:
+            break;
+        }
+        if (needFocus) {
+          mockTapInfo.targetElem.focus();
+        } else {
+          e.preventDefault(); // prevent click 300ms later
+        }
+        const touch = e.changedTouches[0];
+        const event = new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+          screenX: touch.screenX,
+          screenY: touch.screenY,
+          clientX: touch.clientX,
+          clientY: touch.clientY,
+        });
+        mockTapInfo.targetElem.dispatchEvent(event);
+      }
+
+      // reset values
+      mockTapInfo.lastTouchStartTime = 0;
+      mockTapInfo.touchHasMoved = false;
+      mockTapInfo.targetElem = null;
+    },
+  };
 </script>
 
 <div
@@ -206,6 +285,9 @@
   class:vc-toggle={showMain}
   style="{fontSize ? 'font-size:' + fontSize + ';' : ''}"
   data-theme={theme}
+  on:touchstart|capture={mockTapEvent.touchStart}
+  on:touchmove|capture={mockTapEvent.touchMove}
+  on:touchend|capture={mockTapEvent.touchEnd}
 >
   <SwitchButton
     bind:show={showSwitchButton}

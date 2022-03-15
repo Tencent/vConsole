@@ -1,5 +1,14 @@
 [English](./CHANGELOG.md) | 简体中文
 
+## 3.13.0 (2022-03-15)
+
+- `Feat(Log)` 新增配置项 `log.showTimestames`，见 [公共属性及方法](./doc/public_properties_methods_CN.md)。
+- `Fix(Core)` 使用模拟的 `click` 事件以避免某些场景下原生 click 事件不生效的问题。
+- `Fix(style)` 修复微信 Webview 中的 CSS transition 失效的问题，通过使用 `bottom` 而非 `transform`。
+- `Fix(Core)` 修复在 `onReady` 回调中调用 vConsole 方法导致报错的问题。 (issue #516)
+- `Refactor(Storage)` 提高健壮性。
+
+
 ## 3.12.1 (2022-02-25)
 
 - `Fix(Core)` 修复当 VConsole 作为新模块 `import` 时 `VConsole.instance` 为空的问题。
@@ -36,7 +45,7 @@
 
 ## 3.11.0 (2021-12-30)
 
-- `Feat(Global)` 支持自定义挂载点，配置项 `vConsole.option.target` 见 [公共属性及方法](./doc/public_properties_methods_CN.md)。 (issue #455)
+- `Feat(Core)` 支持自定义挂载点，配置项 `vConsole.option.target` 见 [公共属性及方法](./doc/public_properties_methods_CN.md)。 (issue #455)
 - `Feat(Log)` 新增插件方法 `vConsole.log.log()|info()|...`、`vConsole.log.clear()`，见 [内置插件：属性及方法](./doc/plugin_properties_methods_CN.md)。
 - `Feat(Network)` 新增插件方法 `vConsole.network.add()|update()`、`vConsole.network.clear()`，见 [内置插件：属性及方法](./doc/plugin_properties_methods_CN.md)。
 - `Feat(Network)` 支持限制请求数量，配置项 `vConsole.option.maxNetworkNumber`见 [公共属性及方法](./doc/public_properties_methods_CN.md)。 (issue #492)
@@ -83,7 +92,7 @@
 
 - `Style(Log)` 支持 `BigInt` 类型并更新 `Symbol` 类型的样式。
 - `Refactor(Style)` 在 vConsole 初始化时再懒加载 style 标签（而非 import 后就加载）。
-- `Fix(Global)` 使用 `this || self` 作为 `globalObject`，以避免 `self is not defined` 错误。 (issue #441)
+- `Fix(Core)` 使用 `this || self` 作为 `globalObject`，以避免 `self is not defined` 错误。 (issue #441)
 - `Fix(Log)` 修复打印 `Symbol` 类型时产生的 `Cannot convert a Symbol value to a string` 错误。
 - `Fix(Log)` 修复 commands 命令及其输出结果无法复制的问题。
 - `Fix(Network)` 修复解码 URL 参数时产生的 `URIError` 错误。 (issue #470)
@@ -93,7 +102,7 @@
 
 ## 3.9.4 (2021-10-26)
 
-- `Refactor(Global)` 为 `VConsole` 类的方法参数添加 Typescript 声明.
+- `Refactor(Core)` 为 `VConsole` 类的方法参数添加 Typescript 声明.
 
 
 ## 3.9.3 (2021-10-22)
@@ -116,7 +125,7 @@
 - `Feat(Log)` 显示 audio 资源加载失败的报错。 (PR #419 by @zimv)
 - `Feat(Storage)` 重写 Storage 面板，现支持添加/编辑/删除内容。 (PR #429 by @ManiaciaChao)
 - `Feat(Plugin)` 新增第三方插件 [vite-plugin-vconsole](https://github.com/vadxq/vite-plugin-vconsole)。 (by @vadxq)
-- `Refactor(Global)` 开始使用 Svelte 作为模板引擎。 (PR #429 by @ManiaciaChao)
+- `Refactor(Core)` 开始使用 Svelte 作为模板引擎。 (PR #429 by @ManiaciaChao)
 - `Refactor(Core|Element)` 转换 core 文件及 Element 面板为 `.ts` 文件。
 - `Fix(Log)` 修复打印无 `toJSON` 方法的对象（如 `Vue` 实例）时会报错的问题。 (PR #431 by @sillyhong)
 - `Fix(Network)` 修复不以 `http` 开头的 url 会报错的问题。 (issue #420)
@@ -146,7 +155,7 @@
 
 - `Feat(Storage)` 对于大体积 value 先展示预览值，以避免堵塞渲染。 (issue #300)
 - `Feat(Storage)` 新增复制按钮、删除按钮。
-- `Feat(Global)` 当初始参数 `theme` 为空时，跟随系统默认主题色。
+- `Feat(Core)` 当初始参数 `theme` 为空时，跟随系统默认主题色。
 - `Refactpr(Storage)` 转换 Storage 面板为 `.ts` 文件。
 - `Fix(Network)` 使用 `forEach` 而非 `.entries()` 来遍历 `headers` 以避免一些兼容性问题。 (issue #404)
 - `Fix(Network)` 修复 `Content-Type` 为空时导致的报错。
@@ -162,7 +171,7 @@
 - `Feat(Log)` 新增输出 `unhandledrejection` 类型日志。 (PR #389 by @zimv)
 - `Feat(Network)` 新增支持展示 `navigator.sendBeacon()` 的网络请求。 (PR #383 by @cola119)
 - `Feat(Network)` 新增在 "General" 栏目展示 "Type" (Request Type) 字段，取值包括 `xhr|fetch|ping`。
-- `Refactpr(Global)` 开始使用 TypeScript 重构代码。现在 Network 面板首先转成了 `.ts` 文件。
+- `Refactpr(Core)` 开始使用 TypeScript 重构代码。现在 Network 面板首先转成了 `.ts` 文件。
 - `Fix(Network)` 修复移除 Network 面板后没有恢复原生 `window.fetch()` 方法的问题。
 - `Fix(Storage)` 修复清除所有 cookie 时无法完全删除非顶级域名下的 cookie 的问题。 (issue #398)
 - `Fix(Element)` 修复当 element 的 `attributes` 或 `characterData` 变化时 element 被嵌套渲染的问题。 (issue #399)
@@ -171,7 +180,7 @@
 ## 3.5.2 (2021-05-13)
 
 - `Chore` 升级到 Webpack5，并升级所有 NPM packages 到最新版本。
-- `Fix(Global)` 修复因 `selection` 选区引起的点击事件无效问题。
+- `Fix(Core)` 修复因 `selection` 选区引起的点击事件无效问题。
 - `Fix(Log)` 当日志数量达到 `maxLogNumber` 上限时清空对应的 `cachedLogs`。
 - `Fix(Log)` 修复 XSS 漏洞。
 
@@ -194,32 +203,32 @@
 
 ## v3.4.1 (2021-04-09)
 
-- `Feature(Global)` 新增 `setSwitchPosition(x, y)` 方法以更新开关按钮的位置，见 [Public Properties & Methods](./doc/public_properties_methods_CN.md)。
-- `Perf(Global)` 添加 `Symbol` polyfill。(issue #361)
-- `Fix(Global)` 修复 `setOption()` 后主题样式未及时更新的问题。
-- `Fix(Global)` 删除 `transitionEnd` 以避免一些兼容性问题。(issue #364)
+- `Feature(Core)` 新增 `setSwitchPosition(x, y)` 方法以更新开关按钮的位置，见 [Public Properties & Methods](./doc/public_properties_methods_CN.md)。
+- `Perf(Core)` 添加 `Symbol` polyfill。(issue #361)
+- `Fix(Core)` 修复 `setOption()` 后主题样式未及时更新的问题。
+- `Fix(Core)` 删除 `transitionEnd` 以避免一些兼容性问题。(issue #364)
 - `Fix(Network)` 修复 `fetch` 的 `init` 未考虑为可选参数的问题。(issue #363, #365)
 - `Fix(Network)` 修复 XSS 漏洞。
 
 
 ## v3.4.0 (2021-01-14)
 
-- `Feature(Global)` 支持暗黑模式，配置项 `vConsole.option.theme` 见 [Public Properties & Methods](./doc/public_properties_methods_CN.md)。(by @progrape)
-- `Feature(Global)` 开关按钮加入拖拽安全区，避免遮挡全面屏手机底部操作区。(issue #353)
+- `Feature(Core)` 支持暗黑模式，配置项 `vConsole.option.theme` 见 [Public Properties & Methods](./doc/public_properties_methods_CN.md)。(by @progrape)
+- `Feature(Core)` 开关按钮加入拖拽安全区，避免遮挡全面屏手机底部操作区。(issue #353)
 - `Feature(Log)` 指令输入框键入括号且自动补全括号后，光标将自动移动到括号内部。(issue #293)
 - `Feature(System)` 增加显示 `Location` 信息。(issue #343)
 - `Feature(Network)`支持 `fetch` 网络记录。(by @weiqian93)
 - `Feature(Network)` 支持显示 Request Headers。
 - `Feature(Network)` 仅显示简短网址，URL 参数将显示在详细信息中。(issue #291)
 - `Feature(Plugin)` 新第三方插件 [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats)。(by @smackgg)
-- `Fix(Global)` 修复点击开关按钮后位置会被重置的问题。
-- `Fix(Global)` 修复 `document.documentElement.offsetHeight|offsetWidth` 在新浏览器中不够准确的问题。(by @littlee)
-- `Fix(Global)` 阻止用户事件派发到 readOnly 或 disabled 的 element 上。(by @norux)
-- `Fix(Global)` 修复 nonce 查找不准确的问题。(by @sunderls)
-- `Fix(Global)` 修复一个安全问题。(#345 by @QiAnXinCodeSafe)
-- `Fix(Global)` 屏蔽 "webkitStorageInfo deprecation" 告警。
-- `Perf(Global)` 删除 `Symbol`、`Array.from` polyfill。(issue #325, #275)
-- `Perf(Global)` 日志中显示对象内所有的 enumerable 和 unenumerable 属性。 (issue #327)
+- `Fix(Core)` 修复点击开关按钮后位置会被重置的问题。
+- `Fix(Core)` 修复 `document.documentElement.offsetHeight|offsetWidth` 在新浏览器中不够准确的问题。(by @littlee)
+- `Fix(Core)` 阻止用户事件派发到 readOnly 或 disabled 的 element 上。(by @norux)
+- `Fix(Core)` 修复 nonce 查找不准确的问题。(by @sunderls)
+- `Fix(Core)` 修复一个安全问题。(#345 by @QiAnXinCodeSafe)
+- `Fix(Core)` 屏蔽 "webkitStorageInfo deprecation" 告警。
+- `Perf(Core)` 删除 `Symbol`、`Array.from` polyfill。(issue #325, #275)
+- `Perf(Core)` 日志中显示对象内所有的 enumerable 和 unenumerable 属性。 (issue #327)
 - `Chore` 更新 Webpack DevServer 的配置项。(by @QinZhen001)
 
 
@@ -227,16 +236,16 @@
 
 - `Feature(Log)` 增加 `%c` 以支持自定义日志样式，详情见 [使用教程](./doc/tutorial_CN.md)。
 - `Feature(Plugin)` 增加 `VConsole.VConsoleLogPlugin` 等 `VConsole.VConsole*` 内置插件在 `VConsole` class 上的挂载。
-- `Fix(Global)` 修复若干小问题。(#267 by @Molunerfinn, #272 by @domom)
+- `Fix(Core)` 修复若干小问题。(#267 by @Molunerfinn, #272 by @domom)
 - `Fix(Storage)` 修复当 cookie `path=/` 或设置了 `domain` 时删除失败的问题。(#264 by @qianxinfeng)
-- `Perf(Global)` 在 `window DOMContentLoaded` 而不是 `window load` 时显示 vConsole。
+- `Perf(Core)` 在 `window DOMContentLoaded` 而不是 `window load` 时显示 vConsole。
 
 
 ## v3.3.2 (2019-07-04)
 
-- `Feature(Global)` 增加 TypeScript 声明文件。（by @jas0ncn）
-- `Fix(Global)` 修复开关按钮拖动后位置不对的问题。（by @rexschuang）
-- `Fix(Global)` 修复若干小问题。（by @stenders）
+- `Feature(Core)` 增加 TypeScript 声明文件。（by @jas0ncn）
+- `Fix(Core)` 修复开关按钮拖动后位置不对的问题。（by @rexschuang）
+- `Fix(Core)` 修复若干小问题。（by @stenders）
 - `Fix(Log)` 不在列表底部时避免自动滚动。（by @ele828）
 
 

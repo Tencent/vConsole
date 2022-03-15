@@ -15,6 +15,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 // polyfill
 import 'core-js/stable/symbol';
+import 'core-js/stable/promise';
 
 // classes
 import { VConsole } from './core/core';
