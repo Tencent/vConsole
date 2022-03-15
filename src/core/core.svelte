@@ -42,6 +42,7 @@
   let showMask = false;
   let isInBottom = true;
   let preivousContentUpdateTime = 0;
+  let cssTimer = null;
 
   $: {
     if (show === true) {
@@ -50,13 +51,15 @@
       showPanel = true;
       showMask = true;
       // set 10ms delay to fix confict between display and transition
-      setTimeout(() => {
+      cssTimer && clearTimeout(cssTimer);
+      cssTimer = setTimeout(() => {
         showMain = true;
         autoScrollToBottom();
       }, 10);
     } else {
       showMain = false;
-      setTimeout(() => {
+      cssTimer && clearTimeout(cssTimer);
+      cssTimer = setTimeout(() => {
         // panel will be hidden by CSS transition in 0.3s
         showPanel = false;
         showMask = false;
