@@ -1,6 +1,6 @@
 [English](./CHANGELOG.md) | 简体中文
 
-## 3.13.0-rc (2022-03-??)
+## 3.13.0 (2022-03-15)
 
 - `Feat(Log)` 新增配置项 `log.showTimestames`，见 [公共属性及方法](./doc/public_properties_methods_CN.md)。
 - `Fix(Core)` 使用模拟的 `click` 事件以避免某些场景下原生 click 事件不生效的问题。
