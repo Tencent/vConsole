@@ -282,7 +282,6 @@ export class VConsole {
     eventName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1);
     if (tool.isFunction(this.option[eventName])) {
       setTimeout(() => {
-        console.log('triggerEvent', eventName);
         this.option[eventName].apply(this, param);
       }, 0);
     }
