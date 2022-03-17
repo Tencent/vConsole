@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.14.0-rc (2022-03-??)
+
+- `Refactor(Network)` Now network records will be more accurate by using Proxy to prevent XMLHttpRequest overwriting by other request libraries (like Axios).
+
+
 ## 3.13.0 (2022-03-15)
 
 - `Feat(Log)` Add new option `log.showTimestames`, see [Public Properties & Methods](./doc/public_properties_methods.md).

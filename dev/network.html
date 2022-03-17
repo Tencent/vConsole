@@ -7,8 +7,8 @@
   <link href="./lib/weui.min.css" rel="stylesheet"/>
   <link href="./lib/demo.css" rel="stylesheet"/>
 
-  <script src="../dist/vconsole.min.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="../dist/vconsole.min.js"></script>
 </head>
 <body ontouchstart>
   <div class="page">
@@ -19,6 +19,7 @@
       <a onclick="postAjax()" href="javascript:;" class="weui_btn weui_btn_default">POST XHR (Data: Object)</a>
       <a onclick="postAjax('json')" href="javascript:;" class="weui_btn weui_btn_default">POST XHR (Data: JSON String)</a>
       <a onclick="optionsXHR()" href="javascript:;" class="weui_btn weui_btn_default">OPTIONS XHR</a>
+      <a onclick="xhrStream()" href="javascript:;" class="weui_btn weui_btn_default">XHR Stream</a>
     </div>
 
     <div class="section">
@@ -33,6 +34,7 @@
       <a onclick="postFetchByRequest()" href="javascript:;" class="weui_btn weui_btn_default">POST Fetch Using XHR</a>
       <a onclick="optionsFetch()" href="javascript:;" class="weui_btn weui_btn_default">OPTIONS Fetch</a>
       <a onclick="fetchIOSLowBug()" href="javascript:;" class="weui_btn weui_btn_default">Fetch iOS LowBug</a>
+      <a onclick="fetchStream()" href="javascript:;" class="weui_btn weui_btn_default">Fetch Steam</a>
     </div>
 
     <div class="section">
@@ -254,6 +256,75 @@ function getFetch500() {
   }).catch((e) => {
     console.error('Fetch Error:', e);
   });
+}
+
+function fetchStream() {
+  window.fetch('./data/stream.flv?id=' + Math.random()).then((response) => {
+    console.log(response instanceof window.Response);
+    return;
+    console.log('then response', 'bodyUsed:', response.bodyUsed, 'locked:', response.body.locked);
+    const reader = response.body.getReader();
+    console.log('then response', 'bodyUsed:', response.bodyUsed, 'locked:', response.body.locked);
+    let bytesReceived = 0;
+
+    return reader.read().then(function process(result) {
+        console.log('reader.read', 'bodyUsed:', response.bodyUsed, 'locked:', response.body.locked);
+        if (result.done) {
+          console.log('Failed to find match');
+          return;
+        }
+
+        bytesReceived += result.value.length;
+        console.log(`Received ${bytesReceived} bytes.`);
+
+        if (bytesReceived > 3000000) {
+          reader.cancel();
+          console.log('Cancel.', response.status);
+          return;
+        }
+
+        return reader.read().then(process);
+      });
+  });
+}
+
+function xhrStream() {
+  vConsole.show();
+  const url = './data/stream.flv?id=' + Math.random();
+  const xhr = new XMLHttpRequest();
+  xhr.timeout = 1000;
+  console.log('xhr:', xhr);
+  console.log('xhr type:', typeof xhr, xhr instanceof XMLHttpRequest);
+  xhr.open('GET', url);
+  xhr.send();
+  xhr.onreadystatechange = () => {
+    console.log('XHR onreadystatechange:', xhr.readyState);
+  };
+  xhr.onprogress = (e) => {
+    // console.log('XHR onprogress:', 'readyState:', xhr.readyState, 'status:', xhr.status, 'loaded:', e.loaded, 'timeStamp:', e.timeStamp);
+    // console.log('XHR onprogress state:', xhr.readyState, xhr.status);
+    if (e.loaded > 3000000) {
+      xhr.abort();
+    }
+  };
+  xhr.onloadstart = (e) => {
+    // console.log('XHR onloadstart:', e);
+  };
+  xhr.onloadend = (e) => {
+    // console.log('XHR onloadend:', 'readyState:', xhr.readyState, xhr.status, e);
+  };
+  xhr.onload = (e) => {
+    // console.log('XHR onload:', 'readyState:', xhr.readyState, xhr.status, e);
+  };
+  xhr.onerror = (e) => {
+    console.log('XHR onerror:', e);
+  };
+  xhr.onabort = (e) => {
+    console.log('XHR onabort:', xhr.readyState, xhr.status, e);
+  };
+  xhr.ontimeout = (e) => {
+    console.log('XHR ontimeout:', e);
+  }
 }
 
 function postImage() {

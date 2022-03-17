@@ -3,6 +3,7 @@ import * as tool from '../lib/tool';
 import { VConsoleModel } from '../lib/model';
 import { contentStore } from '../core/core.model';
 import { VConsoleNetworkRequestItem, RequestItemHelper } from './requestItem';
+import { XHRProxy } from './xhr.proxy';
 import type { VConsoleRequestMethod } from './requestItem';
 
 
@@ -19,9 +20,6 @@ export class VConsoleNetworkModel extends VConsoleModel {
   public maxNetworkNumber: number = 1000;
   protected itemCounter: number = 0;
 
-  private _xhrOpen: XMLHttpRequest['open'] = undefined; // the origin function
-  private _xhrSend: XMLHttpRequest['send'] = undefined;
-  private _xhrSetRequestHeader: XMLHttpRequest['setRequestHeader'] = undefined;
   private _fetch: WindowOrWorkerGlobalScope['fetch'] = undefined;
   private _sendBeacon: Navigator['sendBeacon'] = undefined;
 
@@ -36,12 +34,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
   public unMock() {
     // recover original functions
     if (window.XMLHttpRequest) {
-      window.XMLHttpRequest.prototype.open = this._xhrOpen;
-      window.XMLHttpRequest.prototype.send = this._xhrSend;
-      window.XMLHttpRequest.prototype.setRequestHeader = this._xhrSetRequestHeader;
-      this._xhrOpen = undefined;
-      this._xhrSend = undefined;
-      this._xhrSetRequestHeader = undefined;
+      window.XMLHttpRequest = XHRProxy.origXMLHttpRequest;
     }
     if (window.fetch) {
       window.fetch = this._fetch;
@@ -90,153 +83,10 @@ export class VConsoleNetworkModel extends VConsoleModel {
     const _XMLHttpRequest = window.XMLHttpRequest;
     if (!_XMLHttpRequest) { return; }
 
-    const that = this;
-    const _open = window.XMLHttpRequest.prototype.open,
-          _send = window.XMLHttpRequest.prototype.send,
-          _setRequestHeader = window.XMLHttpRequest.prototype.setRequestHeader;
-    that._xhrOpen = _open;
-    that._xhrSend = _send;
-    that._xhrSetRequestHeader = _setRequestHeader;
-
-    // mock open()
-    window.XMLHttpRequest.prototype.open = function() {
-      const XMLReq: XMLHttpRequest = this;
-      const args = [].slice.call(arguments),
-            method = args[0],
-            url = args[1];
-      const item = new VConsoleNetworkRequestItem();
-      let timer = null;
-
-      // may be used by other functions
-      (<any>XMLReq)._requestID = item.id;
-      (<any>XMLReq)._method = method;
-      (<any>XMLReq)._url = url;
-
-      // mock onReadyStateChange
-      const _onreadystatechange = (<any>XMLReq)._origOnreadystatechange || XMLReq.onreadystatechange || function() {};
-      const onreadystatechange = function() {
-
-        // update status
-        item.readyState = XMLReq.readyState;
-        item.responseType = XMLReq.responseType;
-        item.requestType = 'xhr';
-
-        // update data by readyState
-        switch (XMLReq.readyState) {
-          case 0: // UNSENT
-            item.status = 0;
-            item.statusText = 'Pending';
-            if (!item.startTime) {
-              item.startTime = (+new Date());
-            }
-            break;
-
-          case 1: // OPENED
-            item.status = 0;
-            item.statusText = 'Pending';
-            if (!item.startTime) {
-              item.startTime = (+new Date());
-            }
-            break;
-
-          case 2: // HEADERS_RECEIVED
-            item.status = XMLReq.status;
-            item.statusText = 'Loading';
-            item.header = {};
-            const header = XMLReq.getAllResponseHeaders() || '',
-                  headerArr = header.split('\n');
-            // extract plain text to key-value format
-            for (let i = 0; i < headerArr.length; i++) {
-              const line = headerArr[i];
-              if (!line) { continue; }
-              const arr = line.split(': ');
-              const key = arr[0],
-                    value = arr.slice(1).join(': ');
-              item.header[key] = value;
-            }
-            break;
-
-          case 3: // LOADING
-            item.status = XMLReq.status;
-            item.statusText = 'Loading';
-            break;
-
-          case 4: // DONE
-            clearInterval(timer);
-            item.status = XMLReq.status;
-            item.statusText = String(XMLReq.status); // show status code when request completed
-            item.endTime = +new Date(),
-            item.costTime = item.endTime - (item.startTime || item.endTime);
-            item.response = XMLReq.response;
-            break;
-
-          default:
-            clearInterval(timer);
-            item.status = XMLReq.status;
-            item.statusText = 'Unknown';
-            break;
-        }
-
-        // update response by responseType
-        item.response = RequestItemHelper.genResonseByResponseType(item.responseType, item.response);
-
-        if (!(<any>XMLReq)._noVConsole) {
-          that.updateRequest(item.id, item);
-        }
-        return _onreadystatechange.apply(XMLReq, arguments);
-      };
-      XMLReq.onreadystatechange = onreadystatechange;
-      // when the XHR object is reused, we can still call the original function while it is overwrote. (issue #214)
-      (<any>XMLReq)._origOnreadystatechange = _onreadystatechange;
-
-      // some 3rd-libraries will change XHR's default function
-      // so we use a timer to avoid lost tracking of readyState
-      let preState = -1;
-      timer = setInterval(function() {
-        if (preState != XMLReq.readyState) {
-          preState = XMLReq.readyState;
-          onreadystatechange.call(XMLReq);
-        }
-      }, 10);
-
-      return _open.apply(XMLReq, args);
-    };
-
-    // mock setRequestHeader()
-    window.XMLHttpRequest.prototype.setRequestHeader = function() {
-      const XMLReq = this;
-      const args = [].slice.call(arguments);
-
-      const reqList = get(requestList);
-      const item = reqList[XMLReq._requestID];
-      if (item) {
-        if (!item.requestHeader) { item.requestHeader = {}; }
-        item.requestHeader[args[0]] = args[1];
-      }
-      return _setRequestHeader.apply(XMLReq, args);
-    };
-
-    // mock send()
-    window.XMLHttpRequest.prototype.send = function() {
-      const XMLReq: XMLHttpRequest = this;
-      const args = [].slice.call(arguments),
-            data: XMLHttpRequestBodyInit = args[0];
-      const { _requestID, _url, _method } = <any>XMLReq;
-
-      const reqList = get(requestList);
-      const item = reqList[_requestID] || new VConsoleNetworkRequestItem();
-      item.method = _method ? _method.toUpperCase() : 'GET';
-      item.url = _url || '';
-      item.name = item.url.replace(new RegExp('[/]*$'), '').split('/').pop() || '';
-      item.getData = RequestItemHelper.genGetDataByUrl(item.url, {});
-      item.postData = that.getFormattedBody(data);
-
-      if (!(<any>XMLReq)._noVConsole) {
-        that.updateRequest(item.id, item);
-      }
-
-      return _send.apply(XMLReq, args);
-    };
+    window.XMLHttpRequest = XHRProxy.create((item: VConsoleNetworkRequestItem) => {
+      this.updateRequest(item.id, item);
+    });
+    
 
   };
 
@@ -314,8 +164,28 @@ export class VConsoleNetworkModel extends VConsoleModel {
 
       return _fetch(request, init).then((res) => {
         // fix ios<11 https://github.com/github/fetch/issues/504
-        const response = res.clone();
-        _fetchReponse = response.clone();
+        const response = res;
+        _fetchReponse = res;
+        // const response = new Proxy(res, {
+        //   // set(target, name, value) {
+        //   //   console.log('set', name);
+        //   //   return Reflect.set(target, name, value);
+        //   // },
+        //   get(target, name) {
+        //     console.log('get', name)
+        //     if (typeof target[name] === 'function') {
+        //       if (name === 'cancel') {
+
+        //       }
+        //     }
+        //     return Reflect.get(target, name);
+        //   },
+        //   apply(target, thisArg, argumentsList) {
+        //     console.log('apply:', target.name);
+        //     return target(...argumentsList);
+        //   }
+        // });
+        // _fetchReponse = res;
         // (window as any)._vcOrigConsole.log('_fetch', _fetchReponse);
 
         item.endTime = +new Date();
@@ -333,10 +203,10 @@ export class VConsoleNetworkModel extends VConsoleModel {
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
           item.responseType = 'json';
-          return response.clone().text();
+          return response.text();
         } else if (contentType && (contentType.includes('text/html') || contentType.includes('text/plain'))) {
           item.responseType = 'text';
-          return response.clone().text();
+          return response.text();
         } else {
           item.responseType = '';
           return '[object Object]';
