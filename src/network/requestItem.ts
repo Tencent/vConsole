@@ -118,7 +118,7 @@ export const RequestItemHelper = {
    * Generate formatted response data by responseType.
    */
   genResonseByResponseType(responseType: string, response) {
-    let ret;
+    let ret = '';
     switch (responseType) {
       case '':
       case 'text':
@@ -130,12 +130,13 @@ export const RequestItemHelper = {
             ret = tool.safeJSONStringify(ret, { maxDepth: 10, keyMaxLen: 500000, pretty: true });
           } catch (e) {
             // not a JSON string
-            ret = response;
+            ret = tool.getStringWithinLength(String(response), 500000);
           }
         } else if (tool.isObject(response) || tool.isArray(response)) {
           ret = tool.safeJSONStringify(response, { maxDepth: 10, keyMaxLen: 500000, pretty: true });
         } else if (typeof response !== 'undefined') {
           ret = Object.prototype.toString.call(response);
+          ret = tool.getStringWithinLength(ret, 500000);
         }
         break;
   
@@ -145,6 +146,7 @@ export const RequestItemHelper = {
       default:
         if (typeof response !== 'undefined') {
           ret = Object.prototype.toString.call(response);
+          ret = tool.getStringWithinLength(ret, 500000);
         }
         break;
     }

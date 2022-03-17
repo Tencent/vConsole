@@ -376,6 +376,17 @@ export function subString(str: string, len: number) {
   return str;
 }
 
+/**
+ * Get a string within a limited max length.
+ */
+export function getStringWithinLength(str: string, maxLen: number) {
+  const bytes = getStringBytes(str);
+  if (bytes > maxLen) {
+    str = subString(str, maxLen) + `...(${getBytesText(bytes)})`;
+  }
+  return str;
+}
+
 const _sortArrayCompareFn = <T extends string>(a: T, b: T) => {
   return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
 };

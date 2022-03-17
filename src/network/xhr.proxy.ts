@@ -140,7 +140,7 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
   }
 }
 
-export class XHRProxy extends XMLHttpRequest {
+export class XHRProxy {
   public static origXMLHttpRequest = XMLHttpRequest;
   
   public static create(onUpdateCallback: IOnUpdateCallback) {
