@@ -3,7 +3,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 ## 3.14.0-rc (2022-03-??)
 
 - `Feat(Network)` Improve rendering performance of large Response data by cropping the displayed response content.
-- `Refactor(Network)` Now network records will be more accurate by using Proxy to prevent XMLHttpRequest overwriting by other request libraries (like Axios).
+- `Refactor(Network)` Now network records will be more accurate by using Proxy to prevent `XMLHttpRequest | fetch` overwriting by other request libraries (like Axios).
 
 
 ## 3.13.0 (2022-03-15)

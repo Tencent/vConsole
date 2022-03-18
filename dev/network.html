@@ -133,6 +133,7 @@ function getAjax() {
 }
 
 function getFetch() {
+  vConsole.show();
   window.fetch('./data/success.json?method=fetchGet&id=' + Math.random(), {
     method: 'GET',
     headers: {
@@ -140,9 +141,11 @@ function getFetch() {
       'content-type': 'application/json'
     },
   }).then((data) => {
+    console.log('getFetch() response:', data);
+    // return data;
     return data.json();
   }).then((data) => {
-    console.log('get Fetch Response:', data);
+    console.log('getFetch() json:', data);
   });
 }
 
@@ -162,7 +165,6 @@ function fetchIOSLowBug() {
     console.error('fetchIOSLowBug bug!!!:', err);
   });
 }
-
 
 function getFetchSimple() {
   window.fetch('./data/large.json?type=fetchGet&id=' + Math.random()).then((data) => {
@@ -259,10 +261,11 @@ function getFetch500() {
 }
 
 function fetchStream() {
+  vConsole.show();
   window.fetch('./data/stream.flv?id=' + Math.random()).then((response) => {
-    console.log(response instanceof window.Response);
-    return;
     console.log('then response', 'bodyUsed:', response.bodyUsed, 'locked:', response.body.locked);
+    // console.log(response.text())
+    // return;
     const reader = response.body.getReader();
     console.log('then response', 'bodyUsed:', response.bodyUsed, 'locked:', response.body.locked);
     let bytesReceived = 0;
@@ -292,19 +295,17 @@ function xhrStream() {
   vConsole.show();
   const url = './data/stream.flv?id=' + Math.random();
   const xhr = new XMLHttpRequest();
-  xhr.timeout = 1000;
-  console.log('xhr:', xhr);
+  xhr.timeout = 11000;
   console.log('xhr type:', typeof xhr, xhr instanceof XMLHttpRequest);
   xhr.open('GET', url);
   xhr.send();
   xhr.onreadystatechange = () => {
-    console.log('XHR onreadystatechange:', xhr.readyState);
+    console.log('XHR onreadystatechange:', 'readyState:', xhr.readyState, 'responseType:', xhr.responseType);
   };
   xhr.onprogress = (e) => {
     // console.log('XHR onprogress:', 'readyState:', xhr.readyState, 'status:', xhr.status, 'loaded:', e.loaded, 'timeStamp:', e.timeStamp);
-    // console.log('XHR onprogress state:', xhr.readyState, xhr.status);
     if (e.loaded > 3000000) {
-      xhr.abort();
+      // xhr.abort();
     }
   };
   xhr.onloadstart = (e) => {
@@ -314,7 +315,7 @@ function xhrStream() {
     // console.log('XHR onloadend:', 'readyState:', xhr.readyState, xhr.status, e);
   };
   xhr.onload = (e) => {
-    // console.log('XHR onload:', 'readyState:', xhr.readyState, xhr.status, e);
+    console.log('XHR onload:', 'readyState:', xhr.readyState, xhr.status, xhr.responseType);
   };
   xhr.onerror = (e) => {
     console.log('XHR onerror:', e);

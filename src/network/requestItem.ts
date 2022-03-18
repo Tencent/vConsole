@@ -143,6 +143,7 @@ export const RequestItemHelper = {
       case 'blob':
       case 'document':
       case 'arraybuffer':
+      case 'formdata':
       default:
         if (typeof response !== 'undefined') {
           ret = Object.prototype.toString.call(response);
@@ -249,5 +250,17 @@ export const RequestItemHelper = {
       ret = `[object ${type}]`;
     }
     return ret;
+  },
+
+  getURL(urlString: string = '') {
+    if (urlString.startsWith('//')) {
+      const baseUrl = new URL(window.location.href);
+      urlString = `${baseUrl.protocol}${urlString}`;
+    }
+    if (urlString.startsWith('http')) {
+      return new URL(urlString);
+    } else {
+      return new URL(urlString, window.location.href);
+    }
   },
 };
