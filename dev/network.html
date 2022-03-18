@@ -142,10 +142,15 @@ function getFetch() {
     },
   }).then((data) => {
     console.log('getFetch() response:', data);
+    setTimeout(() => {
+      data.json().then((res) => {
+        console.log(res);
+      });
+    }, 3000);
     // return data;
-    return data.json();
+    // return data.json();
   }).then((data) => {
-    console.log('getFetch() json:', data);
+    // console.log('getFetch() json:', data);
   });
 }
 
@@ -305,7 +310,7 @@ function xhrStream() {
   xhr.onprogress = (e) => {
     // console.log('XHR onprogress:', 'readyState:', xhr.readyState, 'status:', xhr.status, 'loaded:', e.loaded, 'timeStamp:', e.timeStamp);
     if (e.loaded > 3000000) {
-      // xhr.abort();
+      xhr.abort();
     }
   };
   xhr.onloadstart = (e) => {

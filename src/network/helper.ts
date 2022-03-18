@@ -30,7 +30,7 @@ export const genGetDataByUrl = (url: string, getData = {}) => {
 /**
  * Generate formatted response data by responseType.
  */
-export const genResonseByResponseType = (responseType: string, response) => {
+export const genResonseByResponseType = (responseType: string, response: any) => {
   let ret = '';
   switch (responseType) {
     case '':
@@ -49,7 +49,6 @@ export const genResonseByResponseType = (responseType: string, response) => {
         ret = tool.safeJSONStringify(response, { maxDepth: 10, keyMaxLen: 500000, pretty: true });
       } else if (typeof response !== 'undefined') {
         ret = Object.prototype.toString.call(response);
-        ret = tool.getStringWithinLength(ret, 500000);
       }
       break;
 
@@ -60,7 +59,6 @@ export const genResonseByResponseType = (responseType: string, response) => {
     default:
       if (typeof response !== 'undefined') {
         ret = Object.prototype.toString.call(response);
-        ret = tool.getStringWithinLength(ret, 500000);
       }
       break;
   }
@@ -108,20 +106,24 @@ export const updateItemByReadyState = (item: VConsoleNetworkRequestItem, XMLReq:
     case 3: // LOADING
       item.status = XMLReq.status;
       item.statusText = 'Loading';
+      item.responseSize = XMLReq.response.length;
+      item.responseSizeText = tool.getBytesText(item.responseSize);
       break;
 
     case 4: // DONE
-      // clearInterval(timer);
       // `XMLReq.abort()` will change `status` from 200 to 0, so use previous value in this case
       item.status = XMLReq.status || item.status || 0;
       item.statusText = String(item.status); // show status code when request completed
       item.endTime = Date.now(),
       item.costTime = item.endTime - (item.startTime || item.endTime);
       item.response = XMLReq.response;
+      if (XMLReq.response.length) {
+        item.responseSize = XMLReq.response.length;
+        item.responseSizeText = tool.getBytesText(item.responseSize);
+      }
       break;
 
     default:
-      // clearInterval(timer);
       item.status = XMLReq.status;
       item.statusText = 'Unknown';
       break;

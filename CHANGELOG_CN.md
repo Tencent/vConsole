@@ -1,5 +1,13 @@
 [English](./CHANGELOG.md) | 简体中文
 
+## 3.14.0-rc (2022-03-??)
+
+- `Feat(Network)` 新增显示 Response 的体积。
+- `Feat(Network)` 新增对 `transfer-encoding: chunked` 的支持，现在可记录流式回包（stream response）。
+- `Feat(Network)` 展示时裁剪过大的 Response 回包以提高渲染性能。
+- `Refactor(Network)` 提高网络记录的准确性，以避免被外部库（如 Axios）覆盖；方法是对 `XMLHttpRequest | fetch` 使用 Proxy。
+
+
 ## 3.13.0 (2022-03-15)
 
 - `Feat(Log)` 新增配置项 `log.showTimestames`，见 [公共属性及方法](./doc/public_properties_methods_CN.md)。

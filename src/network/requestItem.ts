@@ -18,13 +18,15 @@ export class VConsoleNetworkRequestItem {
   requestType: 'xhr' | 'fetch' | 'ping' | 'custom';
   requestHeader: HeadersInit = null;
   response: any;
+  responseSize: number      = 0; // bytes
+  responseSizeText: string  = '';
   startTime: number         = 0;
   endTime: number           = 0;
   costTime?: number         = 0;
   getData: { [key: string]: string } = null;
   postData: { [key: string]: string } | string = null;
   actived: boolean          = false;
-  noVConsole?: boolean       = false;
+  noVConsole?: boolean      = false;
 
   constructor() {
     this.id = getUniqueID();
