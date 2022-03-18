@@ -341,6 +341,7 @@ function postImage() {
 }
 
 function sendBeacon() {
+  vConsole.show();
   console.info('sendBeacon() Start, response should be logged after End');
   window.navigator.sendBeacon('./data/success.json?method=beacon', JSON.stringify({
     foo: 'bar',
@@ -367,16 +368,6 @@ function axiosRequest(method) {
     console.log('axiosRequest error:', error);
   });
   console.info('axiosRequest() End');
-}
-
-function sendBeacon() {
-  console.info('sendBeacon() Start, response should be logged after End');
-  window.navigator.sendBeacon('./data/success.json?method=beacon', JSON.stringify({
-    foo: 'bar',
-    id: Math.random(),
-    type: 'sendBeacon'
-  }));
-  console.info('sendBeacon() End');
 }
 
 function axiosRequest(method) {

@@ -5,6 +5,7 @@ import { contentStore } from '../core/core.model';
 import { RequestItemHelper, VConsoleNetworkRequestItem } from './requestItem';
 import { XHRProxy } from './xhr.proxy';
 import { FetchProxy } from './fetch.proxy';
+import { BeaconProxy } from './beacon.proxy';
 
 
 /**
@@ -19,9 +20,6 @@ export const requestList = writable<{ [id: string]: VConsoleNetworkRequestItem }
 export class VConsoleNetworkModel extends VConsoleModel {
   public maxNetworkNumber: number = 1000;
   protected itemCounter: number = 0;
-
-  private _sendBeacon: Navigator['sendBeacon'] = undefined;
-
  
   constructor() {
     super();
@@ -38,9 +36,8 @@ export class VConsoleNetworkModel extends VConsoleModel {
     if (window.hasOwnProperty('fetch')) {
       window.fetch = FetchProxy.origFetch;
     }
-    if (window.navigator.sendBeacon) {
-      window.navigator.sendBeacon = this._sendBeacon;
-      this._sendBeacon = undefined;
+    if (!!window.navigator.sendBeacon) {
+      window.navigator.sendBeacon = BeaconProxy.origSendBeacon;
     }
   }
 
@@ -81,7 +78,6 @@ export class VConsoleNetworkModel extends VConsoleModel {
     if (!window.hasOwnProperty('XMLHttpRequest')) {
       return;
     }
-
     window.XMLHttpRequest = XHRProxy.create((item: VConsoleNetworkRequestItem) => {
       this.updateRequest(item.id, item);
     });
@@ -95,7 +91,6 @@ export class VConsoleNetworkModel extends VConsoleModel {
     if (!window.hasOwnProperty('fetch')) {
       return;
     }
-
     window.fetch = FetchProxy.create((item: VConsoleNetworkRequestItem) => {
       this.updateRequest(item.id, item);
     });
@@ -106,58 +101,12 @@ export class VConsoleNetworkModel extends VConsoleModel {
    * @private
    */
   private mockSendBeacon() {
-    const _sendBeacon = window.navigator.sendBeacon;
-    if (!_sendBeacon) { return; }
-    const that = this;
-    this._sendBeacon = _sendBeacon;
-
-    // https://fetch.spec.whatwg.org/#concept-bodyinit-extract
-    const getContentType = (data?: BodyInit) => {
-      if (data instanceof Blob) { return data.type; }
-      if (data instanceof FormData) { return 'multipart/form-data'; }
-      if (data instanceof URLSearchParams) { return 'application/x-www-form-urlencoded;charset=UTF-8'; }
-      return 'text/plain;charset=UTF-8';
-    };
-
-    window.navigator.sendBeacon = (urlString: string, data?: BodyInit) => {
-      const item = new VConsoleNetworkRequestItem();
+    if (!window.navigator.sendBeacon) {
+      return;
+    }
+    window.navigator.sendBeacon = BeaconProxy.create((item: VConsoleNetworkRequestItem) => {
       this.updateRequest(item.id, item);
-
-      const url = RequestItemHelper.getURL(urlString);
-      item.method = 'POST';
-      item.url = urlString;
-      item.name = (url.pathname.split('/').pop() || '') + url.search;
-      item.requestType = 'ping';
-      item.requestHeader = { 'Content-Type': getContentType(data) };
-      item.status = 0;
-      item.statusText = 'Pending';
-      
-      if (url.search && url.searchParams) {
-        item.getData = {};
-        for (const [key, value] of url.searchParams) {
-          item.getData[key] = value;
-        }
-      }
-      item.postData = RequestItemHelper.genFormattedBody(data);
-
-      if (!item.startTime) {
-        item.startTime = Date.now();
-      }
-
-      const isSuccess = _sendBeacon.call(window.navigator, urlString, data);
-      if (isSuccess) {
-        item.endTime = Date.now();
-        item.costTime = item.endTime - (item.startTime || item.endTime);
-        item.status = 0;
-        item.statusText = 'Sent';
-        item.readyState = 4;
-      } else {
-        item.status = 500;
-        item.statusText = 'Unknown';
-      }
-      that.updateRequest(item.id, item);
-      return isSuccess;
-    };
+    });
   }
 
   protected limitListLength() {
