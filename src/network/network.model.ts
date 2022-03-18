@@ -1,8 +1,7 @@
 import { writable, get } from 'svelte/store';
-import * as tool from '../lib/tool';
 import { VConsoleModel } from '../lib/model';
 import { contentStore } from '../core/core.model';
-import { RequestItemHelper, VConsoleNetworkRequestItem } from './requestItem';
+import { VConsoleNetworkRequestItem } from './requestItem';
 import { XHRProxy } from './xhr.proxy';
 import { FetchProxy } from './fetch.proxy';
 import { BeaconProxy } from './beacon.proxy';

@@ -1,5 +1,6 @@
 import * as tool from '../lib/tool';
-import { VConsoleNetworkRequestItem, RequestItemHelper } from './requestItem';
+import * as Helper from './helper';
+import { VConsoleNetworkRequestItem } from './requestItem';
 import type { VConsoleRequestMethod } from './requestItem';
 
 type IOnUpdateCallback = (item: VConsoleNetworkRequestItem) => void;
@@ -33,7 +34,7 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
         return () => {
           this.item.responseType = <any>key.toLowerCase();
           return target[key]().then((val) => {
-            this.item.response = RequestItemHelper.genResonseByResponseType(this.item.responseType, val);
+            this.item.response = Helper.genResonseByResponseType(this.item.responseType, val);
             this.onUpdateCallback(this.item);
             return val;
           });
@@ -65,7 +66,7 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
           this.item.statusText = result.done ? String(this.item.status) : 'Loading';
           readerReceivedValue = new Uint8Array([...readerReceivedValue, ...result.value]);
           if (result.done) {
-            this.item.response = RequestItemHelper.genResonseByResponseType(this.item.responseType, readerReceivedValue);
+            this.item.response = Helper.genResonseByResponseType(this.item.responseType, readerReceivedValue);
           }
           this.onUpdateCallback(this.item);
           return result;
@@ -77,7 +78,7 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
         this.item.statusText = 'Cancel';
         this.item.endTime = Date.now();
         this.item.costTime = this.item.endTime - (this.item.startTime || this.item.endTime);
-        this.item.response = RequestItemHelper.genResonseByResponseType(this.item.responseType, readerReceivedValue);
+        this.item.response = Helper.genResonseByResponseType(this.item.responseType, readerReceivedValue);
         this.onUpdateCallback(this.item);
         return _cancel.apply(reader, args);
       };
@@ -116,11 +117,11 @@ export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T
     // handle `input` content
     if (tool.isString(input)) { // when `input` is a string
       method = init?.method || 'GET';
-      url = RequestItemHelper.getURL(<string>input);
+      url = Helper.getURL(<string>input);
       requestHeader = init?.headers || null;
     } else { // when `input` is a `Request` object
       method = (<Request>input).method || 'GET';
-      url = RequestItemHelper.getURL((<Request>input).url);
+      url = Helper.getURL((<Request>input).url);
       requestHeader = (<Request>input).headers;
     }
 
@@ -154,7 +155,7 @@ export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T
 
     // save POST data
     if (init?.body) {
-      item.postData = RequestItemHelper.genFormattedBody(init.body);
+      item.postData = Helper.genFormattedBody(init.body);
     }
 
     // const request = tool.isString(input) ? url.toString() : input;

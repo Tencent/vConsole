@@ -1,4 +1,6 @@
-import { VConsoleNetworkRequestItem, RequestItemHelper } from './requestItem';
+
+import * as Helper from './helper';
+import { VConsoleNetworkRequestItem } from './requestItem';
 
 type IOnUpdateCallback = (item: VConsoleNetworkRequestItem) => void;
 
@@ -23,7 +25,7 @@ export class BeaconProxyHandler<T extends typeof navigator.sendBeacon> implement
     const data: BodyInit = argsList[1];
     const item = new VConsoleNetworkRequestItem();
 
-    const url = RequestItemHelper.getURL(urlString);
+    const url = Helper.getURL(urlString);
     item.method = 'POST';
     item.url = urlString;
     item.name = (url.pathname.split('/').pop() || '') + url.search;
@@ -38,7 +40,7 @@ export class BeaconProxyHandler<T extends typeof navigator.sendBeacon> implement
         item.getData[key] = value;
       }
     }
-    item.postData = RequestItemHelper.genFormattedBody(data);
+    item.postData = Helper.genFormattedBody(data);
 
     if (!item.startTime) {
       item.startTime = Date.now();

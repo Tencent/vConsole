@@ -1,4 +1,5 @@
-import { VConsoleNetworkRequestItem, RequestItemHelper } from './requestItem';
+import * as Helper from './helper';
+import { VConsoleNetworkRequestItem } from './requestItem';
 
 type IOnUpdateCallback = (item: VConsoleNetworkRequestItem) => void;
 
@@ -67,10 +68,10 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
     this.item.costTime = this.item.endTime - this.item.startTime;
 
     // update data by readyState
-    RequestItemHelper.updateItemByReadyState(this.item, this.XMLReq);
+    Helper.updateItemByReadyState(this.item, this.XMLReq);
 
     // update response by responseType
-    this.item.response = RequestItemHelper.genResonseByResponseType(this.item.responseType, this.item.response);
+    this.item.response = Helper.genResonseByResponseType(this.item.responseType, this.item.response);
 
     this.triggerUpdate();
   }
@@ -102,7 +103,7 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
       this.item.method = method ? method.toUpperCase() : 'GET';
       this.item.url = url || '';
       this.item.name = this.item.url.replace(new RegExp('[/]*$'), '').split('/').pop() || '';
-      this.item.getData = RequestItemHelper.genGetDataByUrl(this.item.url, {});
+      this.item.getData = Helper.genGetDataByUrl(this.item.url, {});
       this.triggerUpdate();
       return target.open.apply(target, args);
     };
@@ -112,7 +113,7 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
     return (...args) => {
       // console.log('Proxy send()');
       const data: XMLHttpRequestBodyInit = args[0];
-      this.item.postData = RequestItemHelper.genFormattedBody(data);
+      this.item.postData = Helper.genFormattedBody(data);
       this.triggerUpdate();
       return target.send.apply(target, args);
     };
