@@ -2,6 +2,7 @@
 
 ## 3.14.0-rc (2022-03-??)
 
+- `Feat(Core)` 切换插件面板时，面板会自动滚动到上次的位置。
 - `Feat(Network)` 新增显示 Response 的体积。
 - `Feat(Network)` 新增对 `transfer-encoding: chunked` 的支持，现在可记录流式回包（stream response）。
 - `Feat(Network)` 展示时裁剪过大的 Response 回包以提高渲染性能。

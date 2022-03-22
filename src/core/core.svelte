@@ -43,6 +43,7 @@
   let isInBottom = true;
   let preivousContentUpdateTime = 0;
   let cssTimer = null;
+  const contentScrollTop: { [pluginId: string]: number } = {};
 
   $: {
     if (show === true) {
@@ -117,6 +118,10 @@
       scrollToBottom();
     }
   };
+  const scrollToPreviousPosition = () => {
+    if (!divContent) { return; }
+    divContent.scrollTop = contentScrollTop[activedPluginId] || 0;
+  };
 
 
   /*************************************
@@ -135,6 +140,9 @@
     }
     activedPluginId = tabId;
     dispatch('changePanel', { pluginId: tabId });
+    setTimeout(() => {
+      scrollToPreviousPosition();
+    }, 0);
   };
   const onTapTopbar = (e, pluginId: string, idx: number) => {
     const topbar = pluginList[pluginId].topbarList[idx];
@@ -200,7 +208,8 @@
     } else {
       isInBottom = false;
     }
-    // (window as any)._vcOrigConsole.log('onContentScroll', isInBottom);
+    contentScrollTop[activedPluginId] = divContent.scrollTop;
+    // (window as any)._vcOrigConsole.log('onContentScroll', activedPluginId, isInBottom, contentScrollTop[activedPluginId]);
   };
 
   /**
