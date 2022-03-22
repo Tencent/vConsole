@@ -48,7 +48,8 @@ A configuration object.
 
 Key                   | Type     | Optional | Default value                               | Description
 --------------------- | -------- | -------- | ------------------------------------------- | -------------------
-defaultPlugins        | Array    | true     | ['system', 'network', 'element', 'storage'] | Listed built-in plugins will be inited and loaded into vConsole. 
+defaultPlugins        | Array(String) | true     | ['system', 'network', 'element', 'storage'] | Listed built-in plugins will be inited and loaded into vConsole. 
+pluginOrder           | Array(String) | true | [] | Plugin panels will be sorted as this list. Plugin not listed will be put last.
 onReady               | Function | true     |                                             | Trigger after vConsole is inited and default plugins is loaded.
 disableLogScrolling   | Boolean  | true     |                                             | If `false`, panel will not scroll to bottom while printing new logs.
 theme                 | String   | true     | 'light'                                     | Theme mode, 'light' | 'dark'.

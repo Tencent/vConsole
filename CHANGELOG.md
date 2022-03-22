@@ -2,6 +2,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 ## 3.14.0-rc (2022-03-??)
 
+- `Feat(Core)` Add new option `pluginOrder` to adjust the order of built-in and custom plugins, see [Public Properties & Methods](./doc/public_properties_methods.md).
 - `Feat(Core)` Panel will auto scroll to previous position when switching plugin panel.
 - `Feat(Network)` Add response size.
 - `Feat(Network)` Add support for `transfer-encoding: chunked`, now streaming response can be recorded.

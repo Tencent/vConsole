@@ -25,18 +25,13 @@
 
 <script>
 window.vConsole = new window.VConsole({
-  maxLogNumber: 1000,
-  // disableLogScrolling: true,
+  pluginOrder: ['tab1', 'storage', 'element', 'network'],
   onReady: function() {
     console.log('vConsole is ready.');
   },
-  onClearLog: function() {
-    console.log('on clearLog');
-  }
 });
 
 function newTab() {
-  console.info('newTab() Start');
   var tab = new window.VConsole.VConsolePlugin('tab1', 'Tab1');
   tab
   .on('init', function() { console.log(this.id, 'init'); })
@@ -50,7 +45,8 @@ function newTab() {
   .on('showConsole', function() { console.log(this.id, 'showConsole'); })
   .on('hideConsole', function() { console.log(this.id, 'hideConsole'); });
   vConsole.addPlugin(tab);
-  console.info('newTab() End');
+  vConsole.show();
+  vConsole.showPlugin('tab1');
 }
 
 function newTabWithTool() {

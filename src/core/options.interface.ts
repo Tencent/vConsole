@@ -17,6 +17,7 @@ export interface VConsoleOptions {
   defaultPlugins?: ('system' | 'network' | 'element' | 'storage')[];
   theme?: '' | 'dark' | 'light';
   disableLogScrolling?: boolean;
+  pluginOrder?: string[];
   onReady?: () => void;
 
   log?: VConsoleLogOptions,
