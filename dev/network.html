@@ -7,8 +7,8 @@
   <link href="./lib/weui.min.css" rel="stylesheet"/>
   <link href="./lib/demo.css" rel="stylesheet"/>
 
-  <script src="../dist/vconsole.min.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="../dist/vconsole.min.js"></script>
 </head>
 <body ontouchstart>
   <div class="page">
@@ -19,6 +19,7 @@
       <a onclick="postAjax()" href="javascript:;" class="weui_btn weui_btn_default">POST XHR (Data: Object)</a>
       <a onclick="postAjax('json')" href="javascript:;" class="weui_btn weui_btn_default">POST XHR (Data: JSON String)</a>
       <a onclick="optionsXHR()" href="javascript:;" class="weui_btn weui_btn_default">OPTIONS XHR</a>
+      <a onclick="xhrStream()" href="javascript:;" class="weui_btn weui_btn_default">XHR Stream</a>
     </div>
 
     <div class="section">
@@ -33,6 +34,7 @@
       <a onclick="postFetchByRequest()" href="javascript:;" class="weui_btn weui_btn_default">POST Fetch Using XHR</a>
       <a onclick="optionsFetch()" href="javascript:;" class="weui_btn weui_btn_default">OPTIONS Fetch</a>
       <a onclick="fetchIOSLowBug()" href="javascript:;" class="weui_btn weui_btn_default">Fetch iOS LowBug</a>
+      <a onclick="fetchStream()" href="javascript:;" class="weui_btn weui_btn_default">Fetch Steam</a>
     </div>
 
     <div class="section">
@@ -131,6 +133,7 @@ function getAjax() {
 }
 
 function getFetch() {
+  vConsole.show();
   window.fetch('./data/success.json?method=fetchGet&id=' + Math.random(), {
     method: 'GET',
     headers: {
@@ -138,9 +141,16 @@ function getFetch() {
       'content-type': 'application/json'
     },
   }).then((data) => {
-    return data.json();
+    console.log('getFetch() response:', data);
+    setTimeout(() => {
+      data.json().then((res) => {
+        console.log(res);
+      });
+    }, 3000);
+    // return data;
+    // return data.json();
   }).then((data) => {
-    console.log('get Fetch Response:', data);
+    // console.log('getFetch() json:', data);
   });
 }
 
@@ -160,7 +170,6 @@ function fetchIOSLowBug() {
     console.error('fetchIOSLowBug bug!!!:', err);
   });
 }
-
 
 function getFetchSimple() {
   window.fetch('./data/large.json?type=fetchGet&id=' + Math.random()).then((data) => {
@@ -256,6 +265,74 @@ function getFetch500() {
   });
 }
 
+function fetchStream() {
+  vConsole.show();
+  window.fetch('./data/stream.flv?id=' + Math.random()).then((response) => {
+    console.log('then response', 'bodyUsed:', response.bodyUsed, 'locked:', response.body.locked);
+    // console.log(response.text())
+    // return;
+    const reader = response.body.getReader();
+    console.log('then response', 'bodyUsed:', response.bodyUsed, 'locked:', response.body.locked);
+    let bytesReceived = 0;
+
+    return reader.read().then(function process(result) {
+        console.log('reader.read', 'bodyUsed:', response.bodyUsed, 'locked:', response.body.locked);
+        if (result.done) {
+          console.log('Failed to find match');
+          return;
+        }
+
+        bytesReceived += result.value.length;
+        console.log(`Received ${bytesReceived} bytes.`);
+
+        if (bytesReceived > 3000000) {
+          reader.cancel();
+          console.log('Cancel.', response.status);
+          return;
+        }
+
+        return reader.read().then(process);
+      });
+  });
+}
+
+function xhrStream() {
+  vConsole.show();
+  const url = './data/stream.flv?id=' + Math.random();
+  const xhr = new XMLHttpRequest();
+  xhr.timeout = 11000;
+  console.log('xhr type:', typeof xhr, xhr instanceof XMLHttpRequest);
+  xhr.open('GET', url);
+  xhr.send();
+  xhr.onreadystatechange = () => {
+    console.log('XHR onreadystatechange:', 'readyState:', xhr.readyState, 'responseType:', xhr.responseType);
+  };
+  xhr.onprogress = (e) => {
+    // console.log('XHR onprogress:', 'readyState:', xhr.readyState, 'status:', xhr.status, 'loaded:', e.loaded, 'timeStamp:', e.timeStamp);
+    if (e.loaded > 3000000) {
+      xhr.abort();
+    }
+  };
+  xhr.onloadstart = (e) => {
+    // console.log('XHR onloadstart:', e);
+  };
+  xhr.onloadend = (e) => {
+    // console.log('XHR onloadend:', 'readyState:', xhr.readyState, xhr.status, e);
+  };
+  xhr.onload = (e) => {
+    console.log('XHR onload:', 'readyState:', xhr.readyState, xhr.status, xhr.responseType);
+  };
+  xhr.onerror = (e) => {
+    console.log('XHR onerror:', e);
+  };
+  xhr.onabort = (e) => {
+    console.log('XHR onabort:', xhr.readyState, xhr.status, e);
+  };
+  xhr.ontimeout = (e) => {
+    console.log('XHR ontimeout:', e);
+  }
+}
+
 function postImage() {
   console.info('postImage() Start, response should be logged after End');
   const xhr = new XMLHttpRequest();
@@ -269,6 +346,7 @@ function postImage() {
 }
 
 function sendBeacon() {
+  vConsole.show();
   console.info('sendBeacon() Start, response should be logged after End');
   window.navigator.sendBeacon('./data/success.json?method=beacon', JSON.stringify({
     foo: 'bar',
@@ -295,16 +373,6 @@ function axiosRequest(method) {
     console.log('axiosRequest error:', error);
   });
   console.info('axiosRequest() End');
-}
-
-function sendBeacon() {
-  console.info('sendBeacon() Start, response should be logged after End');
-  window.navigator.sendBeacon('./data/success.json?method=beacon', JSON.stringify({
-    foo: 'bar',
-    id: Math.random(),
-    type: 'sendBeacon'
-  }));
-  console.info('sendBeacon() End');
 }
 
 function axiosRequest(method) {

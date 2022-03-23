@@ -47,7 +47,8 @@ vConsole.version // => "3.11.0"
 
 键名                  | 类型      | 可选     | 默认值                                       | 描述
 --------------------- | -------- | -------- | ------------------------------------------- | -------------------
-defaultPlugins        | Array    | true     | ['system', 'network', 'element', 'storage'] | 需要自动初始化并加载的内置插件。 
+defaultPlugins        | Array(String) | true     | ['system', 'network', 'element', 'storage'] | 需要自动初始化并加载的内置插件。 
+pluginOrder           | Array(String) | true | [] | 插件面板会按此列表进行排序，未列出的插件将排在最后。
 onReady               | Function | true     |                                             | 回调方法，当 vConsole 完成初始化并加载完内置插件后触发。
 disableLogScrolling   | Boolean  | true     |                                             | 若为 `false`，有新日志时面板将不会自动滚动到底部。
 theme                 | String   | true     | 'light'                                     | 主题颜色，可选值为 'light' | 'dark'。
@@ -67,6 +68,7 @@ vConsole.setOption('log.maxLogNumber', 5000);
 // 覆盖整个对象：
 vConsole.setOption({ log: { maxLogNumber: 5000 } });
 ```
+
 
 ---
 

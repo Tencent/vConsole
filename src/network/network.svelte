@@ -71,6 +71,10 @@
               <div class="vc-table-col vc-table-col-2">Request Type</div>
               <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{req.requestType}</div>
             </div>
+            <div class="vc-table-row vc-left-border vc-small">
+              <div class="vc-table-col vc-table-col-2">HTTP Status</div>
+              <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{req.status}</div>
+            </div>
           </div>
           {#if (req.requestHeader !== null)}
           <div>
@@ -149,6 +153,12 @@
                 <i class="vc-table-row-icon"><IconCopy content={req.response} /></i>
               </dt>
             </dl>
+            {#if (req.responseSize > 0)}
+            <div class="vc-table-row vc-left-border vc-small">
+              <div class="vc-table-col vc-table-col-2">Size</div>
+              <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{req.responseSizeText}</div>
+            </div>
+            {/if}
             <div class="vc-table-row vc-left-border vc-small">
               <pre class="vc-table-col vc-max-height vc-min-height">{req.response || ''}</pre>
             </div>

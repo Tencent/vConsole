@@ -1,5 +1,15 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.14.0 (2022-03-23)
+
+- `Feat(Core)` Add new option `pluginOrder` to adjust the order of built-in and custom plugins, see [Public Properties & Methods](./doc/public_properties_methods.md).
+- `Feat(Core)` Panel will auto scroll to previous position when switching plugin panel.
+- `Feat(Network)` Add response size.
+- `Feat(Network)` Add support for `transfer-encoding: chunked`, now streaming response can be recorded.
+- `Feat(Network)` Improve rendering performance of large Response data by cropping the displayed response content.
+- `Refactor(Network)` Now network records will be more accurate by using Proxy to prevent `XMLHttpRequest | fetch` overwriting by other request libraries (like Axios).
+
+
 ## 3.13.0 (2022-03-15)
 
 - `Feat(Log)` Add new option `log.showTimestames`, see [Public Properties & Methods](./doc/public_properties_methods.md).

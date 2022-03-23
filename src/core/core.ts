@@ -282,7 +282,6 @@ export class VConsole {
     eventName = 'on' + eventName.charAt(0).toUpperCase() + eventName.slice(1);
     if (tool.isFunction(this.option[eventName])) {
       setTimeout(() => {
-        console.log('triggerEvent', eventName);
         this.option[eventName].apply(this, param);
       }, 0);
     }
@@ -300,7 +299,7 @@ export class VConsole {
       topbarList: [],
       toolbarList: [],
     };
-    this.compInstance.pluginList = this.compInstance.pluginList;
+    this.compInstance.pluginList = this._reorderPluginList(this.compInstance.pluginList);
     // start init
     plugin.trigger('init');
     // render tab (if it is a tab plugin then it should has tab-related events)
@@ -377,6 +376,29 @@ export class VConsole {
     if (!!plugin && plugin.isReady) {
       plugin.trigger(eventName);
     }
+  }
+
+  /**
+   * Sorting plugin list by option `pluginOrder`.
+   * Plugin not listed in `pluginOrder` will be put last.
+   */
+  private _reorderPluginList(pluginList: { [pluginID: string]: any }) {
+    if (!tool.isArray(this.option.pluginOrder)) {
+      return pluginList;
+    }
+    const keys = Object.keys(pluginList).sort((a, b) => {
+      const ia = this.option.pluginOrder.indexOf(a);
+      const ib = this.option.pluginOrder.indexOf(b);
+      if (ia === ib) { return 0; }
+      if (ia === -1) { return 1; }
+      if (ib === -1) { return -1; }
+      return ia - ib;
+    });
+    const newList: typeof pluginList = {};
+    for (let i = 0; i < keys.length; i++) {
+      newList[keys[i]] = pluginList[keys[i]];
+    }
+    return newList;
   }
 
   /**

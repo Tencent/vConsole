@@ -349,11 +349,11 @@ export function getBytesText(bytes: number) {
   if (bytes <= 0) {
     return '';
   }
-  if (bytes >= 1024 * 1024) {
-    return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+  if (bytes >= 1000 * 1000) {
+    return (bytes / 1000 / 1000).toFixed(1) + ' MB';
   }
-  if (bytes >= 1024 * 1) {
-    return (bytes / 1024).toFixed(1) + ' KB';
+  if (bytes >= 1000 * 1) {
+    return (bytes / 1000).toFixed(1) + ' KB';
   }
   return bytes + ' B';
 }
@@ -373,6 +373,17 @@ export function subString(str: string, len: number) {
     }
   }
 
+  return str;
+}
+
+/**
+ * Get a string within a limited max length.
+ */
+export function getStringWithinLength(str: string, maxLen: number) {
+  const bytes = getStringBytes(str);
+  if (bytes > maxLen) {
+    str = subString(str, maxLen) + `...(${getBytesText(bytes)})`;
+  }
   return str;
 }
 
