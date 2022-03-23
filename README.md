@@ -38,7 +38,7 @@ See [Tutorial](./doc/tutorial.md) for more usage details.
 
 For installation, there are 2 primary ways of adding vConsole to a project:
 
-#### Method 1: Using npm (Recommanded)
+#### Method 1: Using npm (Suggested)
 
 ```bash
 $ npm install vconsole
