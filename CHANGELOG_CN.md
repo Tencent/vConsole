@@ -1,6 +1,6 @@
 [English](./CHANGELOG.md) | 简体中文
 
-## 3.14.0-rc (2022-03-??)
+## 3.14.0 (2022-03-23)
 
 - `Feat(Core)` 新增配置项 `pluginOrder` 来调整插件面板的排序，见 [公共属性及方法](./doc/public_properties_methods_CN.md)。
 - `Feat(Core)` 切换插件面板时，面板会自动滚动到上次的位置。
