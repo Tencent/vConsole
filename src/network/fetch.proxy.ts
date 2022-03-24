@@ -2,8 +2,7 @@ import * as tool from '../lib/tool';
 import * as Helper from './helper';
 import { VConsoleNetworkRequestItem } from './requestItem';
 import type { VConsoleRequestMethod } from './requestItem';
-
-type IOnUpdateCallback = (item: VConsoleNetworkRequestItem) => void;
+import type { IOnUpdateCallback } from './helper';
 
 export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T> {
   public resp: Response;

@@ -1,8 +1,7 @@
 
 import * as Helper from './helper';
 import { VConsoleNetworkRequestItem } from './requestItem';
-
-type IOnUpdateCallback = (item: VConsoleNetworkRequestItem) => void;
+import type { IOnUpdateCallback } from './helper';
 
 // https://fetch.spec.whatwg.org/#concept-bodyinit-extract
 const getContentType = (data?: BodyInit) => {
