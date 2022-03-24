@@ -95,6 +95,11 @@ module.exports = (env, argv) => {
       minimizer: [
         new TerserPlugin({
           extractComments: false,
+          terserOptions: {
+            compress: {
+              pure_funcs: ['console.log'], // drop `console.log` only
+            },
+          },
         }),
       ],
       // splitChunks: {
