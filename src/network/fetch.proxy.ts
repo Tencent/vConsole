@@ -195,7 +195,7 @@ export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T
         item.readyState = 4;
 
         this.handleResponseBody(resp.clone(), item).then((responseValue: string | ArrayBuffer) => {
-          console.log(item.responseType, responseValue)
+          // console.log(item.responseType, responseValue)
           item.responseSize = typeof responseValue === 'string' ? responseValue.length : responseValue.byteLength;
           item.responseSizeText = tool.getBytesText(item.responseSize);
           item.response = Helper.genResonseByResponseType(item.responseType, responseValue);
