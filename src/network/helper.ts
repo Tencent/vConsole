@@ -106,8 +106,10 @@ export const updateItemByReadyState = (item: VConsoleNetworkRequestItem, XMLReq:
     case 3: // LOADING
       item.status = XMLReq.status;
       item.statusText = 'Loading';
-      item.responseSize = XMLReq.response.length;
-      item.responseSizeText = tool.getBytesText(item.responseSize);
+      if (typeof XMLReq.response === 'object' && XMLReq.response.length) {
+        item.responseSize = XMLReq.response.length;
+        item.responseSizeText = tool.getBytesText(item.responseSize);
+      }
       break;
 
     case 4: // DONE
@@ -117,7 +119,7 @@ export const updateItemByReadyState = (item: VConsoleNetworkRequestItem, XMLReq:
       item.endTime = Date.now(),
       item.costTime = item.endTime - (item.startTime || item.endTime);
       item.response = XMLReq.response;
-      if (XMLReq.response.length) {
+      if (typeof XMLReq.response === 'object' && XMLReq.response.length) {
         item.responseSize = XMLReq.response.length;
         item.responseSizeText = tool.getBytesText(item.responseSize);
       }
