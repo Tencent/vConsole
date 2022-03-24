@@ -1,7 +1,7 @@
+import { getBytesText } from '../lib/tool';
 import * as Helper from './helper';
 import { VConsoleNetworkRequestItem } from './requestItem';
-
-type IOnUpdateCallback = (item: VConsoleNetworkRequestItem) => void;
+import type { IOnUpdateCallback } from './helper';
 
 export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T> {
   public XMLReq: XMLHttpRequest;
@@ -68,7 +68,7 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
     this.item.costTime = this.item.endTime - this.item.startTime;
 
     // update data by readyState
-    Helper.updateItemByReadyState(this.item, this.XMLReq);
+    this.updateItemByReadyState();
 
     // update response by responseType
     this.item.response = Helper.genResonseByResponseType(this.item.responseType, this.item.response);
@@ -138,6 +138,73 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
       this.onTimeout();
       value.apply(target, args);
     });
+  }
+
+  /**
+   * Update item's properties according to readyState.
+   */
+  protected updateItemByReadyState() {
+    switch (this.XMLReq.readyState) {
+      case 0: // UNSENT
+        this.item.status = 0;
+        this.item.statusText = 'Pending';
+        if (!this.item.startTime) {
+          this.item.startTime = Date.now();
+        }
+        break;
+  
+      case 1: // OPENED
+        this.item.status = 0;
+        this.item.statusText = 'Pending';
+        if (!this.item.startTime) {
+          this.item.startTime = Date.now();
+        }
+        break;
+  
+      case 2: // HEADERS_RECEIVED
+        this.item.status = this.XMLReq.status;
+        this.item.statusText = 'Loading';
+        this.item.header = {};
+        const header = this.XMLReq.getAllResponseHeaders() || '',
+              headerArr = header.split('\n');
+        // extract plain text to key-value format
+        for (let i = 0; i < headerArr.length; i++) {
+          const line = headerArr[i];
+          if (!line) { continue; }
+          const arr = line.split(': ');
+          const key = arr[0];
+          const value = arr.slice(1).join(': ');
+          this.item.header[key] = value;
+        }
+        break;
+  
+      case 3: // LOADING
+        this.item.status = this.XMLReq.status;
+        this.item.statusText = 'Loading';
+        if (typeof this.XMLReq.response === 'object' && this.XMLReq.response.length) {
+          this.item.responseSize = this.XMLReq.response.length;
+          this.item.responseSizeText = getBytesText(this.item.responseSize);
+        }
+        break;
+  
+      case 4: // DONE
+        // `XMLReq.abort()` will change `status` from 200 to 0, so use previous value in this case
+        this.item.status = this.XMLReq.status || this.item.status || 0;
+        this.item.statusText = String(this.item.status); // show status code when request completed
+        this.item.endTime = Date.now(),
+        this.item.costTime = this.item.endTime - (this.item.startTime || this.item.endTime);
+        this.item.response = this.XMLReq.response;
+        if (typeof this.XMLReq.response === 'object' && this.XMLReq.response.length) {
+          this.item.responseSize = this.XMLReq.response.length;
+          this.item.responseSizeText = getBytesText(this.item.responseSize);
+        }
+        break;
+  
+      default:
+        this.item.status = this.XMLReq.status;
+        this.item.statusText = 'Unknown';
+        break;
+    }
   }
 }
 

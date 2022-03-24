@@ -1,6 +1,8 @@
 import * as tool from '../lib/tool';
 import type { VConsoleNetworkRequestItem } from './requestItem';
 
+export type IOnUpdateCallback = (item: VConsoleNetworkRequestItem) => void;
+
 /**
  * Generate `getData` by url. 
  */
@@ -63,71 +65,6 @@ export const genResonseByResponseType = (responseType: string, response: any) =>
       break;
   }
   return ret;
-};
-
-/**
- * Update item's properties according to readyState.
- */
-export const updateItemByReadyState = (item: VConsoleNetworkRequestItem, XMLReq: XMLHttpRequest) => {
-  switch (XMLReq.readyState) {
-    case 0: // UNSENT
-      item.status = 0;
-      item.statusText = 'Pending';
-      if (!item.startTime) {
-        item.startTime = (+new Date());
-      }
-      break;
-
-    case 1: // OPENED
-      item.status = 0;
-      item.statusText = 'Pending';
-      if (!item.startTime) {
-        item.startTime = (+new Date());
-      }
-      break;
-
-    case 2: // HEADERS_RECEIVED
-      item.status = XMLReq.status;
-      item.statusText = 'Loading';
-      item.header = {};
-      const header = XMLReq.getAllResponseHeaders() || '',
-            headerArr = header.split('\n');
-      // extract plain text to key-value format
-      for (let i = 0; i < headerArr.length; i++) {
-        const line = headerArr[i];
-        if (!line) { continue; }
-        const arr = line.split(': ');
-        const key = arr[0],
-              value = arr.slice(1).join(': ');
-        item.header[key] = value;
-      }
-      break;
-
-    case 3: // LOADING
-      item.status = XMLReq.status;
-      item.statusText = 'Loading';
-      item.responseSize = XMLReq.response.length;
-      item.responseSizeText = tool.getBytesText(item.responseSize);
-      break;
-
-    case 4: // DONE
-      // `XMLReq.abort()` will change `status` from 200 to 0, so use previous value in this case
-      item.status = XMLReq.status || item.status || 0;
-      item.statusText = String(item.status); // show status code when request completed
-      item.endTime = Date.now(),
-      item.costTime = item.endTime - (item.startTime || item.endTime);
-      item.response = XMLReq.response;
-      if (XMLReq.response.length) {
-        item.responseSize = XMLReq.response.length;
-        item.responseSizeText = tool.getBytesText(item.responseSize);
-      }
-      break;
-
-    default:
-      item.status = XMLReq.status;
-      item.statusText = 'Unknown';
-      break;
-  }
 };
 
 /**

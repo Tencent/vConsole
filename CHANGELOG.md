@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.14.1 (2022-03-24)
+
+- `Fix(Network)` Fix `responseSize` error when `readyState === 3`.
+
+
 ## 3.14.0 (2022-03-23)
 
 - `Feat(Core)` Add new option `pluginOrder` to adjust the order of built-in and custom plugins, see [Public Properties & Methods](./doc/public_properties_methods.md).
