@@ -1,5 +1,12 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.14.2-rc (2022-03-??)
+
+- `Fix(Network)` Remove debugging console.log.
+- `Chore` Drop `console.log` in Webpack process to ensure that no debugging logs appear in release version.
+- `Chore` Add new build command to compile files in different scenarios.
+
+
 ## 3.14.1 (2022-03-24)
 
 - `Fix(Network)` Fix `responseSize` error when `readyState === 3`.
