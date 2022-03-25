@@ -1,6 +1,6 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-## 3.14.2-rc (2022-03-??)
+## 3.14.2 (2022-03-25)
 
 - `Fix(Network)` Remove debugging console.log.
 - `Chore` Drop `console.log` in Webpack process to ensure that no debugging logs appear in release version.
