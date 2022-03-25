@@ -4,9 +4,11 @@ const { execSync } = require('child_process');
 const TerserPlugin = require('terser-webpack-plugin');
 const sveltePreprocess = require('svelte-preprocess');
 const pkg = require('./package.json');
+const BuildTarget = ['web', 'wx'];
 
 module.exports = (env, argv) => {
   const isDev = argv.mode === 'development';
+  const __TARGET__ = BuildTarget.indexOf(env.target) === -1 ? BuildTarget[0] : env.target;
   return {
     mode: argv.mode,
     devtool: false,
@@ -95,18 +97,13 @@ module.exports = (env, argv) => {
       minimizer: [
         new TerserPlugin({
           extractComments: false,
+          terserOptions: {
+            compress: {
+              pure_funcs: ['console.log'], // drop `console.log` only
+            },
+          },
         }),
       ],
-      // splitChunks: {
-      //   cacheGroups: {
-      //     styles: {
-      //       name: "styles",
-      //       type: "css/mini-extract",
-      //       chunks: "all",
-      //       enforce: true,
-      //     },
-      //   },
-      // },
     },
     watchOptions: {
       ignored: ['**/node_modules'],
@@ -126,6 +123,7 @@ module.exports = (env, argv) => {
       }),
       new Webpack.DefinePlugin({
         __VERSION__: JSON.stringify(pkg.version),
+        __TARGET__: JSON.stringify(__TARGET__),
       }),
       {
         apply: (compiler) => {

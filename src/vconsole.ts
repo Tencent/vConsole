@@ -17,7 +17,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 import 'core-js/stable/symbol';
 import 'core-js/stable/promise';
 
-// classes
+// vConsole Core Class
 import { VConsole } from './core/core';
 
 // export

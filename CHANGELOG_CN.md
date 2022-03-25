@@ -1,5 +1,12 @@
 [English](./CHANGELOG.md) | 简体中文
 
+## 3.14.2 (2022-03-25)
+
+- `Fix(Network)` 删除调试日志。
+- `Chore` 在构建时自动删除 `console.log` 以确保调试日志不会出现在正式版本中。
+- `Chore` 添加新的编译命令以编译出不同场景下的文件。
+
+
 ## 3.14.1 (2022-03-24)
 
 - `Fix(Network)` 修复当 `readyState === 3` 时的 `responseSize` 错误。

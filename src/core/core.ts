@@ -37,12 +37,11 @@ import { VConsoleStoragePlugin } from '../storage/storage';
 import { VConsoleLogExporter } from '../log/log.exporter';
 import { VConsoleNetworkExporter } from '../network/network.exporter';
 
-
 const VCONSOLE_ID = '#__vconsole';
 
 export class VConsole {
   public version: string = __VERSION__;
-  public isInited: boolean;
+  public isInited: boolean = false;
   public option: VConsoleOptions = {};
 
   protected compInstance: SvelteComponent;
@@ -54,13 +53,13 @@ export class VConsole {
   public network: VConsoleNetworkExporter;
 
   // Export static classes
-  public static VConsolePlugin = VConsolePlugin;
-  public static VConsoleLogPlugin = VConsoleLogPlugin;
-  public static VConsoleDefaultPlugin = VConsoleDefaultPlugin;
-  public static VConsoleSystemPlugin = VConsoleSystemPlugin;
-  public static VConsoleNetworkPlugin = VConsoleNetworkPlugin;
-  public static VConsoleElementPlugin = VConsoleElementPlugin;
-  public static VConsoleStoragePlugin = VConsoleStoragePlugin;
+  public static VConsolePlugin: typeof VConsolePlugin;
+  public static VConsoleLogPlugin: typeof VConsoleLogPlugin;
+  public static VConsoleDefaultPlugin: typeof VConsoleDefaultPlugin;
+  public static VConsoleSystemPlugin: typeof VConsoleSystemPlugin;
+  public static VConsoleNetworkPlugin: typeof VConsoleNetworkPlugin;
+  public static VConsoleElementPlugin: typeof VConsoleElementPlugin;
+  public static VConsoleStoragePlugin: typeof VConsoleStoragePlugin;
 
   constructor(opt?: VConsoleOptions) {
     if (!!VConsole.instance && VConsole.instance instanceof VConsole) {
@@ -163,10 +162,12 @@ export class VConsole {
     const plugins = {
       // 'default': { proto: VConsoleSystemPlugin, name: 'Log' },
       'system': { proto: VConsoleSystemPlugin, name: 'System' },
-      'network': { proto: VConsoleNetworkPlugin, name: 'Network' },
-      'element': { proto: VConsoleElementPlugin, name: 'Element' },
-      'storage': { proto: VConsoleStoragePlugin, name: 'Storage' }
     };
+    if (__TARGET__ === 'web') {
+      plugins['network'] = { proto: VConsoleNetworkPlugin, name: 'Network' };
+      plugins['element'] = { proto: VConsoleElementPlugin, name: 'Element' };
+      plugins['storage'] = { proto: VConsoleStoragePlugin, name: 'Storage' };
+    }
     if (!!list && tool.isArray(list)) {
       for (let i = 0; i < list.length; i++) {
         const pluginConf = plugins[list[i]];
@@ -559,4 +560,16 @@ export class VConsole {
 
 } // END class
 
-export default VConsole;
+
+// Export built-in plugins
+VConsole.VConsolePlugin = VConsolePlugin;
+VConsole.VConsoleLogPlugin = VConsoleLogPlugin;
+VConsole.VConsoleDefaultPlugin = VConsoleDefaultPlugin;
+VConsole.VConsoleSystemPlugin = VConsoleSystemPlugin;
+
+// for tree shaking
+if (__TARGET__ === 'web') {
+  VConsole.VConsoleNetworkPlugin = VConsoleNetworkPlugin;
+  VConsole.VConsoleElementPlugin = VConsoleElementPlugin;
+  VConsole.VConsoleStoragePlugin = VConsoleStoragePlugin;
+}

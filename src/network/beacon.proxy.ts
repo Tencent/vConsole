@@ -19,7 +19,7 @@ export class BeaconProxyHandler<T extends typeof navigator.sendBeacon> implement
   }
 
   public apply(target: T, thisArg: T, argsList: any[]) {
-    console.log('on call!!')
+    // console.log('on call!!')
     const urlString: string = argsList[0];
     const data: BodyInit = argsList[1];
     const item = new VConsoleNetworkRequestItem();
