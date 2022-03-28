@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.14.3-rc (2022-03-28)
+
+- `Fix(Network)` Fix `response.size` error.
+
+
 ## 3.14.2 (2022-03-25)
 
 - `Fix(Network)` Remove debugging console.log.

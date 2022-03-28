@@ -1,5 +1,10 @@
 [English](./CHANGELOG.md) | 简体中文
 
+## 3.14.3-rc (2022-03-28)
+
+- `Fix(Network)` 修复 `response.size` 错误。
+
+
 ## 3.14.2 (2022-03-25)
 
 - `Fix(Network)` 删除调试日志。
