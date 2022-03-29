@@ -18,6 +18,7 @@
       <a onclick="getAjax()" href="javascript:;" class="weui_btn weui_btn_default">GET XHR</a>
       <a onclick="postAjax()" href="javascript:;" class="weui_btn weui_btn_default">POST XHR (Data: Object)</a>
       <a onclick="postAjax('json')" href="javascript:;" class="weui_btn weui_btn_default">POST XHR (Data: JSON String)</a>
+      <a onclick="postAjax('', 'massive.json')" href="javascript:;" class="weui_btn weui_btn_default">POST XHR (Massive Resp)</a>
       <a onclick="optionsXHR()" href="javascript:;" class="weui_btn weui_btn_default">OPTIONS XHR</a>
       <a onclick="xhrStream()" href="javascript:;" class="weui_btn weui_btn_default">XHR Stream</a>
     </div>
@@ -70,14 +71,11 @@
 
 <script>
 const vConsole = new window.VConsole({
-  maxLogNumber: 1000,
-  // defaultPlugins: ['system', 'network'],
+  // defaultPlugins: ['system'],
   // disableLogScrolling: true,
   onReady: function() {
     console.log('vConsole is ready.');
-    setTimeout(() => {
-      vConsole.showPlugin('network');
-    }, 100);
+    vConsole.showPlugin('network');
   }
 });
 
@@ -90,7 +88,8 @@ function showPanel() {
   vConsole.show();
 }
 
-function postAjax(postType) {
+function postAjax(postType, file = 'large.json') {
+  showPanel();
   const xhr = new XMLHttpRequest();
   xhr.onload = () => {
     console.log('post XHR Response:', JSON.parse(xhr.response));
@@ -113,7 +112,7 @@ function postAjax(postType) {
     postData = JSON.stringify(postData);
   }
   console.log('post data:', postData);
-  xhr.open('POST', './data/large.json?method=fetchPost&c=中文');
+  xhr.open('POST', `./data/${file}?method=fetchPost&c=中文`);
   xhr.send(postData);
   // xhr.send(JSON.stringify({foo: 'bar', id: Math.random(), '<xss0>': '<xss1> XSS Attack!'}));
 }
@@ -133,7 +132,7 @@ function getAjax() {
 }
 
 function getFetch() {
-  vConsole.show();
+  showPanel();
   window.fetch('./data/success.json?method=fetchGet&id=' + Math.random(), {
     method: 'GET',
     headers: {

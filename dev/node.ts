@@ -1,4 +1,6 @@
-import VConsole from 'vconsole';
+import * as tool from '../src/lib/tool';
+const massiveData = require('./data/massive.json');
+// console.log('massiveData:', massiveData);
 
-const vconsole = new VConsole();
-console.log(vconsole.version);
+const ret = tool.safeJSONStringify(massiveData, { maxDepth: 10, keyMaxLen: 5000, pretty: true });
+console.log(ret);

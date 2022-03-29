@@ -191,9 +191,10 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
         // `XMLReq.abort()` will change `status` from 200 to 0, so use previous value in this case
         this.item.status = this.XMLReq.status || this.item.status || 0;
         this.item.statusText = String(this.item.status); // show status code when request completed
-        this.item.endTime = Date.now(),
-          this.item.costTime = this.item.endTime - (this.item.startTime || this.item.endTime);
+        this.item.endTime = Date.now();
+        this.item.costTime = this.item.endTime - (this.item.startTime || this.item.endTime);
         this.item.response = this.XMLReq.response;
+
         if (!!this.XMLReq.response && this.XMLReq.response.length) {
           this.item.responseSize = this.XMLReq.response.length;
           this.item.responseSizeText = getBytesText(this.item.responseSize);

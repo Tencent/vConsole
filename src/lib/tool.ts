@@ -202,9 +202,8 @@ const _safeJSONStringifyCircularFinder = () => {
 const _safeJSONStringifyFlatValue = (value: any, maxLen = 0) => {
   let str = '';
   if (isString(value)) {
-    const len = value.length;
-    if (maxLen > 0 && len > maxLen) {
-      value = subString(value, maxLen) + `...(${getBytesText(getStringBytes(value))})`;
+    if (maxLen > 0) {
+      value = getStringWithinLength(value, maxLen);
     }
     str += '"' + getVisibleText(value) + '"';
   } else if (isSymbol(value)) {
@@ -337,6 +336,11 @@ export function JSONStringify(value: any, replacer?: (this: any, key: string, va
   return stringifyResult;
 }
 
+/**
+ * Get the bytes of a string.
+ * @example 'a' = 1
+ * @example '好' = 3
+ */
 export function getStringBytes(str: string) {
   try {
     return encodeURI(str).split(/%(?:u[0-9A-F]{2})?[0-9A-F]{2}|./).length - 1;
@@ -345,6 +349,9 @@ export function getStringBytes(str: string) {
   }
 }
 
+/**
+ * Convert bytes number to 'MB' or 'KB' string.
+ */
 export function getBytesText(bytes: number) {
   if (bytes <= 0) {
     return '';
@@ -358,31 +365,14 @@ export function getBytesText(bytes: number) {
   return bytes + ' B';
 }
 
-const _subStringPattern = /[^\x00-\xff]/g
-export function subString(str: string, len: number) {
-  let m: number;
-
-  if (str.replace(_subStringPattern, '**').length > len) {
-    m = Math.floor(len / 2);
-
-    for (let i = m, l = str.length; i < l; i++) {
-      const sub = str.substring(0, i);
-      if (sub.replace(_subStringPattern, '**').length >= len) {
-        return sub;
-      }
-    }
-  }
-
-  return str;
-}
-
 /**
  * Get a string within a limited max length.
+ * The byte size of the string will be appended to the string when reached the limit.
+ * @return 'some string...(3.1 MB)'
  */
 export function getStringWithinLength(str: string, maxLen: number) {
-  const bytes = getStringBytes(str);
-  if (bytes > maxLen) {
-    str = subString(str, maxLen) + `...(${getBytesText(bytes)})`;
+  if (str.length > maxLen) {
+    str = str.substring(0, maxLen) + `...(${getBytesText(getStringBytes(str))})`;
   }
   return str;
 }

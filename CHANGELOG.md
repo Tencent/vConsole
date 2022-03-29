@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.14.4-rc (2022-03-??)
+
+- `Fix(Network)` Fix CPU high load bug when response is a large string. (issue #515)
+
+
 ## 3.14.3 (2022-03-28)
 
 - `Fix(Network)` Fix `response.size` error.
