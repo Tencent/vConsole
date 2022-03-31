@@ -26,7 +26,7 @@ module.exports = (env, argv) => {
       onBeforeSetupMiddleware(devServer) {
         devServer.app.all('*', (req, res) => {
           const fileType = req.path.split('.').pop();
-          // console.log('Req:::', fileType, req.query)
+          // console.log('Req:::', fileType, req.path, req.query);
           if (fileType === 'flv') {
             res.set({
               'Content-Type': 'video/x-flv',

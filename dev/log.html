@@ -29,6 +29,7 @@
       <a onclick="allDataTypes()" href="javascript:;" class="weui_btn weui_btn_default">All Data Types</a>
       <a onclick="logTypes()" href="javascript:;" class="weui_btn weui_btn_default">Log/Info/Debug/Warn/Error</a>
       <a onclick="differentPanelLog()" href="javascript:;" class="weui_btn weui_btn_default">Output to Different Panels</a>
+      <a onclick="logTime()" href="javascript:;" class="weui_btn weui_btn_default">console.time</a>
     </div>
 
     <div class="section">
@@ -124,6 +125,16 @@ function differentPanelLog() {
   console.log('[DEFAULT]', 'Switch to System tab to see next log.');
   console.log('[system]', 'This log should be shown in System panel.');
   console.log('[foobar]', 'This log should be shown in Log panel. (No "foobar" plugin.)');
+}
+
+function logTime() {
+  vConsole.show();
+  const label = 'aaa';
+  console.time(label);
+  console.log('Wait...');
+  setTimeout(() => {
+    console.timeEnd(label);
+  }, Math.ceil(Math.random() * 2000));
 }
 
 function formattingLog() {
