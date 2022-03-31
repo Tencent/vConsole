@@ -18,8 +18,10 @@
       <a onclick="getAjax()" href="javascript:;" class="weui_btn weui_btn_default">GET XHR</a>
       <a onclick="postAjax()" href="javascript:;" class="weui_btn weui_btn_default">POST XHR (Data: Object)</a>
       <a onclick="postAjax('json')" href="javascript:;" class="weui_btn weui_btn_default">POST XHR (Data: JSON String)</a>
+      <a onclick="postAjax('', 'massive.json')" href="javascript:;" class="weui_btn weui_btn_default">POST XHR (Massive Resp)</a>
       <a onclick="optionsXHR()" href="javascript:;" class="weui_btn weui_btn_default">OPTIONS XHR</a>
-      <a onclick="xhrStream()" href="javascript:;" class="weui_btn weui_btn_default">XHR Stream</a>
+      <a onclick="xhrStream('flv')" href="javascript:;" class="weui_btn weui_btn_default">XHR Chunked: flv</a>
+      <a onclick="xhrStream('json')" href="javascript:;" class="weui_btn weui_btn_default">XHR Chunked: json</a>
     </div>
 
     <div class="section">
@@ -42,6 +44,7 @@
 
       <a onclick="sendBeacon()" href="javascript:;" class="weui_btn weui_btn_default">sendBeacon</a>
       <a onclick="axiosRequest('GET')" href="javascript:;" class="weui_btn weui_btn_default">Axios: GET</a>
+      <a onclick="axiosRequest('POST')" href="javascript:;" class="weui_btn weui_btn_default">Axios: POST</a>
       <a onclick="scrolling()" href="javascript:;" class="weui_btn weui_btn_default">Scrolling</a>
       <a onclick="crossDomain()" href="javascript:;" class="weui_btn weui_btn_default">Cross Domain</a>
     </div>
@@ -70,14 +73,11 @@
 
 <script>
 const vConsole = new window.VConsole({
-  maxLogNumber: 1000,
-  // defaultPlugins: ['system', 'network'],
+  // defaultPlugins: ['system'],
   // disableLogScrolling: true,
   onReady: function() {
     console.log('vConsole is ready.');
-    setTimeout(() => {
-      vConsole.showPlugin('network');
-    }, 100);
+    vConsole.showPlugin('network');
   }
 });
 
@@ -90,7 +90,8 @@ function showPanel() {
   vConsole.show();
 }
 
-function postAjax(postType) {
+function postAjax(postType, file = 'large.json') {
+  showPanel();
   const xhr = new XMLHttpRequest();
   xhr.onload = () => {
     console.log('post XHR Response:', JSON.parse(xhr.response));
@@ -113,7 +114,7 @@ function postAjax(postType) {
     postData = JSON.stringify(postData);
   }
   console.log('post data:', postData);
-  xhr.open('POST', './data/large.json?method=fetchPost&c=中文');
+  xhr.open('POST', `./data/${file}?method=fetchPost&c=中文`);
   xhr.send(postData);
   // xhr.send(JSON.stringify({foo: 'bar', id: Math.random(), '<xss0>': '<xss1> XSS Attack!'}));
 }
@@ -133,7 +134,7 @@ function getAjax() {
 }
 
 function getFetch() {
-  vConsole.show();
+  showPanel();
   window.fetch('./data/success.json?method=fetchGet&id=' + Math.random(), {
     method: 'GET',
     headers: {
@@ -296,9 +297,9 @@ function fetchStream() {
   });
 }
 
-function xhrStream() {
+function xhrStream(format = 'flv') {
   vConsole.show();
-  const url = './data/stream.flv?id=' + Math.random();
+  const url = `./data/success.${format}?chunked=1&id=` + Math.random();
   const xhr = new XMLHttpRequest();
   xhr.timeout = 11000;
   console.log('xhr type:', typeof xhr, xhr instanceof XMLHttpRequest);
@@ -357,7 +358,7 @@ function sendBeacon() {
 }
 
 function axiosRequest(method) {
-  console.info('axiosRequest() Start');
+  vConsole.show();
   axios({
     method,
     url: './data/success.json?method=axios&r=' + Math.random(),
@@ -372,26 +373,6 @@ function axiosRequest(method) {
   .catch(function(error) {
     console.log('axiosRequest error:', error);
   });
-  console.info('axiosRequest() End');
-}
-
-function axiosRequest(method) {
-  console.info('axiosRequest() Start');
-  axios({
-    method,
-    url: './data/success.json?method=axios&r=' + Math.random(),
-    headers: { 'content-type': 'application/x-www-form-urlencoded' },
-    data: {
-      foo: 'bar'
-    }
-  })
-  .then(function(response) {
-    console.log('axiosRequest response:', response);
-  })
-  .catch(function(error) {
-    console.log('axiosRequest error:', error);
-  });
-  console.info('axiosRequest() End');
 }
 
 function optionsXHR() {

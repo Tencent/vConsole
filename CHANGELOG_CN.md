@@ -1,5 +1,16 @@
 [English](./CHANGELOG.md) | 简体中文
 
+## 3.14.4 (2022-03-31)
+
+- `Fix(Network)` 修复回包超大时导致的卡死问题。 (issue #515)
+- `Fix(Network)` 修复 XHR 中缺失显示 Request Headers 的问题。 (issue #522)
+
+
+## 3.14.3 (2022-03-28)
+
+- `Fix(Network)` 修复 `response.size` 错误。
+
+
 ## 3.14.2 (2022-03-25)
 
 - `Fix(Network)` 删除调试日志。

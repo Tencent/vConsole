@@ -42,13 +42,13 @@ export const genResonseByResponseType = (responseType: string, response: any) =>
       if (tool.isString(response)) {
         try {
           ret = JSON.parse(response);
-          ret = tool.safeJSONStringify(ret, { maxDepth: 10, keyMaxLen: 500000, pretty: true });
+          ret = tool.safeJSONStringify(ret, { maxDepth: 10, keyMaxLen: 10000, pretty: true });
         } catch (e) {
           // not a JSON string
-          ret = tool.getStringWithinLength(String(response), 500000);
+          ret = tool.getStringWithinLength(String(response), 10000);
         }
       } else if (tool.isObject(response) || tool.isArray(response)) {
-        ret = tool.safeJSONStringify(response, { maxDepth: 10, keyMaxLen: 500000, pretty: true });
+        ret = tool.safeJSONStringify(response, { maxDepth: 10, keyMaxLen: 10000, pretty: true });
       } else if (typeof response !== 'undefined') {
         ret = Object.prototype.toString.call(response);
       }

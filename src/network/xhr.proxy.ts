@@ -23,9 +23,12 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
     switch (key) {
       case 'open':
         return this.getOpen(target);
-      
+
       case 'send':
         return this.getSend(target);
+      
+      case 'setRequestHeader':
+        return this.getSetRequestHeader(target);
 
       default:
         if (typeof target[key] === 'function') {
@@ -44,18 +47,18 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
       case '_noVConsole':
         this.item.noVConsole = !!value;
         return;
-      
+
       case 'onreadystatechange':
         return this.setOnReadyStateChange(target, key, value);
-      
+
       case 'onabort':
         return this.setOnAbort(target, key, value);
 
       case 'ontimeout':
         return this.setOnTimeout(target, key, value);
-        
+
       default:
-        // do nothing
+      // do nothing
     }
     return Reflect.set(target, key, value);
   }
@@ -95,7 +98,7 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
     }
   }
 
-  protected getOpen(target) {
+  protected getOpen(target: T) {
     return (...args) => {
       // console.log('Proxy open()');
       const method = args[0];
@@ -109,13 +112,24 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
     };
   }
 
-  protected getSend(target) {
+  protected getSend(target: T) {
     return (...args) => {
       // console.log('Proxy send()');
       const data: XMLHttpRequestBodyInit = args[0];
       this.item.postData = Helper.genFormattedBody(data);
       this.triggerUpdate();
       return target.send.apply(target, args);
+    };
+  }
+
+  protected getSetRequestHeader(target: T) {
+    return (...args) => {
+      if (!this.item.requestHeader) {
+        this.item.requestHeader = {};
+      }
+      this.item.requestHeader[args[0]] = args[1];
+      this.triggerUpdate();
+      return target.setRequestHeader.apply(target, args);
     };
   }
 
@@ -152,7 +166,7 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
           this.item.startTime = Date.now();
         }
         break;
-  
+
       case 1: // OPENED
         this.item.status = 0;
         this.item.statusText = 'Pending';
@@ -160,13 +174,13 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
           this.item.startTime = Date.now();
         }
         break;
-  
+
       case 2: // HEADERS_RECEIVED
         this.item.status = this.XMLReq.status;
         this.item.statusText = 'Loading';
         this.item.header = {};
         const header = this.XMLReq.getAllResponseHeaders() || '',
-              headerArr = header.split('\n');
+          headerArr = header.split('\n');
         // extract plain text to key-value format
         for (let i = 0; i < headerArr.length; i++) {
           const line = headerArr[i];
@@ -177,29 +191,30 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
           this.item.header[key] = value;
         }
         break;
-  
+
       case 3: // LOADING
         this.item.status = this.XMLReq.status;
         this.item.statusText = 'Loading';
-        if (typeof this.XMLReq.response === 'object' && this.XMLReq.response.length) {
+        if (!!this.XMLReq.response && this.XMLReq.response.length) {
           this.item.responseSize = this.XMLReq.response.length;
           this.item.responseSizeText = getBytesText(this.item.responseSize);
         }
         break;
-  
+
       case 4: // DONE
         // `XMLReq.abort()` will change `status` from 200 to 0, so use previous value in this case
         this.item.status = this.XMLReq.status || this.item.status || 0;
         this.item.statusText = String(this.item.status); // show status code when request completed
-        this.item.endTime = Date.now(),
+        this.item.endTime = Date.now();
         this.item.costTime = this.item.endTime - (this.item.startTime || this.item.endTime);
         this.item.response = this.XMLReq.response;
-        if (typeof this.XMLReq.response === 'object' && this.XMLReq.response.length) {
+
+        if (!!this.XMLReq.response && this.XMLReq.response.length) {
           this.item.responseSize = this.XMLReq.response.length;
           this.item.responseSizeText = getBytesText(this.item.responseSize);
         }
         break;
-  
+
       default:
         this.item.status = this.XMLReq.status;
         this.item.statusText = 'Unknown';
@@ -210,7 +225,7 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
 
 export class XHRProxy {
   public static origXMLHttpRequest = XMLHttpRequest;
-  
+
   public static create(onUpdateCallback: IOnUpdateCallback) {
     return new Proxy(XMLHttpRequest, {
       construct(ctor) {

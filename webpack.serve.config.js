@@ -25,7 +25,9 @@ module.exports = (env, argv) => {
       ],
       onBeforeSetupMiddleware(devServer) {
         devServer.app.all('*', (req, res) => {
-          if (req.path.includes('.flv')) {
+          const fileType = req.path.split('.').pop();
+          // console.log('Req:::', fileType, req.path, req.query);
+          if (fileType === 'flv') {
             res.set({
               'Content-Type': 'video/x-flv',
               // 'Content-Type', 'application/octet-stream',
@@ -50,13 +52,23 @@ module.exports = (env, argv) => {
           } else {
             const delay = req.query.t || Math.ceil(Math.random() * 100);
             setTimeout(() => {
-              res.status(req.query.s || 200);
               const filePath = Path.join(contentBase, req.path);
               try {
                 fs.accessSync(filePath, fs.constants.F_OK);
-                // res.send(fs.readFileSync(filePath));
-                res.sendFile(filePath);
+                res.type(fileType);
+                res.status(req.query.s || 200);
+                if (req.query.chunked) {
+                  res.set({
+                    'Transfer-Encoding': 'chunked',
+                    'Connection': 'keep-alive',
+                  });
+                  res.write(fs.readFileSync(filePath));
+                } else {
+                  res.send(fs.readFileSync(filePath));
+                }
+                // res.sendFile(filePath, options);
               } catch (e) {
+                res.status(404);
                 res.end();
               }
               // console.log(req.query);

@@ -1,5 +1,16 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.14.4 (2022-03-31)
+
+- `Fix(Network)` Fix CPU high load bug when response is a large string. (issue #515)
+- `Fix(Network)` Fix missing Request Headers issue in XHR. (issue #522)
+
+
+## 3.14.3 (2022-03-28)
+
+- `Fix(Network)` Fix `response.size` error.
+
+
 ## 3.14.2 (2022-03-25)
 
 - `Fix(Network)` Remove debugging console.log.

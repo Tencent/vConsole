@@ -2,7 +2,7 @@
   import Icon from '../component/icon.svelte';
   import IconCopy from '../component/iconCopy.svelte';
   import { VConsoleStorageModel, storageStore } from './storage.model';
-  import { getStringBytes, getBytesText, subString } from '../lib/tool';
+  import { getStringWithinLength } from '../lib/tool';
 
   // export let storages: ReturnType<VConsoleStorageModel['getAllStorages']> = [];
   // export let activedName = '';
@@ -10,7 +10,7 @@
   const model = VConsoleStorageModel.getSingleton(VConsoleStorageModel, 'VConsoleStorageModel');
   const { updateTime } = storageStore;
 
-  const BYTES_LIMIT = 1024;
+  const LEN_LIMIT = 1024;
   let storageData: [string, string][] = [];
   // edit state
   let editingIdx = -1;
@@ -34,8 +34,7 @@
     editingVal = '';
   };
   const properDisplay = (str: string) => {
-    const bytes = getStringBytes(str);
-    return bytes > BYTES_LIMIT ? subString(str, BYTES_LIMIT) + ` (${getBytesText(bytes)})` : str;
+    return getStringWithinLength(str, LEN_LIMIT);
   };
 
   const onTapDelete = async (key: string) => {
