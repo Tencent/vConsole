@@ -3,6 +3,7 @@
 ## 3.14.4-rc (2022-03-??)
 
 - `Fix(Network)` 修复回包超大时导致的卡死问题。 (issue #515)
+- `Fix(Network)` 修复 XHR 中缺失显示 Request Headers 的问题。 (issue #522)
 
 
 ## 3.14.3 (2022-03-28)

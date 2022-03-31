@@ -26,6 +26,9 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
 
       case 'send':
         return this.getSend(target);
+      
+      case 'setRequestHeader':
+        return this.getSetRequestHeader(target);
 
       default:
         if (typeof target[key] === 'function') {
@@ -95,7 +98,7 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
     }
   }
 
-  protected getOpen(target) {
+  protected getOpen(target: T) {
     return (...args) => {
       // console.log('Proxy open()');
       const method = args[0];
@@ -109,13 +112,24 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
     };
   }
 
-  protected getSend(target) {
+  protected getSend(target: T) {
     return (...args) => {
       // console.log('Proxy send()');
       const data: XMLHttpRequestBodyInit = args[0];
       this.item.postData = Helper.genFormattedBody(data);
       this.triggerUpdate();
       return target.send.apply(target, args);
+    };
+  }
+
+  protected getSetRequestHeader(target: T) {
+    return (...args) => {
+      if (!this.item.requestHeader) {
+        this.item.requestHeader = {};
+      }
+      this.item.requestHeader[args[0]] = args[1];
+      this.triggerUpdate();
+      return target.setRequestHeader.apply(target, args);
     };
   }
 

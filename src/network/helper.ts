@@ -33,7 +33,6 @@ export const genGetDataByUrl = (url: string, getData = {}) => {
  * Generate formatted response data by responseType.
  */
 export const genResonseByResponseType = (responseType: string, response: any) => {
-  console.log('genResonseByResponseType', responseType);
   let ret = '';
   switch (responseType) {
     case '':
