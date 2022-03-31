@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.14.5-rc (2022-04-??)
+
+- `Fix(Core)` Fix unexpected error when init vConsole twice in short time. (issue #525)
+
+
 ## 3.14.4 (2022-03-31)
 
 - `Fix(Network)` Fix CPU high load bug when response is a large string. (issue #515)
