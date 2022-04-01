@@ -3,6 +3,7 @@
 ## 3.14.5-rc (2022-04-??)
 
 - `Fix(Core)` 修复极短时间内重复初始化 vConsole 导致的报错。 (issue #525)
+- `Fix(Log)` 修复 `console.time | console.timeEnd` 不输出日志的问题。 (issue #523)
 
 
 ## 3.14.4 (2022-03-31)

@@ -149,10 +149,16 @@ export class VConsoleLogModel extends VConsoleModel {
     window.console.timeEnd = ((label: string = '') => {
       const pre = timeLog[label];
       if (pre) {
-        console.log(label + ':', (Date.now() - pre) + 'ms');
+        this.addLog({
+          type: 'log',
+          origData: [label + ':', (Date.now() - pre) + 'ms'],
+        });
         delete timeLog[label];
       } else {
-        console.log(label + ': 0ms');
+        this.addLog({
+          type: 'log',
+          origData: [label + ': 0ms'],
+        });
       }
     }).bind(window.console);
 
