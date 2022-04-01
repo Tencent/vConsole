@@ -8,6 +8,7 @@
   <link href="./lib/demo.css" rel="stylesheet"/>
 
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/zepto/dist/zepto.min.js"></script>
   <script src="../dist/vconsole.min.js"></script>
 </head>
 <body ontouchstart>
@@ -45,6 +46,7 @@
       <a onclick="sendBeacon()" href="javascript:;" class="weui_btn weui_btn_default">sendBeacon</a>
       <a onclick="axiosRequest('GET')" href="javascript:;" class="weui_btn weui_btn_default">Axios: GET</a>
       <a onclick="axiosRequest('POST')" href="javascript:;" class="weui_btn weui_btn_default">Axios: POST</a>
+      <a onclick="zeptoRequest('POST')" href="javascript:;" class="weui_btn weui_btn_default">Zepto: POST</a>
       <a onclick="scrolling()" href="javascript:;" class="weui_btn weui_btn_default">Scrolling</a>
       <a onclick="crossDomain()" href="javascript:;" class="weui_btn weui_btn_default">Cross Domain</a>
     </div>
@@ -113,8 +115,9 @@ function postAjax(postType, file = 'large.json') {
   if (postType === 'json') {
     postData = JSON.stringify(postData);
   }
-  console.log('post data:', postData);
+  console.log(xhr.setRequestHeader);
   xhr.open('POST', `./data/${file}?method=fetchPost&c=中文`);
+  xhr.setRequestHeader.apply(xhr, ['custom-auth', 'foobar']);
   xhr.send(postData);
   // xhr.send(JSON.stringify({foo: 'bar', id: Math.random(), '<xss0>': '<xss1> XSS Attack!'}));
 }
@@ -372,6 +375,29 @@ function axiosRequest(method) {
   })
   .catch(function(error) {
     console.log('axiosRequest error:', error);
+  });
+}
+
+function zeptoRequest(method = 'GET') {
+  vConsole.show();
+  $.ajax({
+    type: method,
+    async: true,
+    url: './data/success.json?method=zepto&r=' + Math.random(),
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded',
+      'custom-auth': 'foobar'
+    },
+    data: {
+      foo: 'bar',
+    },
+    xhrFields:{
+      withCredentials: true
+    },
+    dataType: 'json',
+    success(data) {
+      console.log('zeptoRequest response:', data);
+    },
   });
 }
 
