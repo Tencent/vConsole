@@ -182,6 +182,9 @@ export class VConsoleElementPlugin extends VConsoleSveltePlugin {
 
   protected _onCharacterDataChange(mutation: MutationRecord) {
     const node = this.nodeMap.get(mutation.target);
+    if (!node) {
+      return;
+    }
     node.textContent = mutation.target.textContent;
     this._refreshStore();
   }
@@ -233,6 +236,9 @@ export class VConsoleElementPlugin extends VConsoleSveltePlugin {
 
   protected _updateVNodeAttributes(elem: Node) {
     const node = this.nodeMap.get(elem);
+    if (!node) {
+      return;
+    }
     if (elem instanceof Element) {
       node.id = elem.id || '';
       node.className = elem.className || '';
