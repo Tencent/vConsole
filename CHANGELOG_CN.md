@@ -6,6 +6,7 @@
 - `Fix(Log)` 修复 `console.time | console.timeEnd` 不输出日志的问题。 (issue #523)
 - `Fix(Element)` 修复更新 attributes 时引起的 `undefined is not an object` 错误。 (issue #526)
 - `Fix(Network)` 当请求完成后，不再代理 response body reader。
+- `Chore` 修复 Svelte 在 Windows 环境中未被 Babel 转义的问题。 (PR #528)
 
 
 ## 3.14.4 (2022-03-31)
