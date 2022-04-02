@@ -5,6 +5,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix(Core)` Fix unexpected error when init vConsole twice in short time. (issue #525)
 - `Fix(Log)` Fix bug that `console.time | console.timeEnd` do not output log. (issue #523)
 - `Fix(Element)` Fix `undefined is not an object` error when updating attributes. (issue #526)
+- `Fix(Network)` Do not proxy response body reader when response is done.
 
 
 ## 3.14.4 (2022-03-31)

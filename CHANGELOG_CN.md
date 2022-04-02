@@ -5,6 +5,7 @@
 - `Fix(Core)` 修复极短时间内重复初始化 vConsole 导致的报错。 (issue #525)
 - `Fix(Log)` 修复 `console.time | console.timeEnd` 不输出日志的问题。 (issue #523)
 - `Fix(Element)` 修复更新 attributes 时引起的 `undefined is not an object` 错误。 (issue #526)
+- `Fix(Network)` 当请求完成后，不再代理 response body reader。
 
 
 ## 3.14.4 (2022-03-31)

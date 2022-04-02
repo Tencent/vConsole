@@ -25,11 +25,15 @@ module.exports = (env, argv) => {
       ],
       onBeforeSetupMiddleware(devServer) {
         devServer.app.all('*', (req, res) => {
+          const contentType = {
+            'flv': 'video/x-flv',
+            'wav': 'audio/x-wav',
+          };
           const fileType = req.path.split('.').pop();
           // console.log('Req:::', fileType, req.path, req.query);
           if (fileType === 'flv') {
             res.set({
-              'Content-Type': 'video/x-flv',
+              'Content-Type': contentType[fileType],
               // 'Content-Type', 'application/octet-stream',
               'Transfer-Encoding': 'chunked',
               'Connection': 'keep-alive',

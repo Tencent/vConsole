@@ -9,6 +9,7 @@
 
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://unpkg.com/zepto/dist/zepto.min.js"></script>
+  <script src="https://unpkg.com/wavesurfer.js"></script>
   <script src="../dist/vconsole.min.js"></script>
 </head>
 <body ontouchstart>
@@ -49,6 +50,7 @@
       <a onclick="zeptoRequest('POST')" href="javascript:;" class="weui_btn weui_btn_default">Zepto: POST</a>
       <a onclick="scrolling()" href="javascript:;" class="weui_btn weui_btn_default">Scrolling</a>
       <a onclick="crossDomain()" href="javascript:;" class="weui_btn weui_btn_default">Cross Domain</a>
+      <a onclick="testWavesurfer()" href="javascript:;" class="weui_btn weui_btn_default">Wavesurfer.js</a>
     </div>
 
     <div class="section">
@@ -176,7 +178,7 @@ function fetchIOSLowBug() {
 }
 
 function getFetchSimple() {
-  window.fetch('./data/large.json?type=fetchGet&id=' + Math.random()).then((data) => {
+  window.fetch('./data/massive.json?type=fetchGet&id=' + Math.random()).then((data) => {
     return data.json();
   }).then((data) => {
     console.log('getFetchSimple Response:', data);
@@ -437,6 +439,19 @@ function optionsFetch() {
     console.error('optionsFetch Error:', error);
   });
   console.info('optionsFetch() End');
+}
+
+function testWavesurfer() {
+  showPanel();
+  const div = document.createElement('DIV');
+  div.id = 'waveform';
+  document.body.append(div);
+  var wavesurfer = WaveSurfer.create({
+    container: '#waveform',
+    waveColor: 'violet',
+    progressColor: 'purple'
+  });
+  wavesurfer.load('./data/a.wav?method=fetch');
 }
 
 function scrolling() {
