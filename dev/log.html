@@ -129,12 +129,12 @@ function differentPanelLog() {
 
 function logTime() {
   vConsole.show();
-  const label = 'aaa';
+  const label = 'ab';
   console.time(label);
-  console.log('Wait...');
-  setTimeout(() => {
-    console.timeEnd(label);
-  }, Math.ceil(Math.random() * 2000));
+  for (let i = 0; i < 10; i++) {
+    console.log('Wait...', i);
+  }
+  console.timeEnd(label);
 }
 
 function formattingLog() {

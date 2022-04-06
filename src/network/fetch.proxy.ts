@@ -23,7 +23,8 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
   }
 
   public get(target: T, key: string) {
-    // if (typeof key === 'string') { console.log('Proxy get:', key) }
+    // if (typeof key === 'string') { console.log('[Fetch.proxy] get:', key) }
+    const value = Reflect.get(target, key);
     switch (key) {
       case 'arrayBuffer':
       case 'blob':
@@ -32,19 +33,17 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
       case 'text':
         return () => {
           this.item.responseType = <any>key.toLowerCase();
-          return target[key]().then((resp) => {
+          return value.apply(target).then((resp) => {
             this.item.response = Helper.genResonseByResponseType(this.item.responseType, resp);
             this.onUpdateCallback(this.item);
             return resp;
           });
         };
     }
-    if (typeof target[key] === 'function') {
-      return (...args) => {
-        return target[key].apply(target, args);
-      };
+    if (typeof value === 'function') {
+      return value.bind(target);
     } else {
-      return Reflect.get(target, key);
+      return value;
     }
   }
 
@@ -52,13 +51,23 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
     let readerReceivedValue: Uint8Array;
     const _getReader = this.resp.body.getReader;
     this.resp.body.getReader = () => {
+      // console.log('[Fetch.proxy] getReader');
       const reader = <ReturnType<typeof _getReader>>_getReader.apply(this.resp.body);
+
+      // when readyState is already 4,
+      // it's not a chunked stream, or it had already been read.
+      // so should not update status.
+      if (this.item.readyState === 4) {
+        return reader;
+      }
+
       const _read = reader.read;
       const _cancel = reader.cancel;
       this.item.responseType = 'arraybuffer';
 
       reader.read = () => {
         return (<ReturnType<typeof _read>>_read.apply(reader)).then((result) => {
+          // console.log('[Fetch.proxy] read', result.done);
           if (!readerReceivedValue) {
             readerReceivedValue = new Uint8Array(result.value);
           } else {
@@ -142,7 +151,7 @@ export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T
     item.statusText = 'Pending';
     item.readyState = 1;
     if (!item.startTime) { // UNSENT
-      item.startTime = (+new Date());
+      item.startTime = Date.now();
     }
 
     if (Object.prototype.toString.call(requestHeader) === '[object Headers]') {
@@ -183,6 +192,7 @@ export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T
         item.header[key] = value;
         isChunked = value.toLowerCase().indexOf('chunked') > -1 ? true : isChunked;
       }
+      // console.log('[Fetch.proxy] afterFetch', 'isChunked:', isChunked, resp.status);
       
       if (isChunked) {
         // when `transfer-encoding` is chunked, the response is a stream which is under loading,

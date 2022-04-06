@@ -21,6 +21,9 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
   public get(target: T, key: string) {
     // if (typeof key === 'string') { console.log('Proxy get:', typeof key, key); }
     switch (key) {
+      case '_noVConsole':
+        return this.item.noVConsole;
+
       case 'open':
         return this.getOpen(target);
 
@@ -31,12 +34,11 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
         return this.getSetRequestHeader(target);
 
       default:
-        if (typeof target[key] === 'function') {
-          return (...args) => {
-            return target[key].apply(target, args);
-          };
+        const value = Reflect.get(target, key);
+        if (typeof value === 'function') {
+          return value.bind(target);
         } else {
-          return Reflect.get(target, key);
+          return value;
         }
     }
   }
@@ -108,7 +110,7 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
       this.item.name = this.item.url.replace(new RegExp('[/]*$'), '').split('/').pop() || '';
       this.item.getData = Helper.genGetDataByUrl(this.item.url, {});
       this.triggerUpdate();
-      return target.open.apply(target, args);
+      return Reflect.get(target, 'open').apply(target, args);
     };
   }
 
@@ -118,7 +120,7 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
       const data: XMLHttpRequestBodyInit = args[0];
       this.item.postData = Helper.genFormattedBody(data);
       this.triggerUpdate();
-      return target.send.apply(target, args);
+      return Reflect.get(target, 'send').apply(target, args);
     };
   }
 
@@ -129,7 +131,7 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
       }
       this.item.requestHeader[args[0]] = args[1];
       this.triggerUpdate();
-      return target.setRequestHeader.apply(target, args);
+      return Reflect.get(target, 'setRequestHeader').apply(target, args);
     };
   }
 

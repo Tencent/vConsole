@@ -66,6 +66,7 @@ export class VConsole {
       console.debug('[vConsole] vConsole is already exists.');
       return VConsole.instance;
     }
+    VConsole.instance = this;
 
     this.isInited = false;
     this.option = {
@@ -131,7 +132,7 @@ export class VConsole {
    * Get singleton instance.
    **/
   public static get instance() {
-    return (<any>$.one(VCONSOLE_ID))?.__VCONSOLE_INSTANCE as VConsole;
+    return (<any>window).__VCONSOLE_INSTANCE;
   }
 
   /**
@@ -142,12 +143,7 @@ export class VConsole {
       console.debug('[vConsole] Cannot set `VConsole.instance` because the value is not the instance of VConsole.');
       return;
     }
-    const $elm = $.one(VCONSOLE_ID);
-    if ($elm) {
-      (<any>$elm).__VCONSOLE_INSTANCE = value;
-    } else {
-      console.debug('[vConsole] Cannot set `VConsole.instance` because vConsole has not finished initializing yet.');
-    }
+    (<any>window).__VCONSOLE_INSTANCE = value;
   }
 
   /**
@@ -219,9 +215,6 @@ export class VConsole {
         const pluginId = e.detail.pluginId;
         this.showPlugin(pluginId);
       });
-
-      // bind vConsole instance
-      VConsole.instance = this;
     }
 
     // set options into component

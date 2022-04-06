@@ -20,6 +20,7 @@
     <a onclick="setOption()" href="javascript:;" class="weui_btn weui_btn_default">setOption</a>
     <a onclick="destroy()" href="javascript:;" class="weui_btn weui_btn_default">Destroy</a>
     <a onclick="newVConsole()" href="javascript:;" class="weui_btn weui_btn_default">new VConsole</a>
+    <a onclick="existingId()" href="javascript:;" class="weui_btn weui_btn_default">Existing Id</a>
   </div>
 </body>
 </html>
@@ -104,5 +105,14 @@ function newVConsole() {
 function destroy() {
   window.vConsole.destroy();
   console.log('vConsole is destroyed');
+}
+
+function existingId() {
+  window.vConsole.destroy();
+  const div = document.createElement('DIV');
+  div.id = '__vconsole';
+  document.body.append(div);
+
+  window.vConsole = new window.VConsole();
 }
 </script>
