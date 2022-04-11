@@ -1,5 +1,10 @@
 [English](./CHANGELOG.md) | 简体中文
 
+## 3.14.6-rc (2022-04-??)
+
+- `Fix(Network)` 修复 `resp.body` undefined 错误。 (issue #531)
+
+
 ## 3.14.5 (2022-04-06)
 
 - `Fix(Core)` 修复极短时间内重复初始化 vConsole 导致的报错。 (issue #525)

@@ -49,6 +49,13 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
 
   protected mockReader() {
     let readerReceivedValue: Uint8Array;
+    if (!this.resp.body) {
+      // some browsers do not return `body` in some cases, like `OPTIONS` method. (issue #531)
+      return;
+    }
+    if (typeof this.resp.body.getReader !== 'function') {
+      return;
+    }
     const _getReader = this.resp.body.getReader;
     this.resp.body.getReader = () => {
       // console.log('[Fetch.proxy] getReader');

@@ -430,7 +430,7 @@ function optionsXHR() {
 
 function optionsFetch() {
   console.info('optionsFetch() Start');
-  window.fetch('./data/a.json?method=optionsFetch&s=203&t=300', {
+  window.fetch('./data/success.json?method=optionsFetch&s=203&t=300', {
     method: 'OPTIONS',
     body: { foo: 'bar', id: Math.random(), type: 'fetch', 'method': 'put', },
   }).then((data) => {

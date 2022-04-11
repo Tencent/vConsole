@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.14.6-rc (2022-04-??)
+
+- `Fix(Network)` Fix `resp.body` undefined error. (issue #531)
+
+
 ## 3.14.5 (2022-04-06)
 
 - `Fix(Core)` Fix unexpected error when init vConsole twice in short time. (issue #525)
