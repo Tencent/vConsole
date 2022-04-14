@@ -7,9 +7,9 @@
   <link href="./lib/weui.min.css" rel="stylesheet"/>
   <link href="./lib/demo.css" rel="stylesheet"/>
 
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="https://unpkg.com/zepto/dist/zepto.min.js"></script>
-  <script src="https://unpkg.com/wavesurfer.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js" async></script>
+  <script src="https://unpkg.com/zepto/dist/zepto.js" async></script>
+  <script src="https://unpkg.com/wavesurfer.js" async></script>
   <script src="../dist/vconsole.min.js"></script>
 </head>
 <body ontouchstart>
@@ -367,7 +367,10 @@ function axiosRequest(method) {
   axios({
     method,
     url: './data/success.json?method=axios&r=' + Math.random(),
-    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded',
+      'foo': 'bar',
+    },
     data: {
       foo: 'bar'
     }
@@ -388,7 +391,8 @@ function zeptoRequest(method = 'GET') {
     url: './data/success.json?method=zepto&r=' + Math.random(),
     headers: {
       'content-type': 'application/x-www-form-urlencoded',
-      'custom-auth': 'foobar'
+      'custom-auth': 'foobar',
+      'foo': 'bar',
     },
     data: {
       foo: 'bar',
@@ -430,7 +434,7 @@ function optionsXHR() {
 
 function optionsFetch() {
   console.info('optionsFetch() Start');
-  window.fetch('./data/a.json?method=optionsFetch&s=203&t=300', {
+  window.fetch('./data/success.json?method=optionsFetch&s=203&t=300', {
     method: 'OPTIONS',
     body: { foo: 'bar', id: Math.random(), type: 'fetch', 'method': 'put', },
   }).then((data) => {
