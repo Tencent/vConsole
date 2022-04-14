@@ -3,6 +3,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 ## 3.14.6-rc (2022-04-??)
 
 - `Fix(Network)` Fix `resp.body` undefined error. (issue #531)
+- `Fix(Network)` Fix missing Request Headers when `xhr.setRequestHeader` is overwritten. (issue #533)
 
 
 ## 3.14.5 (2022-04-06)

@@ -3,6 +3,7 @@
 ## 3.14.6-rc (2022-04-??)
 
 - `Fix(Network)` 修复 `resp.body` undefined 错误。 (issue #531)
+- `Fix(Network)` 修复 `xhr.setRequestHeader` 被覆盖改写时丢失 Request Headers 的问题。 (issue #533)
 
 
 ## 3.14.5 (2022-04-06)

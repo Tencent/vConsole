@@ -7,9 +7,9 @@
   <link href="./lib/weui.min.css" rel="stylesheet"/>
   <link href="./lib/demo.css" rel="stylesheet"/>
 
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="https://unpkg.com/zepto/dist/zepto.min.js"></script>
-  <script src="https://unpkg.com/wavesurfer.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js" async></script>
+  <script src="https://unpkg.com/zepto/dist/zepto.js" async></script>
+  <script src="https://unpkg.com/wavesurfer.js" async></script>
   <script src="../dist/vconsole.min.js"></script>
 </head>
 <body ontouchstart>
@@ -127,6 +127,12 @@ function postAjax(postType, file = 'large.json') {
 function getAjax() {
   const url = window.location.origin + '/dev/data/success.json?method=xhrGet&id=' + Math.random() + '&<xss0>';
   const xhr = new XMLHttpRequest();
+  const nativeSetHeader = xhr.setRequestHeader;
+  console.log(nativeSetHeader);
+  xhr.setRequestHeader = function(name, value) {
+    console.log('SET-HEADER', name, value);
+    nativeSetHeader.apply(xhr, name, value);
+  };
   xhr.open('GET', url);
   xhr.setRequestHeader('custom-header', 'foobar');
   xhr.send();
@@ -367,7 +373,10 @@ function axiosRequest(method) {
   axios({
     method,
     url: './data/success.json?method=axios&r=' + Math.random(),
-    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded',
+      'foo': 'bar',
+    },
     data: {
       foo: 'bar'
     }
@@ -388,7 +397,8 @@ function zeptoRequest(method = 'GET') {
     url: './data/success.json?method=zepto&r=' + Math.random(),
     headers: {
       'content-type': 'application/x-www-form-urlencoded',
-      'custom-auth': 'foobar'
+      'custom-auth': 'foobar',
+      'foo': 'bar',
     },
     data: {
       foo: 'bar',

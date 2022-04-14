@@ -101,6 +101,7 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
   }
 
   protected getOpen(target: T) {
+    const targetFunction = Reflect.get(target, 'open');
     return (...args) => {
       // console.log('Proxy open()');
       const method = args[0];
@@ -110,28 +111,30 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
       this.item.name = this.item.url.replace(new RegExp('[/]*$'), '').split('/').pop() || '';
       this.item.getData = Helper.genGetDataByUrl(this.item.url, {});
       this.triggerUpdate();
-      return Reflect.get(target, 'open').apply(target, args);
+      return targetFunction.apply(target, args);
     };
   }
 
   protected getSend(target: T) {
+    const targetFunction = Reflect.get(target, 'send');
     return (...args) => {
       // console.log('Proxy send()');
       const data: XMLHttpRequestBodyInit = args[0];
       this.item.postData = Helper.genFormattedBody(data);
       this.triggerUpdate();
-      return Reflect.get(target, 'send').apply(target, args);
+      return targetFunction.apply(target, args);
     };
   }
 
   protected getSetRequestHeader(target: T) {
+    const targetFunction = Reflect.get(target, 'setRequestHeader');
     return (...args) => {
       if (!this.item.requestHeader) {
         this.item.requestHeader = {};
       }
       this.item.requestHeader[args[0]] = args[1];
       this.triggerUpdate();
-      return Reflect.get(target, 'setRequestHeader').apply(target, args);
+      return targetFunction.apply(target, args);
     };
   }
 
