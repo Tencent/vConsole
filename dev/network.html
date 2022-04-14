@@ -127,12 +127,6 @@ function postAjax(postType, file = 'large.json') {
 function getAjax() {
   const url = window.location.origin + '/dev/data/success.json?method=xhrGet&id=' + Math.random() + '&<xss0>';
   const xhr = new XMLHttpRequest();
-  const nativeSetHeader = xhr.setRequestHeader;
-  console.log(nativeSetHeader);
-  xhr.setRequestHeader = function(name, value) {
-    console.log('SET-HEADER', name, value);
-    nativeSetHeader.apply(xhr, name, value);
-  };
   xhr.open('GET', url);
   xhr.setRequestHeader('custom-header', 'foobar');
   xhr.send();

@@ -178,6 +178,7 @@ export class VConsoleLogModel extends VConsoleModel {
     // recover original console methods
     for (const method in this.origConsole) {
       window.console[method] = this.origConsole[method] as any;
+      delete this.origConsole[method];
     }
     if ((<any>window)._vcOrigConsole) {
       delete (<any>window)._vcOrigConsole;

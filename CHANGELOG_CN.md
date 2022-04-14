@@ -1,9 +1,11 @@
 [English](./CHANGELOG.md) | 简体中文
 
-## 3.14.6-rc (2022-04-??)
+## 3.14.6 (2022-04-14)
 
+- `Fix(Log)` 修复当销毁并再次新建 vConsole 时失去追踪 logs 的问题。
 - `Fix(Network)` 修复 `resp.body` undefined 错误。 (issue #531)
 - `Fix(Network)` 修复 `xhr.setRequestHeader` 被覆盖改写时丢失 Request Headers 的问题。 (issue #533)
+- `Chore` 更新 NPM 依赖。
 
 
 ## 3.14.5 (2022-04-06)

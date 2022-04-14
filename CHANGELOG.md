@@ -1,9 +1,11 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-## 3.14.6-rc (2022-04-??)
+## 3.14.6 (2022-04-14)
 
+- `Fix(Log)` Fix logs lost tracking when adding a new vConsole after destroying the old one.
 - `Fix(Network)` Fix `resp.body` undefined error. (issue #531)
 - `Fix(Network)` Fix missing Request Headers when `xhr.setRequestHeader` is overwritten. (issue #533)
+- `Chore` Update NPM dependencies.
 
 
 ## 3.14.5 (2022-04-06)
