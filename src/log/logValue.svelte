@@ -25,7 +25,7 @@
 
       if (!isInTree && valueType === 'string') {
         // convert string
-        dataValue = tool.htmlEncode(dataValue.replace('\\n', '\n').replace('\\t', '\t'));
+        dataValue = tool.htmlEncode(dataValue.replaceAll('\\n', '\n').replaceAll('\\t', '    '));
       }
 
       // (window as any)._vcOrigConsole.log('logValue update', origData);

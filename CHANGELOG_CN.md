@@ -1,5 +1,10 @@
 [English](./CHANGELOG.md) | 简体中文
 
+## 3.14.7 (2022-07-??)
+
+- `Fix(Log)` 修复 `window.onerror` 丢失换行的问题。
+
+
 ## 3.14.6 (2022-04-14)
 
 - `Fix(Log)` 修复当销毁后再次初始化 vConsole 时失去追踪 logs 的问题。

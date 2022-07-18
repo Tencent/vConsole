@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.14.7 (2022-07-??)
+
+- `Fix(Log)` Fix `window.onerror` missing line breaks.
+
+
 ## 3.14.6 (2022-04-14)
 
 - `Fix(Log)` Fix logs lost tracking when adding a new vConsole after destroying the old one.
