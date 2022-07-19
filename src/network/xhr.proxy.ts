@@ -237,6 +237,13 @@ export class XHRProxy {
         const XMLReq = new ctor();
         return new Proxy(XMLReq, new XHRProxyHandler(XMLReq, onUpdateCallback));
       },
+      // qiankun.js will judge if some function is valid by using fn.toString
+      // inside low version chrome, this proxy will lost valid pointer of XMLHttpRequest's function property
+      // and finally qiankun will crash
+      get(target, key) {
+        const property = target[key];
+        return (typeof property === 'function') ? property.bind(target) : property;
+      }
     });
   }
 }
