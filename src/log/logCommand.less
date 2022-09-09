@@ -17,7 +17,8 @@
 
 // input or textarea
 .vc-cmd-input-wrap {
-  display: block;
+  display: flex;
+  align-items: center;
   position: relative;
   height: (28em / @font);
   margin-right: (40em / @font);
@@ -52,12 +53,8 @@
   font-size: 1em;
 }
 .vc-cmd-clear-btn {
-  position: absolute;
+  flex: 1 (40em / @font);
   text-align: center;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: (40em / @font);
   line-height: (40em / @font);
 }
 .vc-cmd-btn:active,
