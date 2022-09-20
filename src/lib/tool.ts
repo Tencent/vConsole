@@ -229,7 +229,7 @@ const _safeJSONStringify = (obj, opt: ISafeJSONStringifyOption, _curDepth = 0) =
   if (isCircular) {
     if (isArray(obj)) {
       opt.ret += '(Circular Array)';
-    } else if (isObject) {
+    } else if (isObject(obj)) {
       opt.ret += `(Circular ${obj.constructor?.name || 'Object'})`;
     }
     return;

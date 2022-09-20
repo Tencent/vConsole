@@ -4,6 +4,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 - `Fix(Log)` Fix `window.onerror` missing line breaks.
 - `Fix(Log)` Fix unclickable `vc-cmd-clear-btn` on iOS Safari. (PR #564)
+- `Fix(Log)` Fix a typo that misjudged circular reference objects. (issue #566)
 - `Chore` Add option `env['no-core-js']` to disable core-js polyfill. (PR #562)
 
 
