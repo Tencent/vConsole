@@ -1,8 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
-## 3.14.7 (2022-07-??)
+## 3.14.7 (2022-09-??)
 
 - `Fix(Log)` Fix `window.onerror` missing line breaks.
+- `Fix(Log)` Fix unclickable `vc-cmd-clear-btn` on iOS Safari. (PR #564)
+- `Chore` Add option `env['no-core-js']` to disable core-js polyfill. (PR #562)
 
 
 ## 3.14.6 (2022-04-14)

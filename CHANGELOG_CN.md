@@ -1,8 +1,10 @@
 [English](./CHANGELOG.md) | 简体中文
 
-## 3.14.7 (2022-07-??)
+## 3.14.7 (2022-09-??)
 
 - `Fix(Log)` 修复 `window.onerror` 丢失换行的问题。
+- `Fix(Log)` 修复清除命令行按钮在 iOS Safari 中无法点击的问题。 (PR #564)
+- `Chore` 添加 `env['no-core-js']` 选项来停用构建时使用 core-js polyfill。 (PR #562)
 
 
 ## 3.14.6 (2022-04-14)
