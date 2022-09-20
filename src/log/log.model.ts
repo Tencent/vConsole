@@ -310,7 +310,7 @@ export class VConsoleLogModel extends VConsoleModel {
       (pluginLogs[pluginId] = pluginLogs[pluginId] || []).push(log);
     }
 
-    const pluginIds = Object.keys(plugin;Logs)
+    const pluginIds = Object.keys(pluginLogs);
     for (const pluginId of pluginIds) {
       const logs = pluginLogs[pluginId];
 
