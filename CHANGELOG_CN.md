@@ -2,10 +2,11 @@
 
 ## 3.14.7 (2022-09-??)
 
-- `Fix(Core)` 修复因设置 `pluginOrder` 导致插件面板排序错误的问题。 (issue #559)
+- `Feat(Log)` 优化打印日志时的性能。 (PR #567)
 - `Fix(Log)` 修复 `window.onerror` 丢失换行的问题。
 - `Fix(Log)` 修复清除命令行按钮在 iOS Safari 中无法点击的问题。 (PR #564)
 - `Fix(Log)` 修复一处误判循环引用对象的笔误。 (issue #566)
+- `Fix(Core)` 修复因设置 `pluginOrder` 导致插件面板排序错误的问题。 (issue #559)
 - `Chore` 添加 `env['no-core-js']` 选项来停用构建时使用 core-js polyfill。 (PR #562)
 
 
