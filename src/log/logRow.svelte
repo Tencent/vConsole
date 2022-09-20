@@ -1,3 +1,4 @@
+<svelte:options immutable/>
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import * as tool from '../lib/tool';
@@ -42,7 +43,7 @@
   const isTree = (origData: any) => {
     return !(origData instanceof VConsoleUninvocatableObject) && (tool.isArray(origData) || tool.isObject(origData));
   };
-  
+
   const onTapCopy = () => {
     const text: string[] = [];
     try {
