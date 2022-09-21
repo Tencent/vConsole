@@ -18,6 +18,7 @@
     <a onclick="xssStorage()" href="javascript:;" class="weui_btn weui_btn_default">XSS</a>
     <a onclick="defaultStoragesClear()" href="javascript:;" class="weui_btn weui_btn_default">defaultStorages: clear</a>
     <a onclick="defaultStoragesAdd()" href="javascript:;" class="weui_btn weui_btn_default">defaultStorages: add</a>
+    <a onclick="defaultStoragesUpdate()" href="javascript:;" class="weui_btn weui_btn_default">defaultStorages: update</a>
   </div>
 </body>
 </html>
@@ -28,7 +29,7 @@ import '../dist/vconsole.min.js';
 window.vConsole = new window.VConsole({
   // disableLogScrolling: true,
   storage: {
-    // defaultStorages: [],
+    // defaultStorages: ['sessionStorage', 'cookies', 'localStorage'],
   },
   onReady: function() {
     console.log('vConsole is ready.');
@@ -139,5 +140,9 @@ function defaultStoragesClear() {
 function defaultStoragesAdd() {
   window.wx = {};
   vConsole.setOption('storage.defaultStorages', ['wxStorage', 'localStorage']);
+}
+
+function defaultStoragesUpdate() {
+  vConsole.setOption('storage.defaultStorages', ['localStorage', 'unknownStorage', 'sessionStorage']);
 }
 </script>
