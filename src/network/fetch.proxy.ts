@@ -118,13 +118,13 @@ export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T
     this.onUpdateCallback = onUpdateCallback;
   }
 
-  public apply(target: T, thisArg: T, argsList) {
+  public apply(target: T, thisArg: typeof window, argsList) {
     const input: RequestInfo = argsList[0];
     const init: RequestInit = argsList[1];
     const item = new VConsoleNetworkRequestItem();
     this.beforeFetch(item, input, init);
 
-    return (<ReturnType<T>>target.apply(thisArg, argsList)).then(this.afterFetch(item)).catch((e) => {
+    return (<ReturnType<T>>target.apply(window, argsList)).then(this.afterFetch(item)).catch((e) => {
       // mock finally
       item.endTime = Date.now();
       item.costTime = item.endTime - (item.startTime || item.endTime);
