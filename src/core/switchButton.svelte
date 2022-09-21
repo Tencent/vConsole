@@ -123,8 +123,8 @@
   class="vc-switch"
   style="right: {btnSwitchPos.x}px; bottom: {btnSwitchPos.y}px; display: {show ? 'block' : 'none'};"
   bind:this={btnSwitch}
-  on:touchstart={onTouchStart}
-  on:touchend={onTouchEnd}
-  on:touchmove={onTouchMove}
+  on:touchstart|nonpassive={onTouchStart}
+  on:touchend|nonpassive={onTouchEnd}
+  on:touchmove|nonpassive={onTouchMove}
   on:click
 >vConsole</div>

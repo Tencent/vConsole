@@ -8,6 +8,7 @@
 - `Fix(Log)` 修复一处误判循环引用对象的笔误。 (issue #566)
 - `Fix(Storage)` 修复因设置 `storage.defaultStorages` 导致 Storage 面板排序错误的问题。 (issue #560)
 - `Fix(Core)` 修复因设置 `pluginOrder` 导致插件面板排序错误的问题。 (issue #559)
+- `Fix(Core)` 修复因 `Touch` 事件中的 `preventDefault` 导致的 intervention 错误。 (issue #546)
 - `Chore` 添加 `env['no-core-js']` 选项来停用构建时使用 core-js polyfill。 (PR #562)
 
 

@@ -293,9 +293,9 @@
   class:vc-toggle={showMain}
   style="{fontSize ? 'font-size:' + fontSize + ';' : ''}"
   data-theme={theme}
-  on:touchstart|capture={mockTapEvent.touchStart}
-  on:touchmove|capture={mockTapEvent.touchMove}
-  on:touchend|capture={mockTapEvent.touchEnd}
+  on:touchstart|capture|nonpassive={mockTapEvent.touchStart}
+  on:touchmove|capture|nonpassive={mockTapEvent.touchMove}
+  on:touchend|capture|nonpassive={mockTapEvent.touchEnd}
 >
   <SwitchButton
     bind:show={showSwitchButton}

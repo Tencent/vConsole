@@ -8,6 +8,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix(Log)` Fix a typo that misjudged circular reference objects. (issue #566)
 - `Fix(Storage)` Fix storage pannel sorting error when setting `storage.defaultStorages` option. (issue #560)
 - `Fix(Core)` Fix plugin panel sorting error when setting `pluginOrder` option. (issue #559)
+- `Fix(Core)` Fix intervention error caused by `preventDefault` in `Touch` events. (issue #546)
 - `Chore` Add option `env['no-core-js']` to disable core-js polyfill. (PR #562)
 
 
