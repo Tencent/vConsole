@@ -2,7 +2,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 ## 3.14.7 (2022-09-??)
 
-- `Feat(Log)` Optimize rendering performance when adding logs. (PR #567)
+- `Perf(Log)` Optimize rendering performance when adding logs. (PR #567)
 - `Fix(Log)` Fix `window.onerror` missing line breaks.
 - `Fix(Log)` Fix unclickable `vc-cmd-clear-btn` on iOS Safari. (PR #564)
 - `Fix(Log)` Fix a typo that misjudged circular reference objects. (issue #566)

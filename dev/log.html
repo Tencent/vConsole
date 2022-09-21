@@ -14,9 +14,16 @@
 <body ontouchstart>
   <div id="page" class="page">
     <div class="section">
+    <div class="hd">String</div>
+
+      <a onclick="simpleStrings()" href="javascript:;" class="weui_btn weui_btn_default">Simple Strings</a>
+      <a onclick="printf()" href="javascript:;" class="weui_btn weui_btn_default">Printf</a>
+      <a onclick="styling()" href="javascript:;" class="weui_btn weui_btn_default">Styling</a>
+    </div>
+
+    <div class="section">
       <div class="hd">Object</div>
 
-      <a onclick="(() => console.log('Hello vConsole!'))()" href="javascript:;" class="weui_btn weui_btn_default">A Simple String</a>
       <a onclick="normalObject()" href="javascript:;" class="weui_btn weui_btn_default">Common Object</a>
       <a onclick="largeObject()" href="javascript:;" class="weui_btn weui_btn_default">Large Object</a>
       <a onclick="circularObject()" href="javascript:;" class="weui_btn weui_btn_default">Circular Object & Array</a>
@@ -119,6 +126,24 @@ var aa = {
   },
   bc: [1, 2, 3],
 };
+
+function simpleStrings() {
+  console.log('Hello vConsole!');
+  console.log(`Line 1,
+  Line 2`);
+}
+
+function printf() {
+  console.log('Hi %s, Im %s', 'Foo', 'Bar'); // Hi Foo, Im Bar
+  console.log('I had %d cakes', 3); // I had 3 cakes
+  console.log('The %o is large', aa); // The [[aa]] is large
+}
+
+function styling() {
+  console.log('%c blue %c red', 'color:blue', 'color:red'); // blue red
+  console.log('%c FOO', 'font-weight:bold', 'bar'); // FOO bar
+  console.log('%c Foo %c bar', 'color:red'); // Foo %c bar
+}
 
 function differentPanelLog() {
   console.log('[default]', 'This log should be shown in Log panel.');
@@ -298,7 +323,7 @@ function xssLog() {
     'key': 'foo\nbar\tyoo',
     "-->\tyo\n'\"/><div>": "-->\n'\"/><iframe>"
   };
-  console.log('XSS str:', "-->\tyo\n'\"/><iframe>");
+  console.log('XSS str:', "-->\tyo\n'\"/><iframe><i>");
   console.log(arr);
   console.log(obj);
 }
