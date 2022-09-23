@@ -9,7 +9,7 @@ const BuildTarget = ['web', 'wx'];
 module.exports = (env, argv) => {
   const isDev = argv.mode === 'development';
   const __TARGET__ = BuildTarget.indexOf(env.target) === -1 ? BuildTarget[0] : env.target;
-  const noCoreJS = !!env['no-core-js']
+  const noCoreJS = !!env['no-core-js'] || __TARGET__ === 'wx';
   // define plugins
   const plugins = [
     new Webpack.BannerPlugin({
