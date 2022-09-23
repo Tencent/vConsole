@@ -185,6 +185,7 @@ type ISafeJSONStringifyOption = {
   maxDepth: number,
   keyMaxLen: number,
   pretty: boolean,
+  standardJSON: boolean,
   circularFinder: (val: any) => any,
 };
 const _safeJSONStringifyCircularFinder = () => {
@@ -227,11 +228,13 @@ const _safeJSONStringify = (obj, opt: ISafeJSONStringifyOption, _curDepth = 0) =
 
   const isCircular = opt.circularFinder(obj);
   if (isCircular) {
+    let circularText = '';
     if (isArray(obj)) {
-      opt.ret += '(Circular Array)';
+      circularText = '(Circular Array)';
     } else if (isObject(obj)) {
-      opt.ret += `(Circular ${obj.constructor?.name || 'Object'})`;
+      circularText = `(Circular ${obj.constructor?.name || 'Object'})`;
     }
+    opt.ret += opt.standardJSON ? `"${circularText}"` : circularText;
     return;
   }
 
@@ -261,6 +264,8 @@ const _safeJSONStringify = (obj, opt: ISafeJSONStringifyOption, _curDepth = 0) =
       if (!isArray(obj)) {
         if (isObject(key) || isArray(key) || isSymbol(key)) {
           opt.ret += Object.prototype.toString.call(key);
+        } else if (isString(key) && opt.standardJSON) {
+          opt.ret += '"' + key + '"';
         } else {
           opt.ret += key;
         }
@@ -294,7 +299,7 @@ const _safeJSONStringify = (obj, opt: ISafeJSONStringifyOption, _curDepth = 0) =
 
     } catch (e) {
       // cannot stringify `value`, use a default text
-      opt.ret += '(...)';
+      opt.ret += opt.standardJSON ? '"(PARSE_ERROR)"' : '(PARSE_ERROR)';
     }
 
     if (opt.keyMaxLen > 0 && opt.ret.length >= opt.keyMaxLen * 10) {
@@ -311,12 +316,23 @@ const _safeJSONStringify = (obj, opt: ISafeJSONStringifyOption, _curDepth = 0) =
 /**
  * A safe `JSON.stringify` method. 
  */
-export function safeJSONStringify(obj, opt: { maxDepth?: number, keyMaxLen?: number, pretty?: boolean } = { maxDepth: -1, keyMaxLen: -1, pretty: false, }) {
+export function safeJSONStringify(obj, opt: {
+  maxDepth?: number,
+  keyMaxLen?: number,
+  pretty?: boolean,
+  standardJSON?: boolean,
+} = {
+  maxDepth: -1,
+  keyMaxLen: -1,
+  pretty: false,
+  standardJSON: false,
+}) {
   const option: ISafeJSONStringifyOption = Object.assign({
     ret: '',
     maxDepth: -1,
     keyMaxLen: -1,
     pretty: false,
+    standardJSON: false,
     circularFinder: _safeJSONStringifyCircularFinder(),
   }, opt);
   _safeJSONStringify(obj, option);

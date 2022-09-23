@@ -6,6 +6,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix(Log)` Fix `window.onerror` missing line breaks.
 - `Fix(Log)` Fix unclickable `vc-cmd-clear-btn` on iOS Safari. (PR #564)
 - `Fix(Log)` Fix a typo that misjudged circular reference objects. (issue #566)
+- `Fix(Log|Network)` Copy objects or arrays as standard JSON format. (issue #547)
 - `Fix(Network)` Fix `Fetch` stays in pending status when `window` is proxied. (issue #556)
 - `Fix(Storage)` Fix storage pannel sorting error when setting `storage.defaultStorages` option. (issue #560)
 - `Fix(Core)` Fix plugin panel sorting error when setting `pluginOrder` option. (issue #559)
