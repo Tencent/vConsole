@@ -48,17 +48,18 @@ export class VConsoleDefaultPlugin extends VConsoleLogPlugin {
     this.onErrorHandler = this.onErrorHandler ? this.onErrorHandler : (event) => {
       let msg = event.message;
       if (event.filename) {
-        msg += '\n' + event.filename.replace(location.origin, '');
-      }
-      if (event.lineno || event.colno) {
-        msg += ':' + event.lineno + ':' + event.colno;
+        msg += '\\n\\t' + event.filename.replace(location.origin, '');
+        if (event.lineno || event.colno) {
+          msg += ':' + event.lineno + ':' + event.colno;
+        }
       }
       // print error stack info
       const hasStack = !!event.error && !!event.error.stack;
       const stackInfo = (hasStack && event.error.stack.toString()) || '';
+      msg += '\\n' + stackInfo;
       this.model.addLog({
         type: 'error',
-        origData: [msg, stackInfo],
+        origData: [msg],
       }, { noOrig: true });
     };
     window.removeEventListener('error', this.onErrorHandler);

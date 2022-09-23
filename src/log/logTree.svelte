@@ -1,3 +1,4 @@
+<svelte:options immutable/>
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import * as tool from '../lib/tool';

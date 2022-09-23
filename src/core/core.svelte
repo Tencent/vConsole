@@ -25,7 +25,7 @@
   export let switchButtonPosition = { x: 0, y: 0 };
   export let activedPluginId = '';
   export let pluginList: { [id: string]: IPlugin } = {};
-  export let divContentInner: HTMLElement = undefined;
+  export let divContent: HTMLElement;
 
 
   /*************************************
@@ -34,7 +34,6 @@
 
 	const dispatch = createEventDispatcher();
   let preventContentMove = false;
-  let divContent: HTMLElement;
   let unsubscribe: ReturnType<typeof contentStore.subscribe>;
   let fontSize = '';
   let showMain = false;
@@ -294,9 +293,9 @@
   class:vc-toggle={showMain}
   style="{fontSize ? 'font-size:' + fontSize + ';' : ''}"
   data-theme={theme}
-  on:touchstart|capture={mockTapEvent.touchStart}
-  on:touchmove|capture={mockTapEvent.touchMove}
-  on:touchend|capture={mockTapEvent.touchEnd}
+  on:touchstart|capture|nonpassive={mockTapEvent.touchStart}
+  on:touchmove|capture|nonpassive={mockTapEvent.touchMove}
+  on:touchend|capture|nonpassive={mockTapEvent.touchEnd}
 >
   <SwitchButton
     bind:show={showSwitchButton}
@@ -347,7 +346,6 @@
           id="__vc_plug_{plugin.id}"
           class="vc-plugin-box"
           class:vc-actived="{plugin.id === activedPluginId}"
-          bind:this={divContentInner}
         ></div>
       {/each}
     </div>

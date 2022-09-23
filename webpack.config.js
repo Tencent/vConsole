@@ -9,6 +9,40 @@ const BuildTarget = ['web', 'wx'];
 module.exports = (env, argv) => {
   const isDev = argv.mode === 'development';
   const __TARGET__ = BuildTarget.indexOf(env.target) === -1 ? BuildTarget[0] : env.target;
+  const noCoreJS = !!env['no-core-js'] || __TARGET__ === 'wx';
+  // define plugins
+  const plugins = [
+    new Webpack.BannerPlugin({
+      banner: [
+        'vConsole v' + pkg.version + ' (' + pkg.homepage + ')',
+        '',
+        'Tencent is pleased to support the open source community by making vConsole available.',
+        'Copyright (C) 2017 THL A29 Limited, a Tencent company. All rights reserved.',
+        'Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at',
+        'http://opensource.org/licenses/MIT',
+        'Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.',
+      ].join('\n'),
+      entryOnly: true,
+    }),
+    new Webpack.DefinePlugin({
+      __VERSION__: JSON.stringify(pkg.version),
+      __TARGET__: JSON.stringify(__TARGET__),
+    }),
+  ];
+  if (isDev) {
+    plugins.push({
+      apply: (compiler) => {
+        compiler.hooks.done.tap('DeclarationEmitter', () => {
+          execSync('npm run build:typings');
+        });
+      },
+    })
+  }
+  if (noCoreJS) {
+    const dummyModulePath = Path.resolve(__dirname, './build/dummy.js');
+    plugins.push(new Webpack.NormalModuleReplacementPlugin(/^core-js\/.*/, dummyModulePath));
+  }
+
   return {
     mode: argv.mode,
     devtool: false,
@@ -108,31 +142,6 @@ module.exports = (env, argv) => {
     watchOptions: {
       ignored: ['**/node_modules'],
     },
-    plugins: [
-      new Webpack.BannerPlugin({
-        banner: [
-          'vConsole v' + pkg.version + ' (' + pkg.homepage + ')',
-          '',
-          'Tencent is pleased to support the open source community by making vConsole available.',
-          'Copyright (C) 2017 THL A29 Limited, a Tencent company. All rights reserved.',
-          'Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at',
-          'http://opensource.org/licenses/MIT',
-          'Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.',
-        ].join('\n'),
-        entryOnly: true,
-      }),
-      new Webpack.DefinePlugin({
-        __VERSION__: JSON.stringify(pkg.version),
-        __TARGET__: JSON.stringify(__TARGET__),
-      }),
-      {
-        apply: (compiler) => {
-          compiler.hooks.done.tap('DeclarationEmitter', () => {
-            if (isDev) return; // only emit declarations in prod mode
-            execSync('npm run build:typings');
-          });
-        },
-      },
-    ],
+    plugins
   };
 };

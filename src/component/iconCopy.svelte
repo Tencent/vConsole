@@ -15,7 +15,12 @@
       text = handler(content) || '';
     } else {
       if (tool.isObject(content) || tool.isArray(content)) {
-        text = tool.safeJSONStringify(content);
+        text = tool.safeJSONStringify(content, {
+          maxDepth: 10,
+          keyMaxLen: 10000,
+          pretty: false,
+          standardJSON: true,
+        });
       } else {
         text = content;
       }

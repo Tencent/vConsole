@@ -56,6 +56,8 @@ export class VConsoleLogModel extends VConsoleModel {
   public maxLogNumber: number = 1000;
   protected logCounter: number = 0; // a counter used to do some tasks on a regular basis
   protected pluginPattern: RegExp;
+  protected logQueue: IVConsoleLog[] = [];
+  protected flushLogScheduled: boolean = false;
 
   /**
    * The original `window.console` methods.
@@ -113,7 +115,7 @@ export class VConsoleLogModel extends VConsoleModel {
 
   /**
    * Hook `window.console` with vConsole log method.
-   * Methods will be hooked only once. 
+   * Methods will be hooked only once.
    */
   public mockConsole() {
     if (typeof this.origConsole.log === 'function') {
@@ -228,7 +230,7 @@ export class VConsoleLogModel extends VConsoleModel {
       return store;
     });
   }
-  
+
   /**
    * Add a vConsole log.
    */
@@ -249,16 +251,8 @@ export class VConsoleLogModel extends VConsoleModel {
     // }
     // log.data = getLogDatasWithFormatting(item?.origData);
 
-    // extract pluginId by `[xxx]` format
-    const pluginId = this._extractPluginIdByLog(log);
+    this._signalLog(log);
 
-    if (this._isRepeatedLog(pluginId, log)) {
-      this._updateLastLogRepeated(pluginId);
-    } else {
-      this._pushLogList(pluginId, log);
-      this._limitLogListLength();
-    }
-    
     if (!opt?.noOrig) {
       // logging to original console
       this.callOriginalConsole(item.type, ...item.origData);
@@ -292,6 +286,54 @@ export class VConsoleLogModel extends VConsoleModel {
     }, { cmdType: 'output' });
   };
 
+  protected _signalLog(log: IVConsoleLog) {
+    // throttle addLog
+    if (!this.flushLogScheduled) {
+      this.flushLogScheduled = true;
+      window.requestAnimationFrame(() => {
+        this.flushLogScheduled = false;
+        this._flushLogs();
+      });
+    }
+    this.logQueue.push(log);
+  }
+
+  protected _flushLogs() {
+    const logQueue = this.logQueue;
+    this.logQueue = [];
+    const pluginLogs: Record<string, IVConsoleLog[]> = {};
+
+    // extract pluginId by `[xxx]` format
+    for (const log of logQueue) {
+      const pluginId = this._extractPluginIdByLog(log);
+
+      (pluginLogs[pluginId] = pluginLogs[pluginId] || []).push(log);
+    }
+
+    const pluginIds = Object.keys(pluginLogs);
+    for (const pluginId of pluginIds) {
+      const logs = pluginLogs[pluginId];
+
+      const store = Store.get(pluginId);
+      store.update((store) => {
+        let logList = [...store.logList];
+
+        for (const log of logs) {
+          if (this._isRepeatedLog(logList, log)) {
+            this._updateLastLogRepeated(logList);
+          } else {
+            logList.push(log);
+          }
+        }
+
+        logList = this._limitLogListLength(logList);
+
+        return { logList };
+      })
+    }
+    contentStore.updateTime();
+  }
+
   protected _extractPluginIdByLog(log: IVConsoleLog) {
     // if origData[0] is `[xxx]` format, and `xxx` is a Log plugin id,
     // then put this log to that plugin,
@@ -312,9 +354,8 @@ export class VConsoleLogModel extends VConsoleModel {
     return pluginId;
   }
 
-  protected _isRepeatedLog(pluginId: string, log: IVConsoleLog) {
-    const store = Store.getRaw(pluginId);
-    const lastLog = store.logList[store.logList.length - 1];
+  protected _isRepeatedLog(logList: IVConsoleLog[], log: IVConsoleLog) {
+    const lastLog = logList[logList.length - 1];
     if (!lastLog) {
       return false;
     }
@@ -332,42 +373,32 @@ export class VConsoleLogModel extends VConsoleModel {
     return isRepeated;
   }
 
-  protected _updateLastLogRepeated(pluginId: string) {
-    Store.get(pluginId).update((store) => {
-      const list = store.logList
-      const last = list[list.length - 1];
-      last.repeated = last.repeated ? last.repeated + 1 : 2;
-      return store;
-    });
+  protected _updateLastLogRepeated(logList: IVConsoleLog[]) {
+    const last = logList[logList.length - 1];
+    const repeated = last.repeated ? last.repeated + 1 : 2;
+    logList[logList.length - 1] = {
+      ...last,
+      repeated,
+    };
+    return logList;
   }
 
-  protected _pushLogList(pluginId: string, log: IVConsoleLog) {
-    Store.get(pluginId).update((store) => {
-      store.logList.push(log);
-      return store;
-    });
-    contentStore.updateTime();
-  }
-
-  protected _limitLogListLength() {
+  protected _limitLogListLength(logList: IVConsoleLog[]): IVConsoleLog[] {
     // update logList length every N rounds
-    const N = 10;
-    this.logCounter++;
-    if (this.logCounter % N !== 0) {
-      return;
-    }
-    this.logCounter = 0;
+    // const N = 10;
+    // this.logCounter++;
+    // if (this.logCounter % N !== 0) {
+    //   return logList;
+    // }
+    // this.logCounter = 0;
 
-    const stores = Store.getAll();
-    for (const id in stores) {
-      stores[id].update((store) => {
-        if (store.logList.length > this.maxLogNumber - N) {
-          // delete N more logs for performance
-          store.logList.splice(0, store.logList.length - this.maxLogNumber + N);
-          // this.callOriginalConsole('info', 'delete', id, store[id].logList.length);
-        }
-        return store;
-      });
+    const len = logList.length;
+    const maxLen = this.maxLogNumber;
+    if (len > maxLen) {
+      // delete N more logs for performance
+      // this.callOriginalConsole('info', 'delete', len, len - maxLen);
+      return logList.slice(len - maxLen, len);
     }
+    return logList;
   }
 }

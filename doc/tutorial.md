@@ -127,13 +127,13 @@ console.log('%c FOO', 'font-weight:bold', 'bar'); // FOO bar
 console.log('%c Foo %c bar', 'color:red'); // Foo %c bar
 ```
 
-> Note that only first parameter support `%c` format, and the following parameter(s) will be used as HTML style to fill `%c`, and the remain `%c` or parameters will be shown as normal string.
+> Note that only the first parameter support `%c` format, and the `%c` must be followed by a space. The following parameter(s) will be used as HTML style to fill `%c`, and the remain `%c` or parameters will be shown as normal string.
 
 ---
 
 ### Using string substitutions
 
-Use `%s, %d, %o` to output log with formatting.
+Use `%s, %d, %o` to output a log with formatting. The pattern must be followed by a space.
 
 - `%s`: Output as a string. Non-string objects will be converted into strings.
 - `%d`: Output as a number.

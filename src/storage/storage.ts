@@ -1,4 +1,5 @@
 import { get } from 'svelte/store';
+import { isArray } from '../lib/tool';
 import { VConsoleSveltePlugin } from '../lib/sveltePlugin';
 import { VConsoleStorageModel, storageStore } from './storage.model';
 import { default as StorageComp } from './storage.svelte';
@@ -53,9 +54,14 @@ export class VConsoleStoragePlugin extends VConsoleSveltePlugin {
   }
 
   public onUpdateOption() {
-    if (typeof this.vConsole.option.storage?.defaultStorages !== 'undefined') {
-      storageStore.defaultStorages.set(this.vConsole.option.storage?.defaultStorages || []);
-      this.updateTopBar();
+    let defaultStorages = this.vConsole.option.storage?.defaultStorages;
+    if (isArray(defaultStorages)) {
+      defaultStorages = defaultStorages.length > 0 ? defaultStorages : ['cookies'];
+      if (defaultStorages !== get(storageStore.defaultStorages)) {
+        storageStore.defaultStorages.set(defaultStorages);
+        storageStore.activedName.set(defaultStorages[0]);
+        this.updateTopBar();
+      }
     }
   }
 
@@ -73,7 +79,7 @@ export class VConsoleStoragePlugin extends VConsoleSveltePlugin {
         data: {
           name: name,
         },
-        actived: i === 0,
+        actived: name === get(storageStore.activedName),
         onClick: (e: PointerEvent, data: { name: string }) => {
           const activedName = get(storageStore.activedName);
           if (data.name === activedName) {

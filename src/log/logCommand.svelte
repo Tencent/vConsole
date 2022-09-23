@@ -236,11 +236,6 @@
   </ul>
 
   <div class="vc-cmd-input-wrap">
-    {#if cmdValue.length > 0}
-      <div class="vc-cmd-clear-btn" on:click|preventDefault={() => onTapClearText('cmd')}>
-        <Icon name="clear" />
-      </div>
-    {/if}
     <textarea
       class="vc-cmd-input"
       placeholder="command..."
@@ -251,6 +246,11 @@
       on:focus={onCmdFocus}
       on:blur={onCmdBlur}
     ></textarea>
+    {#if cmdValue.length > 0}
+    <div class="vc-cmd-clear-btn" on:click|preventDefault={() => onTapClearText('cmd')}>
+      <Icon name="clear" />
+    </div>
+  {/if}
   </div>
 </form>
 
@@ -258,15 +258,15 @@
   <button class="vc-cmd-btn" type="submit">Filter</button>
   <ul class='vc-cmd-prompted'></ul>
   <div class="vc-cmd-input-wrap">
-    {#if filterValue.length > 0}
-      <div class="vc-cmd-clear-btn" on:click|preventDefault={() => onTapClearText('filter')}>
-        <Icon name="clear" />
-      </div>
-    {/if}
     <textarea
       class="vc-cmd-input"
       placeholder="filter..."
       bind:value={filterValue}
     ></textarea>
+    {#if filterValue.length > 0}
+    <div class="vc-cmd-clear-btn" on:click|preventDefault={() => onTapClearText('filter')}>
+      <Icon name="clear" />
+    </div>
+  {/if}
   </div>
 </form>
