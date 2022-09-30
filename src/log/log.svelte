@@ -5,7 +5,8 @@
   import LogRow from './logRow.svelte';
   import LogCommand from './logCommand.svelte';
   import Style from './log.less';
-  import type { IConsoleLogMethod } from './log.model';
+  import type { IConsoleLogMethod, IVConsoleLog } from './log.model';
+  import RecycleScroller from '../component/recycleScroller/recycleScroller.svelte';
 
   export let pluginId: string = 'default';
   export let showCmd: boolean = false;
@@ -24,6 +25,18 @@
     }
   }
 
+  let logList: IVConsoleLog[] = []
+
+  $: {
+    logList = $store.logList.filter(log =>
+      // filterType
+      (filterType === 'all' || filterType === log.type)
+      &&
+      // filterText
+      (filterText === '' || isMatchedFilterText(log, filterText))
+    )
+  }
+
   onMount(() => {
     Style.use();
   });
@@ -38,24 +51,13 @@
 </script>
 
 <div class="vc-plugin-content" class:vc-logs-has-cmd={showCmd}>
-  {#if $store && $store.logList.length > 0}
-    {#each $store.logList as log (log._id)}
-      {#if (
-        // filterType
-        filterType === 'all' || filterType === log.type)
-        &&
-        // filterText
-        (filterText === '' || isMatchedFilterText(log, filterText)
-      )}
-        <LogRow log={log} showTimestamps={showTimestamps} />
+  <RecycleScroller items={logList} itemHeight={30} buffer={100} >
+    <div slot="empty" class="vc-plugin-empty">Empty</div>
+    <LogRow slot="item" let:item={log} log={log} showTimestamps={showTimestamps} />
+    <svelte:fragment slot="footer">
+      {#if showCmd}
+        <LogCommand on:filterText={onFilterText} />
       {/if}
-    {/each}
-  {:else}
-    <div class="vc-plugin-empty"></div>
-  {/if}
-
-  {#if showCmd}
-    <LogCommand on:filterText={onFilterText} />
-  {/if}
-
+    </svelte:fragment>
+  </RecycleScroller>
 </div>

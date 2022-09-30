@@ -21,6 +21,7 @@ export interface IVConsoleLog {
   type: IConsoleLogMethod;
   cmdType?: 'input' | 'output';
   repeated?: number;
+  toggle: Record<string, boolean>;
   date: number;
   data: IVConsoleLogData[]; // the `args: any[]` of `console.log(...args)`
 }
@@ -240,6 +241,7 @@ export class VConsoleLogModel extends VConsoleModel {
       _id: tool.getUniqueID(),
       type: item.type,
       cmdType: opt?.cmdType,
+      toggle: {},
       date: Date.now(),
       data: getLogDatasWithFormatting(item.origData || []),
     };
