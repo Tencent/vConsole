@@ -61,6 +61,18 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
         this.model.clearPluginLog(this.id);
         this.vConsole.triggerEvent('clearLog');
       }
+    }, {
+      name: 'Top',
+      global: false,
+      onClick: (e) => {
+        this.compInstance.scrollToTop()
+      }
+    }, {
+      name: 'Bottom',
+      global: false,
+      onClick: (e) => {
+        this.compInstance.scrollToBottom()
+      }
     }];
     callback(toolList);
   }

@@ -63,6 +63,7 @@ class TouchTracker {
         };
       }
     }
+    return null
   }
 
   private _onTouchMove = throttleRAF(() => {

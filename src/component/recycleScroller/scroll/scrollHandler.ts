@@ -1,3 +1,4 @@
+import Linear from "./linear";
 import Scroll from "./scroll";
 import { TrackerHandler } from "./touchTracker";
 
@@ -32,7 +33,8 @@ function animation(
 const UNDERSCROLL_TRACKING = 0;
 
 class ScrollHandler implements TrackerHandler {
-  private _scroll: Scroll;
+  private _scrollModel: Scroll;
+  private _linearModel: Linear;
   private _startPosition = 0;
   private _position = 0;
   private _animate: ReturnType<typeof animation> | null = null;
@@ -43,7 +45,8 @@ class ScrollHandler implements TrackerHandler {
     private _updatePosition: (pos: number) => void
   ) {
     this._getExtent = getExtent;
-    this._scroll = new Scroll(getExtent, false);
+    this._scrollModel = new Scroll(getExtent, false);
+    this._linearModel = new Linear();
   }
 
   onTouchStart() {
@@ -98,8 +101,8 @@ class ScrollHandler implements TrackerHandler {
     }
     this._position = pos;
     this._updatePosition(-pos);
-    if (Math.abs(dy) <= 0.1 && Math.abs(velocityY) <= 0.1) return
-    const scroll = this._scroll;
+    if (Math.abs(dy) <= 0.1 && Math.abs(velocityY) <= 0.1) return;
+    const scroll = this._scrollModel;
     scroll.set(pos, velocityY);
     this._animate = animation(scroll, (t) => {
       const pos = (this._position = scroll.x(t));
@@ -120,7 +123,7 @@ class ScrollHandler implements TrackerHandler {
     }
 
     this._position = pos;
-    const scroll = this._scroll;
+    const scroll = this._scrollModel;
     scroll.set(pos, 0);
     this._animate = animation(scroll, (t) => {
       const pos = (this._position = scroll.x(t));
@@ -145,28 +148,45 @@ class ScrollHandler implements TrackerHandler {
       }
     }
 
-    this._position = pos
+    this._position = pos;
 
-    this._updatePosition(-pos)
+    this._updatePosition(-pos);
   }
 
   getPosition() {
     return -this._position;
   }
 
-  updatePosition(position) {
+  updatePosition(position: number) {
     const dx = -position - this._position;
     this._startPosition += dx;
-    this._position += dx
+    this._position += dx;
     const pos = this._position;
 
     this._updatePosition(-pos);
 
-    const scroll = this._scroll;
+    const scroll = this._scrollModel;
     const t = Date.now();
     if (!scroll.done(t)) {
       const dx = scroll.dx(t);
       scroll.set(pos, dx, t);
+    }
+  }
+
+  scrollTo(position: number, duration?: number) {
+    if (this._animate) {
+      this._animate.cancel();
+      this._animate = null
+    }
+    if (duration > 0) {
+      const linearModel = this._linearModel;
+      linearModel.set(this._position, -position, duration);
+      this._animate = animation(this._linearModel, (t) => {
+        const pos = (this._position = linearModel.x(t));
+        this._updatePosition(-pos);
+      });
+    } else {
+      this._updatePosition(position)
     }
   }
 }

@@ -20,7 +20,7 @@ export interface IVConsoleLog {
   _id: string;
   type: IConsoleLogMethod;
   cmdType?: 'input' | 'output';
-  repeated?: number;
+  repeated: number;
   toggle: Record<string, boolean>;
   date: number;
   data: IVConsoleLogData[]; // the `args: any[]` of `console.log(...args)`
@@ -244,6 +244,7 @@ export class VConsoleLogModel extends VConsoleModel {
       toggle: {},
       date: Date.now(),
       data: getLogDatasWithFormatting(item.origData || []),
+      repeated: 0,
     };
     // for (let i = 0; i < item?.origData.length; i++) {
     //   const data: IVConsoleLogData = {

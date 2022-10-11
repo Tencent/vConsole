@@ -16,6 +16,7 @@
   let isInited: boolean = false;
   let filterText: string = '';
   let store: ReturnType<typeof Store.get>;
+  let scrollerHandler
 
   $: {
     if (!isInited) {
@@ -48,10 +49,18 @@
   const onFilterText = (e) => {
     filterText = e.detail.filterText || '';
   };
+
+  export const scrollToTop = () => {
+    scrollerHandler.scrollTo(0, 500)
+  }
+
+  export const scrollToBottom = () => {
+    scrollerHandler.scrollTo(logList.length - 1, 500)
+  }
 </script>
 
 <div class="vc-plugin-content" class:vc-logs-has-cmd={showCmd}>
-  <RecycleScroller items={logList} itemHeight={30} buffer={100} >
+  <RecycleScroller items={logList} itemHeight={30} buffer={100} stickToBottom bind:handler={scrollerHandler}>
     <div slot="empty" class="vc-plugin-empty">Empty</div>
     <LogRow slot="item" let:item={log} log={log} showTimestamps={showTimestamps} />
     <svelte:fragment slot="footer">
