@@ -60,7 +60,15 @@
 </script>
 
 <div class="vc-plugin-content" class:vc-logs-has-cmd={showCmd}>
-  <RecycleScroller items={logList} itemHeight={30} buffer={100} stickToBottom bind:handler={scrollerHandler}>
+  <RecycleScroller
+    items={logList}
+    itemKey="_id"
+    itemHeight={30}
+    buffer={100}
+    stickToBottom
+    scrollbar
+    bind:handler={scrollerHandler}
+  >
     <div slot="empty" class="vc-plugin-empty">Empty</div>
     <LogRow slot="item" let:item={log} log={log} showTimestamps={showTimestamps} />
     <svelte:fragment slot="footer">

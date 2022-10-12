@@ -66,11 +66,11 @@ class TouchTracker {
     return null
   }
 
-  private _onTouchMove = throttleRAF(() => {
+  private _onTouchMove = () => {
     const deltaX = this._historyX[this._historyX.length - 1]
     const deltaY = this._historyY[this._historyY.length - 1]
     this._handler.onTouchMove(deltaX, deltaY);
-  })
+  }
 
   private _onWheel = throttleRAF(() => {
     const deltaX = this._wheelDeltaX
@@ -106,7 +106,7 @@ class TouchTracker {
     this._historyY.push(delta.y);
     this._historyTime.push(Date.now());
 
-    this._onTouchMove.trigger()
+    this._onTouchMove()
   };
 
   handleTouchEnd = (e: TouchEvent) => {
@@ -114,8 +114,6 @@ class TouchTracker {
 
     const delta = this._getTouchDelta(e);
     if (delta === null) return;
-
-    this._onTouchMove.cancel()
 
     let velocityX = 0;
     let velocityY = 0;
@@ -144,8 +142,6 @@ class TouchTracker {
 
     const delta = this._getTouchDelta(e);
     if (delta === null) return;
-
-    this._onTouchMove.cancel()
 
     this._touchId = null;
 
