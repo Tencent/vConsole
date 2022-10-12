@@ -212,7 +212,7 @@
   let isOnBottom = true;
   let avoidRefresh = false;
 
-  const scrollHandler = new ScrollHandler(getScrollExtent, (pos) => {
+  const scrollHandler = new ScrollHandler(getScrollExtent, async (pos) => {
     // if (pos < 0) {
     //   ;(window as any)._vcOrigConsole.error('invalid pos', pos, new Error().stack);
     //   debugger
@@ -220,15 +220,16 @@
     const scrollExtent = getScrollExtent();
     isOnBottom = Math.abs(pos - scrollExtent) <= 1;
 
-    // refresh first to avoid recaculating styles caused by changing transform styles below.
+    contents.style.transform = `translateY(${-pos}px) translateZ(0)`;
+    refreshScrollbar();
+
     if (avoidRefresh) {
       avoidRefresh = false;
     } else {
+      await new Promise(resolve => setTimeout(resolve, 0))
+
       refresh(items, pos, viewportHeight, false);
     }
-
-    contents.style.transform = `translateY(${-pos}px) translateZ(0)`;
-    refreshScrollbar();
   });
 
   const refreshScrollbar = () => {
@@ -386,25 +387,13 @@
     async (height) => {
       if (viewportHeight === height) return;
       // (window as any)._vcOrigConsole.log("viewport height resize", height);
-      // simply refresh is viewport height changes
-      const oldViewportHeight = viewportHeight;
-
       viewportHeight = height;
 
       // setTimeout to avoid ResizeObserver loop limit exceeded error
       await new Promise((resolve) => setTimeout(resolve, 0));
 
-      if (oldViewportHeight === 0) {
-        // viewport invisible to visible
-        refresh(items, scrollHandler.getPosition(), viewportHeight, false);
-        scrollToBottom(isOnBottom && stickToBottom);
-      } else if (viewportHeight === 0) {
-        // visible to invisible
-        refresh(items, scrollHandler.getPosition(), viewportHeight, false);
-      } else {
-        scrollToBottom(isOnBottom && stickToBottom);
-        refresh(items, scrollHandler.getPosition(), viewportHeight, false);
-      }
+      refresh(items, scrollHandler.getPosition(), viewportHeight, false);
+      if (viewportHeight !== 0) scrollToBottom(isOnBottom && stickToBottom);
       refreshScrollbar();
     }
   );
@@ -416,6 +405,8 @@
       // ;(window as any)._vcOrigConsole.log('footer height resize', height);
       // no need to fresh
       footerHeight = height;
+      if (viewportHeight !== 0) scrollToBottom(isOnBottom && stickToBottom);
+      refreshScrollbar();
     }
   );
 
