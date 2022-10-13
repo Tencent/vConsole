@@ -226,7 +226,7 @@
     if (avoidRefresh) {
       avoidRefresh = false;
     } else {
-      await new Promise(resolve => setTimeout(resolve, 0))
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
       refresh(items, pos, viewportHeight, false);
     }
@@ -467,9 +467,20 @@
   const touchTracker = new TouchTracker(scrollHandler);
 
   export const handler = {
-    scrollTo: (index: number, duration?: number) => {
+    scrollTo: (index: number) => {
       const itemPos = topMap[Math.max(0, Math.min(items.length - 1, index))];
       const scrollPos = Math.min(getScrollExtent(), itemPos);
+
+      const maxDuration = 500;
+      const minPixelsPerSecond = 2000;
+
+      const duration = Math.min(
+        Math.floor(
+          (maxDuration * Math.abs(scrollHandler.getPosition() - scrollPos)) /
+            minPixelsPerSecond
+        ),
+        maxDuration
+      );
 
       scrollHandler.scrollTo(scrollPos, duration);
     },

@@ -52,11 +52,11 @@
   };
 
   export const scrollToTop = () => {
-    scrollerHandler.scrollTo(0, 500);
+    scrollerHandler.scrollTo(0);
   };
 
   export const scrollToBottom = () => {
-    scrollerHandler.scrollTo(logList.length - 1, 500);
+    scrollerHandler.scrollTo(logList.length - 1);
   };
 
   export const options: IVConsoleTabOptions = {
