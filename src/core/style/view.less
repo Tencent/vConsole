@@ -57,9 +57,8 @@
 // content
 .vc-content {
   background-color: var(--VC-BG-2);
-  overflow: hidden;
-  // overflow-x: hidden;
-  // overflow-y: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   position: absolute;
   top: (40em / @font);
   left: 0;
@@ -75,6 +74,8 @@
 .vc-plugin-box {
   display: none;
   position: relative;
+}
+.vc-plugin-box.vc-fixed-height {
   height: 100%;
 }
 .vc-plugin-box.vc-actived {

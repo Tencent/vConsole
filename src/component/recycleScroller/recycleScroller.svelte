@@ -234,9 +234,9 @@
 
   const refreshScrollbar = () => {
     const pos = scrollHandler.getPosition();
-    const fac = viewportHeight / (frameHeight + footerHeight);
+    const fac = 100 / (frameHeight + footerHeight);
     scrollbarThumbPos = pos * fac;
-    scrollbarThumbHeight = 100 * fac;
+    scrollbarThumbHeight = viewportHeight * fac;
   };
 
   const scrollToBottom = (force?: boolean) => {
@@ -515,7 +515,7 @@
       <div
         class="vc-scroller-scrollbar-thumb"
         style:height="{scrollbarThumbHeight}%"
-        style:transform="translateY({scrollbarThumbPos}px) translateZ(0)"
+        style:top="{scrollbarThumbPos}%"
       />
     </div>
   {/if}

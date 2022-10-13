@@ -1,22 +1,23 @@
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
-  import { isMatchedFilterText } from './logTool';
-  import { VConsoleLogStore as Store } from './log.store';
-  import LogRow from './logRow.svelte';
-  import LogCommand from './logCommand.svelte';
-  import Style from './log.less';
-  import type { IConsoleLogMethod, IVConsoleLog } from './log.model';
-  import RecycleScroller from '../component/recycleScroller/recycleScroller.svelte';
+  import { onMount, onDestroy } from "svelte";
+  import { isMatchedFilterText } from "./logTool";
+  import { VConsoleLogStore as Store } from "./log.store";
+  import LogRow from "./logRow.svelte";
+  import LogCommand from "./logCommand.svelte";
+  import Style from "./log.less";
+  import type { IConsoleLogMethod, IVConsoleLog } from "./log.model";
+  import RecycleScroller from "../component/recycleScroller/recycleScroller.svelte";
+  import type { IVConsoleTabOptions } from "../lib/plugin";
 
-  export let pluginId: string = 'default';
+  export let pluginId: string = "default";
   export let showCmd: boolean = false;
-  export let filterType: 'all' | IConsoleLogMethod = 'all';
+  export let filterType: "all" | IConsoleLogMethod = "all";
   export let showTimestamps: boolean = false;
 
   let isInited: boolean = false;
-  let filterText: string = '';
+  let filterText: string = "";
   let store: ReturnType<typeof Store.get>;
-  let scrollerHandler
+  let scrollerHandler;
 
   $: {
     if (!isInited) {
@@ -26,16 +27,16 @@
     }
   }
 
-  let logList: IVConsoleLog[] = []
+  let logList: IVConsoleLog[] = [];
 
   $: {
-    logList = $store.logList.filter(log =>
-      // filterType
-      (filterType === 'all' || filterType === log.type)
-      &&
-      // filterText
-      (filterText === '' || isMatchedFilterText(log, filterText))
-    )
+    logList = $store.logList.filter(
+      (log) =>
+        // filterType
+        (filterType === "all" || filterType === log.type) &&
+        // filterText
+        (filterText === "" || isMatchedFilterText(log, filterText))
+    );
   }
 
   onMount(() => {
@@ -47,16 +48,20 @@
   });
 
   const onFilterText = (e) => {
-    filterText = e.detail.filterText || '';
+    filterText = e.detail.filterText || "";
   };
 
   export const scrollToTop = () => {
-    scrollerHandler.scrollTo(0, 500)
-  }
+    scrollerHandler.scrollTo(0, 500);
+  };
 
   export const scrollToBottom = () => {
-    scrollerHandler.scrollTo(logList.length - 1, 500)
-  }
+    scrollerHandler.scrollTo(logList.length - 1, 500);
+  };
+
+  export const options: IVConsoleTabOptions = {
+    fixedHeight: true,
+  };
 </script>
 
 <div class="vc-plugin-content" class:vc-logs-has-cmd={showCmd}>

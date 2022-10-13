@@ -28,7 +28,7 @@
   bind:this={item}
   class="vc-scroller-item"
   style:display={show ? "block" : "none"}
-  style:transform="translateY({top}px) translateZ(0)"
+  style:top="{top}px"
 >
   <slot />
 </div>

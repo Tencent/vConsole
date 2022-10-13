@@ -30,6 +30,10 @@ export interface IVConsoleToolbarOptions {
   onClick?: (e: Event, data?: any) => any;
 }
 
+export interface IVConsoleTabOptions {
+  fixedHeight?: boolean
+}
+
 /**
  * vConsole Plugin Base Class
  */
@@ -40,7 +44,7 @@ export class VConsolePlugin {
   protected _id: string;
   protected _name: string;
   protected _vConsole: VConsole;
-  
+
   constructor(...args);
   constructor(id: string, name = 'newPlugin') {
     this.id = id;
