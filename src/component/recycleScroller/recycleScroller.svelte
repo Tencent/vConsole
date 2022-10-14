@@ -4,6 +4,7 @@
   import ScrollHandler from "./scroll/scrollHandler";
   import TouchTracker from "./scroll/touchTracker";
   import Style from "./recycleScroller.less";
+  import createRecycleManager from "./recycleManager";
 
   // props
   export let items: any[];
@@ -30,181 +31,12 @@
   let scrollbarThumbHeight = 100;
   let scrollbarThumbPos = 0;
 
-  let heightMap = [];
-  let topMap = [];
+  const heightMap = [];
+  const topMap = [];
   // sort by key
-  let visible: { key: number; index: number; data: any; show: boolean }[] = [];
-  // sort by index
-  let orderedVisible: {
-    key: number;
-    index: number;
-    data: any;
-    show: boolean;
-  }[] = [];
+  let visible: { key: number; index: number; show: boolean }[] = [];
 
-  const updateVisible = (start, end) => {
-    // (window as any)._vcOrigConsole.log("updateVisible", start, end);
-    const newVisible: {
-      key: number;
-      index: number;
-      data: any;
-      show: boolean;
-    }[] = [];
-    // const visibleCount = end - start
-    const poolCount = orderedVisible.length;
-    // ;(window as any)._vcOrigConsole.log('poolCount', poolCount)
-
-    if (poolCount === 0) {
-      for (let i = start; i < end; i += 1) {
-        newVisible.push({
-          key: i - start,
-          index: i,
-          data: items[i],
-          show: true,
-        });
-      }
-      orderedVisible = newVisible;
-      visible = newVisible.slice().sort((a, b) => a.key - b.key);
-      return;
-    }
-
-    const firstPool = orderedVisible[0].index;
-    const lastPool = orderedVisible[poolCount - 1].index + 1;
-
-    // ;(window as any)._vcOrigConsole.log('firstPool', firstPool)
-    // ;(window as any)._vcOrigConsole.log('lastPool', lastPool)
-
-    // 计算新的 visible 区域
-    const newFirstPool =
-      start <= lastPool
-        ? // 1. 开头一定在 [0, start]
-          Math.max(
-            0,
-            Math.min(
-              start,
-              // 2. 开头一定在 [firstPool, lastPool) 之间
-              Math.max(firstPool, Math.min(lastPool - 1, end - poolCount))
-            )
-          )
-        : start; // lastPool 如果比 start 小，则前部无法保留下来
-
-    const newLastPool =
-      firstPool <= end
-        ? // 1. 结尾一定在 [end, items.length] 之间
-          Math.max(
-            end,
-            Math.min(
-              items.length,
-              // 2. 结尾一定在 (firstPool, lastPool] 之间
-              Math.max(
-                firstPool + 1,
-                Math.min(lastPool, newFirstPool + poolCount)
-              )
-            )
-          )
-        : end; // end 如果比 firstPool 小，则后部无法保留下来
-
-    // ;(window as any)._vcOrigConsole.log('newFirstPool', newFirstPool)
-    // ;(window as any)._vcOrigConsole.log('newLastPool', newLastPool)
-
-    if (newLastPool - newFirstPool < poolCount) {
-      // 数量少于上次，无法复用，全都重新生成
-      for (let i = start; i < end; i += 1) {
-        newVisible.push({
-          key: i - start,
-          index: i,
-          data: items[i],
-          show: true,
-        });
-      }
-      orderedVisible = newVisible;
-      visible = newVisible.slice().sort((a, b) => a.key - b.key);
-      return;
-    }
-
-    let usedPoolIndex = 0;
-    let usedPoolOffset = 0;
-
-    // 复用区域
-    let reuseStart = 0;
-    let reuseEnd = 0;
-
-    if (lastPool < newFirstPool || newLastPool < firstPool) {
-      // 完全没有交集，随便复用
-      reuseStart = newFirstPool;
-      reuseEnd = newFirstPool + poolCount;
-    } else if (firstPool < newFirstPool) {
-      // 开头复用
-      usedPoolOffset = newFirstPool - firstPool;
-      reuseStart = newFirstPool;
-      reuseEnd = newFirstPool + poolCount;
-    } else if (newLastPool < lastPool) {
-      // 尾部复用
-      usedPoolOffset = poolCount - (lastPool - newLastPool);
-      reuseStart = newLastPool - poolCount;
-      reuseEnd = newLastPool;
-    } else if (newFirstPool <= firstPool && lastPool <= newLastPool) {
-      // 新的 visible 是完全子集，直接复用
-      reuseStart = firstPool;
-      reuseEnd = lastPool;
-    }
-
-    // ;(window as any)._vcOrigConsole.log('usedPoolIndex', usedPoolIndex)
-    // ;(window as any)._vcOrigConsole.log('usedPoolOffset', usedPoolOffset)
-    // ;(window as any)._vcOrigConsole.log('reuseStart', reuseStart)
-    // ;(window as any)._vcOrigConsole.log('reuseEnd', reuseEnd)
-
-    // 开头不可见区域
-    // 如果有不可见区域，则一定是来自上一次 visible 的复用 row
-    for (let i = newFirstPool; i < start; i += 1, usedPoolIndex += 1) {
-      const pool = orderedVisible[(usedPoolOffset + usedPoolIndex) % poolCount];
-      newVisible.push({
-        key: pool.key,
-        index: i,
-        data: items[i],
-        show: false,
-      });
-    }
-
-    // 可见区域
-    for (let i = start, keyIndex = 0; i < end; i += 1) {
-      let key;
-      if (reuseStart <= i && i < reuseEnd) {
-        // 复用 row
-        const pool =
-          orderedVisible[(usedPoolOffset + usedPoolIndex) % poolCount];
-        key = pool.key;
-        usedPoolIndex += 1;
-      } else {
-        // 新建 row
-        key = poolCount + keyIndex;
-        keyIndex += 1;
-      }
-      newVisible.push({
-        key,
-        index: i,
-        data: items[i],
-        show: true,
-      });
-    }
-
-    // 末尾不可见区域
-    // 如果有不可见区域，则一定是来自上一次 visible 的复用 row
-    for (let i = end; i < newLastPool; i += 1, usedPoolIndex += 1) {
-      const pool = orderedVisible[(usedPoolOffset + usedPoolIndex) % poolCount];
-      newVisible.push({
-        key: pool.key,
-        index: i,
-        data: items[i],
-        show: false,
-      });
-    }
-
-    orderedVisible = newVisible;
-    visible = newVisible.slice().sort((a, b) => a.key - b.key);
-    // (window as any)._vcOrigConsole.log("orderedVisible", orderedVisible);
-    // (window as any)._vcOrigConsole.log("visible", visible);
-  };
+  const updateVisible = createRecycleManager()
 
   const getScrollExtent = () =>
     Math.max(0, frameHeight + footerHeight - viewportHeight);
@@ -228,7 +60,7 @@
     } else {
       await new Promise((resolve) => setTimeout(resolve, 0));
 
-      refresh(items, pos, viewportHeight, false);
+      refresh(items, pos, viewportHeight);
     }
   });
 
@@ -299,7 +131,7 @@
 
     oldItems = items;
 
-    refresh(items, scrollHandler.getPosition(), viewportHeight, true);
+    refresh(items, scrollHandler.getPosition(), viewportHeight);
     frame.style.height = `${frameHeight}px`;
     scrollToBottom(isOnBottom && stickToBottom);
     refreshScrollbar();
@@ -309,25 +141,14 @@
     items: any[],
     scrollTop: number,
     viewportHeight: number,
-    force: boolean
   ) {
-    // (window as any)._vcOrigConsole.error(
-    //   "refresh",
-    //   items.length,
-    //   scrollTop,
-    //   viewportHeight
-    // );
-
     let i = 0;
     let y = 0;
-    let oldStart = start;
-    let oldEnd = end;
 
     while (i < items.length && y + heightMap[i] < scrollTop - buffer) {
       y += heightMap[i];
       i += 1;
     }
-    // (window as any)._vcOrigConsole.error("refresh start", i, y);
 
     start = i;
 
@@ -339,13 +160,10 @@
       y += heightMap[i];
       i += 1;
     }
-    // (window as any)._vcOrigConsole.error("refresh end", i, y);
 
     end = i;
 
-    if (oldStart !== start || oldEnd !== end || force) {
-      updateVisible(start, end);
-    }
+    visible = updateVisible(items.length, start, end);
   }
 
   const registerHeightObserver = (
@@ -392,7 +210,7 @@
       // setTimeout to avoid ResizeObserver loop limit exceeded error
       await new Promise((resolve) => setTimeout(resolve, 0));
 
-      refresh(items, scrollHandler.getPosition(), viewportHeight, false);
+      refresh(items, scrollHandler.getPosition(), viewportHeight);
       if (viewportHeight !== 0) scrollToBottom(isOnBottom && stickToBottom);
       refreshScrollbar();
     }
@@ -449,7 +267,7 @@
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     // (window as any)._vcOrigConsole.log("frameHeight", frameHeight);
-    refresh(items, scrollHandler.getPosition(), viewportHeight, false);
+    refresh(items, scrollHandler.getPosition(), viewportHeight);
     frame.style.height = `${frameHeight}px`;
     refreshScrollbar();
   };
@@ -505,7 +323,7 @@
             top={topMap[row.index]}
             onResize={(height) => onRowResize(row.index, height)}
           >
-            <slot name="item" item={row.data}>Missing template</slot>
+            <slot name="item" item={items[row.index]}>Missing template</slot>
           </RecycleItem>
         {/each}
       {:else}
