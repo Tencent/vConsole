@@ -4,6 +4,7 @@
 
 - `Feat(Log)` 新增虚拟滚动列表以提升性能，并支持快速滚动到顶部/底部。 (PR #570)
 - `Feat(Network)` 新增 request 的 "Start Time"（发起时间）。
+- `Feat(Network)` 使用 `curl` 格式作为 request 的复制内容，而非 `url`。 (issue #410)
 
 
 ## 3.14.7 (2022-09-23)

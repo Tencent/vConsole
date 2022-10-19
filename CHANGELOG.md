@@ -4,6 +4,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 - `Feat(Log)` Add recycle scrolling and scroll to top/bottom. (PR #570)
 - `Feat(Network)` Add "Start Time" of a request.
+- `Feat(Network)` Use `curl` instead of `url` as the copy value of a request. (issue #410)
 
 
 ## 3.14.7 (2022-09-23)

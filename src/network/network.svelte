@@ -4,6 +4,7 @@
   import IconCopy from '../component/iconCopy.svelte';
   import { requestList } from './network.model';
   import Style from './network.less';
+  import type { VConsoleNetworkRequestItem } from './requestItem';
 
   let reqCount = 0;
   const updateReqCount = (list: typeof $requestList) => {
@@ -14,6 +15,15 @@
 
   const onTapPreview = (reqId: string) => {
     $requestList[reqId].actived = !$requestList[reqId].actived;
+  };
+  const onCopyCurl = (req: VConsoleNetworkRequestItem) => {
+    let curl = `curl -X ${req.method}`;
+    if (typeof req.postData === 'string') {
+      curl += ` -d '${req.postData}'`;
+    } else if (typeof req.postData === 'object' && req.postData !== null) {
+      curl += ` -d '${tool.safeJSONStringify(req.postData)}'`;
+    }
+    return `${curl} '${req.url}'`;
   };
 
   onMount(() => {
@@ -56,7 +66,7 @@
             <dl class="vc-table-row vc-left-border">
               <dt class="vc-table-col vc-table-col-title">
                 General
-                <i class="vc-table-row-icon"><IconCopy content={req.url} /></i>
+                <i class="vc-table-row-icon"><IconCopy handler={onCopyCurl} content={req} /></i>
               </dt>
             </dl>
             <div class="vc-table-row vc-left-border vc-small">
