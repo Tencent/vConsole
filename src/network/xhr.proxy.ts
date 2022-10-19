@@ -1,4 +1,4 @@
-import { getBytesText } from '../lib/tool';
+import { getBytesText, getDate } from '../lib/tool';
 import * as Helper from './helper';
 import { VConsoleNetworkRequestItem } from './requestItem';
 import type { IOnUpdateCallback } from './helper';
@@ -165,18 +165,13 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
   protected updateItemByReadyState() {
     switch (this.XMLReq.readyState) {
       case 0: // UNSENT
-        this.item.status = 0;
-        this.item.statusText = 'Pending';
-        if (!this.item.startTime) {
-          this.item.startTime = Date.now();
-        }
-        break;
-
       case 1: // OPENED
         this.item.status = 0;
         this.item.statusText = 'Pending';
         if (!this.item.startTime) {
           this.item.startTime = Date.now();
+          const sd = getDate(this.item.startTime);
+          this.item.startTimeText = `${sd.year}-${sd.month}-${sd.day} ${sd.hour}:${sd.minute}:${sd.second}.${sd.millisecond}`;
         }
         break;
 

@@ -75,6 +75,10 @@
               <div class="vc-table-col vc-table-col-2">HTTP Status</div>
               <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{req.status}</div>
             </div>
+            <div class="vc-table-row vc-left-border vc-small">
+              <div class="vc-table-col vc-table-col-2">Start Time</div>
+              <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{req.startTimeText}</div>
+            </div>
           </div>
           {#if (req.requestHeader !== null)}
           <div>

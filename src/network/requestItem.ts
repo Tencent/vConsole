@@ -21,6 +21,7 @@ export class VConsoleNetworkRequestItem {
   responseSize: number      = 0; // bytes
   responseSizeText: string  = '';
   startTime: number         = 0;
+  startTimeText: string     = '';
   endTime: number           = 0;
   costTime?: number         = 0;
   getData: { [key: string]: string } = null;
