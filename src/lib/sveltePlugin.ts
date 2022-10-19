@@ -23,12 +23,12 @@ export class VConsoleSveltePlugin<T extends {} = {}> extends VConsolePlugin {
 
   onRenderTab(callback) {
     const $container = document.createElement('div');
-    this.compInstance = new this.CompClass({
+    const compInstance = this.compInstance = new this.CompClass({
       target: $container,
       props: this.initialProps,
     });
     // console.log('onRenderTab', this.compInstance);
-    callback($container.firstElementChild);
+    callback($container.firstElementChild, compInstance.options);
   }
 
   onRemove() {

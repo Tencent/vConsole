@@ -12,25 +12,19 @@
 
   let dataValue: string = '';
   let valueType: string = '';
-  let isInited: boolean = false;
   let isInTree: boolean = false;
 
   $: {
-    if (!isInited) {
-      // the value is NOT in a tree when key is undefined
-      isInTree = dataKey !== undefined;
+    // the value is NOT in a tree when key is undefined
+    isInTree = dataKey !== undefined;
 
-      const ret = getValueTextAndType(origData, isInTree);
-      valueType = ret.valueType;
-      dataValue = ret.text;
+    const ret = getValueTextAndType(origData, isInTree);
+    valueType = ret.valueType;
+    dataValue = ret.text;
 
-      if (!isInTree && valueType === 'string') {
-        // if it's a single string, then keep line breaks.
-        dataValue = dataValue.replace(/\\n/g, '\n').replace(/\\t/g, '    ');
-      }
-
-      // (window as any)._vcOrigConsole.log('logValue update', origData);
-      isInited = true;
+    if (!isInTree && valueType === 'string') {
+      // if it's a single string, then keep line breaks.
+      dataValue = dataValue.replace(/\\n/g, '\n').replace(/\\t/g, '    ');
     }
   }
 

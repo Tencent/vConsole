@@ -12,7 +12,6 @@
   export let log: IVConsoleLog;
   export let showTimestamps: boolean = false;
 
-  let isInited: boolean = false;
   let logTime: string = '';
 
   const pad = (num, size) => {
@@ -22,11 +21,7 @@
 
   $: {
     // (window as any)._vcOrigConsole.log('logRow update', log._id, ...log.data);
-    if (!isInited) {
-      isInited = true;
-    }
-
-    if (showTimestamps && logTime === '') {
+    if (showTimestamps) {
       const d = new Date(log.date);
       logTime = pad(d.getHours(), 2) + ':' + pad(d.getMinutes(), 2) + ':' + pad(d.getSeconds(), 2) + ':' + pad(d.getMilliseconds(), 3);
     }
@@ -77,7 +72,7 @@
     <div class="vc-log-content">
       {#each log.data as logData, i (i)}
         {#if isTree(logData.origData)}
-          <LogTree origData={logData.origData} />
+          <LogTree origData={logData.origData} keyPath={String(i)} toggle={log.toggle} />
         {:else}
           <LogValue origData={logData.origData} style={logData.style} />
         {/if}

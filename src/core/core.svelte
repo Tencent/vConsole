@@ -4,7 +4,7 @@
   import { default as SwitchButton } from './switchButton.svelte';
   import { contentStore } from './core.model';
   import Style from './core.less';
-  import type { IVConsoleTopbarOptions, IVConsoleToolbarOptions } from '../lib/plugin';
+  import type { IVConsoleTopbarOptions, IVConsoleToolbarOptions, IVConsoleTabOptions } from '../lib/plugin';
 
   /*************************************
    * Public properties
@@ -14,6 +14,7 @@
     id: string;
     name: string;
     hasTabPanel: boolean;
+    tabOptions?: IVConsoleTabOptions;
     topbarList?: IVConsoleTopbarOptions[];
     toolbarList?: IVConsoleToolbarOptions[];
   }
@@ -345,6 +346,7 @@
         <div
           id="__vc_plug_{plugin.id}"
           class="vc-plugin-box"
+          class:vc-fixed-height="{plugin.tabOptions?.fixedHeight}"
           class:vc-actived="{plugin.id === activedPluginId}"
         ></div>
       {/each}

@@ -2,13 +2,10 @@
 
 // container
 .vc-cmd {
-  position: absolute;
   height: (40em / @font);
-  left: 0;
-  right: 0;
-  bottom: (40em / @font);
   border-top: 1px solid var(--VC-FG-3);
-  display: block !important;
+  display: flex;
+  flex-direction: row;
 
   &.vc-filter{
     bottom: 0;
@@ -19,9 +16,10 @@
 .vc-cmd-input-wrap {
   display: flex;
   align-items: center;
+  flex: 1;
   position: relative;
   height: (28em / @font);
-  margin-right: (40em / @font);
+  // margin-right: (40em / @font);
   padding: (6em / @font) (8em / @font);
 }
 .vc-cmd-input {
@@ -40,10 +38,10 @@
 
 // button
 .vc-cmd-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
+  // position: absolute;
+  // top: 0;
+  // right: 0;
+  // bottom: 0;
   width: (40em / @font);
   border: none;
   background-color: var(--VC-BG-0);
