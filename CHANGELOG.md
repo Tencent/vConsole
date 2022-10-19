@@ -1,5 +1,10 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.15.0-rc (2022-10-??)
+
+- `Feat(Log)` Add recycle scrolling and scroll to top/bottom. (PR #570)
+
+
 ## 3.14.7 (2022-09-23)
 
 - `Perf(Log)` Optimize rendering performance when adding logs. (PR #567)
