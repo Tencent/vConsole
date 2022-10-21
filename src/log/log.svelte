@@ -18,25 +18,26 @@
   let filterText: string = "";
   let store: ReturnType<typeof Store.get>;
   let scrollerHandler;
+  let logList: IVConsoleLog[] = [];
 
   $: {
     if (!isInited) {
       store = Store.get(pluginId);
       isInited = true;
-      // (window as any)._vcOrigConsole.log('log.svelte update', pluginId);
+      // (window as any)._vcOrigConsole.log('log.svelte init update', pluginId);
     }
-  }
 
-  let logList: IVConsoleLog[] = [];
-
-  $: {
-    logList = $store.logList.filter(
-      (log) =>
+    // (window as any)._vcOrigConsole.log('log.svelte update', pluginId);
+    logList = $store.logList.filter((log) => {
+      let ret = 
         // filterType
         (filterType === "all" || filterType === log.type) &&
         // filterText
-        (filterText === "" || isMatchedFilterText(log, filterText))
-    );
+        (filterText === "" || isMatchedFilterText(log, filterText)) &&
+        // group
+        !log.groupCollapsed;
+      return ret;
+    });
   }
 
   onMount(() => {
@@ -49,6 +50,27 @@
 
   const onFilterText = (e) => {
     filterText = e.detail.filterText || "";
+  };
+
+  const onGroupCollapsed = (e) => {
+    const groupLabel = e.detail.groupLabel;
+    const groupHeader = e.detail.groupHeader;
+    const isGroupCollapsed = e.detail.isGroupCollapsed;
+    // (window as any)._vcOrigConsole.log('log.svelte onGroupCollapsed', e.detail);
+    store.update((st) => {
+      st.logList.forEach((log) => {
+        if (log.groupLabel === groupLabel) {
+          if (log.groupHeader > 0) {
+            // (window as any)._vcOrigConsole.log('log.svelte foreach', log);
+            log.groupHeader = groupHeader;
+          } else {
+            log.groupCollapsed = isGroupCollapsed;
+          }
+        }
+      });
+      return st;
+    });
+    
   };
 
   export const scrollToTop = () => {
@@ -75,7 +97,14 @@
     bind:handler={scrollerHandler}
   >
     <div slot="empty" class="vc-plugin-empty">Empty</div>
-    <LogRow slot="item" let:item={log} log={log} showTimestamps={showTimestamps} />
+    <LogRow
+      slot="item"
+      let:item={log}
+      log={log}
+      showTimestamps={showTimestamps}
+      groupHeader={log.groupHeader}
+      on:groupCollapsed={onGroupCollapsed}
+    />
     <svelte:fragment slot="footer">
       {#if showCmd}
         <LogCommand on:filterText={onFilterText} />

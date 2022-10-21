@@ -3,6 +3,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 ## 3.15.0-rc (2022-10-??)
 
 - `Feat(Log)` Add recycle scrolling and scroll to top/bottom. (PR #570)
+- `Feat(Log)` Add support for `console.group(), console.groupCollapsed(), console.groupEnd()`. (issue #545)
 - `Feat(Network)` Add "Start Time" of a request.
 - `Feat(Network)` Use `curl` instead of `url` as the copy value of a request. (issue #410)
 

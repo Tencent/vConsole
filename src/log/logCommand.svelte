@@ -4,7 +4,6 @@
   import { getLastIdentifier } from './logTool';
   import { VConsoleLogModel } from './log.model';
   import Style from './logCommand.less';
-  // import LogRow from './logRow.svelte';
 
   interface ICmdPromptedItem {
     text: string;

@@ -3,6 +3,7 @@
 ## 3.15.0-rc (2022-10-??)
 
 - `Feat(Log)` 新增虚拟滚动列表以提升性能，并支持快速滚动到顶部/底部。 (PR #570)
+- `Feat(Log)` 新增对 `console.group(), console.groupCollapsed(), console.groupEnd()` 方法的支持。 (issue #545)
 - `Feat(Network)` 新增 request 的 "Start Time"（发起时间）。
 - `Feat(Network)` 使用 `curl` 格式作为 request 的复制内容，而非 `url`。 (issue #410)
 
