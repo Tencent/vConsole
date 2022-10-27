@@ -90,6 +90,6 @@
           </div>
         </div>
       {:else}
-        <div class="vc-plugin-empty"></div>
+        <div class="vc-plugin-empty">Empty</div>
       {/each}
 </div>

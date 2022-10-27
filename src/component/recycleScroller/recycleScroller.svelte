@@ -19,11 +19,13 @@
   export let end = 0;
 
   // local state
+  let header: HTMLElement | undefined;
   let footer: HTMLElement | undefined;
   let viewport: HTMLElement | undefined;
   let contents: HTMLElement | undefined;
   let frame: HTMLElement | undefined;
 
+  let headerHeight = 0;
   let footerHeight = 0;
   let viewportHeight = 0;
   let frameHeight = 0;
@@ -39,7 +41,7 @@
   const updateVisible = createRecycleManager()
 
   const getScrollExtent = () =>
-    Math.max(0, frameHeight + footerHeight - viewportHeight);
+    Math.max(0, frameHeight + headerHeight + footerHeight - viewportHeight);
 
   let isOnBottom = true;
   let avoidRefresh = false;
@@ -53,6 +55,7 @@
     isOnBottom = Math.abs(pos - scrollExtent) <= 1;
 
     contents.style.transform = `translateY(${-pos}px) translateZ(0)`;
+    // (window as any)._vcOrigConsole.log('pos', pos);
     refreshScrollbar();
 
     if (avoidRefresh) {
@@ -66,7 +69,7 @@
 
   const refreshScrollbar = () => {
     const pos = scrollHandler.getPosition();
-    const fac = 100 / (frameHeight + footerHeight);
+    const fac = 100 / (frameHeight + headerHeight + footerHeight);
     scrollbarThumbPos = pos * fac;
     scrollbarThumbHeight = viewportHeight * fac;
   };
@@ -120,8 +123,9 @@
       topMap[i] = y;
       y += heightMap[i];
     }
-    frameHeight = Math.max(y, viewportHeight - footerHeight);
+    frameHeight = Math.max(y, viewportHeight - headerHeight - footerHeight);
 
+    // (window as any)._vcOrigConsole.log("init(): frameHeight", frameHeight);
     // (window as any)._vcOrigConsole.log("heightMap", heightMap);
     // (window as any)._vcOrigConsole.log("reuseHeightCount", reuseHeightCount);
     // (window as any)._vcOrigConsole.log(
@@ -210,6 +214,7 @@
       // setTimeout to avoid ResizeObserver loop limit exceeded error
       await new Promise((resolve) => setTimeout(resolve, 0));
 
+      initItems(items);
       refresh(items, scrollHandler.getPosition(), viewportHeight);
       if (viewportHeight !== 0) scrollToBottom(isOnBottom && stickToBottom);
       refreshScrollbar();
@@ -223,7 +228,20 @@
       // ;(window as any)._vcOrigConsole.log('footer height resize', height);
       // no need to fresh
       footerHeight = height;
+      initItems(items);
       if (viewportHeight !== 0) scrollToBottom(isOnBottom && stickToBottom);
+      refreshScrollbar();
+    }
+  );
+
+  registerHeightObserver(
+    () => header,
+    (height) => {
+      if (headerHeight === height) return;
+      // ;(window as any)._vcOrigConsole.log('header height resize', height);
+      // no need to fresh
+      headerHeight = height;
+      initItems(items);
       refreshScrollbar();
     }
   );
@@ -247,7 +265,7 @@
     }
     frameHeight = Math.max(
       topMap[n - 1] + heightMap[n - 1],
-      viewportHeight - footerHeight
+      viewportHeight - headerHeight - footerHeight
     );
 
     const scrollPos = scrollHandler.getPosition();
@@ -315,6 +333,11 @@
   class="vc-scroller-viewport"
 >
   <div bind:this={contents} class="vc-scroller-contents">
+    {#if $$slots.header}
+      <div bind:this={header} class="vc-scroller-header">
+        <slot name="header" />
+      </div>
+    {/if}
     <div bind:this={frame} class="vc-scroller-items">
       {#if items.length}
         {#each visible as row, i (row.key)}
