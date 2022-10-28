@@ -1,5 +1,14 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.15.0-rc (2022-11-??)
+
+- `Feat(Log)` Add recycle scrolling to imporove performance, and add scroll to top/bottom buttons. (PR #570)
+- `Feat(Log)` Add support for `console.group(), console.groupCollapsed(), console.groupEnd()`. (issue #545)
+- `Feat(Network)` Add recycle scrolling to imporove performance.
+- `Feat(Network)` Add "Start Time" of a request.
+- `Feat(Network)` Use `curl` instead of `url` as the copy value of a request. (issue #410)
+
+
 ## 3.14.7 (2022-09-23)
 
 - `Perf(Log)` Optimize rendering performance when adding logs. (PR #567)

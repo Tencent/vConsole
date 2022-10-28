@@ -1,6 +1,6 @@
 <svelte:options immutable/>
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy, createEventDispatcher } from 'svelte';
   import * as tool from '../lib/tool';
   import IconCopy from '../component/iconCopy.svelte';
   import LogValue from './logValue.svelte';
@@ -11,7 +11,9 @@
 
   export let log: IVConsoleLog;
   export let showTimestamps: boolean = false;
+  export let groupHeader: 0 | 1 | 2 = 0;
 
+  const dispatch = createEventDispatcher();
   let logTime: string = '';
 
   const pad = (num, size) => {
@@ -39,6 +41,17 @@
     return !(origData instanceof VConsoleUninvocatableObject) && (tool.isArray(origData) || tool.isObject(origData));
   };
 
+  const onTapLogRow = () => {
+    if (groupHeader > 0) {
+      // (window as any)._vcOrigConsole.log('onTapLogRow', groupHeader);
+      dispatch('groupCollapsed', {
+        groupLabel: log.groupLabel,
+        groupHeader: groupHeader === 1 ? 2 : 1,
+        isGroupCollapsed: groupHeader === 1 ? true : false,
+      });
+    }
+  };
+
   const onTapCopy = () => {
     const text: string[] = [];
     try {
@@ -62,7 +75,18 @@
     class="vc-log-row vc-log-{log.type}"
     class:vc-log-input={log.cmdType === 'input'}
     class:vc-log-output={log.cmdType === 'output'}
+    class:vc-log-group={groupHeader > 0}
+    class:vc-toggle={groupHeader === 1}
+    on:click={onTapLogRow}
   >
+    {#if log.groupLevel}
+      {#each new Array(log.groupLevel) as lv}
+        <i class="vc-log-padding"></i>
+      {/each}
+    {/if}
+    {#if groupHeader > 0}
+      <div class="vc-log-group-toggle"></div>
+    {/if}
     {#if showTimestamps}
       <div class="vc-log-time">{logTime}</div>
     {/if}

@@ -72,7 +72,7 @@
 
 <div class="vc-log-tree" class:vc-toggle={isToggle} class:vc-is-tree={isTree} data-keypath={keyPath}>
 
-  <div class="vc-log-tree-node" on:click={onTapTreeNode}>
+  <div class="vc-log-tree-node" on:click|stopPropagation={onTapTreeNode}>
     <LogValue origData={origData} dataKey={dataKey} keyType={keyType} />
   </div>
 
