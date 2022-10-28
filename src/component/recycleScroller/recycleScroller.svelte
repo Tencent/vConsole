@@ -38,7 +38,7 @@
   // sort by key
   let visible: { key: number; index: number; show: boolean }[] = [];
 
-  const updateVisible = createRecycleManager()
+  const updateVisible = createRecycleManager();
 
   const getScrollExtent = () =>
     Math.max(0, frameHeight + headerHeight + footerHeight - viewportHeight);
@@ -141,11 +141,7 @@
     refreshScrollbar();
   }
 
-  function refresh(
-    items: any[],
-    scrollTop: number,
-    viewportHeight: number,
-  ) {
+  function refresh(items: any[], scrollTop: number, viewportHeight: number) {
     let i = 0;
     let y = 0;
 
@@ -211,6 +207,13 @@
       // (window as any)._vcOrigConsole.log("viewport height resize", height);
       viewportHeight = height;
 
+      let y = 0
+      for (let i = 0; i < items.length; i += 1) {
+        y += heightMap[i];
+      }
+      frameHeight = Math.max(y, viewportHeight - footerHeight);
+      frame.style.height = `${frameHeight}px`;
+
       // setTimeout to avoid ResizeObserver loop limit exceeded error
       await new Promise((resolve) => setTimeout(resolve, 0));
 
@@ -228,7 +231,14 @@
       // ;(window as any)._vcOrigConsole.log('footer height resize', height);
       // no need to fresh
       footerHeight = height;
-      initItems(items);
+
+      let y = 0
+      for (let i = 0; i < items.length; i += 1) {
+        y += heightMap[i];
+      }
+      frameHeight = Math.max(y, viewportHeight - headerHeight - footerHeight);
+      frame.style.height = `${frameHeight}px`;
+
       if (viewportHeight !== 0) scrollToBottom(isOnBottom && stickToBottom);
       refreshScrollbar();
     }
