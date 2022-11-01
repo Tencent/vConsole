@@ -18,6 +18,7 @@
       <div class="hd">XMLHttpRequest</div>
 
       <a onclick="getAjax()" href="javascript:;" class="weui_btn weui_btn_default">GET XHR</a>
+      <a onclick="putAjax()" href="javascript:;" class="weui_btn weui_btn_default">PUT XHR</a>
       <a onclick="postAjax()" href="javascript:;" class="weui_btn weui_btn_default">POST XHR (Data: Object)</a>
       <a onclick="postAjax('json')" href="javascript:;" class="weui_btn weui_btn_default">POST XHR (Data: JSON String)</a>
       <a onclick="postAjax('', 'massive.json')" href="javascript:;" class="weui_btn weui_btn_default">POST XHR (Massive Resp)</a>
@@ -34,6 +35,7 @@
       <a onclick="getFetchText()" href="javascript:;" class="weui_btn weui_btn_default">GET Fetch Text</a>
       <a onclick="getFetchJsonText()" href="javascript:;" class="weui_btn weui_btn_default">GET Fetch JSON Text</a>
       <a onclick="getFetch500()" href="javascript:;" class="weui_btn weui_btn_default">GET Fetch 500</a>
+      <a onclick="putFetch()" href="javascript:;" class="weui_btn weui_btn_default">PUT Fetch</a>
       <a onclick="postFetch()" href="javascript:;" class="weui_btn weui_btn_default">POST Fetch</a>
       <a onclick="postFetchByRequest()" href="javascript:;" class="weui_btn weui_btn_default">POST Fetch Using XHR</a>
       <a onclick="optionsFetch()" href="javascript:;" class="weui_btn weui_btn_default">OPTIONS Fetch</a>
@@ -138,6 +140,30 @@ function getAjax() {
   };
 }
 
+function putAjax() {
+  showPanel();
+  const url = window.location.origin + '/dev/data/success.json?method=xhrGet&id=' + Math.random() + '&<xss0>';
+
+  let postData = {
+    foo: 'bar',
+    book: { id: 123, type: 'comic', uid: [4,5,6,7,8] },
+    id: `${Math.random()}${Math.random()}${Math.random()}${Math.random()}${Math.random()}${Math.random()}`,
+    type: 'xhr',
+    '<xss0>': '<xss1> XSS Attack!'
+  };
+
+  const xhr = new XMLHttpRequest();
+  xhr.open('PUT', url);
+  xhr.setRequestHeader('custom-header', 'foobar');
+  xhr.send(postData);
+  xhr.onload = () => {
+    console.log('put XHR Response:', JSON.parse(xhr.response));
+  };
+  xhr.onerror = () => {
+    console.log('put XHR Error');
+  };
+}
+
 function getFetch() {
   showPanel();
   window.fetch('./data/success.json?method=fetchGet&id=' + Math.random(), {
@@ -182,6 +208,29 @@ function getFetchSimple() {
     return data.json();
   }).then((data) => {
     console.log('getFetchSimple Response:', data);
+  });
+}
+
+function putFetch() {
+  showPanel();
+  window.fetch('./data/success.json?method=fetchPut&id=' + Math.random(), {
+    method: 'PUT',
+    headers: {
+      'custom-header': 'foobar',
+      'content-type': 'application/json'
+    },
+    body: { foo: 'bar', id: Math.random(), type: 'fetch' },
+  }).then((data) => {
+    console.log('putFetch() response:', data);
+    setTimeout(() => {
+      data.json().then((res) => {
+        console.log(res);
+      });
+    }, 3000);
+    // return data;
+    // return data.json();
+  }).then((data) => {
+    // console.log('putFetch() json:', data);
   });
 }
 

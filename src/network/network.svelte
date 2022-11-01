@@ -37,10 +37,6 @@
     return `${curl} '${req.url}'`;
   };
 
-  const stopTuochPropagation = (e: Event) => {
-    e.stopPropagation();
-  };
-
   onMount(() => {
     Style.use();
   });
@@ -161,11 +157,7 @@
               <div class="vc-table-row vc-left-border vc-small">
                 <pre
                   class="vc-table-col vc-table-col-value vc-max-height-line"
-                  on:touchstart={stopTuochPropagation}
-                  on:touchmove={stopTuochPropagation}
-                  on:touchend={stopTuochPropagation}
-                  on:touchcancel={stopTuochPropagation}
-                  on:wheel={stopTuochPropagation}
+                  data-scrollable="1"
                 >{req.postData}</pre>
               </div>
             {:else}
@@ -174,11 +166,7 @@
                 <div class="vc-table-col vc-table-col-2">{key}</div>
                 <div
                   class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line"
-                  on:touchstart={stopTuochPropagation}
-                  on:touchmove={stopTuochPropagation}
-                  on:touchend={stopTuochPropagation}
-                  on:touchcancel={stopTuochPropagation}
-                  on:wheel={stopTuochPropagation}
+                  data-scrollable="1"
                 >{prettyStringify(item)}</div>
               </div>
               {/each}
@@ -217,11 +205,7 @@
             <div class="vc-table-row vc-left-border vc-small">
               <pre
                 class="vc-table-col vc-max-height vc-min-height"
-                on:touchstart={stopTuochPropagation}
-                on:touchmove={stopTuochPropagation}
-                on:touchend={stopTuochPropagation}
-                on:touchcancel={stopTuochPropagation}
-                on:wheel={stopTuochPropagation}
+                data-scrollable="1"
               >{req.response || ''}</pre>
             </div>
           </div>

@@ -83,6 +83,7 @@ class TouchTracker {
   })
 
   handleTouchStart = (e: TouchEvent) => {
+    if ((<HTMLElement>e.target).dataset?.scrollable === '1') { return; }
     e.preventDefault();
 
     const touch = e.touches[0];
@@ -97,6 +98,7 @@ class TouchTracker {
   };
 
   handleTouchMove = (e: TouchEvent) => {
+    if ((<HTMLElement>e.target).dataset?.scrollable === '1') { return; }
     e.preventDefault();
 
     const delta = this._getTouchDelta(e);
@@ -110,6 +112,7 @@ class TouchTracker {
   };
 
   handleTouchEnd = (e: TouchEvent) => {
+    if ((<HTMLElement>e.target).dataset?.scrollable === '1') { return; }
     e.preventDefault();
 
     const delta = this._getTouchDelta(e);
@@ -138,6 +141,7 @@ class TouchTracker {
   };
 
   handleTouchCancel = (e: TouchEvent) => {
+    if ((<HTMLElement>e.target).dataset?.scrollable === '1') { return; }
     e.preventDefault();
 
     const delta = this._getTouchDelta(e);
@@ -150,12 +154,14 @@ class TouchTracker {
   };
 
   handleWheel = (e: WheelEvent) => {
+    if ((<HTMLElement>e.target).dataset?.scrollable === '1') { return; }
     e.preventDefault();
 
-    this._wheelDeltaX += e.deltaX
-    this._wheelDeltaY += e.deltaY
+    this._wheelDeltaX += e.deltaX;
+    this._wheelDeltaY += e.deltaY;
 
-    this._onWheel.trigger()
+    this._onWheel.trigger();
+    // ;(window as any)._vcOrigConsole.log('onWheel', e.target);
   };
 }
 
