@@ -96,32 +96,32 @@ class Spring {
   private _solution: {
     x: (dt: number) => number;
     dx: (dt: number) => number;
-  } | null
+  } | null;
   private _endPosition: number;
   private _startTime: number;
 
   constructor(mass: number, springConstant: number, damping: number) {
     this._solver = getSolver(mass, springConstant, damping);
-    this._solution = null
+    this._solution = null;
     this._endPosition = 0;
     this._startTime = 0;
   }
   x(t: number) {
-    if (!this._solution) return 0
+    if (!this._solution) return 0;
     const dt = (t - this._startTime) / 1000.0;
     return this._endPosition + this._solution.x(dt);
   }
   dx(t: number) {
-    if (!this._solution) return 0
+    if (!this._solution) return 0;
     const dt = (t - this._startTime) / 1000.0;
     return this._solution.dx(dt);
   }
   set(endPosition: number, x: number, velocity: number, t?: number) {
     if (!t) t = Date.now();
-    this._endPosition = endPosition
+    this._endPosition = endPosition;
     if (x == endPosition && almostZero(velocity)) return;
-    this._solution = this._solver(x - endPosition, velocity)
-    this._startTime = t
+    this._solution = this._solver(x - endPosition, velocity);
+    this._startTime = t;
   }
   done(t: number) {
     if (!t) t = Date.now();

@@ -8,6 +8,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Feat(Network)` Add "Start Time" of a request.
 - `Feat(Network)` Use `curl` instead of `url` as the copy value of a request. (issue #410)
 - `Fix(Storage)` Fix an event bug that overflow content cannot scroll. (issue #542)
+- `Fix(Core)` Fix click event on `<select>` elements. (PR #577)
 
 
 ## 3.14.7 (2022-09-23)

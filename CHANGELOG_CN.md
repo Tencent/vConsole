@@ -8,6 +8,7 @@
 - `Feat(Network)` 新增 request 的 "Start Time"（发起时间）。
 - `Feat(Network)` 使用 `curl` 格式作为 request 的复制内容，而非 `url`。 (issue #410)
 - `Fix(Storage)` 修复内容溢出的元素无法滑动的问题。 (issue #542)
+- `Fix(Core)` 修复 `<select>` 的点击事件问题。 (PR #577)
 
 
 ## 3.14.7 (2022-09-23)

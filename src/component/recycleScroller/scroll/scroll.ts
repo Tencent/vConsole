@@ -1,5 +1,5 @@
-import Friction from "./friction";
-import Spring from "./spring";
+import Friction from './friction';
+import Spring from './spring';
 
 /** *
  * Scroll combines Friction and Spring to provide the
@@ -54,7 +54,7 @@ class Scroll {
       if (this._enableSpring) {
         this._spring.set(0, x, dx, t);
       } else {
-        return 0
+        return 0;
       }
     } else {
       const extent = this._getExtend();
@@ -63,7 +63,7 @@ class Scroll {
         if (this._enableSpring) {
           this._spring.set(-extent, x, dx, t);
         } else {
-          return -extent
+          return -extent;
         }
       }
     }
@@ -73,13 +73,13 @@ class Scroll {
   dx(t: number) {
     if (!this._toEdge) return this._friction.dx(t);
     if (this._enableSpring) return this._spring.dx(t);
-    return 0
+    return 0;
   }
 
   done(t: number) {
     if (!this._toEdge) return this._friction.done(t);
     if (this._enableSpring) return this._spring.done(t);
-    return true
+    return true;
   }
 }
 

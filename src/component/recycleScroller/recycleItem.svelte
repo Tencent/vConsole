@@ -1,26 +1,28 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
 
-  export let show: boolean
-  export let top: boolean
+  export let show: boolean;
+  export let top: boolean;
 
-  export let onResize: (height: number) => void = () => {}
+  export let onResize: (height: number) => void = () => {};
 
-  let item: HTMLDivElement | undefined
+  let item: HTMLDivElement | undefined;
 
-  let observer: ResizeObserver | null = null
+  let observer: ResizeObserver | null = null;
 
   onMount(() => {
-    if (show) onResize(item.getBoundingClientRect().height)
+    if (show) {
+      onResize(item.getBoundingClientRect().height);
+    }
     observer = new ResizeObserver((entries) => {
       const entry = entries[0];
       if (show) onResize(entry.contentRect.height)
-    })
-    observer.observe(item)
+    });
+    observer.observe(item);
   });
 
   onDestroy(() => {
-    observer.disconnect()
+    observer.disconnect();
   });
 </script>
 

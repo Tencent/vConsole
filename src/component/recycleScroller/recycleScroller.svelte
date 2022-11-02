@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
-  import RecycleItem from "./recycleItem.svelte";
-  import ScrollHandler from "./scroll/scrollHandler";
-  import TouchTracker from "./scroll/touchTracker";
-  import Style from "./recycleScroller.less";
-  import createRecycleManager from "./recycleManager";
+  import { onMount, onDestroy } from 'svelte';
+  import RecycleItem from './recycleItem.svelte';
+  import ScrollHandler from './scroll/scrollHandler';
+  import TouchTracker from './scroll/touchTracker';
+  import Style from './recycleScroller.less';
+  import createRecycleManager from './recycleManager';
 
   // props
   export let items: any[];

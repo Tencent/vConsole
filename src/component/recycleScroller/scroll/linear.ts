@@ -9,7 +9,7 @@ class Linear {
     this._x = x;
     this._endX = endX;
     this._v = (endX - x) / dt;
-    this._startTime = t || Date.now()
+    this._startTime = t || Date.now();
     this._endTime = this._startTime + dt;
   }
 
@@ -21,7 +21,7 @@ class Linear {
 
   dx(t: number) {
     if (this.done(t)) return 0;
-    return this._v
+    return this._v;
   }
 
   done(t: number) {

@@ -1,6 +1,6 @@
-import Linear from "./linear";
-import Scroll from "./scroll";
-import { TrackerHandler } from "./touchTracker";
+import Linear from './linear';
+import Scroll from './scroll';
+import { TrackerHandler } from './touchTracker';
 
 // This function sets up a requestAnimationFrame-based timer which calls
 // the callback every frame while the physics model is still moving.
@@ -186,7 +186,7 @@ class ScrollHandler implements TrackerHandler {
         this._updatePosition(-pos);
       });
     } else {
-      this._updatePosition(position)
+      this._updatePosition(position);
     }
   }
 }

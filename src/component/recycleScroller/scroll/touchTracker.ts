@@ -7,31 +7,31 @@ export interface TrackerHandler {
 }
 
 const throttleRAF = (fn: () => void) => {
-  let timer: ReturnType<typeof requestAnimationFrame> | null = null
-  let call = false
+  let timer: ReturnType<typeof requestAnimationFrame> | null = null;
+  let call = false;
 
   const notify = () => {
-    call = false
-    fn()
+    call = false;
+    fn();
     timer = requestAnimationFrame(() => {
       timer = null
       if (call) notify()
-    })
+    });
   }
 
   const trigger = () => {
     if (timer === null) {
-      notify()
+      notify();
     } else {
-      call = true
+      call = true;
     }
   }
 
   const cancel = () => {
     if (timer) {
-      cancelAnimationFrame(timer)
-      call = false
-      timer = null
+      cancelAnimationFrame(timer);
+      call = false;
+      timer = null;
     }
   }
 
@@ -63,21 +63,21 @@ class TouchTracker {
         };
       }
     }
-    return null
+    return null;
   }
 
   private _onTouchMove = () => {
-    const deltaX = this._historyX[this._historyX.length - 1]
-    const deltaY = this._historyY[this._historyY.length - 1]
+    const deltaX = this._historyX[this._historyX.length - 1];
+    const deltaY = this._historyY[this._historyY.length - 1];
     this._handler.onTouchMove(deltaX, deltaY);
   }
 
   private _onWheel = throttleRAF(() => {
-    const deltaX = this._wheelDeltaX
-    const deltaY = this._wheelDeltaY
+    const deltaX = this._wheelDeltaX;
+    const deltaY = this._wheelDeltaY;
 
-    this._wheelDeltaX = 0
-    this._wheelDeltaY = 0
+    this._wheelDeltaX = 0;
+    this._wheelDeltaY = 0;
 
     this._handler.onWheel(deltaX, deltaY);
   })
@@ -108,7 +108,7 @@ class TouchTracker {
     this._historyY.push(delta.y);
     this._historyTime.push(Date.now());
 
-    this._onTouchMove()
+    this._onTouchMove();
   };
 
   handleTouchEnd = (e: TouchEvent) => {
