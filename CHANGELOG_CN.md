@@ -1,6 +1,6 @@
 [English](./CHANGELOG.md) | 简体中文
 
-## 3.15.0-rc (2022-11-??)
+## 3.15.0 (2022-11-02)
 
 - `Feat(Log)` 新增虚拟滚动列表以提升性能，并支持快速滚动到顶部/底部。 (PR #570)
 - `Feat(Log)` 新增对 `console.group(), console.groupCollapsed(), console.groupEnd()` 方法的支持。 (issue #545)
