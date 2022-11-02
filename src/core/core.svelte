@@ -251,7 +251,7 @@
     touchMove(e) {
       const touch = e.changedTouches[0];
       if (
-        Math.abs(touch.pageX - mockTapInfo.touchstartX) > mockTapInfo.tapBoundary || 
+        Math.abs(touch.pageX - mockTapInfo.touchstartX) > mockTapInfo.tapBoundary ||
         Math.abs(touch.pageY - mockTapInfo.touchstartY) > mockTapInfo.tapBoundary
       ) {
         mockTapInfo.touchHasMoved = true;
@@ -261,8 +261,8 @@
     touchEnd(e) {
       // move and time within limits, manually trigger `click` event
       if (
-        mockTapInfo.touchHasMoved === false && 
-        e.timeStamp - mockTapInfo.lastTouchStartTime < mockTapInfo.tapTime && 
+        mockTapInfo.touchHasMoved === false &&
+        e.timeStamp - mockTapInfo.lastTouchStartTime < mockTapInfo.tapTime &&
         mockTapInfo.targetElem != null
       ) {
         const tagName = mockTapInfo.targetElem.tagName.toLowerCase();
@@ -270,6 +270,9 @@
         switch (tagName) {
           case 'textarea': // focus
             needFocus = true; break;
+          case 'select':
+            needFocus = !mockTapInfo.targetElem.disabled && !mockTapInfo.targetElem.readOnly;
+            break;
           case 'input':
             switch (mockTapInfo.targetElem.type) {
               case 'button':
