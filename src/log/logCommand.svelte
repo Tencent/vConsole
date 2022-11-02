@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-  import Icon from '../component/icon.svelte';
+  import Icon from '../component/icon/icon.svelte';
   import { getLastIdentifier } from './logTool';
   import { VConsoleLogModel } from './log.model';
   import Style from './logCommand.less';

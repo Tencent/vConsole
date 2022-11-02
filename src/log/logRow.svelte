@@ -2,7 +2,7 @@
 <script lang="ts">
   import { onMount, onDestroy, createEventDispatcher } from 'svelte';
   import * as tool from '../lib/tool';
-  import IconCopy from '../component/iconCopy.svelte';
+  import IconCopy from '../component/icon/iconCopy.svelte';
   import LogValue from './logValue.svelte';
   import LogTree from './logTree.svelte';
   import Style from './logRow.less';

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import * as tool from '../lib/tool';
-  import IconCopy from '../component/iconCopy.svelte';
+  import IconCopy from '../component/icon/iconCopy.svelte';
   import { requestList } from './network.model';
   import Style from './network.less';
   import RecycleScroller from '../component/recycleScroller/recycleScroller.svelte';
