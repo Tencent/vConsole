@@ -1,7 +1,7 @@
 <script lang="ts">
   import copy from 'copy-text-to-clipboard';
-  import * as tool from '../lib/tool';
-  import Icon from '../component/icon.svelte';
+  import * as tool from '../../lib/tool';
+  import Icon from './icon.svelte';
 
   export let content: any = '';
   export let handler: (content: any) => string = undefined;

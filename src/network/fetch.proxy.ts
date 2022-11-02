@@ -159,6 +159,8 @@ export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T
     item.readyState = 1;
     if (!item.startTime) { // UNSENT
       item.startTime = Date.now();
+      const sd = tool.getDate(item.startTime);
+      item.startTimeText = `${sd.year}-${sd.month}-${sd.day} ${sd.hour}:${sd.minute}:${sd.second}.${sd.millisecond}`;
     }
 
     if (Object.prototype.toString.call(requestHeader) === '[object Headers]') {

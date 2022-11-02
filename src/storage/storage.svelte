@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Icon from '../component/icon.svelte';
-  import IconCopy from '../component/iconCopy.svelte';
+  import Icon from '../component/icon/icon.svelte';
+  import IconCopy from '../component/icon/iconCopy.svelte';
   import { VConsoleStorageModel, storageStore } from './storage.model';
   import { getStringWithinLength } from '../lib/tool';
 
@@ -90,6 +90,6 @@
           </div>
         </div>
       {:else}
-        <div class="vc-plugin-empty"></div>
+        <div class="vc-plugin-empty">Empty</div>
       {/each}
 </div>

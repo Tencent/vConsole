@@ -37,6 +37,7 @@
       <a onclick="logTypes()" href="javascript:;" class="weui_btn weui_btn_default">Log/Info/Debug/Warn/Error</a>
       <a onclick="differentPanelLog()" href="javascript:;" class="weui_btn weui_btn_default">Output to Different Panels</a>
       <a onclick="logTime()" href="javascript:;" class="weui_btn weui_btn_default">console.time</a>
+      <a onclick="logGroup()" href="javascript:;" class="weui_btn weui_btn_default">console.group</a>
     </div>
 
     <div class="section">
@@ -160,6 +161,25 @@ function logTime() {
     console.log('Wait...', i);
   }
   console.timeEnd(label);
+  console.timeEnd(label);
+}
+
+function logGroup() {
+  vConsole.show();
+  console.log('This is the outer level');
+  console.group();
+    console.log('Level 2');
+    console.group(aa);
+      console.log('Level 3');
+      console.groupCollapsed('LV4');
+        console.warn('More of level 4');
+        console.info(aa);
+      console.groupEnd();
+      console.log('Back to level 3')
+    console.groupEnd();
+    console.log('Back to level 2');
+  console.groupEnd();
+  console.log('Back to the outer level');
 }
 
 function formattingLog() {

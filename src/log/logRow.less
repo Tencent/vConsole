@@ -35,6 +35,43 @@
   margin-left: auto;
 }
 
+// group
+.vc-log-padding {
+  width: (20em / @font);
+  border-left: 1px solid var(--VC-FG-3);
+}
+.vc-log-group .vc-log-content {
+  font-weight: bold;
+}
+.vc-log-group-toggle {
+  padding-left: (10em / @font);
+}
+.vc-log-group-toggle {
+  display: block;
+  font-style: italic;
+  padding-left: (10em / @font);
+  position: relative;
+}
+.vc-log-group-toggle:active {
+  background-color: var(--VC-BG-COLOR-ACTIVE);
+}
+.vc-log-group > .vc-log-group-toggle::before {
+  content: "";
+  position: absolute;
+  top: (4em / @font);
+  left: (2em / @font);
+  width: 0;
+  height: 0;
+  border: transparent solid (4em / @font);
+  border-left-color: var(--VC-FG-1);
+}
+.vc-log-group.vc-toggle > .vc-log-group-toggle::before {
+  top: (6em / @font);
+  left: 0;
+  border-top-color: var(--VC-FG-1);
+  border-left-color: transparent;
+}
+
 // time
 .vc-log-time {
   width: (80em / @font);

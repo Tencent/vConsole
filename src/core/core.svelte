@@ -4,7 +4,7 @@
   import { default as SwitchButton } from './switchButton.svelte';
   import { contentStore } from './core.model';
   import Style from './core.less';
-  import type { IVConsoleTopbarOptions, IVConsoleToolbarOptions } from '../lib/plugin';
+  import type { IVConsoleTopbarOptions, IVConsoleToolbarOptions, IVConsoleTabOptions } from '../lib/plugin';
 
   /*************************************
    * Public properties
@@ -14,6 +14,7 @@
     id: string;
     name: string;
     hasTabPanel: boolean;
+    tabOptions?: IVConsoleTabOptions;
     topbarList?: IVConsoleTopbarOptions[];
     toolbarList?: IVConsoleToolbarOptions[];
   }
@@ -165,6 +166,23 @@
     }
   };
   const onContentTouchStart = (e) => {
+    // skip inputs
+    let isInputElement = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
+    if (isInputElement) {
+      return;
+    }
+    // skip scrollable elements
+    let isScrollElement = false;
+    if (typeof window.getComputedStyle === 'function') {
+      const style = window.getComputedStyle(e.target);
+      if (style.overflow === 'auto' || style.overflow === 'scroll') {
+        isScrollElement = true;
+      }
+    }
+    if (isScrollElement) {
+      // (window as any)._vcOrigConsole.log('onContentTouchStart isScrollElement', isScrollElement);
+      return;
+    }
     const top = divContent.scrollTop,
           totalScroll = divContent.scrollHeight,
           currentScroll = top + divContent.offsetHeight;
@@ -176,26 +194,23 @@
       // scrollTop always equals to 0 (it is always on the top),
       // so we need to prevent scroll event manually
       if (divContent.scrollTop === 0) {
-        if (e.target.classList && !e.target.classList.contains('vc-cmd-input')) { // skip input
-          preventContentMove = true;
-        }
+        preventContentMove = true;
       }
     } else if (currentScroll === totalScroll) {
       // when content is on the bottom,
       // do similar processing
       divContent.scrollTop = top - 1;
       if (divContent.scrollTop === top) {
-        if (e.target.classList && !e.target.classList.contains('vc-cmd-input')) {
-          preventContentMove = true;
-        }
+        preventContentMove = true;
       }
     }
-    // (window as any)._vcOrigConsole.log('preventContentMove', preventContentMove);
+    // (window as any)._vcOrigConsole.log('onContentTouchStart preventContentMove', preventContentMove);
   };
   const onContentTouchMove = (e) => {
     if (preventContentMove) {
       e.preventDefault();
     }
+    // (window as any)._vcOrigConsole.log('onContentTouchMove preventContentMove', preventContentMove);
   };
   const onContentTouchEnd = (e) => {
     preventContentMove = false;
@@ -235,18 +250,29 @@
     },
     touchMove(e) {
       const touch = e.changedTouches[0];
-      if (Math.abs(touch.pageX - mockTapInfo.touchstartX) > mockTapInfo.tapBoundary || Math.abs(touch.pageY - mockTapInfo.touchstartY) > mockTapInfo.tapBoundary) {
+      if (
+        Math.abs(touch.pageX - mockTapInfo.touchstartX) > mockTapInfo.tapBoundary ||
+        Math.abs(touch.pageY - mockTapInfo.touchstartY) > mockTapInfo.tapBoundary
+      ) {
         mockTapInfo.touchHasMoved = true;
       }
+      // (window as any)._vcOrigConsole.log('mockTapEvent.touchMove',  mockTapInfo.touchHasMoved);
     },
     touchEnd(e) {
       // move and time within limits, manually trigger `click` event
-      if (mockTapInfo.touchHasMoved === false && e.timeStamp - mockTapInfo.lastTouchStartTime < mockTapInfo.tapTime && mockTapInfo.targetElem != null) {
+      if (
+        mockTapInfo.touchHasMoved === false &&
+        e.timeStamp - mockTapInfo.lastTouchStartTime < mockTapInfo.tapTime &&
+        mockTapInfo.targetElem != null
+      ) {
         const tagName = mockTapInfo.targetElem.tagName.toLowerCase();
         let needFocus = false;
         switch (tagName) {
           case 'textarea': // focus
             needFocus = true; break;
+          case 'select':
+            needFocus = !mockTapInfo.targetElem.disabled && !mockTapInfo.targetElem.readOnly;
+            break;
           case 'input':
             switch (mockTapInfo.targetElem.type) {
               case 'button':
@@ -345,6 +371,7 @@
         <div
           id="__vc_plug_{plugin.id}"
           class="vc-plugin-box"
+          class:vc-fixed-height="{plugin.tabOptions?.fixedHeight}"
           class:vc-actived="{plugin.id === activedPluginId}"
         ></div>
       {/each}

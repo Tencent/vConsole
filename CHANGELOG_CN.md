@@ -1,5 +1,16 @@
 [English](./CHANGELOG.md) | 简体中文
 
+## 3.15.0 (2022-11-02)
+
+- `Feat(Log)` 新增虚拟滚动列表以提升性能，并支持快速滚动到顶部/底部。 (PR #570)
+- `Feat(Log)` 新增对 `console.group(), console.groupCollapsed(), console.groupEnd()` 方法的支持。 (issue #545)
+- `Feat(Network)` 新增虚拟滚动列表以提升性能。
+- `Feat(Network)` 新增 request 的 "Start Time"（发起时间）。
+- `Feat(Network)` 使用 `curl` 格式作为 request 的复制内容，而非 `url`。 (issue #410)
+- `Fix(Storage)` 修复内容溢出的元素无法滑动的问题。 (issue #542)
+- `Fix(Core)` 修复 `<select>` 的点击事件问题。 (PR #577)
+
+
 ## 3.14.7 (2022-09-23)
 
 - `Perf(Log)` 优化打印日志时的性能。 (PR #567)

@@ -1,10 +1,9 @@
 <script lang="ts">
   import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-  import Icon from '../component/icon.svelte';
+  import Icon from '../component/icon/icon.svelte';
   import { getLastIdentifier } from './logTool';
   import { VConsoleLogModel } from './log.model';
   import Style from './logCommand.less';
-  // import LogRow from './logRow.svelte';
 
   interface ICmdPromptedItem {
     text: string;
@@ -43,7 +42,7 @@
   onDestroy(() => {
     Style.unuse();
   });
-  
+
 
   /*************************************
    * Methods
@@ -109,7 +108,7 @@
           if (promptedList.length >= 100) {
             break;
           }
-          
+
           const key = String(cachedObjKeys[objName][i]);
           const keyPattern = new RegExp('^' + keyName, 'i'); // polyfill String.startsWith
           if (keyPattern.test(key)) {
@@ -222,8 +221,6 @@
 </script>
 
 <form class="vc-cmd" on:submit|preventDefault={onCmdSubmit}>
-  <button class="vc-cmd-btn" type="submit">OK</button>
-
   <ul class='vc-cmd-prompted' style="{promptedStyle}">
     {#if promptedList.length > 0}
       <li class="vc-cmd-prompted-hide" on:click={clearPromptedList}>Close</li>
@@ -252,10 +249,11 @@
     </div>
   {/if}
   </div>
+
+  <button class="vc-cmd-btn" type="submit">OK</button>
 </form>
 
 <form class="vc-cmd vc-filter" on:submit|preventDefault={onFilterSubmit}>
-  <button class="vc-cmd-btn" type="submit">Filter</button>
   <ul class='vc-cmd-prompted'></ul>
   <div class="vc-cmd-input-wrap">
     <textarea
@@ -269,4 +267,5 @@
     </div>
   {/if}
   </div>
+  <button class="vc-cmd-btn" type="submit">Filter</button>
 </form>

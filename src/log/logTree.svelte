@@ -8,10 +8,11 @@
 
   export let origData: any;
   export let dataKey: string = undefined;
+  export let keyPath: string = ''
   export let keyType: '' | 'private' | 'symbol' = '';
+  export let toggle: Record<string, boolean> = {}
 
   const KEY_PAGE_SIZE = 50;
-  let isInited: boolean = false;
   let isToggle: boolean = false;
   let isTree: boolean = false;
   let isShowProto: boolean = false;
@@ -22,10 +23,9 @@
   let childNonEnumKeyOffset = KEY_PAGE_SIZE;
 
   $: {
-    if (!isInited) {
-      isTree = !(origData instanceof VConsoleUninvocatableObject) && (tool.isArray(origData) || tool.isObject(origData));
-      isInited = true;
-    }
+    isToggle = toggle[keyPath] || false
+
+    isTree = !(origData instanceof VConsoleUninvocatableObject) && (tool.isArray(origData) || tool.isObject(origData));
 
     if (isTree && isToggle) {
       // keys only need to be initialized once
@@ -57,6 +57,7 @@
   };
   const onTapTreeNode = () => {
     isToggle = !isToggle;
+    toggle[keyPath] = isToggle
   };
   const getValueByKey = (key: any) => {
     // invocate some object's property may cause error,
@@ -69,9 +70,9 @@
   };
 </script>
 
-<div class="vc-log-tree" class:vc-toggle={isToggle} class:vc-is-tree={isTree}>
+<div class="vc-log-tree" class:vc-toggle={isToggle} class:vc-is-tree={isTree} data-keypath={keyPath}>
 
-  <div class="vc-log-tree-node" on:click={onTapTreeNode}>
+  <div class="vc-log-tree-node" on:click|stopPropagation={onTapTreeNode}>
     <LogValue origData={origData} dataKey={dataKey} keyType={keyType} />
   </div>
 
@@ -79,7 +80,7 @@
     <div class="vc-log-tree-child">
       {#each childEnumKeys as key, i (key)}
         {#if i < childEnumKeyOffset}
-          <svelte:self origData={getValueByKey(key)} dataKey={key} />
+          <svelte:self origData={getValueByKey(key)} dataKey={key} keyPath={`${keyPath}.${key}`} toggle={toggle} />
         {/if}
       {/each}
       {#if childEnumKeyOffset < childEnumKeys.length}
@@ -87,12 +88,12 @@
       {/if}
 
       {#each childSymbolKeys as key (key)}
-        <svelte:self origData={getValueByKey(key)} dataKey={String(key)} keyType="symbol" />
+        <svelte:self origData={getValueByKey(key)} dataKey={String(key)} keyType="symbol" keyPath={`${keyPath}[${String(key)}]`} toggle={toggle} />
       {/each}
 
       {#each childNonEnumKeys as key, i (key)}
         {#if i < childNonEnumKeyOffset}
-          <svelte:self origData={getValueByKey(key)} dataKey={key} keyType="private" />
+          <svelte:self origData={getValueByKey(key)} dataKey={key} keyType="private" keyPath={`${keyPath}.${key}`} toggle={toggle} />
         {/if}
       {/each}
       {#if childNonEnumKeyOffset < childNonEnumKeys.length}
@@ -100,7 +101,7 @@
       {/if}
 
       {#if isShowProto}
-        <svelte:self origData={getValueByKey('__proto__')} dataKey="__proto__" keyType="private" />
+        <svelte:self origData={getValueByKey('__proto__')} dataKey="__proto__" keyType="private" keyPath={`${keyPath}.__proto__`} toggle={toggle} />
       {/if}
     </div>
   {/if}
