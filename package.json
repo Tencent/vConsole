@@ -50,6 +50,7 @@
     "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.14.1",
     "@babel/preset-typescript": "^7.13.0",
+    "@types/webpack-env": "^1.18.0",
     "babel-loader": "^8.2.4",
     "babel-plugin-add-module-exports": "^1.0.4",
     "css-loader": "^6.7.1",

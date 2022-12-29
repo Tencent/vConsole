@@ -232,6 +232,8 @@ export class VConsole {
       this.compInstance.theme = theme;
     }
 
+    this.compInstance.lang = this.option.lang ? this.option.lang : "en"
+
     if (this.compInstance.disableScrolling !== this.option.disableLogScrolling) {
       this.compInstance.disableScrolling = !!this.option.disableLogScrolling;
     }

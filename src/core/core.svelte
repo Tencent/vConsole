@@ -1,11 +1,11 @@
 <script lang="ts">
   import { onMount, onDestroy, createEventDispatcher } from 'svelte';
   import * as tool from '../lib/tool';
+  import { i18n } from '../lib/lang'
   import { default as SwitchButton } from './switchButton.svelte';
   import { contentStore } from './core.model';
   import Style from './core.less';
   import type { IVConsoleTopbarOptions, IVConsoleToolbarOptions, IVConsoleTabOptions } from '../lib/plugin';
-
   /*************************************
    * Public properties
    *************************************/
@@ -20,6 +20,7 @@
   }
 
   export let theme = '';
+  export let lang = 'en';
   export let disableScrolling = false;
   export let show = false;
   export let showSwitchButton = true;
@@ -27,6 +28,8 @@
   export let activedPluginId = '';
   export let pluginList: { [id: string]: IPlugin } = {};
   export let divContent: HTMLElement;
+
+
 
 
   /*************************************
@@ -44,6 +47,7 @@
   let preivousContentUpdateTime = 0;
   let cssTimer = null;
   const contentScrollTop: { [pluginId: string]: number } = {};
+  let t = i18n(lang)
 
   $: {
     if (show === true) {
@@ -66,6 +70,7 @@
         showMask = false;
       }, 330);
     }
+    t = i18n(lang)
   }
 
 
@@ -340,7 +345,7 @@
             class:vc-actived={plugin.id === activedPluginId}
             id="__vc_tab_{plugin.id}"
             on:click={() => onTapTabbar(plugin.id)}
-          >{plugin.name}</a>
+          >{ t(plugin.name)}</a>
         {/if}
       {/each}
     </div>
@@ -353,7 +358,7 @@
             class:vc-toggle={plugin.id === activedPluginId}
             class:vc-actived={item.actived}
             on:click={(e) => onTapTopbar(e, plugin.id, i)}
-          >{item.name}</i>
+          >{t(item.name)}</i>
         {/each}
       {/each}
     </div>
@@ -385,10 +390,10 @@
             class:vc-global-tool={item.global}
             class:vc-toggle={plugin.id === activedPluginId}
             on:click={(e) => onTapToolbar(e, plugin.id, i)}
-          >{item.name}</i>
+          >{t(item.name)}</i>
         {/each}
       {/each}
-      <i class="vc-tool vc-global-tool vc-tool-last vc-hide" on:click={onTapEventHide}>Hide</i>
+      <i class="vc-tool vc-global-tool vc-tool-last vc-hide" on:click={onTapEventHide}>{t("Hide")}</i>
     </div>
   </div>
 </div>
