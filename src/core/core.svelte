@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy, createEventDispatcher } from 'svelte';
   import * as tool from '../lib/tool';
-  import { i18n } from '../lib/lang'
+  import { i18n } from '../lib/lang';
   import { default as SwitchButton } from './switchButton.svelte';
   import { contentStore } from './core.model';
   import Style from './core.less';
@@ -47,7 +47,7 @@
   let preivousContentUpdateTime = 0;
   let cssTimer = null;
   const contentScrollTop: { [pluginId: string]: number } = {};
-  let t = i18n(lang)
+  let t = i18n(lang);
 
   $: {
     if (show === true) {
@@ -70,7 +70,7 @@
         showMask = false;
       }, 330);
     }
-    t = i18n(lang)
+    t = i18n(lang);
   }
 
 
@@ -345,7 +345,7 @@
             class:vc-actived={plugin.id === activedPluginId}
             id="__vc_tab_{plugin.id}"
             on:click={() => onTapTabbar(plugin.id)}
-          >{ t(plugin.name)}</a>
+          >{t(plugin.name)}</a>
         {/if}
       {/each}
     </div>
@@ -393,7 +393,7 @@
           >{t(item.name)}</i>
         {/each}
       {/each}
-      <i class="vc-tool vc-global-tool vc-tool-last vc-hide" on:click={onTapEventHide}>{t("Hide")}</i>
+      <i class="vc-tool vc-global-tool vc-tool-last vc-hide" on:click={onTapEventHide}>{t('Hide')}</i>
     </div>
   </div>
 </div>

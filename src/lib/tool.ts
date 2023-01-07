@@ -491,8 +491,3 @@ export function callWx(method: string, ...args) {
   }
   return undefined;
 }
-
-
-export function t(str: string):string {
-  return str + "-"
-}
