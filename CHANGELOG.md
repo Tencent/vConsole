@@ -4,6 +4,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 - `Feat(Netwrk)` Add new option `network.ignoreUrlRegExp` to skip some requests. (PR #623)
 - `Fix(Core)` Fix prototype pollution in `vConsole.setOption()`. (issue #616 #621)
+- `Fix(Network)` Fix possible "Cannot read property" error by `sendBeacon`. (issue #615)
 
 
 ## 3.15.0 (2022-11-02)

@@ -105,7 +105,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
    * @private
    */
   private mockSendBeacon() {
-    if (!window.navigator.sendBeacon) {
+    if (!window?.navigator?.sendBeacon) {
       return;
     }
     window.navigator.sendBeacon = BeaconProxy.create((item: VConsoleNetworkRequestItem) => {
