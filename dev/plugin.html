@@ -10,6 +10,7 @@
   <link href="./lib/demo.css" rel="stylesheet"/>
 
   <script src="../dist/vconsole.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
 </head>
 <body ontouchstart>
   <div class="page">
@@ -94,7 +95,7 @@ function newGlobalToolButton() {
 
 function newTabUseJQuery() {
   console.info('newTabUseJQuery() Start');
-  var tab = new window.vConsole.VConsolePlugin('tab4', 'Tab4');
+  var tab = new window.VConsole.VConsolePlugin('tab4', 'Tab4');
   var $html = $('<div><a href="javascript:;">Alert</a></div>');
   $html.find('a').click(function() {
     alert('OK');
@@ -108,7 +109,7 @@ function newTabUseJQuery() {
 
 function newTabUseDOM() {
   console.info('newTabUseDOM() Start');
-  var tab = new window.vConsole.VConsolePlugin('tab5', 'Tab5');
+  var tab = new window.VConsole.VConsolePlugin('tab5', 'Tab5');
   var $elm = document.createElement('DIV');
   $elm.innerHTML = '<p>It works</p>';
   tab.on('renderTab', function(cb) {
