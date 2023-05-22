@@ -18,7 +18,7 @@ export const requestList = writable<{ [id: string]: VConsoleNetworkRequestItem }
  */
 export class VConsoleNetworkModel extends VConsoleModel {
   public maxNetworkNumber: number = 1000;
-  public hideUrlRegexp?: RegExp
+  public ignoreUrlRegExp: RegExp = undefined;
   protected itemCounter: number = 0;
 
   constructor() {
@@ -51,7 +51,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
    */
   public updateRequest(id: string, data: VConsoleNetworkRequestItem) {
     const { url } = data;
-    if (url && this.hideUrlRegexp?.test(url)) {
+    if (url && this.ignoreUrlRegExp?.test(url)) {
       return;
     }
     const reqList = get(requestList);

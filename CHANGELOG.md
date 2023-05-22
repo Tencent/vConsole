@@ -1,5 +1,11 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.16.0 (2023-05-??)
+
+- `Feat(Netwrk)` Add new option `network.ignoreUrlRegExp` to skip some requests. (PR #623)
+- `Fix(Core)` Fix prototype pollution in `vConsole.setOption()`. (issue #616 #621)
+
+
 ## 3.15.0 (2022-11-02)
 
 - `Feat(Log)` Add recycle scrolling to imporove performance, and add scroll to top/bottom buttons. (PR #570)
@@ -77,7 +83,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 ## 3.13.0 (2022-03-15)
 
-- `Feat(Log)` Add new option `log.showTimestames`, see [Public Properties & Methods](./doc/public_properties_methods.md).
+- `Feat(Log)` Add new option `log.showTimestamps`, see [Public Properties & Methods](./doc/public_properties_methods.md).
 - `Fix(Core)` Use polyfill `click` event to prevent raw click event not working in some cases.
 - `Fix(style)` Fix CSS transition failure in WeChat webview by using `bottom` instead of `transform`.
 - `Fix(Core)` Fix error when calling vConsole method in `onReady` callback. (issue #516)
