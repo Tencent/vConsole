@@ -517,21 +517,32 @@ export class VConsole {
    * @example `setOption({ log: { maxLogNumber: 20 }})`: overwrite 'log' object.
    */
   public setOption(keyOrObj: any, value?: any) {
+    
     if (typeof keyOrObj === 'string') {
       // parse `a.b = val` to `a: { b: val }`
       const keys = keyOrObj.split('.');
       let opt: any = this.option;
-      for (let i = 0; i < keys.length - 1; i++) {
+      for (let i = 0; i < keys.length; i++) {
+        if (keys[i] === '__proto__' || keys[i] === 'constructor' || keys[i] === 'prototype') {
+          console.debug(`[vConsole] Cannot set \`${keys[i]}\` in \`vConsole.setOption()\`.`);
+          return;
+        }
         if (opt[keys[i]] === undefined) {
           opt[keys[i]] = {};
         }
+        if (i === keys.length - 1) {
+          opt[keys[i]] = value;
+        }
         opt = opt[keys[i]];
       }
-      opt[keys[keys.length - 1]] = value;
       this._triggerPluginsEvent('updateOption');
       this._updateComponentByOptions();
     } else if (tool.isObject(keyOrObj)) {
       for (let k in keyOrObj) {
+        if (k === '__proto__' || k === 'constructor' || k === 'prototype') {
+          console.debug(`[vConsole] Cannot set \`${k}\` in \`vConsole.setOption()\`.`);
+          continue;
+        }
         this.option[k] = keyOrObj[k];
       }
       this._triggerPluginsEvent('updateOption');
