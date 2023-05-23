@@ -357,7 +357,11 @@ export class VConsole {
     });
     // end init
     plugin.isReady = true;
-    plugin.trigger('ready');
+    // issue #591 is introduce by the fixing for #559
+    // add a deley to fix (issue #591)
+    setTimeout(() => {
+      plugin.trigger('ready');
+    }, 0);
   }
 
   /**
