@@ -5,6 +5,7 @@
 - `Feat(Netwrk)` 新增配置项 `network.ignoreUrlRegExp` 以跳过一些请求。 (PR #623)
 - `Fix(Core)` 修复 `vConsole.setOption()` 中可能存在的原型污染问题。 (issue #616 #621)
 - `Fix(Log)` 修复调用 `console.clear()` 时没有重置 group 层级的问题。 (issue #611)
+- `Fix(Log)` 修复因 iOS（小于 13.4）不支持 `ResizeObserver` 接口导致的致命错误 (issue #610)
 - `Fix(Network)` 修复可能由 `sendBeacon` 引发的 "Cannot read property" 错误。 (issue #615)
 
 

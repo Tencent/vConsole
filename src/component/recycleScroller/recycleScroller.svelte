@@ -4,6 +4,7 @@
   import ScrollHandler from './scroll/scrollHandler';
   import TouchTracker from './scroll/touchTracker';
   import Style from './recycleScroller.less';
+  import { ResizeObserverPolyfill } from './resizeObserver';
   import createRecycleManager from './recycleManager';
 
   // props
@@ -177,7 +178,7 @@
       if (elem) {
         heightUpdater(elem.getBoundingClientRect().height);
         if (observer) observer.disconnect();
-        observer = new ResizeObserver((entries) => {
+        observer = new ResizeObserverPolyfill((entries) => {
           const entry = entries[0];
           heightUpdater(entry.contentRect.height);
         });

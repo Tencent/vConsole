@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
+  import { ResizeObserverPolyfill } from './resizeObserver';
 
   export let show: boolean;
   export let top: boolean;
@@ -14,7 +15,7 @@
     if (show) {
       onResize(item.getBoundingClientRect().height);
     }
-    observer = new ResizeObserver((entries) => {
+    observer = new ResizeObserverPolyfill((entries) => {
       const entry = entries[0];
       if (show) onResize(entry.contentRect.height)
     });
