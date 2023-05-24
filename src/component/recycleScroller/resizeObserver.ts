@@ -4,7 +4,11 @@
  */
 class EmptyResizeObserver {
   constructor(callback: (entries: any[], observer?: EmptyResizeObserver) => void) {
-    // do nothing
+    console.debug('[vConsole] `ResizeObserver` is not supported in the browser, vConsole cannot render correctly.');
+    const entries = [{
+      contentRect: { height: 60 },
+    }];
+    callback(entries, this);
   }
 
   public disconnect() {
@@ -20,4 +24,5 @@ class EmptyResizeObserver {
   }
 }
 
+// export const ResizeObserverPolyfill = EmptyResizeObserver;
 export const ResizeObserverPolyfill = window.ResizeObserver || EmptyResizeObserver;
