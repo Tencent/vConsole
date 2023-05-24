@@ -2,6 +2,7 @@
   import { onMount, onDestroy, createEventDispatcher } from 'svelte';
   import * as tool from '../lib/tool';
   import { default as SwitchButton } from './switchButton.svelte';
+  import { default as PluginContent } from '../lib/pluginContent.svelte';
   import { contentStore } from './core.model';
   import Style from './core.less';
   import type { IVConsoleTopbarOptions, IVConsoleToolbarOptions, IVConsoleTabOptions } from '../lib/plugin';
@@ -17,6 +18,7 @@
     tabOptions?: IVConsoleTabOptions;
     topbarList?: IVConsoleTopbarOptions[];
     toolbarList?: IVConsoleToolbarOptions[];
+    content?: HTMLElement;
   }
 
   export let theme = '';
@@ -368,12 +370,13 @@
       on:scroll={onContentScroll}
     >
       {#each Object.entries(pluginList) as [pluginId, plugin]}
-        <div
-          id="__vc_plug_{plugin.id}"
-          class="vc-plugin-box"
-          class:vc-fixed-height="{plugin.tabOptions?.fixedHeight}"
-          class:vc-actived="{plugin.id === activedPluginId}"
-        ></div>
+        <svelte:component
+          this={PluginContent} 
+          pluginId={plugin.id} 
+          fixedHeight={plugin.tabOptions?.fixedHeight} 
+          actived={plugin.id === activedPluginId} 
+          content={plugin.content}
+        />
       {/each}
     </div>
 

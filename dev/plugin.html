@@ -39,9 +39,9 @@ function newTab() {
   .on('init', function() { console.log(this.id, 'init'); })
   .on('renderTab', function(cb) {
     console.log(this.id, 'renderTab');
-    cb('<div>I am ' + this.id+'</div>');
+    cb('<div id="tab1">I am ' + this.id+'</div>');
   })
-  .on('ready', function() {  console.log(this.id, 'ready'); })
+  .on('ready', function() { console.log(this.id, 'ready', document.querySelector('#tab1')); })
   .on('show', function() { console.log(this.id, 'show'); })
   .on('hide', function() { console.log(this.id, 'hide'); })
   .on('showConsole', function() { console.log(this.id, 'showConsole'); })

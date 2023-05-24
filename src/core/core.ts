@@ -293,6 +293,8 @@ export class VConsole {
       tabOptions: undefined,
       topbarList: [],
       toolbarList: [],
+      content: undefined,
+      contentContainer: undefined,
     };
     this.compInstance.pluginList = this._reorderPluginList(this.compInstance.pluginList);
     // start init
@@ -305,20 +307,7 @@ export class VConsole {
       pluginInfo.tabOptions = options;
       // render tabbox
       if (!!tabboxHTML) {
-        // when built-in plugins are initializing in the same time,
-        // plugin's `.vc-plugin-box` element will be re-order by `pluginOrder` option,
-        // so the innerHTML should be inserted with a delay
-        // to make sure getting the right `.vc-plugin-box`. (issue #559)
-        setTimeout(() => {
-          const divContentInner = document.querySelector('#__vc_plug_' + plugin.id);
-          if (tool.isString(tabboxHTML)) {
-            divContentInner.innerHTML += tabboxHTML;
-          } else if (tool.isFunction(tabboxHTML.appendTo)) {
-            tabboxHTML.appendTo(divContentInner);
-          } else if (tool.isElement(tabboxHTML)) {
-            divContentInner.insertAdjacentElement('beforeend', tabboxHTML);
-          }
-        }, 0);
+        this.compInstance.pluginList[plugin.id].content = tabboxHTML;
       }
       this.compInstance.pluginList = this.compInstance.pluginList;
     });
