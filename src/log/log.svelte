@@ -1,21 +1,21 @@
-<script lang="ts">
-  import { onMount, onDestroy } from "svelte";
-  import { isMatchedFilterText } from "./logTool";
-  import { VConsoleLogStore as Store } from "./log.store";
-  import LogRow from "./logRow.svelte";
-  import LogCommand from "./logCommand.svelte";
-  import Style from "./log.less";
-  import type { IConsoleLogMethod, IVConsoleLog } from "./log.model";
-  import RecycleScroller from "../component/recycleScroller/recycleScroller.svelte";
-  import type { IVConsoleTabOptions } from "../lib/plugin";
+<script lang='ts'>
+  import { onMount, onDestroy } from 'svelte';
+  import { isMatchedFilterText } from './logTool';
+  import { VConsoleLogStore as Store } from './log.store';
+  import LogRow from './logRow.svelte';
+  import LogCommand from './logCommand.svelte';
+  import Style from './log.less';
+  import type { IConsoleLogMethod, IVConsoleLog } from './log.model';
+  import RecycleScroller from '../component/recycleScroller/recycleScroller.svelte';
+  import type { IVConsoleTabOptions } from '../lib/plugin';
 
-  export let pluginId: string = "default";
+  export let pluginId: string = 'default';
   export let showCmd: boolean = false;
-  export let filterType: "all" | IConsoleLogMethod = "all";
+  export let filterType: 'all' | IConsoleLogMethod = 'all';
   export let showTimestamps: boolean = false;
 
   let isInited: boolean = false;
-  let filterText: string = "";
+  let filterText: string = '';
   let store: ReturnType<typeof Store.get>;
   let scrollerHandler;
   let logList: IVConsoleLog[] = [];
@@ -31,9 +31,9 @@
     logList = $store.logList.filter((log) => {
       let ret = 
         // filterType
-        (filterType === "all" || filterType === log.type) &&
+        (filterType === 'all' || filterType === log.type) &&
         // filterText
-        (filterText === "" || isMatchedFilterText(log, filterText)) &&
+        (filterText === '' || isMatchedFilterText(log, filterText)) &&
         // group
         !log.groupCollapsed;
       return ret;
