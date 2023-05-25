@@ -28,7 +28,6 @@
   export let switchButtonPosition = { x: 0, y: 0 };
   export let activedPluginId = '';
   export let pluginList: { [id: string]: IPlugin } = {};
-  export let divContent: HTMLElement;
 
 
   /*************************************
@@ -45,6 +44,7 @@
   let isInBottom = true;
   let preivousContentUpdateTime = 0;
   let cssTimer = null;
+  let divContent: HTMLElement;
   const contentScrollTop: { [pluginId: string]: number } = {};
 
   $: {
