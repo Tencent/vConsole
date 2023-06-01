@@ -4,7 +4,7 @@
   import ScrollHandler from './scroll/scrollHandler';
   import TouchTracker from './scroll/touchTracker';
   import Style from './recycleScroller.less';
-  import { ResizeObserverPolyfill } from './resizeObserver';
+  import { useResizeObserver, hasResizeObserver } from './resizeObserver';
   import createRecycleManager from './recycleManager';
 
   // props
@@ -40,33 +40,141 @@
   let visible: { key: number; index: number; show: boolean }[] = [];
 
   const updateVisible = createRecycleManager();
-
-  const getScrollExtent = () =>
-    Math.max(0, frameHeight + headerHeight + footerHeight - viewportHeight);
+  const getScrollExtent = () => {
+    return Math.max(0, frameHeight + headerHeight + footerHeight - viewportHeight);
+  };
+  const emptyEvent = () => {};
 
   let isOnBottom = true;
   let avoidRefresh = false;
 
-  const scrollHandler = new ScrollHandler(getScrollExtent, async (pos) => {
-    // if (pos < 0) {
-    //   ;(window as any)._vcOrigConsole.error('invalid pos', pos, new Error().stack);
-    //   debugger
-    // }
-    const scrollExtent = getScrollExtent();
-    isOnBottom = Math.abs(pos - scrollExtent) <= 1;
+  let oldItems = [];
+  let isMounted = false;
+  let isInited = false;
+  let isObservable = hasResizeObserver();
+  let scrollHandler: ScrollHandler;
+  let touchTracker: TouchTracker;
 
-    contents.style.transform = `translateY(${-pos}px) translateZ(0)`;
-    // (window as any)._vcOrigConsole.log('pos', pos);
-    refreshScrollbar();
+  const registerHeightObserver = (
+    getElem: () => HTMLElement | null,
+    heightUpdater: (height: number) => void
+  ) => {
+    let observer: ResizeObserver | null;
 
-    if (avoidRefresh) {
-      avoidRefresh = false;
-    } else {
-      await new Promise((resolve) => setTimeout(resolve, 0));
+    onMount(() => {
+      const elem = getElem();
+      if (elem) {
+        heightUpdater(elem.getBoundingClientRect().height);
+        if (observer) observer.disconnect();
+        const ResizeObserverPolyfill = useResizeObserver();
+        observer = new ResizeObserverPolyfill((entries) => {
+          const entry = entries[0];
+          heightUpdater(entry.contentRect.height);
+        });
 
-      refresh(items, pos, viewportHeight);
-    }
-  });
+        observer.observe(elem);
+      } else {
+        heightUpdater(0);
+        if (observer) {
+          observer.disconnect();
+          observer = null;
+        }
+      }
+    });
+
+    onDestroy(() => {
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+    });
+  };
+
+  const initHandler = () => {
+    if (!isObservable) { return; }
+    scrollHandler = scrollHandler || new ScrollHandler(getScrollExtent, async (pos) => {
+      // if (pos < 0) {
+      //   ;(window as any)._vcOrigConsole.error('invalid pos', pos, new Error().stack);
+      //   debugger
+      // }
+      const scrollExtent = getScrollExtent();
+      isOnBottom = Math.abs(pos - scrollExtent) <= 1;
+
+      contents.style.transform = `translateY(${-pos}px) translateZ(0)`;
+      // (window as any)._vcOrigConsole.log('pos', pos);
+      refreshScrollbar();
+
+      if (avoidRefresh) {
+        avoidRefresh = false;
+      } else {
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        refresh(items, pos, viewportHeight);
+      }
+    });
+
+    touchTracker = touchTracker || new TouchTracker(scrollHandler);
+  };
+
+  const initRegisterHeightObserver = () => {
+    if (isInited || !isObservable) { return; }
+    
+    registerHeightObserver(
+      () => viewport,
+      async (height) => {
+        if (viewportHeight === height) return;
+        // (window as any)._vcOrigConsole.log("viewport height resize", height);
+        viewportHeight = height;
+
+        let y = 0
+        for (let i = 0; i < items.length; i += 1) {
+          y += heightMap[i];
+        }
+        frameHeight = Math.max(y, viewportHeight - footerHeight);
+        frame.style.height = `${frameHeight}px`;
+
+        // setTimeout to avoid ResizeObserver loop limit exceeded error
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        initItems(items);
+        refresh(items, scrollHandler.getPosition(), viewportHeight);
+        if (viewportHeight !== 0) scrollToBottom(isOnBottom && stickToBottom);
+        refreshScrollbar();
+      }
+    );
+
+    registerHeightObserver(
+      () => footer,
+      (height) => {
+        if (footerHeight === height) return;
+        // ;(window as any)._vcOrigConsole.log('footer height resize', height);
+        // no need to fresh
+        footerHeight = height;
+
+        let y = 0
+        for (let i = 0; i < items.length; i += 1) {
+          y += heightMap[i];
+        }
+        frameHeight = Math.max(y, viewportHeight - headerHeight - footerHeight);
+        frame.style.height = `${frameHeight}px`;
+
+        if (viewportHeight !== 0) scrollToBottom(isOnBottom && stickToBottom);
+        refreshScrollbar();
+      }
+    );
+
+    registerHeightObserver(
+      () => header,
+      (height) => {
+        if (headerHeight === height) return;
+        // ;(window as any)._vcOrigConsole.log('header height resize', height);
+        // no need to fresh
+        headerHeight = height;
+        initItems(items);
+        refreshScrollbar();
+      }
+    );
+  };
 
   const refreshScrollbar = () => {
     const pos = scrollHandler.getPosition();
@@ -88,21 +196,28 @@
     }
   };
 
-  function initItems(items) {
-    return init(items, viewportHeight, itemHeight);
-  }
-
-  let oldItems = [];
-  let mounted;
+  const initItems = (items) => {
+    init(items, viewportHeight, itemHeight);
+  };
 
   // whenever `items` or `itemHeight` changes, refresh the viewport
-  $: if (mounted) initItems(items);
+  $: {
+    if (isMounted) {
+      if (!isObservable) {
+        // hack: When the ResizeObserver is not available, use native scrolling.
+        // At this time, the parent container should have an automatic height instead of a fixed height
+        viewport.parentElement.style.height = 'auto';
+      }
+      initItems(items);
+      isInited = true;
+    }
+  }
 
   function init(items, viewportHeight, itemHeight) {
     // preserve heightMap
     const itemsHeightMap = new Map<any, number>();
 
-    // (window as any)._vcOrigConsole.log("init");
+    // (window as any)._vcOrigConsole.log('init', isObservable);
     // let reuseHeightCount = 0;
 
     for (let i = 0; i < oldItems.length; i += 1) {
@@ -136,10 +251,14 @@
 
     oldItems = items;
 
-    refresh(items, scrollHandler.getPosition(), viewportHeight);
-    frame.style.height = `${frameHeight}px`;
-    scrollToBottom(isOnBottom && stickToBottom);
-    refreshScrollbar();
+    if (isObservable) {
+      refresh(items, scrollHandler.getPosition(), viewportHeight);
+      frame.style.height = `${frameHeight}px`;
+      scrollToBottom(isOnBottom && stickToBottom);
+      refreshScrollbar();
+    } else {
+      refresh(items, 0, 9000000);
+    }
   }
 
   function refresh(items: any[], scrollTop: number, viewportHeight: number) {
@@ -166,96 +285,6 @@
 
     visible = updateVisible(items.length, start, end);
   }
-
-  const registerHeightObserver = (
-    getElem: () => HTMLElement | null,
-    heightUpdater: (height: number) => void
-  ) => {
-    let observer: ResizeObserver | null;
-
-    onMount(() => {
-      const elem = getElem();
-      if (elem) {
-        heightUpdater(elem.getBoundingClientRect().height);
-        if (observer) observer.disconnect();
-        observer = new ResizeObserverPolyfill((entries) => {
-          const entry = entries[0];
-          heightUpdater(entry.contentRect.height);
-        });
-
-        observer.observe(elem);
-      } else {
-        heightUpdater(0);
-        if (observer) {
-          observer.disconnect();
-          observer = null;
-        }
-      }
-    });
-
-    onDestroy(() => {
-      if (observer) {
-        observer.disconnect();
-        observer = null;
-      }
-    });
-  };
-
-  registerHeightObserver(
-    () => viewport,
-    async (height) => {
-      if (viewportHeight === height) return;
-      // (window as any)._vcOrigConsole.log("viewport height resize", height);
-      viewportHeight = height;
-
-      let y = 0
-      for (let i = 0; i < items.length; i += 1) {
-        y += heightMap[i];
-      }
-      frameHeight = Math.max(y, viewportHeight - footerHeight);
-      frame.style.height = `${frameHeight}px`;
-
-      // setTimeout to avoid ResizeObserver loop limit exceeded error
-      await new Promise((resolve) => setTimeout(resolve, 0));
-
-      initItems(items);
-      refresh(items, scrollHandler.getPosition(), viewportHeight);
-      if (viewportHeight !== 0) scrollToBottom(isOnBottom && stickToBottom);
-      refreshScrollbar();
-    }
-  );
-
-  registerHeightObserver(
-    () => footer,
-    (height) => {
-      if (footerHeight === height) return;
-      // ;(window as any)._vcOrigConsole.log('footer height resize', height);
-      // no need to fresh
-      footerHeight = height;
-
-      let y = 0
-      for (let i = 0; i < items.length; i += 1) {
-        y += heightMap[i];
-      }
-      frameHeight = Math.max(y, viewportHeight - headerHeight - footerHeight);
-      frame.style.height = `${frameHeight}px`;
-
-      if (viewportHeight !== 0) scrollToBottom(isOnBottom && stickToBottom);
-      refreshScrollbar();
-    }
-  );
-
-  registerHeightObserver(
-    () => header,
-    (height) => {
-      if (headerHeight === height) return;
-      // ;(window as any)._vcOrigConsole.log('header height resize', height);
-      // no need to fresh
-      headerHeight = height;
-      initItems(items);
-      refreshScrollbar();
-    }
-  );
 
   const onRowResize = async (index: number, height: number) => {
     if (heightMap[index] === height || viewportHeight === 0) return;
@@ -303,7 +332,7 @@
 
   // trigger initial refresh
   onMount(() => {
-    mounted = true;
+    isMounted = true;
     Style.use();
   });
 
@@ -311,10 +340,14 @@
     Style.unuse();
   });
 
-  const touchTracker = new TouchTracker(scrollHandler);
+  if (isObservable) {
+    initHandler();
+    initRegisterHeightObserver();
+  }
 
   export const handler = {
     scrollTo: (index: number) => {
+      if (!isObservable) { return; }
       const itemPos = topMap[Math.max(0, Math.min(items.length - 1, index))];
       const scrollPos = Math.min(getScrollExtent(), itemPos);
 
@@ -336,12 +369,13 @@
 
 <div
   bind:this={viewport}
-  on:touchstart={touchTracker.handleTouchStart}
-  on:touchmove={touchTracker.handleTouchMove}
-  on:touchend={touchTracker.handleTouchEnd}
-  on:touchcancel={touchTracker.handleTouchCancel}
-  on:wheel={touchTracker.handleWheel}
+  on:touchstart={!isObservable ? emptyEvent : touchTracker.handleTouchStart}
+  on:touchmove={!isObservable ? emptyEvent : touchTracker.handleTouchMove}
+  on:touchend={!isObservable ? emptyEvent : touchTracker.handleTouchEnd}
+  on:touchcancel={!isObservable ? emptyEvent : touchTracker.handleTouchCancel}
+  on:wheel={!isObservable ? emptyEvent : touchTracker.handleWheel}
   class="vc-scroller-viewport"
+  class:static={!isObservable}
 >
   <div bind:this={contents} class="vc-scroller-contents">
     {#if $$slots.header}

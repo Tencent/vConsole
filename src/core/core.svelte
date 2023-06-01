@@ -168,6 +168,7 @@
     }
   };
   const onContentTouchStart = (e) => {
+    // (window as any)._vcOrigConsole.log('onContentTouchStart', e.target.tagName, e.target.className);
     // skip inputs
     let isInputElement = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
     if (isInputElement) {
@@ -177,9 +178,10 @@
     let isScrollElement = false;
     if (typeof window.getComputedStyle === 'function') {
       const style = window.getComputedStyle(e.target);
-      if (style.overflow === 'auto' || style.overflow === 'scroll') {
+      if (style.overflow === 'auto' || style.overflow === 'initial' || style.overflow === 'scroll') {
         isScrollElement = true;
       }
+      // (window as any)._vcOrigConsole.log('onContentTouchStart isScrollElement', style.overflow);
     }
     if (isScrollElement) {
       // (window as any)._vcOrigConsole.log('onContentTouchStart isScrollElement', isScrollElement);
@@ -188,6 +190,7 @@
     const top = divContent.scrollTop,
           totalScroll = divContent.scrollHeight,
           currentScroll = top + divContent.offsetHeight;
+    // (window as any)._vcOrigConsole.log('onContentTouchStart', `top=${top}`, `totalScroll=${totalScroll}`, `currentScroll=${currentScroll}`);
     if (top === 0) {
       // when content is on the top,
       // reset scrollTop to lower position to prevent iOS apply scroll action to background
