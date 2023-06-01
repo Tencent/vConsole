@@ -1,5 +1,15 @@
 [English](./CHANGELOG.md) | 简体中文
 
+## 3.15.1 (2023-06-01)
+
+- `Feat(Netwrk)` 新增配置项 `network.ignoreUrlRegExp` 以跳过一些请求。 (PR #623)
+- `Fix(Core)` 修复 `vConsole.setOption()` 中可能存在的原型污染问题。 (issue #616 #621)
+- `Fix(Core)` 修复插件事件 `ready` 在插件完成渲染前就被触发的问题。 (issue #591)
+- `Fix(Log)` 修复调用 `console.clear()` 时没有重置 group 层级的问题。 (issue #611)
+- `Fix(Log)` 兼容 iOS（小于 13.4）不支持 `ResizeObserver` 的情况，代价是打印大批量日志可能会有性能问题。 (issue #610)
+- `Fix(Network)` 修复可能由 `sendBeacon` 引发的 "Cannot read property" 错误。 (issue #615)
+
+
 ## 3.15.0 (2022-11-02)
 
 - `Feat(Log)` 新增虚拟滚动列表以提升性能，并支持快速滚动到顶部/底部。 (PR #570)
@@ -77,7 +87,7 @@
 
 ## 3.13.0 (2022-03-15)
 
-- `Feat(Log)` 新增配置项 `log.showTimestames`，见 [公共属性及方法](./doc/public_properties_methods_CN.md)。
+- `Feat(Log)` 新增配置项 `log.showTimestamps`，见 [公共属性及方法](./doc/public_properties_methods_CN.md)。
 - `Fix(Core)` 使用模拟的 `click` 事件以避免某些场景下原生 click 事件不生效的问题。
 - `Fix(style)` 修复微信 Webview 中的 CSS transition 失效的问题，通过使用 `bottom` 而非 `transform`。
 - `Fix(Core)` 修复在 `onReady` 回调中调用 vConsole 方法导致报错的问题。 (issue #516)

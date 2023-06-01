@@ -1,5 +1,15 @@
 English | [简体中文](./CHANGELOG_CN.md)
 
+## 3.15.1 (2023-06-01)
+
+- `Feat(Netwrk)` Add new option `network.ignoreUrlRegExp` to skip some requests. (PR #623)
+- `Fix(Core)` Fix prototype pollution in `vConsole.setOption()`. (issue #616 #621)
+- `Fix(Core)` Fix plugin event `ready` triggering before its HTML finishes rendering. (issue #591)
+- `Fix(Log)` Reset group state when `console.clear()` is called. (issue #611)
+- `Fix(Log)` Compatible with iOS (less than 13.4) that does not support `ResizeObserver`, but there may be a potential performance issue when printing a large number of logs. (issue #610)
+- `Fix(Network)` Fix possible "Cannot read property" error by `sendBeacon`. (issue #615)
+
+
 ## 3.15.0 (2022-11-02)
 
 - `Feat(Log)` Add recycle scrolling to imporove performance, and add scroll to top/bottom buttons. (PR #570)
@@ -77,7 +87,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 ## 3.13.0 (2022-03-15)
 
-- `Feat(Log)` Add new option `log.showTimestames`, see [Public Properties & Methods](./doc/public_properties_methods.md).
+- `Feat(Log)` Add new option `log.showTimestamps`, see [Public Properties & Methods](./doc/public_properties_methods.md).
 - `Fix(Core)` Use polyfill `click` event to prevent raw click event not working in some cases.
 - `Fix(style)` Fix CSS transition failure in WeChat webview by using `bottom` instead of `transform`.
 - `Fix(Core)` Fix error when calling vConsole method in `onReady` callback. (issue #516)

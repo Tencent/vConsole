@@ -1,4 +1,3 @@
-import { writable, get } from 'svelte/store';
 import * as tool from '../lib/tool';
 import { VConsoleModel } from '../lib/model';
 import { contentStore } from '../core/core.model';
@@ -39,18 +38,6 @@ export interface IVConsoleAddLogOptions {
   cmdType?: 'input' | 'output';
 }
 
-// export interface IVConsoleLogStore {
-//   logList: IVConsoleLog[];
-// }
-
-
-/**********************************
- * Stores
- **********************************/
-
-// export const logStore = writable<{ [pluginId: string]: IVConsoleLogStore }>({});
-
-
 
 /**********************************
  * Model
@@ -85,12 +72,6 @@ export class VConsoleLogModel extends VConsoleModel {
       this.mockConsole();
     }
 
-    // logStore.update((store) => {
-    //   store[pluginId] = {
-    //     logList: [],
-    //   };
-    //   return store;
-    // });
     Store.create(pluginId);
 
     this.ADDED_LOG_PLUGIN_ID.push(pluginId);
@@ -221,6 +202,7 @@ export class VConsoleLogModel extends VConsoleModel {
 
   protected _mockConsoleClear() {
     window.console.clear = ((...args) => {
+      this.resetGroup();
       this.clearLog();
       this.callOriginalConsole('clear', ...args);
     }).bind(window.console);
@@ -250,21 +232,21 @@ export class VConsoleLogModel extends VConsoleModel {
   }
 
   /**
+   * Reset groups by `console.group()`.
+   */
+  public resetGroup() {
+    while (this.groupLevel > 0) {
+      console.groupEnd();
+    }
+  }
+
+  /**
    * Remove all logs.
    */
   public clearLog() {
-    // logStore.update((store) => {
-    //   for (const id in store) {
-    //     store[id].logList = [];
-    //   }
-    //   return store;
-    // });
     const stores = Store.getAll();
     for (let id in stores) {
-      stores[id].update((store) => {
-        store.logList = [];
-        return store;
-      });
+      this.clearPluginLog(id);
     }
   }
 
@@ -272,16 +254,21 @@ export class VConsoleLogModel extends VConsoleModel {
    * Remove a plugin's logs.
    */
   public clearPluginLog(pluginId: string) {
-    // logStore.update((store) => {
-    //   if (store[pluginId]) {
-    //     store[pluginId].logList = [];
-    //   }
-    //   return store;
-    // });
+    // clear logs in the queue
+    const logQueue = this.logQueue;
+    this.logQueue = [];
+    for (const log of logQueue) {
+      const logPluginId = this._extractPluginIdByLog(log);
+      if (logPluginId !== pluginId) {
+        this.logQueue.push(log);
+      }
+    }
+    // clear logs in the store
     Store.get(pluginId).update((store) => {
-      store.logList = [];
+      store.logList.length = 0;
       return store;
     });
+    contentStore.updateTime();
   }
 
   /**

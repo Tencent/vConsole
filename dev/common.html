@@ -93,6 +93,11 @@ function setOption() {
   vConsole.setOption('log.maxLogNumber', 20);
   vConsole.setOption({ network: { maxNetworkNumber: 30 }});
   vConsole.setOption({ network: { b: 123 }}); // overwrite previous line
+  vConsole.setOption({ '__proto__': { a: 1 }, 'prototype': { b: 2 }, 'constructor': 3 });
+  vConsole.setOption('__proto__.noOrig', 1);
+  vConsole.setOption('prototype.noOrig', 2);
+  vConsole.setOption('constructor', () => { console.log('hack') });
+  vConsole.setOption('log.__proto__.noOrig', 1);
   console.log(vConsole.option);
 }
 

@@ -293,6 +293,8 @@ export class VConsole {
       tabOptions: undefined,
       topbarList: [],
       toolbarList: [],
+      content: undefined,
+      contentContainer: undefined,
     };
     this.compInstance.pluginList = this._reorderPluginList(this.compInstance.pluginList);
     // start init
@@ -305,20 +307,7 @@ export class VConsole {
       pluginInfo.tabOptions = options;
       // render tabbox
       if (!!tabboxHTML) {
-        // when built-in plugins are initializing in the same time,
-        // plugin's `.vc-plugin-box` element will be re-order by `pluginOrder` option,
-        // so the innerHTML should be inserted with a delay
-        // to make sure getting the right `.vc-plugin-box`. (issue #559)
-        setTimeout(() => {
-          const divContentInner = document.querySelector('#__vc_plug_' + plugin.id);
-          if (tool.isString(tabboxHTML)) {
-            divContentInner.innerHTML += tabboxHTML;
-          } else if (tool.isFunction(tabboxHTML.appendTo)) {
-            tabboxHTML.appendTo(divContentInner);
-          } else if (tool.isElement(tabboxHTML)) {
-            divContentInner.insertAdjacentElement('beforeend', tabboxHTML);
-          }
-        }, 0);
+        this.compInstance.pluginList[plugin.id].content = tabboxHTML;
       }
       this.compInstance.pluginList = this.compInstance.pluginList;
     });
@@ -517,21 +506,32 @@ export class VConsole {
    * @example `setOption({ log: { maxLogNumber: 20 }})`: overwrite 'log' object.
    */
   public setOption(keyOrObj: any, value?: any) {
+    
     if (typeof keyOrObj === 'string') {
       // parse `a.b = val` to `a: { b: val }`
       const keys = keyOrObj.split('.');
       let opt: any = this.option;
-      for (let i = 0; i < keys.length - 1; i++) {
+      for (let i = 0; i < keys.length; i++) {
+        if (keys[i] === '__proto__' || keys[i] === 'constructor' || keys[i] === 'prototype') {
+          console.debug(`[vConsole] Cannot set \`${keys[i]}\` in \`vConsole.setOption()\`.`);
+          return;
+        }
         if (opt[keys[i]] === undefined) {
           opt[keys[i]] = {};
         }
+        if (i === keys.length - 1) {
+          opt[keys[i]] = value;
+        }
         opt = opt[keys[i]];
       }
-      opt[keys[keys.length - 1]] = value;
       this._triggerPluginsEvent('updateOption');
       this._updateComponentByOptions();
     } else if (tool.isObject(keyOrObj)) {
       for (let k in keyOrObj) {
+        if (k === '__proto__' || k === 'constructor' || k === 'prototype') {
+          console.debug(`[vConsole] Cannot set \`${k}\` in \`vConsole.setOption()\`.`);
+          continue;
+        }
         this.option[k] = keyOrObj[k];
       }
       this._triggerPluginsEvent('updateOption');

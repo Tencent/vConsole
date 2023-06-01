@@ -57,6 +57,7 @@ target                | String, HTMLElement | true | `document.documentElement` 
 log.maxLogNumber      | Number   | true     | 1000                                        | Overflow logs will be removed from log panels.
 log.showTimestamps    | Boolean  | true     | false                                       | Display timestamps of logs.
 network.maxNetworkNumber | Number | true    | 1000                                        | Overflow requests will be removed from Netowrk panel.
+network.ignoreUrlRegExp | RegExp | true     |                                              | Skip the requests which url match the RegExp.
 storage.defaultStorages  | Array  | true    | ['cookies', 'localStorage', 'sessionStorage'] | Listed storage(s) will be available in Storage panel.
 
 Example:

@@ -5,6 +5,7 @@ export interface VConsoleLogOptions {
 
 export interface VConsoleNetworkOptions {
   maxNetworkNumber?: number;
+  ignoreUrlRegExp?: RegExp;
 }
 
 export type VConsoleAvailableStorage = 'cookies' | 'localStorage' | 'sessionStorage' | 'wxStorage';

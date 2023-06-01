@@ -18,8 +18,9 @@ export const requestList = writable<{ [id: string]: VConsoleNetworkRequestItem }
  */
 export class VConsoleNetworkModel extends VConsoleModel {
   public maxNetworkNumber: number = 1000;
+  public ignoreUrlRegExp: RegExp = undefined;
   protected itemCounter: number = 0;
- 
+
   constructor() {
     super();
     this.mockXHR();
@@ -49,6 +50,10 @@ export class VConsoleNetworkModel extends VConsoleModel {
    * Add or update a request item by request ID.
    */
   public updateRequest(id: string, data: VConsoleNetworkRequestItem) {
+    const { url } = data;
+    if (url && this.ignoreUrlRegExp?.test(url)) {
+      return;
+    }
     const reqList = get(requestList);
     const hasItem = !!reqList[id];
     if (hasItem) {
@@ -100,7 +105,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
    * @private
    */
   private mockSendBeacon() {
-    if (!window.navigator.sendBeacon) {
+    if (!window?.navigator?.sendBeacon) {
       return;
     }
     window.navigator.sendBeacon = BeaconProxy.create((item: VConsoleNetworkRequestItem) => {

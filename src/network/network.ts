@@ -41,5 +41,8 @@ export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
     if (this.vConsole.option.network?.maxNetworkNumber !== this.model.maxNetworkNumber) {
       this.model.maxNetworkNumber = Number(this.vConsole.option.network?.maxNetworkNumber) || MAX_NETWORK_NUMBER;
     }
+    if (this.vConsole.option.network?.ignoreUrlRegExp) {
+      this.model.ignoreUrlRegExp = this.vConsole.option.network.ignoreUrlRegExp;
+    }
   }
 }

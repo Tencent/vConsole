@@ -2,6 +2,7 @@
   import { onMount, onDestroy, createEventDispatcher } from 'svelte';
   import * as tool from '../lib/tool';
   import { default as SwitchButton } from './switchButton.svelte';
+  import { default as PluginContent } from '../lib/pluginContent.svelte';
   import { contentStore } from './core.model';
   import Style from './core.less';
   import type { IVConsoleTopbarOptions, IVConsoleToolbarOptions, IVConsoleTabOptions } from '../lib/plugin';
@@ -17,6 +18,7 @@
     tabOptions?: IVConsoleTabOptions;
     topbarList?: IVConsoleTopbarOptions[];
     toolbarList?: IVConsoleToolbarOptions[];
+    content?: HTMLElement;
   }
 
   export let theme = '';
@@ -26,7 +28,6 @@
   export let switchButtonPosition = { x: 0, y: 0 };
   export let activedPluginId = '';
   export let pluginList: { [id: string]: IPlugin } = {};
-  export let divContent: HTMLElement;
 
 
   /*************************************
@@ -43,6 +44,7 @@
   let isInBottom = true;
   let preivousContentUpdateTime = 0;
   let cssTimer = null;
+  let divContent: HTMLElement;
   const contentScrollTop: { [pluginId: string]: number } = {};
 
   $: {
@@ -166,6 +168,7 @@
     }
   };
   const onContentTouchStart = (e) => {
+    // (window as any)._vcOrigConsole.log('onContentTouchStart', e.target.tagName, e.target.className);
     // skip inputs
     let isInputElement = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
     if (isInputElement) {
@@ -175,9 +178,10 @@
     let isScrollElement = false;
     if (typeof window.getComputedStyle === 'function') {
       const style = window.getComputedStyle(e.target);
-      if (style.overflow === 'auto' || style.overflow === 'scroll') {
+      if (style.overflow === 'auto' || style.overflow === 'initial' || style.overflow === 'scroll') {
         isScrollElement = true;
       }
+      // (window as any)._vcOrigConsole.log('onContentTouchStart isScrollElement', style.overflow);
     }
     if (isScrollElement) {
       // (window as any)._vcOrigConsole.log('onContentTouchStart isScrollElement', isScrollElement);
@@ -186,6 +190,7 @@
     const top = divContent.scrollTop,
           totalScroll = divContent.scrollHeight,
           currentScroll = top + divContent.offsetHeight;
+    // (window as any)._vcOrigConsole.log('onContentTouchStart', `top=${top}`, `totalScroll=${totalScroll}`, `currentScroll=${currentScroll}`);
     if (top === 0) {
       // when content is on the top,
       // reset scrollTop to lower position to prevent iOS apply scroll action to background
@@ -368,12 +373,13 @@
       on:scroll={onContentScroll}
     >
       {#each Object.entries(pluginList) as [pluginId, plugin]}
-        <div
-          id="__vc_plug_{plugin.id}"
-          class="vc-plugin-box"
-          class:vc-fixed-height="{plugin.tabOptions?.fixedHeight}"
-          class:vc-actived="{plugin.id === activedPluginId}"
-        ></div>
+        <svelte:component
+          this={PluginContent} 
+          pluginId={plugin.id} 
+          fixedHeight={plugin.tabOptions?.fixedHeight} 
+          actived={plugin.id === activedPluginId} 
+          content={plugin.content}
+        />
       {/each}
     </div>
 

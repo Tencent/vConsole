@@ -141,8 +141,8 @@ function printf() {
 }
 
 function styling() {
-  console.log('%c blue %c red', 'color:blue', 'color:red'); // blue red
-  console.log('%c FOO', 'font-weight:bold', 'bar'); // FOO bar
+  console.log('%c blue %c red', 'color:blue', 'color:red', 'Foo'); // blue red Foo
+  console.log('%c FOO', 'font-weight:bold; font-size:18px; background-color:#00FF00; padding:3px;', 'bar'); // FOO bar
   console.log('%c Foo %c bar', 'color:red'); // Foo %c bar
 }
 
@@ -180,6 +180,13 @@ function logGroup() {
     console.log('Back to level 2');
   console.groupEnd();
   console.log('Back to the outer level');
+
+  // console.group();
+  //   console.log('Level 2');
+  //   console.group(aa);
+  //     console.log('Level 3');
+  // console.clear();
+  // console.log('Now console.clear() is called.');
 }
 
 function formattingLog() {
