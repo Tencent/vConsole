@@ -60,7 +60,7 @@ export const genResonseByResponseType = (responseType: string, response: any) =>
     case 'formdata':
     default:
       if (typeof response !== 'undefined') {
-        ret = Object.prototype.toString.call(response);
+        ret = response;
       }
       break;
   }
