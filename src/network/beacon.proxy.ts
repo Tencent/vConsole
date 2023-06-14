@@ -64,9 +64,16 @@ export class BeaconProxyHandler<T extends typeof navigator.sendBeacon> implement
 }
 
 export class BeaconProxy {
-  public static origSendBeacon = navigator.sendBeacon;
+  public static origSendBeacon = window?.navigator?.sendBeacon;
+
+  public static hasSendBeacon() {
+    return !!BeaconProxy.origSendBeacon;
+  }
 
   public static create(onUpdateCallback: IOnUpdateCallback) {
-    return new Proxy(navigator.sendBeacon, new BeaconProxyHandler(onUpdateCallback));
+    if (!BeaconProxy.hasSendBeacon()) {
+      return undefined;
+    }
+    return new Proxy(BeaconProxy.origSendBeacon, new BeaconProxyHandler(onUpdateCallback));
   }
 }

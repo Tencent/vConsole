@@ -36,7 +36,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
     if (window.hasOwnProperty('fetch')) {
       window.fetch = FetchProxy.origFetch;
     }
-    if (!!window.navigator.sendBeacon) {
+    if (BeaconProxy.hasSendBeacon()) {
       window.navigator.sendBeacon = BeaconProxy.origSendBeacon;
     }
   }
@@ -105,7 +105,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
    * @private
    */
   private mockSendBeacon() {
-    if (!window?.navigator?.sendBeacon) {
+    if (!BeaconProxy.hasSendBeacon()) {
       return;
     }
     window.navigator.sendBeacon = BeaconProxy.create((item: VConsoleNetworkRequestItem) => {

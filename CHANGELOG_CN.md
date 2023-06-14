@@ -1,5 +1,10 @@
 [English](./CHANGELOG.md) | 简体中文
 
+## 3.15.2 (2023-06-??)
+
+- `Fix(Network)` 修复可能由 `sendBeacon` 引发的 "Cannot read property" 错误。(issue #615, #629)
+
+
 ## 3.15.1 (2023-06-01)
 
 - `Feat(Netwrk)` 新增配置项 `network.ignoreUrlRegExp` 以跳过一些请求。 (PR #623)
@@ -7,7 +12,6 @@
 - `Fix(Core)` 修复插件事件 `ready` 在插件完成渲染前就被触发的问题。 (issue #591)
 - `Fix(Log)` 修复调用 `console.clear()` 时没有重置 group 层级的问题。 (issue #611)
 - `Fix(Log)` 兼容 iOS（小于 13.4）不支持 `ResizeObserver` 的情况，代价是打印大批量日志可能会有性能问题。 (issue #610)
-- `Fix(Network)` 修复可能由 `sendBeacon` 引发的 "Cannot read property" 错误。 (issue #615)
 
 
 ## 3.15.0 (2022-11-02)
