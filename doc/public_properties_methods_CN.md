@@ -55,7 +55,7 @@ theme                 | String   | true     | 'light'                           
 target                | String, HTMLElement | true | `document.documentElement`           | 挂载到的节点，可为 HTMLElement 或 CSS selector。
 log.maxLogNumber      | Number   | true     | 1000                                        | 超出数量上限的日志会被自动清除。
 log.showTimestamps    | Boolean  | true     | false                                       | 显示日志的输出时间
-log.maxNetworkNumber  | Number   | true     | 1000                                        | 超出数量上限的请求记录会被自动清除。
+network.maxNetworkNumber  | Number   | true     | 1000                                        | 超出数量上限的请求记录会被自动清除。
 network.ignoreUrlRegExp | RegExp | true     |                                             | 不展示 URL 匹配正则表达式的请求。
 storage.defaultStorages  | Array  | true    | ['cookies', 'localStorage', 'sessionStorage'] | 在 Storage 面板中要加载的 storage 类型。
 
