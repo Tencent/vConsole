@@ -387,7 +387,7 @@
       {#each Object.entries(pluginList) as [pluginId, plugin]}
         {#each plugin.toolbarList as item, i}
           <i
-            class="vc-tool vc-tool-{plugin.id}"
+            class="vc-tool vc-tool-{plugin.id} {item.className}"
             class:vc-global-tool={item.global}
             class:vc-toggle={plugin.id === activedPluginId}
             on:click={(e) => onTapToolbar(e, plugin.id, i)}
