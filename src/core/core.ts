@@ -339,6 +339,7 @@ export class VConsole {
           global: !!item.global,
           data: item.data,
           onClick: item.onClick,
+          className: item.className || ''
         });
       }
       this.compInstance.pluginList[plugin.id].toolbarList = list;

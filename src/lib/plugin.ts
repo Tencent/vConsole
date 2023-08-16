@@ -24,6 +24,7 @@ export interface IVConsoleTopbarOptions {
 }
 
 export interface IVConsoleToolbarOptions {
+  className: string;
   name: string;
   global?: boolean;
   data?: { [key: string]: string };

@@ -117,6 +117,7 @@ Property |         |         |         |
 ------- | ------- | ------- | -------
 name      | string | 必填 | 按钮展示的名字。
 data      | object | 选填 | 按钮的自定义数据，key-value 格式。
+className | string | 选填 | 按钮的 className。
 global    | boolean | 选填，默认 `false` | `false` 时，当切换到别的 tab 后，按钮就会被隐藏；`true` 时，按钮变成全局可见。
 onClick   | (event, data) => void | 必填 | 点击按钮时的回调函数。
 

@@ -107,6 +107,7 @@ Property |         |         |         |
 ------- | ------- | ------- | -------
 name      | string | required | The display name of the button.
 data      | object | optional | Custom data of the button, key-value format.
+className | string | optional | The className of the button.
 global    | boolean | optional, default `false` | When `false`, the button will be hidden while switching to other tab. When `true`, the button will be available to all tabs.
 onClick   | (event, data) => void | required | A callback function when user click the button.
 
