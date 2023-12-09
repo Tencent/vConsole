@@ -1,3 +1,6 @@
+![qrcode](https://github.com/Tencent/vConsole/assets/138715838/89f2b9d8-4d40-47aa-9824-f68bdaec092a)
+![Ggggg](https://github.com/Tencent/vConsole/assets/138715838/ca8bf34e-5d02-4c6e-bdf2-5e1c47a952cf)
+![avatar](https://github.com/Tencent/vConsole/assets/138715838/57c876f5-5ea1-4fdf-83c5-68d7d0dd0532)
 English | [简体中文](./README_CN.md)
 
 vConsole
