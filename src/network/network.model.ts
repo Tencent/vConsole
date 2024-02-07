@@ -82,6 +82,10 @@ export class VConsoleNetworkModel extends VConsoleModel {
     if (!window.hasOwnProperty('XMLHttpRequest')) {
       return;
     }
+    if (window.fetch && window.fetch['polyfill']) {
+      // fetch polyfill is being used
+      return;
+    }
     window.XMLHttpRequest = XHRProxy.create((item: VConsoleNetworkRequestItem) => {
       this.updateRequest(item.id, item);
     });

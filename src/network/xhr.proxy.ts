@@ -3,7 +3,7 @@ import * as Helper from './helper';
 import { VConsoleNetworkRequestItem } from './requestItem';
 import type { IOnUpdateCallback } from './helper';
 
-export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T> {
+class XHRHandler<T extends XMLHttpRequest> {
   public XMLReq: XMLHttpRequest;
   public item: VConsoleNetworkRequestItem;
   protected onUpdateCallback: IOnUpdateCallback;
@@ -16,53 +16,6 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
     this.item = new VConsoleNetworkRequestItem();
     this.item.requestType = 'xhr';
     this.onUpdateCallback = onUpdateCallback;
-  }
-
-  public get(target: T, key: string) {
-    // if (typeof key === 'string') { console.log('Proxy get:', typeof key, key); }
-    switch (key) {
-      case '_noVConsole':
-        return this.item.noVConsole;
-
-      case 'open':
-        return this.getOpen(target);
-
-      case 'send':
-        return this.getSend(target);
-      
-      case 'setRequestHeader':
-        return this.getSetRequestHeader(target);
-
-      default:
-        const value = Reflect.get(target, key);
-        if (typeof value === 'function') {
-          return value.bind(target);
-        } else {
-          return value;
-        }
-    }
-  }
-
-  public set(target: T, key: string, value: any) {
-    // if (typeof key === 'string') { console.log('Proxy set:', typeof key, key); }
-    switch (key) {
-      case '_noVConsole':
-        this.item.noVConsole = !!value;
-        return;
-
-      case 'onreadystatechange':
-        return this.setOnReadyStateChange(target, key, value);
-
-      case 'onabort':
-        return this.setOnAbort(target, key, value);
-
-      case 'ontimeout':
-        return this.setOnTimeout(target, key, value);
-
-      default:
-      // do nothing
-    }
-    return Reflect.set(target, key, value);
   }
 
   public onReadyStateChange() {
@@ -100,7 +53,7 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
     }
   }
 
-  protected getOpen(target: T) {
+  public getOpen(target: T) {
     const targetFunction = Reflect.get(target, 'open');
     return (...args) => {
       // console.log('Proxy open()');
@@ -115,7 +68,7 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
     };
   }
 
-  protected getSend(target: T) {
+  public getSend(target: T) {
     const targetFunction = Reflect.get(target, 'send');
     return (...args) => {
       // console.log('Proxy send()');
@@ -126,7 +79,7 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
     };
   }
 
-  protected getSetRequestHeader(target: T) {
+  public getSetRequestHeader(target: T) {
     const targetFunction = Reflect.get(target, 'setRequestHeader');
     return (...args) => {
       if (!this.item.requestHeader) {
@@ -138,21 +91,21 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
     };
   }
 
-  protected setOnReadyStateChange(target: T, key: string, value) {
+  public setOnReadyStateChange(target: T, key: string, value) {
     return Reflect.set(target, key, (...args) => {
       this.onReadyStateChange();
       value.apply(target, args);
     });
   }
 
-  protected setOnAbort(target: T, key: string, value) {
+  public setOnAbort(target: T, key: string, value) {
     return Reflect.set(target, key, (...args) => {
       this.onAbort();
       value.apply(target, args);
     });
   }
 
-  protected setOnTimeout(target: T, key: string, value) {
+  public setOnTimeout(target: T, key: string, value) {
     return Reflect.set(target, key, (...args) => {
       this.onTimeout();
       value.apply(target, args);
@@ -220,6 +173,67 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
         this.item.statusText = 'Unknown';
         break;
     }
+  }
+}
+
+export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T> {
+  private _xmlHandler: XHRHandler<T>;
+
+  constructor(XMLReq: XMLHttpRequest, onUpdateCallback: IOnUpdateCallback) {
+    Object.defineProperty(this, '_xmlHandler', {
+      value: new XHRHandler<T>(XMLReq, onUpdateCallback),
+      // only properties defined in ProxyHandler interface should be enumerated
+      enumerable: false,
+    });
+    this.get = this.get.bind(this);
+    this.set = this.set.bind(this);
+  }
+
+  public get(target: T, key: string) {
+    // if (typeof key === 'string') { console.log('Proxy get:', typeof key, key); }
+    switch (key) {
+      case '_noVConsole':
+        return this._xmlHandler.item.noVConsole;
+
+      case 'open':
+        return this._xmlHandler.getOpen(target);
+
+      case 'send':
+        return this._xmlHandler.getSend(target);
+
+      case 'setRequestHeader':
+        return this._xmlHandler.getSetRequestHeader(target);
+
+      default:
+        const value = Reflect.get(target, key);
+        if (typeof value === 'function') {
+          return value.bind(target);
+        } else {
+          return value;
+        }
+    }
+  }
+
+  public set(target: T, key: string, value: any) {
+    // if (typeof key === 'string') { console.log('Proxy set:', typeof key, key); }
+    switch (key) {
+      case '_noVConsole':
+        this._xmlHandler.item.noVConsole = !!value;
+        return;
+
+      case 'onreadystatechange':
+        return this._xmlHandler.setOnReadyStateChange(target, key, value);
+
+      case 'onabort':
+        return this._xmlHandler.setOnAbort(target, key, value);
+
+      case 'ontimeout':
+        return this._xmlHandler.setOnTimeout(target, key, value);
+
+      default:
+      // do nothing
+    }
+    return Reflect.set(target, key, value);
   }
 }
 
