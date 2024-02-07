@@ -1,51 +1,9 @@
 @import "../../styles/var.less";
 
+
+
 #__vconsole {
-  --VC-BG-0: #ededed;
-  --VC-BG-1: #f7f7f7;
-  --VC-BG-2: #fff;
-  --VC-BG-3: #f7f7f7;
-  --VC-BG-4: #4c4c4c;
-  --VC-BG-5: #fff;
-  --VC-BG-6: rgba(0, 0, 0, 0.1);
-  --VC-FG-0: rgba(0, 0, 0, 0.9);
-  --VC-FG-HALF: rgba(0, 0, 0, 0.9);
-  --VC-FG-1: rgba(0, 0, 0, 0.5);
-  --VC-FG-2: rgba(0, 0, 0, 0.3);
-  --VC-FG-3: rgba(0, 0, 0, 0.1);
-  --VC-RED: #fa5151;
-  --VC-ORANGE: #fa9d3b;
-  --VC-YELLOW: #ffc300;
-  --VC-GREEN: #91d300;
-  --VC-LIGHTGREEN: #95ec69;
-  --VC-BRAND: #07c160;
-  --VC-BLUE: #10aeff;
-  --VC-INDIGO: #1485ee;
-  --VC-PURPLE: #6467f0;
-  --VC-LINK: #576b95;
-  --VC-TEXTGREEN: #06ae56;
-  --VC-FG: black;
-  --VC-BG: white;
-  --VC-BG-COLOR-ACTIVE: #ececec;
-  --VC-WARN-BG: overlay(rgba(255, 255, 255, .8), #ffc300);
-  --VC-WARN-BORDER: overlay(rgba(255, 255, 255, .6), #ffc300);;
-  --VC-ERROR-BG: overlay(rgba(255, 255, 255, .8), #fa5151);
-  --VC-ERROR-BORDER: overlay(rgba(255, 255, 255, .6), #fa5151);
-
-  --VC-DOM-TAG-NAME-COLOR: #881280;
-  --VC-DOM-ATTRIBUTE-NAME-COLOR: #994500;
-  --VC-DOM-ATTRIBUTE-VALUE-COLOR: #1a1aa6;
-
-  --VC-CODE-KEY-FG: #881391;
-  --VC-CODE-PRIVATE-KEY-FG: overlay(rgba(255, 255, 255, .6), #881391);
-  --VC-CODE-FUNC-FG: #0d22aa;
-  --VC-CODE-NUMBER-FG: #1c00cf;
-  --VC-CODE-STR-FG: #c41a16;
-  --VC-CODE-NULL-FG: #808080;
-
-
-
-  color: var(--VC-FG-0);
+  color: @--VC-FG-0;
   font-size: @fontSize;
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
   -webkit-user-select: auto;
@@ -171,12 +129,12 @@
   }
 
   .vc-table-row-error {
-    border-color: var(--VC-ERROR-BORDER);
-    background-color: var(--VC-ERROR-BG);
+    border-color: @--VC-ERROR-BORDER;
+    background-color: @--VC-ERROR-BG;
 
     .vc-table-col {
-      color: var(--VC-RED);
-      border-color: var(--VC-ERROR-BORDER);
+      color: @--VC-RED;
+      border-color: @--VC-ERROR-BORDER;
     }
   }
 
@@ -193,10 +151,10 @@
       text-align: center;
       display: block;
       &:hover {
-        background: var(--VC-BG-3);
+        background: @--VC-BG-3;
       }
       &:active {
-        background: var(--VC-BG-1);
+        background: @--VC-BG-1;
       }
     }
   }
@@ -204,102 +162,102 @@
   .vc-table-input {
     width: 100%;
     border: none;
-    color: var(--VC-FG-0);
-    background-color: var(--VC-BG-6);
+    color: @--VC-FG-0;
+    background-color: @--VC-BG-6;
     height: (46em / @font);
   }
   .vc-table-input:focus {
-    background-color: var(--VC-FG-2);
+    background-color: @--VC-FG-2;
   }
 }
 
 
-@media (prefers-color-scheme: dark) {
-  #__vconsole:not([data-theme="light"]) {
-      --VC-BG-0: #191919;
-      --VC-BG-1: #1f1f1f;
-      --VC-BG-2: #232323;
-      --VC-BG-3: #2f2f2f;
-      --VC-BG-4: #606060;
-      --VC-BG-5: #2c2c2c;
-      --VC-BG-6: rgba(255, 255, 255, 0.2);
-      --VC-FG-0: rgba(255, 255, 255, 0.8);
-      --VC-FG-HALF: rgba(255, 255, 255, 0.6);
-      --VC-FG-1: rgba(255, 255, 255, 0.5);
-      --VC-FG-2: rgba(255, 255, 255, 0.3);
-      --VC-FG-3: rgba(255, 255, 255, 0.05);
-      --VC-RED: #fa5151;
-      --VC-ORANGE: #c87d2f;
-      --VC-YELLOW: #cc9c00;
-      --VC-GREEN: #74a800;
-      --VC-LIGHTGREEN: #28b561;
-      --VC-BRAND: #07c160;
-      --VC-BLUE: #10aeff;
-      --VC-INDIGO: #1196ff;
-      --VC-PURPLE: #8183ff;
-      --VC-LINK: #7d90a9;
-      --VC-TEXTGREEN: #259c5c;
-      --VC-FG: white;
-      --VC-BG: black;
-      --VC-BG-COLOR-ACTIVE: #282828;
-      --VC-WARN-BG: overlay(rgba(0, 0, 0, .8), #ffc300);
-      --VC-WARN-BORDER: overlay(rgba(0, 0, 0, .6), #ffc300);
-      --VC-ERROR-BG: overlay(rgba(0, 0, 0, .8), #fa5151);
-      --VC-ERROR-BORDER: overlay(rgba(0, 0, 0, .6), #fa5151);
+// @media (prefers-color-scheme: dark) {
+//   #__vconsole:not([data-theme="light"]) {
+//       --VC-BG-0: #191919;
+//       --VC-BG-1: #1f1f1f;
+//       --VC-BG-2: #232323;
+//       --VC-BG-3: #2f2f2f;
+//       --VC-BG-4: #606060;
+//       --VC-BG-5: #2c2c2c;
+//       --VC-BG-6: rgba(255, 255, 255, 0.2);
+//       --VC-FG-0: rgba(255, 255, 255, 0.8);
+//       --VC-FG-HALF: rgba(255, 255, 255, 0.6);
+//       --VC-FG-1: rgba(255, 255, 255, 0.5);
+//       --VC-FG-2: rgba(255, 255, 255, 0.3);
+//       --VC-FG-3: rgba(255, 255, 255, 0.05);
+//       --VC-RED: #fa5151;
+//       --VC-ORANGE: #c87d2f;
+//       --VC-YELLOW: #cc9c00;
+//       --VC-GREEN: #74a800;
+//       --VC-LIGHTGREEN: #28b561;
+//       --VC-BRAND: #07c160;
+//       --VC-BLUE: #10aeff;
+//       --VC-INDIGO: #1196ff;
+//       --VC-PURPLE: #8183ff;
+//       --VC-LINK: #7d90a9;
+//       --VC-TEXTGREEN: #259c5c;
+//       --VC-FG: white;
+//       --VC-BG: black;
+//       --VC-BG-COLOR-ACTIVE: #282828;
+//       --VC-WARN-BG: overlay(rgba(0, 0, 0, .8), #ffc300);
+//       --VC-WARN-BORDER: overlay(rgba(0, 0, 0, .6), #ffc300);
+//       --VC-ERROR-BG: overlay(rgba(0, 0, 0, .8), #fa5151);
+//       --VC-ERROR-BORDER: overlay(rgba(0, 0, 0, .6), #fa5151);
 
-      --VC-DOM-TAG-NAME-COLOR: #5DB0D7;
-      --VC-DOM-ATTRIBUTE-NAME-COLOR: #9BBBDC;
-      --VC-DOM-ATTRIBUTE-VALUE-COLOR: #f29766;
+//       --VC-DOM-TAG-NAME-COLOR: #5DB0D7;
+//       --VC-DOM-ATTRIBUTE-NAME-COLOR: #9BBBDC;
+//       --VC-DOM-ATTRIBUTE-VALUE-COLOR: #f29766;
 
-      --VC-CODE-KEY-FG: #e36eec;
-      --VC-CODE-PRIVATE-KEY-FG: overlay(rgba(255, 255, 255, .6), #e36eec);
-      --VC-CODE-FUNC-FG: #556af2;
-      --VC-CODE-NUMBER-FG: #9980ff;
-      --VC-CODE-STR-FG: #e93f3b;
-      --VC-CODE-NULL-FG: #808080;
-  }
-}
+//       --VC-CODE-KEY-FG: #e36eec;
+//       --VC-CODE-PRIVATE-KEY-FG: overlay(rgba(255, 255, 255, .6), #e36eec);
+//       --VC-CODE-FUNC-FG: #556af2;
+//       --VC-CODE-NUMBER-FG: #9980ff;
+//       --VC-CODE-STR-FG: #e93f3b;
+//       --VC-CODE-NULL-FG: #808080;
+//   }
+// }
 
-#__vconsole[data-theme="dark"] {
-  --VC-BG-0: #191919;
-  --VC-BG-1: #1f1f1f;
-  --VC-BG-2: #232323;
-  --VC-BG-3: #2f2f2f;
-  --VC-BG-4: #606060;
-  --VC-BG-5: #2c2c2c;
-  --VC-BG-6: rgba(255, 255, 255, 0.2);
-  --VC-FG-0: rgba(255, 255, 255, 0.8);
-  --VC-FG-HALF: rgba(255, 255, 255, 0.6);
-  --VC-FG-1: rgba(255, 255, 255, 0.5);
-  --VC-FG-2: rgba(255, 255, 255, 0.3);
-  --VC-FG-3: rgba(255, 255, 255, 0.05);
-  --VC-RED: #fa5151;
-  --VC-ORANGE: #c87d2f;
-  --VC-YELLOW: #cc9c00;
-  --VC-GREEN: #74a800;
-  --VC-LIGHTGREEN: #28b561;
-  --VC-BRAND: #07c160;
-  --VC-BLUE: #10aeff;
-  --VC-INDIGO: #1196ff;
-  --VC-PURPLE: #8183ff;
-  --VC-LINK: #7d90a9;
-  --VC-TEXTGREEN: #259c5c;
-  --VC-FG: white;
-  --VC-BG: black;
-  --VC-BG-COLOR-ACTIVE: #282828;
-  --VC-WARN-BG: overlay(rgba(0, 0, 0, .8), #ffc300);
-  --VC-WARN-BORDER: overlay(rgba(0, 0, 0, .6), #ffc300);
-  --VC-ERROR-BG: overlay(rgba(0, 0, 0, .8), #fa5151);
-  --VC-ERROR-BORDER: overlay(rgba(0, 0, 0, .6), #fa5151);
+// #__vconsole[data-theme="dark"] {
+//   --VC-BG-0: #191919;
+//   --VC-BG-1: #1f1f1f;
+//   --VC-BG-2: #232323;
+//   --VC-BG-3: #2f2f2f;
+//   --VC-BG-4: #606060;
+//   --VC-BG-5: #2c2c2c;
+//   --VC-BG-6: rgba(255, 255, 255, 0.2);
+//   --VC-FG-0: rgba(255, 255, 255, 0.8);
+//   --VC-FG-HALF: rgba(255, 255, 255, 0.6);
+//   --VC-FG-1: rgba(255, 255, 255, 0.5);
+//   --VC-FG-2: rgba(255, 255, 255, 0.3);
+//   --VC-FG-3: rgba(255, 255, 255, 0.05);
+//   --VC-RED: #fa5151;
+//   --VC-ORANGE: #c87d2f;
+//   --VC-YELLOW: #cc9c00;
+//   --VC-GREEN: #74a800;
+//   --VC-LIGHTGREEN: #28b561;
+//   @--VC-BRAND: #07c160;
+//   --VC-BLUE: #10aeff;
+//   --VC-INDIGO: #1196ff;
+//   --VC-PURPLE: #8183ff;
+//   --VC-LINK: #7d90a9;
+//   --VC-TEXTGREEN: #259c5c;
+//   --VC-FG: white;
+//   --VC-BG: black;
+//   --VC-BG-COLOR-ACTIVE: #282828;
+//   --VC-WARN-BG: overlay(rgba(0, 0, 0, .8), #ffc300);
+//   --VC-WARN-BORDER: overlay(rgba(0, 0, 0, .6), #ffc300);
+//   --VC-ERROR-BG: overlay(rgba(0, 0, 0, .8), #fa5151);
+//   --VC-ERROR-BORDER: overlay(rgba(0, 0, 0, .6), #fa5151);
 
-  --VC-DOM-TAG-NAME-COLOR: #5DB0D7;
-  --VC-DOM-ATTRIBUTE-NAME-COLOR: #9BBBDC;
-  --VC-DOM-ATTRIBUTE-VALUE-COLOR: #f29766;
+//   --VC-DOM-TAG-NAME-COLOR: #5DB0D7;
+//   --VC-DOM-ATTRIBUTE-NAME-COLOR: #9BBBDC;
+//   --VC-DOM-ATTRIBUTE-VALUE-COLOR: #f29766;
 
-  --VC-CODE-KEY-FG: #e36eec;
-  --VC-CODE-PRIVATE-KEY-FG: overlay(rgba(255, 255, 255, .6), #e36eec);
-  --VC-CODE-FUNC-FG: #556af2;
-  --VC-CODE-NUMBER-FG: #9980ff;
-  --VC-CODE-STR-FG: #e93f3b;
-  --VC-CODE-NULL-FG: #808080;
-}
+//   --VC-CODE-KEY-FG: #e36eec;
+//   --VC-CODE-PRIVATE-KEY-FG: overlay(rgba(255, 255, 255, .6), #e36eec);
+//   --VC-CODE-FUNC-FG: #556af2;
+//   --VC-CODE-NUMBER-FG: #9980ff;
+//   --VC-CODE-STR-FG: #e93f3b;
+//   --VC-CODE-NULL-FG: #808080;
+// }

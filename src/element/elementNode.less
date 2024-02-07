@@ -1,15 +1,17 @@
+@import "../styles/var.less";
+
 /* color */
 .vcelm-node {
-  color: var(--VC-DOM-TAG-NAME-COLOR);
+  color: @--VC-DOM-TAG-NAME-COLOR;
 }
 .vcelm-k {
-  color: var(--VC-DOM-ATTRIBUTE-NAME-COLOR);
+  color: @--VC-DOM-ATTRIBUTE-NAME-COLOR;
 }
 .vcelm-v {
-  color: var(--VC-DOM-ATTRIBUTE-VALUE-COLOR);
+  color: @--VC-DOM-ATTRIBUTE-VALUE-COLOR;
 }
 .vcelm-l.vc-actived > .vcelm-node {
-  background-color: var(--VC-FG-3);
+  background-color: @--VC-FG-3;
 }
 
 /* layout */
@@ -26,7 +28,7 @@
 //   display: block;
 // }
 .vcelm-l .vcelm-node:active {
-  background-color: var(--VC-BG-COLOR-ACTIVE);
+  background-color: @--VC-BG-COLOR-ACTIVE;
 }
 .vcelm-l.vcelm-noc .vcelm-node:active {
   background-color: transparent;
@@ -56,13 +58,13 @@
   width: 0;
   height: 0;
   border: transparent solid 3px;
-  border-left-color: var(--VC-FG-1);
+  border-left-color: @--VC-FG-1;
 }
 .vcelm-l.vc-toggle:before {
   display: block;
   top: 6px;
   left: 0;
-  border-top-color: var(--VC-FG-1);
+  border-top-color: @--VC-FG-1;
   border-left-color: transparent;
 }
 .vcelm-l.vcelm-noc:before {

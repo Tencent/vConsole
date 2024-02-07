@@ -13,20 +13,20 @@
 
 // log type
 .vc-log-info {
-  color: var(--VC-PURPLE);
+  color: @--VC-PURPLE;
 }
 .vc-log-debug {
-  color: var(--VC-YELLOW);
+  color: @--VC-YELLOW;
 }
 .vc-log-warn {
-  color: var(--VC-ORANGE);
-  border-color: var(--VC-WARN-BORDER);
-  background-color: var(--VC-WARN-BG);
+  color: @--VC-ORANGE;
+  border-color: @--VC-WARN-BORDER;
+  background-color: @--VC-WARN-BG;
 }
 .vc-log-error {
-  color: var(--VC-RED);
-  border-color: var(--VC-ERROR-BORDER);
-  background-color: var(--VC-ERROR-BG);
+  color: @--VC-RED;
+  border-color: @--VC-ERROR-BORDER;
+  background-color: @--VC-ERROR-BG;
 }
 
 // copy icon
@@ -53,7 +53,7 @@
   position: relative;
 }
 .vc-log-group-toggle:active {
-  background-color: var(--VC-BG-COLOR-ACTIVE);
+  background-color: @--VC-BG-COLOR-ACTIVE;
 }
 .vc-log-group > .vc-log-group-toggle::before {
   content: "";
@@ -63,12 +63,12 @@
   width: 0;
   height: 0;
   border: transparent solid (4em / @font);
-  border-left-color: var(--VC-FG-1);
+  border-left-color: @--VC-FG-1;
 }
 .vc-log-group.vc-toggle > .vc-log-group-toggle::before {
   top: (6em / @font);
   left: 0;
-  border-top-color: var(--VC-FG-1);
+  border-top-color: @--VC-FG-1;
   border-left-color: transparent;
 }
 
@@ -88,7 +88,7 @@
 }
 .vc-log-error .vc-log-repeat i {
   color: #901818;
-  background-color: var(--VC-RED);
+  background-color: @--VC-RED;
 }
 .vc-log-warn .vc-log-repeat i {
   color: #987D20;

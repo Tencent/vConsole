@@ -30,7 +30,7 @@
   padding: 0;
   font-size: (12em / @font);
   background-color: transparent;
-  color: var(--VC-FG-0);
+  color: @--VC-FG-0;
 }
 .vc-cmd-input::-webkit-input-placeholder {
   line-height: (28em / @font);
@@ -44,8 +44,8 @@
   // bottom: 0;
   width: (40em / @font);
   border: none;
-  background-color: var(--VC-BG-0);
-  color: var(--VC-FG-0);
+  background-color: @--VC-BG-0;
+  color: @--VC-FG-0;
   outline: none;
   -webkit-touch-callout: none;
   font-size: 1em;
@@ -57,7 +57,7 @@
 }
 .vc-cmd-btn:active,
 .vc-cmd-clear-btn:active {
-  background-color: var(--VC-BG-COLOR-ACTIVE);
+  background-color: @--VC-BG-COLOR-ACTIVE;
 }
 
 // prompted list
@@ -65,7 +65,7 @@
   position: absolute;
   left: (6em / @font);
   right: (6em / @font);
-  background-color: var(--VC-BG-3);
+  background-color: @--VC-BG-3;
   border: 1px solid var(--VC-FG-3);
   overflow-x: scroll;
   display: none;
@@ -77,7 +77,7 @@
   border-bottom: 1px solid var(--VC-FG-3);
 }
 .vc-cmd-prompted li:active {
-  background-color: var(--VC-BG-COLOR-ACTIVE);
+  background-color: @--VC-BG-COLOR-ACTIVE;
 }
 .vc-cmd-prompted-hide {
   text-align: center;
