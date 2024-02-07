@@ -25,6 +25,8 @@ export interface VConsoleOptions {
   network?: VConsoleNetworkOptions,
   storage?: VConsoleStorageOptions,
 
+  switchName?: string,
+
   /**
    * @deprecated Since v3.12.0, use `log.maxLogNumber`.
    */

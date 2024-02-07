@@ -74,6 +74,7 @@ export class VConsole {
       log: {},
       network: {},
       storage: {},
+      switchName: 'vConsole',
     };
 
     // merge options
@@ -200,6 +201,7 @@ export class VConsole {
             x: switchX,
             y: switchY,
           },
+          switchName: this.option.switchName,
         },
       });
 

@@ -26,6 +26,7 @@
   export let show = false;
   export let showSwitchButton = true;
   export let switchButtonPosition = { x: 0, y: 0 };
+  export let switchName = '';
   export let activedPluginId = '';
   export let pluginList: { [id: string]: IPlugin } = {};
 
@@ -332,6 +333,7 @@
     bind:show={showSwitchButton}
     bind:position={switchButtonPosition}
     on:click={onTapEventShow}
+    switchName={switchName}
   />
 
   <div class="vc-mask" style="display: {showMask ? 'block' : 'none'};" on:click={onTapEventHide}></div>

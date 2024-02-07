@@ -9,6 +9,7 @@
 
   export let show = true;
   export let position = { x: 0, y: 0 };
+  export let switchName = 'vConsole';
 
 
   /*************************************
@@ -127,4 +128,4 @@
   on:touchend|nonpassive={onTouchEnd}
   on:touchmove|nonpassive={onTouchMove}
   on:click
->vConsole</div>
+>{switchName}</div>
