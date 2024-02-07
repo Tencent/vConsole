@@ -4,10 +4,10 @@ import { VConsoleNetworkRequestItem } from './requestItem';
 import type { VConsoleRequestMethod } from './requestItem';
 import type { IOnUpdateCallback } from './helper';
 
-export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T> {
+class ResponseHandler<T extends Response> {
   public resp: Response;
   public item: VConsoleNetworkRequestItem;
-  protected onUpdateCallback: IOnUpdateCallback;
+  public onUpdateCallback: IOnUpdateCallback;
 
   constructor(resp: T, item: VConsoleNetworkRequestItem, onUpdateCallback: IOnUpdateCallback) {
     // console.log('Proxy: new constructor')
@@ -15,36 +15,6 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
     this.item = item;
     this.onUpdateCallback = onUpdateCallback;
     this.mockReader();
-  }
-
-  public set(target: T, key: string, value) {
-    // if (typeof key === 'string') { console.log('Proxy set:', key) }
-    return Reflect.set(target, key, value);
-  }
-
-  public get(target: T, key: string) {
-    // if (typeof key === 'string') { console.log('[Fetch.proxy] get:', key) }
-    const value = Reflect.get(target, key);
-    switch (key) {
-      case 'arrayBuffer':
-      case 'blob':
-      case 'formData':
-      case 'json':
-      case 'text':
-        return () => {
-          this.item.responseType = <any>key.toLowerCase();
-          return value.apply(target).then((resp) => {
-            this.item.response = Helper.genResonseByResponseType(this.item.responseType, resp);
-            this.onUpdateCallback(this.item);
-            return resp;
-          });
-        };
-    }
-    if (typeof value === 'function') {
-      return value.bind(target);
-    } else {
-      return value;
-    }
   }
 
   protected mockReader() {
@@ -111,29 +81,60 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
   }
 }
 
-export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T> {
-  protected onUpdateCallback: IOnUpdateCallback;
+export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T> {
+  private _responseHandler: ResponseHandler<T>;
+
+  constructor(resp: T, item: VConsoleNetworkRequestItem, onUpdateCallback: IOnUpdateCallback) {
+    Object.defineProperty(this, '_responseHandler', {
+      value: new ResponseHandler<T>(resp, item, onUpdateCallback),
+      // only properties defined in ProxyHandler interface should be enumerated
+      enumerable: false,
+    });
+    this.get = this.get.bind(this);
+    this.set = this.set.bind(this);
+  }
+
+  public set(target: T, key: string, value) {
+    // if (typeof key === 'string') { console.log('Proxy set:', key) }
+    return Reflect.set(target, key, value);
+  }
+
+  public get(target: T, key: string) {
+    // if (typeof key === 'string') { console.log('[Fetch.proxy] get:', key) }
+    const value = Reflect.get(target, key);
+    switch (key) {
+      case 'arrayBuffer':
+      case 'blob':
+      case 'formData':
+      case 'json':
+      case 'text':
+        return () => {
+          this._responseHandler.item.responseType = <any>key.toLowerCase();
+          return value.apply(target).then((resp) => {
+            this._responseHandler.item.response = Helper.genResonseByResponseType(
+              this._responseHandler.item.responseType, resp
+            );
+            this._responseHandler.onUpdateCallback(this._responseHandler.item);
+            return resp;
+          });
+        };
+    }
+    if (typeof value === 'function') {
+      return value.bind(target);
+    } else {
+      return value;
+    }
+  }
+}
+
+class FetchHandler<T extends typeof fetch> {
+  public onUpdateCallback: IOnUpdateCallback;
 
   constructor(onUpdateCallback: IOnUpdateCallback) {
     this.onUpdateCallback = onUpdateCallback;
   }
 
-  public apply(target: T, thisArg: typeof window, argsList) {
-    const input: RequestInfo = argsList[0];
-    const init: RequestInit = argsList[1];
-    const item = new VConsoleNetworkRequestItem();
-    this.beforeFetch(item, input, init);
-
-    return (<ReturnType<T>>target.apply(window, argsList)).then(this.afterFetch(item)).catch((e) => {
-      // mock finally
-      item.endTime = Date.now();
-      item.costTime = item.endTime - (item.startTime || item.endTime);
-      this.onUpdateCallback(item);
-      throw e;
-    });
-  }
-
-  protected beforeFetch(item: VConsoleNetworkRequestItem, input: RequestInfo, init?: RequestInit) {
+  public beforeFetch(item: VConsoleNetworkRequestItem, input: RequestInfo, init?: RequestInit) {
     let url: URL,
         method = 'GET',
         requestHeader: HeadersInit = null;
@@ -188,7 +189,7 @@ export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T
     this.onUpdateCallback(item);
   }
 
-  protected afterFetch(item) {
+  public afterFetch(item) {
     const then = (resp: Response) => {
       item.endTime = Date.now();
       item.costTime = item.endTime - (item.startTime || item.endTime);
@@ -244,10 +245,41 @@ export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T
   }
 }
 
+export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T> {
+  private _fetchHandler: FetchHandler<T>;
+
+  constructor(onUpdateCallback: IOnUpdateCallback) {
+    Object.defineProperty(this, '_fetchHandler', {
+      value: new FetchHandler<T>(onUpdateCallback),
+      // only properties defined in ProxyHandler interface should be enumerated
+      enumerable: false,
+    });
+    this.apply = this.apply.bind(this);
+  }
+
+  public apply(target: T, thisArg: typeof window, argsList) {
+    const input: RequestInfo = argsList[0];
+    const init: RequestInit = argsList[1];
+    const item = new VConsoleNetworkRequestItem();
+    this._fetchHandler.beforeFetch(item, input, init);
+
+    return (<ReturnType<T>>target.apply(thisArg || window, argsList)).then(this._fetchHandler.afterFetch(item)).catch((e) => {
+      // mock finally
+      item.endTime = Date.now();
+      item.costTime = item.endTime - (item.startTime || item.endTime);
+      this._fetchHandler.onUpdateCallback(item);
+      throw e;
+    });
+  }
+
+}
+
+const origFetch = window.fetch;
+
 export class FetchProxy {
-  public static origFetch = fetch;
+  public static origFetch = origFetch;
 
   public static create(onUpdateCallback: IOnUpdateCallback) {
-    return new Proxy(fetch, new FetchProxyHandler(onUpdateCallback));
+    return new Proxy(window.fetch, new FetchProxyHandler(onUpdateCallback));
   }
 }
