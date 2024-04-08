@@ -9,7 +9,7 @@
   const copyOptions = { target: document.documentElement };
   let showSuc = false;
 
-  const onTapIcon = (e) => {
+  const onTapIcon = async (e) => {
     let text = content;
     if (tool.isFunction(handler)) {
       text = handler(content) || '';
@@ -25,7 +25,16 @@
         text = content;
       }
     }
-    copy(text, copyOptions);
+    if (
+      navigator.clipboard &&
+      typeof navigator.clipboard.writeText === "function"
+    ) {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (error) {}
+    } else {
+      copy(text, copyOptions);
+    }
     showSuc = true;
     setTimeout(() => {
       showSuc = false;
