@@ -78,10 +78,13 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
           if (!readerReceivedValue) {
             readerReceivedValue = new Uint8Array(result.value);
           } else {
-            const newValue = new Uint8Array(readerReceivedValue.length + result.value.length);
-            newValue.set(readerReceivedValue);
-            newValue.set(result.value, readerReceivedValue.length);
-            readerReceivedValue = newValue;
+            // result.value may be undefined when result.done is true
+            if (result.value) {
+              const newValue = new Uint8Array(readerReceivedValue.length + result.value.length);
+              newValue.set(readerReceivedValue);
+              newValue.set(result.value, readerReceivedValue.length);
+              readerReceivedValue = newValue;
+            }
           }
           this.item.endTime = Date.now();
           this.item.costTime = this.item.endTime - (this.item.startTime || this.item.endTime);
