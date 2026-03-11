@@ -48,7 +48,7 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
   }
 
   protected mockReader() {
-    let readerReceivedValue: Uint8Array;
+    let readerReceivedValue: Uint8Array = new Uint8Array(0);
     if (!this.resp.body) {
       // some browsers do not return `body` in some cases, like `OPTIONS` method. (issue #531)
       return;
@@ -75,16 +75,12 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
       reader.read = () => {
         return (<ReturnType<typeof _read>>_read.apply(reader)).then((result) => {
           // console.log('[Fetch.proxy] read', result.done);
-          if (!readerReceivedValue) {
-            readerReceivedValue = new Uint8Array(result.value);
-          } else {
-            // result.value may be undefined when result.done is true
-            if (result.value) {
-              const newValue = new Uint8Array(readerReceivedValue.length + result.value.length);
-              newValue.set(readerReceivedValue);
-              newValue.set(result.value, readerReceivedValue.length);
-              readerReceivedValue = newValue;
-            }
+          // result.value may be undefined when result.done is true
+          if (result.value) {
+            const newValue = new Uint8Array(readerReceivedValue.length + result.value.length);
+            newValue.set(readerReceivedValue);
+            newValue.set(result.value, readerReceivedValue.length);
+            readerReceivedValue = newValue;
           }
           this.item.endTime = Date.now();
           this.item.costTime = this.item.endTime - (this.item.startTime || this.item.endTime);

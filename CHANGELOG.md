@@ -2,6 +2,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 ## 3.16.0 (2026-??-??)
 
+- `Fix(Network)` Fix `result.value` maybe `undefined` when stream reading is done. (PR #715)
 - `Fix(Network)` Fix possible "Cannot read property" error by `sendBeacon`. (issue #615, #629)
 - `Chore` Upgrade NPM dependencies: Svelte 3 → 5, svelte-preprocess 4 → 6, TypeScript 4 → 5, webpack-dev-server 4 → 5, webpack-cli 4 → 6, and other minor version updates.
 - `Chore` Remove unused/obsolete dependencies: `mutation-observer` (IE 9/10 polyfill) and `babel-plugin-add-module-exports`.

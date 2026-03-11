@@ -2,6 +2,7 @@
 
 ## 3.16.0 (2026-??-??)
 
+- `Fix(Network)` 修复 stream 读取完成时 `result.value` 可能为 `undefined` 的问题。(PR #715)
 - `Fix(Network)` 修复可能由 `sendBeacon` 引发的 "Cannot read property" 错误。(issue #615, #629)
 - `Chore` 升级 NPM 依赖：Svelte 3 → 5、svelte-preprocess 4 → 6、TypeScript 4 → 5、webpack-dev-server 4 → 5、webpack-cli 4 → 6 及其他小版本更新。
 - `Chore` 移除无用/过时依赖：`mutation-observer`（IE 9/10 polyfill）及 `babel-plugin-add-module-exports`。
