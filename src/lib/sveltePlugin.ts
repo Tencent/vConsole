@@ -1,15 +1,16 @@
 import VConsolePlugin from './plugin';
-import { SvelteComponent } from 'svelte';
+import type { SvelteComponent, ComponentType } from 'svelte';
+import { createClassComponent } from 'svelte/legacy';
 
 export class VConsoleSveltePlugin<T extends {} = {}> extends VConsolePlugin {
-  CompClass: typeof SvelteComponent;
+  CompClass: ComponentType<SvelteComponent>;
   compInstance?: SvelteComponent;
   initialProps: T;
 
   constructor(
     id: string,
     name: string,
-    CompClass: typeof SvelteComponent,
+    CompClass: ComponentType<SvelteComponent>,
     initialProps: T
   ) {
     super(id, name);
@@ -23,7 +24,8 @@ export class VConsoleSveltePlugin<T extends {} = {}> extends VConsolePlugin {
 
   onRenderTab(callback) {
     const $container = document.createElement('div');
-    const compInstance = this.compInstance = new this.CompClass({
+    const compInstance = this.compInstance = createClassComponent({
+      component: this.CompClass,
       target: $container,
       props: this.initialProps,
     });

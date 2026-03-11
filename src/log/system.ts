@@ -47,7 +47,7 @@ export class VConsoleSystemPlugin extends VConsoleLogPlugin {
     console.info('[system]', 'Client:', logMsg.length ? logMsg.join(', ') : 'Unknown');
 
     // network type
-    let network = ua.toLowerCase().match(/ nettype\/([^ ]+)/g);
+    let network: string[] | RegExpMatchArray | null = ua.toLowerCase().match(/ nettype\/([^ ]+)/g);
     if (network && network[0]) {
       network = network[0].split('/');
       logMsg = [network[1]];

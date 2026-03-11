@@ -25,7 +25,7 @@ export function getDate(time: number) {
     minute = d.getMinutes()<10 ? '0'+d.getMinutes() : d.getMinutes(),
     second = d.getSeconds()<10 ? '0'+d.getSeconds() : d.getSeconds(),
     millisecond = d.getMilliseconds()<10 ? '0'+d.getMilliseconds() : d.getMilliseconds();
-  if (millisecond<100) { millisecond = '0' + millisecond; }
+  if ((millisecond as number)<100) { millisecond = '0' + millisecond; }
   return {
     time: (+d),
     year: year,
