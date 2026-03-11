@@ -413,7 +413,7 @@
         class="vc-scroller-scrollbar-thumb"
         style:height="{scrollbarThumbHeight}%"
         style:top="{scrollbarThumbPos}%"
-      />
+      ></div>
     </div>
   {/if}
 </div>

@@ -23,7 +23,7 @@ module.exports = (env, argv) => {
       static: [
         { directory: contentBase, },
       ],
-      onBeforeSetupMiddleware(devServer) {
+      setupMiddlewares(middlewares, devServer) {
         devServer.app.all('*', (req, res) => {
           const contentType = {
             'flv': 'video/x-flv',
@@ -79,6 +79,7 @@ module.exports = (env, argv) => {
             }, delay);
           }
         });
+        return middlewares;
       }
     },
     optimization: {

@@ -63,10 +63,8 @@ module.exports = (env, argv) => {
     },
     resolve: {
       extensions: ['.ts', '.js', '.html', '.less', '.mjs', '.svelte'],
-      alias: {
-        svelte: Path.resolve('node_modules', 'svelte'),
-      },
-      mainFields: ['svelte', 'browser', 'module', 'main'],
+      mainFields: ['browser', 'module', 'main'],
+      conditionNames: ['svelte', 'browser', 'import', 'require'],
     },
     module: {
       rules: [
@@ -108,6 +106,11 @@ module.exports = (env, argv) => {
                 },
                 emitCss: true,
                 hotReload: false,
+                onwarn: (warning, handler) => {
+                  if (warning.code.startsWith('a11y_') || warning.code.startsWith('a11y-')) return;
+                  if (warning.code === 'options_deprecated_accessors') return;
+                  handler(warning);
+                },
               },
             },
           ],

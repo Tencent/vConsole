@@ -61,7 +61,7 @@
   <div class="vc-table-row">
     <div class="vc-table-col">Key</div>
     <div class="vc-table-col vc-table-col-2">Value</div>
-    <div class="vc-table-col vc-table-col-1 vc-table-action" />
+    <div class="vc-table-col vc-table-col-1 vc-table-action"></div>
   </div>
       {#each storageData as [k, v], i}
         <div class="vc-table-row">

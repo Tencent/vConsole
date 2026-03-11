@@ -1,4 +1,3 @@
-import MutationObserver from 'mutation-observer'
 import { get } from 'svelte/store';
 import { VConsoleSveltePlugin } from '../lib/sveltePlugin';
 import ElementComp from './element.svelte';

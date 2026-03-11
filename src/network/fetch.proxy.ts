@@ -33,7 +33,7 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
       case 'text':
         return () => {
           this.item.responseType = <any>key.toLowerCase();
-          return value.apply(target).then((resp) => {
+          return (value as Function).apply(target).then((resp) => {
             this.item.response = Helper.genResonseByResponseType(this.item.responseType, resp);
             this.onUpdateCallback(this.item);
             return resp;
@@ -57,7 +57,7 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
       return;
     }
     const _getReader = this.resp.body.getReader;
-    this.resp.body.getReader = () => {
+    this.resp.body.getReader = (<any>(() => {
       // console.log('[Fetch.proxy] getReader');
       const reader = <ReturnType<typeof _getReader>>_getReader.apply(this.resp.body);
 
@@ -107,7 +107,7 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
         return _cancel.apply(reader, args);
       };
       return reader;
-    };
+    }));
   }
 }
 

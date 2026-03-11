@@ -14,6 +14,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
  */
 
 import type { SvelteComponent } from 'svelte';
+import { createClassComponent } from 'svelte/legacy';
 import type { VConsoleOptions } from './options.interface';
 
 // helper
@@ -193,7 +194,8 @@ export class VConsole {
       if (! (target instanceof HTMLElement)) {
         target = document.documentElement;
       }
-      this.compInstance = new CoreCompClass({
+      this.compInstance = createClassComponent({
+        component: CoreCompClass,
         target,
         props: {
           switchButtonPosition: {
