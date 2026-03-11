@@ -223,22 +223,16 @@ export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T
 
       this.onUpdateCallback(item);
       
-      // Check if it's a WebAssembly-related request
-      // Determine if it's a WebAssembly file (.wasm) by checking the Content-Type or URL suffix.
+      // WebAssembly.instantiateStreaming() performs internal slot checks on the Response object,
+      // which a Proxy wrapper fails. Skip proxying for wasm responses. (issue #590)
       const contentType = resp.headers.get('content-type');
-      const isWasmRequest = 
-        (contentType && contentType.includes('application/wasm')) || 
-        (item.url && item.url.toLowerCase().endsWith('.wasm')) ||
-        (item.url && item.url.toLowerCase().includes('/wasm'));
-      
-      // If it's a WebAssembly request, return the original Response object without proxying
+      const isWasmRequest =
+        (contentType && contentType.includes('application/wasm')) ||
+        (item.url && item.url.toLowerCase().endsWith('.wasm'));
       if (isWasmRequest) {
-        // Log but do not affect the original Response
-        console.debug('[vConsole] WebAssembly request detected, skipping proxy for:', item.url);
         return resp;
       }
-      
-      // Other requests use proxy
+
       return new Proxy(resp, new ResponseProxyHandler(resp, item, this.onUpdateCallback));
     };
     return then;
