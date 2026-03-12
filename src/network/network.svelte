@@ -113,7 +113,7 @@
               <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{req.startTimeText}</div>
             </div>
           </div>
-          {#if (req.requestHeader !== null)}
+          {#if (req.requestHeader)}
           <div>
             <dl class="vc-table-row vc-left-border">
               <dt class="vc-table-col vc-table-col-title">
