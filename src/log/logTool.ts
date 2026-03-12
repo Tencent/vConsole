@@ -30,9 +30,10 @@ export const getValueTextAndType = (val: any, wrapString = true) => {
     text = getPreviewText(val);
   } else if (tool.isString(val)) {
     valueType = 'string';
-    text = tool.getVisibleText(val);
     if (wrapString) {
-      text = '"' + text + '"';
+      text = JSON.stringify(val);
+    } else {
+      text = tool.getVisibleText(val);
     }
   } else if (tool.isNumber(val)) {
     valueType = 'number';
