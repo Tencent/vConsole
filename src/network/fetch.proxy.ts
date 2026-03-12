@@ -201,10 +201,14 @@ export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T
         isChunked = value.toLowerCase().indexOf('chunked') > -1 ? true : isChunked;
       }
       // console.log('[Fetch.proxy] afterFetch', 'isChunked:', isChunked, resp.status);
-      
-      if (isChunked) {
-        // when `transfer-encoding` is chunked, the response is a stream which is under loading,
-        // so the `readyState` should be 3 (Loading), 
+
+      const contentTypeHeader = resp.headers.get('content-type') || '';
+      const isEventStream = contentTypeHeader.includes('text/event-stream');
+
+      if (isChunked || isEventStream) {
+        // when `transfer-encoding` is chunked or the response is an SSE stream,
+        // the response is a stream which is under loading,
+        // so the `readyState` should be 3 (Loading),
         // and the response should NOT be `clone()` which will affect stream reading.
         item.readyState = 3;
       } else {
@@ -225,9 +229,8 @@ export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T
       
       // WebAssembly.instantiateStreaming() performs internal slot checks on the Response object,
       // which a Proxy wrapper fails. Skip proxying for wasm responses. (issue #590)
-      const contentType = resp.headers.get('content-type');
       const isWasmRequest =
-        (contentType && contentType.includes('application/wasm')) ||
+        (contentTypeHeader && contentTypeHeader.includes('application/wasm')) ||
         (item.url && item.url.toLowerCase().endsWith('.wasm'));
       if (isWasmRequest) {
         return resp;

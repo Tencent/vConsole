@@ -10,6 +10,7 @@
 - `Fix(Storage)` 修复因 remove 操作触发响应式状态重置导致 Storage key 修改失败的问题。(issue #690, PR #709)
 - `Fix(Network)` 修复 fetch proxy 包装 wasm 响应导致 `WebAssembly.instantiateStreaming` 类型错误的问题。(issue #590, PR #711)
 - `Fix(Network)` 修复 stream 读取完成时 `result.value` 可能为 `undefined` 的问题。(PR #715)
+- `Fix(Network)` 修复抓取 `text/event-stream`（SSE）响应时报错的问题，根本原因是代码尝试整体读取响应体，而非将其作为流处理。(issue #686)
 - `Fix(Network)` 修复调用 `destroy()` 后重新创建 VConsole 实例，Network 面板无法抓取请求的问题，根本原因是 network model 单例在移除时未被清除。(issue #695)
 - `Fix(Network)` 修复 Network 面板中 `requestHeader` 为 `undefined` 时抛出 `TypeError` 的问题。(issue #636, PR #693)
 - `Fix(Network)` 修复可能由 `sendBeacon` 引发的 "Cannot read property" 错误。(issue #615, #629)
