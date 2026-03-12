@@ -10,6 +10,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix(Storage)` Fix storage key modification failure caused by reactive state being cleared during remove operation. (issue #690, PR #709)
 - `Fix(Network)` Fix `WebAssembly.instantiateStreaming` type error caused by fetch proxy wrapping wasm responses. (issue #590, PR #711)
 - `Fix(Network)` Fix `result.value` maybe `undefined` when stream reading is done. (PR #715)
+- `Fix(Network)` Fix network requests not being captured after `destroy()` and re-creating a new VConsole instance, caused by the network model singleton not being cleared on removal. (issue #695)
 - `Fix(Network)` Fix `TypeError` when `requestHeader` is `undefined` in the Network panel. (issue #636, PR #693)
 - `Fix(Network)` Fix possible "Cannot read property" error by `sendBeacon`. (issue #615, #629)
 - `Chore` Upgrade NPM dependencies: Svelte 3 → 5, svelte-preprocess 4 → 6, TypeScript 4 → 5, webpack-dev-server 4 → 5, webpack-cli 4 → 6, and other minor version updates.

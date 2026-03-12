@@ -21,6 +21,10 @@ export class VConsoleModel {
     VConsoleModel.singleton[ctorName] = new ctor();
     return <T>VConsoleModel.singleton[ctorName];
   }
+
+  public static removeSingleton(ctorName: string) {
+    delete VConsoleModel.singleton[ctorName];
+  }
 }
 
 export default VConsoleModel;

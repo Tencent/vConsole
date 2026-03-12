@@ -34,6 +34,7 @@ export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
     super.onRemove();
     if (this.model) {
       this.model.unMock();
+      VConsoleNetworkModel.removeSingleton('VConsoleNetworkModel');
     }
   }
 
