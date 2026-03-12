@@ -378,6 +378,7 @@ export class VConsoleLogModel extends VConsoleModel {
       const logs = pluginLogs[pluginId];
 
       const store = Store.get(pluginId);
+      if (!store) { continue; }
       store.update((store) => {
         let logList = [...store.logList];
 

@@ -15,6 +15,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix(Network)` Fix error when fetching `text/event-stream` (SSE) responses, caused by attempting to read the full response body instead of treating it as a stream. (issue #686)
 - `Fix(Network)` Fix network requests not being captured after `destroy()` and re-creating a new VConsole instance, caused by the network model singleton not being cleared on removal. (issue #695)
 - `Fix(Network)` Fix `TypeError` when `requestHeader` is `undefined` in the Network panel. (issue #636, PR #693)
+- `Fix(Log)` Fix `TypeError: Cannot read properties of undefined (reading 'update')` when `destroy()` is called while a `requestAnimationFrame` log flush is pending. (issue #649)
 - `Fix(Network)` Fix possible "Cannot read property" error by `sendBeacon`. (issue #615, #629)
 - `Chore` Upgrade NPM dependencies: Svelte 3 → 5, svelte-preprocess 4 → 6, TypeScript 4 → 5, webpack-dev-server 4 → 5, webpack-cli 4 → 6, and other minor version updates.
 - `Chore` Remove unused/obsolete dependencies: `mutation-observer` (IE 9/10 polyfill) and `babel-plugin-add-module-exports`.

@@ -15,6 +15,7 @@
 - `Fix(Network)` 修复抓取 `text/event-stream`（SSE）响应时报错的问题，根本原因是代码尝试整体读取响应体，而非将其作为流处理。(issue #686)
 - `Fix(Network)` 修复调用 `destroy()` 后重新创建 VConsole 实例，Network 面板无法抓取请求的问题，根本原因是 network model 单例在移除时未被清除。(issue #695)
 - `Fix(Network)` 修复 Network 面板中 `requestHeader` 为 `undefined` 时抛出 `TypeError` 的问题。(issue #636, PR #693)
+- `Fix(Log)` 修复在 `requestAnimationFrame` 日志刷新待执行期间调用 `destroy()` 时，抛出 `TypeError: Cannot read properties of undefined (reading 'update')` 的问题。(issue #649)
 - `Fix(Network)` 修复可能由 `sendBeacon` 引发的 "Cannot read property" 错误。(issue #615, #629)
 - `Chore` 升级 NPM 依赖：Svelte 3 → 5、svelte-preprocess 4 → 6、TypeScript 4 → 5、webpack-dev-server 4 → 5、webpack-cli 4 → 6 及其他小版本更新。
 - `Chore` 移除无用/过时依赖：`mutation-observer`（IE 9/10 polyfill）及 `babel-plugin-add-module-exports`。
