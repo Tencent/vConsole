@@ -28,6 +28,14 @@
     </div>
 
     <div class="section">
+      <div class="hd">WebAssembly</div>
+
+      <a onclick="fetchWasm()" href="javascript:;" class="weui_btn weui_btn_default">fetch().wasm (should load once)</a>
+      <a onclick="instantiateStreamingWasm()" href="javascript:;" class="weui_btn weui_btn_default">instantiateStreaming (should load once)</a>
+      <p id="wasm-result" style="margin:8px 0;font-size:12px;color:#666"></p>
+    </div>
+
+    <div class="section">
       <div class="hd">Fetch</div>
 
       <a onclick="getFetch()" href="javascript:;" class="weui_btn weui_btn_default">GET Fetch</a>
@@ -733,11 +741,39 @@ function wsConnectBinary() {
   sock.onclose = (e) => { console.info('Binary WebSocket closed, code:', e.code); };
 }
 
-function wsConnectFail() {
+function fetchWasm() {
   showPanel();
-  const sock = new WebSocket('wss://this.host.does.not.exist.invalid/');
-  sock.onerror = () => { console.error('wsConnectFail: error (expected)'); };
-  sock.onclose = (e) => { console.info('wsConnectFail: closed, code:', e.code); };
+  const result = document.getElementById('wasm-result');
+  result.textContent = 'Fetching wasm via fetch()...';
+  let fetchCount = 0;
+  const origFetch = window._vcOrigFetch || window.fetch;
+  // Count how many times the network actually fires by watching performance entries
+  const before = performance.getEntriesByType('resource').filter(e => e.name.includes('empty.wasm')).length;
+  window.fetch('./data/empty.wasm?t=' + Math.random()).then(r => r.arrayBuffer()).then(buf => {
+    const after = performance.getEntriesByType('resource').filter(e => e.name.includes('empty.wasm')).length;
+    const newRequests = after - before;
+    result.textContent = `fetch() done. Network requests: ${newRequests} (expected 1)`;
+    result.style.color = newRequests === 1 ? 'green' : 'red';
+  }).catch(e => {
+    result.textContent = 'fetch() error: ' + e;
+    result.style.color = 'red';
+  });
+}
+
+function instantiateStreamingWasm() {
+  showPanel();
+  const result = document.getElementById('wasm-result');
+  result.textContent = 'Loading wasm via WebAssembly.instantiateStreaming()...';
+  const before = performance.getEntriesByType('resource').filter(e => e.name.includes('empty.wasm')).length;
+  WebAssembly.instantiateStreaming(fetch('./data/empty.wasm?t=' + Math.random())).then(obj => {
+    const after = performance.getEntriesByType('resource').filter(e => e.name.includes('empty.wasm')).length;
+    const newRequests = after - before;
+    result.textContent = `instantiateStreaming() done. Network requests: ${newRequests} (expected 1)`;
+    result.style.color = newRequests === 1 ? 'green' : 'red';
+  }).catch(e => {
+    result.textContent = 'instantiateStreaming() error: ' + e;
+    result.style.color = 'red';
+  });
 }
 
 </script>

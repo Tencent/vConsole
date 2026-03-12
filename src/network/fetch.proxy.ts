@@ -205,6 +205,19 @@ export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T
       const contentTypeHeader = resp.headers.get('content-type') || '';
       const isEventStream = contentTypeHeader.includes('text/event-stream');
 
+      // WebAssembly.instantiateStreaming() performs internal slot checks on the Response object,
+      // which a Proxy wrapper fails. Also, cloning the response body (via resp.clone()) causes the
+      // browser to tee the underlying stream, which makes Chrome re-fetch the wasm file a second
+      // time. Skip both body reading and proxying for wasm responses. (issue #590, #674)
+      const isWasmRequest =
+        (contentTypeHeader && contentTypeHeader.includes('application/wasm')) ||
+        (item.url && item.url.toLowerCase().endsWith('.wasm'));
+      if (isWasmRequest) {
+        item.readyState = 4;
+        this.onUpdateCallback(item);
+        return resp;
+      }
+
       if (isChunked || isEventStream) {
         // when `transfer-encoding` is chunked or the response is an SSE stream,
         // the response is a stream which is under loading,
@@ -226,15 +239,6 @@ export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T
       }
 
       this.onUpdateCallback(item);
-      
-      // WebAssembly.instantiateStreaming() performs internal slot checks on the Response object,
-      // which a Proxy wrapper fails. Skip proxying for wasm responses. (issue #590)
-      const isWasmRequest =
-        (contentTypeHeader && contentTypeHeader.includes('application/wasm')) ||
-        (item.url && item.url.toLowerCase().endsWith('.wasm'));
-      if (isWasmRequest) {
-        return resp;
-      }
 
       return new Proxy(resp, new ResponseProxyHandler(resp, item, this.onUpdateCallback));
     };
