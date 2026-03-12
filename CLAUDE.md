@@ -1,5 +1,7 @@
 # vConsole Development Notes
 
+Reply in Simplified Chinese, but use English for code, comments, and Git.
+
 ## Workflow
 
 ### After completing a feature or fix
@@ -10,10 +12,12 @@
 
 ## Git
 - Do not add `Co-Authored-By: Claude` to commit messages.
+- Use `/opt/homebrew/bin/gh` to access GitHub.
 
+## Handling PRs
 
-1. Fetch the PR diff from GitHub (WebFetch the PR page and `.diff` URL).
+1. Fetch the PR diff from GitHub.
 2. Read the affected local source files before judging the implementation.
 3. Evaluate correctness and flag any issues found.
-4. After user approval, merge with `gh pr merge <N> --repo Tencent/vConsole --squash` and run `git pull`. If `gh` is not in PATH, locate it with `which gh` first.
+4. After user approval, merge with `unset GITHUB_TOKEN && /opt/homebrew/bin/gh pr merge <N> --repo Tencent/vConsole --squash` and run `git pull`.
 5. Fix any remaining issues in the local copy, then update both changelogs.
