@@ -75,6 +75,16 @@
     </div>
 
     <div class="section">
+      <div class="hd">WebSocket</div>
+
+      <a onclick="wsConnect()" href="javascript:;" class="weui_btn weui_btn_default">Connect (echo.websocket.org)</a>
+      <a onclick="wsSend()" href="javascript:;" class="weui_btn weui_btn_default">Send Message</a>
+      <a onclick="wsClose()" href="javascript:;" class="weui_btn weui_btn_default">Close</a>
+      <a onclick="wsConnectBinary()" href="javascript:;" class="weui_btn weui_btn_default">Connect + Send Binary</a>
+      <a onclick="wsConnectFail()" href="javascript:;" class="weui_btn weui_btn_default">Connect (fail)</a>
+    </div>
+
+    <div class="section">
       <div class="hd">PerformanceObserver (Static Resources)</div>
 
       <a onclick="loadImgSuccess()" href="javascript:;" class="weui_btn weui_btn_default">Load Image (img tag)</a>
@@ -668,6 +678,66 @@ function loadAudioError() {
   audio.onerror = () => {
     console.info('loadAudioError() End');
   }
+}
+
+let ws = null;
+function wsConnect() {
+  showPanel();
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    console.warn('WebSocket already connected');
+    return;
+  }
+  ws = new WebSocket('wss://echo.websocket.org/?encoding=text');
+  ws.onopen = () => { console.info('WebSocket opened'); };
+  ws.onmessage = (e) => { console.log('WebSocket message:', e.data); };
+  ws.onerror = () => { console.error('WebSocket error'); };
+  ws.onclose = (e) => { console.info('WebSocket closed, code:', e.code); };
+}
+
+function wsSend() {
+  showPanel();
+  if (!ws || ws.readyState !== WebSocket.OPEN) {
+    console.warn('WebSocket not connected, connecting first...');
+    wsConnect();
+    setTimeout(wsSend, 1000);
+    return;
+  }
+  const msg = JSON.stringify({ hello: 'world', time: Date.now() });
+  ws.send(msg);
+  console.info('WebSocket sent:', msg);
+}
+
+function wsClose() {
+  if (!ws) {
+    console.warn('No WebSocket to close');
+    return;
+  }
+  ws.close(1000, 'Manual close');
+  ws = null;
+}
+
+function wsConnectBinary() {
+  showPanel();
+  const sock = new WebSocket('wss://echo.websocket.org/?encoding=binary');
+  sock.binaryType = 'arraybuffer';
+  sock.onopen = () => {
+    console.info('Binary WebSocket opened, sending ArrayBuffer...');
+    const buf = new ArrayBuffer(8);
+    const view = new Uint8Array(buf);
+    for (let i = 0; i < 8; i++) view[i] = i;
+    sock.send(buf);
+    sock.send('text after binary');
+  };
+  sock.onmessage = (e) => { console.log('Binary WebSocket message:', e.data); };
+  sock.onerror = () => { console.error('Binary WebSocket error'); };
+  sock.onclose = (e) => { console.info('Binary WebSocket closed, code:', e.code); };
+}
+
+function wsConnectFail() {
+  showPanel();
+  const sock = new WebSocket('wss://this.host.does.not.exist.invalid/');
+  sock.onerror = () => { console.error('wsConnectFail: error (expected)'); };
+  sock.onclose = (e) => { console.info('wsConnectFail: closed, code:', e.code); };
 }
 
 </script>

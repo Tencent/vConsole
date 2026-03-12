@@ -4,6 +4,13 @@ import { genResonseByResponseType, genGetDataByUrl } from './helper';
 
 export type VConsoleRequestMethod = '' | 'GET' | 'POST' | 'PUT' | 'DELETE' | 'HEAD' | 'CONNECT' | 'OPTIONS' | 'TRACE' | 'PATCH';
 
+export interface VConsoleWebSocketMessage {
+  type: 'send' | 'receive';
+  data: string | ArrayBuffer | Blob;
+  time: number;
+  timeText: string;
+}
+
 export class VConsoleNetworkRequestItem {
   id: string                 = '';
   name?: string              = '';
@@ -15,7 +22,8 @@ export class VConsoleNetworkRequestItem {
   readyState?: XMLHttpRequest['readyState'] = 0;
   header: { [key: string]: string } = null; // response header
   responseType: XMLHttpRequest['responseType'] = '';
-  requestType: 'xhr' | 'fetch' | 'ping' | 'custom' | 'img' | 'script' | 'stylesheet' | 'font' | 'resource';
+  requestType: 'xhr' | 'fetch' | 'ping' | 'custom' | 'img' | 'script' | 'stylesheet' | 'font' | 'resource' | 'websocket';
+  messages?: VConsoleWebSocketMessage[];
   requestHeader: HeadersInit = null;
   response: any;
   responseSize: number      = 0; // bytes

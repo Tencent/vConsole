@@ -189,6 +189,25 @@
             {/each}
           </div>
           {/if}
+          {#if req.requestType === 'websocket'}
+          <div>
+            <dl class="vc-table-row vc-left-border">
+              <dt class="vc-table-col vc-table-col-title">Messages ({(req.messages || []).length})</dt>
+            </dl>
+            {#if (req.messages || []).length === 0}
+            <div class="vc-table-row vc-left-border vc-small">
+              <div class="vc-table-col vc-table-col-value">No messages</div>
+            </div>
+            {:else}
+            {#each (req.messages || []) as msg}
+            <div class="vc-table-row vc-left-border vc-small">
+              <div class="vc-table-col vc-table-col-2 vc-ws-msg-{msg.type}">{msg.type === 'send' ? '↑' : '↓'} {msg.timeText}</div>
+              <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line" data-scrollable="1">{prettyStringify(msg.data)}</div>
+            </div>
+            {/each}
+            {/if}
+          </div>
+          {:else}
           <div>
             <dl class="vc-table-row vc-left-border">
               <dt class="vc-table-col vc-table-col-title">
@@ -215,6 +234,7 @@
               >{req.response || ''}</pre>
             </div>
           </div>
+          {/if}
         </div>
       </div>
     </RecycleScroller>

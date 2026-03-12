@@ -2,9 +2,10 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 ## 3.16.0 (2026-??-??)
 
-- `Feat(Network)` Capture static resource requests (images, scripts, stylesheets, fonts, etc.) via `PerformanceObserver` and display them in the Network panel. (issue #708)
-- `Fix(Core)` Fix copy button not working on iOS 17.2 Safari by using Clipboard API with fallback. (PR #672)
 - `Feat(Log)` Add support for `console.timeLog()`. (issue #681, PR #684)
+- `Feat(Network)` Capture static resource requests (images, scripts, stylesheets, fonts, etc.) via `PerformanceObserver` and display them in the Network panel. (issue #708)
+- `Feat(Network)` Add WebSocket support: display connections in the Network panel with sent/received messages. (issue #688)
+- `Fix(Core)` Fix copy button not working on iOS 17.2 Safari by using Clipboard API with fallback. (PR #672)
 - `Fix(Log)` Fix unescaped quotation marks in Tree view and copied JSON output. (PR #678)
 - `Fix(Storage)` Fix storage key modification failure caused by reactive state being cleared during remove operation. (issue #690, PR #709)
 - `Fix(Network)` Fix `WebAssembly.instantiateStreaming` type error caused by fetch proxy wrapping wasm responses. (issue #590, PR #711)

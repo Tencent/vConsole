@@ -6,6 +6,7 @@ import { XHRProxy } from './xhr.proxy';
 import { FetchProxy } from './fetch.proxy';
 import { BeaconProxy } from './beacon.proxy';
 import { ResourceProxy } from './resource.proxy';
+import { WebSocketProxy } from './websocket.proxy';
 
 
 /**
@@ -29,6 +30,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
     this.mockFetch();
     this.mockSendBeacon();
     this.mockResource();
+    this.mockWebSocket();
   }
 
   public unMock() {
@@ -44,6 +46,9 @@ export class VConsoleNetworkModel extends VConsoleModel {
     }
     if (this.resourceProxy) {
       this.resourceProxy.unMock();
+    }
+    if (window.hasOwnProperty('WebSocket')) {
+      window.WebSocket = WebSocketProxy.origWebSocket;
     }
   }
 
@@ -128,6 +133,19 @@ export class VConsoleNetworkModel extends VConsoleModel {
       return;
     }
     this.resourceProxy = ResourceProxy.create((item: VConsoleNetworkRequestItem) => {
+      this.updateRequest(item.id, item);
+    });
+  }
+
+  /**
+   * mock WebSocket
+   * @private
+   */
+  private mockWebSocket() {
+    if (!window.hasOwnProperty('WebSocket')) {
+      return;
+    }
+    window.WebSocket = WebSocketProxy.create((item: VConsoleNetworkRequestItem) => {
       this.updateRequest(item.id, item);
     });
   }
