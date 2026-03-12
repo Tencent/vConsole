@@ -2,9 +2,11 @@
 
 ## 3.16.0 (2026-??-??)
 
+- `Feat(Log)` 新增对 `console.timeLog()` 的支持。(issue #681, PR #684)
 - `Fix(Storage)` 修复因 remove 操作触发响应式状态重置导致 Storage key 修改失败的问题。(issue #690, PR #709)
 - `Fix(Network)` 修复 fetch proxy 包装 wasm 响应导致 `WebAssembly.instantiateStreaming` 类型错误的问题。(issue #590, PR #711)
 - `Fix(Network)` 修复 stream 读取完成时 `result.value` 可能为 `undefined` 的问题。(PR #715)
+- `Fix(Network)` 修复 Network 面板中 `requestHeader` 为 `undefined` 时抛出 `TypeError` 的问题。(issue #636, PR #693)
 - `Fix(Network)` 修复可能由 `sendBeacon` 引发的 "Cannot read property" 错误。(issue #615, #629)
 - `Chore` 升级 NPM 依赖：Svelte 3 → 5、svelte-preprocess 4 → 6、TypeScript 4 → 5、webpack-dev-server 4 → 5、webpack-cli 4 → 6 及其他小版本更新。
 - `Chore` 移除无用/过时依赖：`mutation-observer`（IE 9/10 polyfill）及 `babel-plugin-add-module-exports`。
