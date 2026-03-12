@@ -2,6 +2,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 ## 3.16.0 (2026-??-??)
 
+- `Fix(Storage)` Fix storage key modification failure caused by reactive state being cleared during remove operation. (issue #690, PR #709)
 - `Fix(Network)` Fix `WebAssembly.instantiateStreaming` type error caused by fetch proxy wrapping wasm responses. (issue #590, PR #711)
 - `Fix(Network)` Fix `result.value` maybe `undefined` when stream reading is done. (PR #715)
 - `Fix(Network)` Fix possible "Cannot read property" error by `sendBeacon`. (issue #615, #629)
