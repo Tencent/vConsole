@@ -206,7 +206,7 @@ const _safeJSONStringifyFlatValue = (value: any, maxLen = 0) => {
     if (maxLen > 0) {
       value = getStringWithinLength(value, maxLen);
     }
-    str += '"' + getVisibleText(value) + '"';
+    str += JSON.stringify(value);
   } else if (isSymbol(value)) {
     str += String(value).replace(/^Symbol\((.*)\)$/i, 'Symbol("$1")');
   } else if (isFunction(value)) {
@@ -265,7 +265,7 @@ const _safeJSONStringify = (obj, opt: ISafeJSONStringifyOption, _curDepth = 0) =
         if (isObject(key) || isArray(key) || isSymbol(key)) {
           opt.ret += Object.prototype.toString.call(key);
         } else if (isString(key) && opt.standardJSON) {
-          opt.ret += '"' + key + '"';
+          opt.ret += JSON.stringify(key);
         } else {
           opt.ret += key;
         }
