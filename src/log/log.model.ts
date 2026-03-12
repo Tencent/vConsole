@@ -119,6 +119,7 @@ export class VConsoleLogModel extends VConsoleModel {
         this.origConsole[method] = window.console[method];
       });
       this.origConsole.time = window.console.time;
+      this.origConsole.timeLog = window.console.timeLog;
       this.origConsole.timeEnd = window.console.timeEnd;
       this.origConsole.clear = window.console.clear;
       this.origConsole.group = window.console.group;
@@ -151,6 +152,18 @@ export class VConsoleLogModel extends VConsoleModel {
 
     window.console.time = ((label: string = '') => {
       timeLog[label] = Date.now();
+    }).bind(window.console);
+
+    window.console.timeLog = ((label: string = '', ...args) => {
+      const pre = timeLog[label];
+      let t = 0;
+      if (pre) {
+        t = Date.now() - pre;
+      }
+      this.addLog({
+        type: 'log',
+        origData: [`${label}: ${t}ms`, ...args],
+      });
     }).bind(window.console);
 
     window.console.timeEnd = ((label: string = '') => {
