@@ -2,7 +2,7 @@
 import { getUniqueID } from '../lib/tool';
 import { genResonseByResponseType, genGetDataByUrl } from './helper';
 
-export type VConsoleRequestMethod = '' | 'GET' | 'POST' | 'PUT' | 'DELETE' | 'HEAD' | 'CONNECT' | 'OPTIONS' | 'TRACE' | 'PATCH';
+export type VConsoleRequestMethod = '' | 'GET' | 'POST' | 'PUT' | 'DELETE' | 'HEAD' | 'CONNECT' | 'OPTIONS' | 'TRACE' | 'PATCH' | 'WS';
 
 export interface VConsoleWebSocketMessage {
   type: 'send' | 'receive';

@@ -20,5 +20,8 @@ import 'core-js/stable/promise';
 // vConsole Core Class
 import { VConsole } from './core/core';
 
+// export types
+export type { VConsoleOptions, VConsoleLogOptions, VConsoleNetworkOptions, VConsoleStorageOptions, VConsoleAvailableStorage } from './core/options.interface';
+
 // export
 export default VConsole;

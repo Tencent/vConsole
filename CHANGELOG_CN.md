@@ -5,6 +5,7 @@
 - `Feat(Log)` 新增对 `console.timeLog()` 的支持。(issue #681, PR #684)
 - `Feat(Network)` 通过 `PerformanceObserver` 捕获静态资源请求（图片、脚本、样式表、字体等）并在 Network 面板中展示。(issue #708)
 - `Feat(Network)` 新增 WebSocket 支持：在 Network 面板中展示 WebSocket 连接及收发消息。(issue #688)
+- `Fix(Core)` 将公共 TypeScript 类型（`VConsoleOptions`、`VConsoleLogOptions`、`VConsoleNetworkOptions`、`VConsoleStorageOptions`、`VConsoleAvailableStorage`）从包根路径导出，支持 `import type { VConsoleOptions } from 'vconsole'` 方式使用。同时将 `'WS'` 加入 `VConsoleRequestMethod` 类型。(issue #668)
 - `Fix(Core)` 修复 iOS 17.2 Safari 中复制按钮无效的问题，改用 Clipboard API 并保留降级处理。(PR #672)
 - `Fix(Log)` 修复 Tree 视图及复制 JSON 时字符串值中引号未转义的问题。(PR #678)
 - `Fix(Storage)` 修复因 remove 操作触发响应式状态重置导致 Storage key 修改失败的问题。(issue #690, PR #709)

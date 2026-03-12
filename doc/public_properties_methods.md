@@ -44,7 +44,15 @@ vConsole.version // => "3.11.0"
 A configuration object.
 
 - Writable
-- Type: object
+- Type: `VConsoleOptions`
+
+TypeScript users can import the type directly:
+
+```typescript
+import type { VConsoleOptions } from 'vconsole';
+```
+
+Available sub-types: `VConsoleLogOptions`, `VConsoleNetworkOptions`, `VConsoleStorageOptions`, `VConsoleAvailableStorage`.
 
 Key                   | Type     | Optional | Default value                               | Description
 --------------------- | -------- | -------- | ------------------------------------------- | -------------------

@@ -25,6 +25,16 @@ console.log('Hello world');
 vConsole.destroy();
 ```
 
+如果你使用 TypeScript，可以直接导入配置项类型：
+
+```typescript
+import VConsole from 'vconsole';
+import type { VConsoleOptions } from 'vconsole';
+
+const options: VConsoleOptions = { theme: 'dark' };
+const vConsole = new VConsole(options);
+```
+
 > 请注意，`VConsole` 只是 vConsole 的原型，而非一个已实例化的对象。  
 > 所以在手动 `new` 实例化之前，vConsole 不会被插入到网页中。
 

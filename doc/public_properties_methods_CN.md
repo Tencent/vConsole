@@ -43,7 +43,15 @@ vConsole.version // => "3.11.0"
 配置项。
 
 - 可写
-- 类型：object
+- 类型：`VConsoleOptions`
+
+TypeScript 用户可直接导入类型：
+
+```typescript
+import type { VConsoleOptions } from 'vconsole';
+```
+
+相关子类型：`VConsoleLogOptions`、`VConsoleNetworkOptions`、`VConsoleStorageOptions`、`VConsoleAvailableStorage`。
 
 键名                  | 类型      | 可选     | 默认值                                       | 描述
 --------------------- | -------- | -------- | ------------------------------------------- | -------------------

@@ -26,6 +26,16 @@ console.log('Hello world');
 vConsole.destroy();
 ```
 
+If you are using TypeScript, you can import the option types directly:
+
+```typescript
+import VConsole from 'vconsole';
+import type { VConsoleOptions } from 'vconsole';
+
+const options: VConsoleOptions = { theme: 'dark' };
+const vConsole = new VConsole(options);
+```
+
 > Notice that `VConsole` is the prototype of vConsole.  
 > So vConsole panel will not be inserted into your page until you `new` it manually.
 
