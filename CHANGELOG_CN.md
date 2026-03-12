@@ -2,6 +2,7 @@
 
 ## 3.16.0 (2026-??-??)
 
+- `Fix(Core)` 修复 iOS 17.2 Safari 中复制按钮无效的问题，改用 Clipboard API 并保留降级处理。(PR #672)
 - `Feat(Log)` 新增对 `console.timeLog()` 的支持。(issue #681, PR #684)
 - `Fix(Log)` 修复 Tree 视图及复制 JSON 时字符串值中引号未转义的问题。(PR #678)
 - `Fix(Storage)` 修复因 remove 操作触发响应式状态重置导致 Storage key 修改失败的问题。(issue #690, PR #709)

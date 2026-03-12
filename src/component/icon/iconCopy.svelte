@@ -31,7 +31,9 @@
     ) {
       try {
         await navigator.clipboard.writeText(text);
-      } catch (error) {}
+      } catch (error) {
+        copy(text, copyOptions);
+      }
     } else {
       copy(text, copyOptions);
     }
