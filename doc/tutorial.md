@@ -164,6 +164,8 @@ console.log('[system] bar'); // this log will show in Log tab instead of System 
 
 All `XMLHttpRequest | fetch | sendBeacon` requests will be logged in Network panel by default.
 
+Static resources loaded by the browser (images, scripts, stylesheets, fonts, etc.) are also captured via `PerformanceObserver`. These entries show the URL, resource type, HTTP status, timing, and size; response body is not available for static resources. When a resource is served from cache, the detail view shows `From Cache: true`.
+
 To prevent logging, add `_noVConsole = true` to XHR object:
 
 ```javascript

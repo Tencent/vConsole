@@ -5,6 +5,7 @@ import { VConsoleNetworkRequestItem } from './requestItem';
 import { XHRProxy } from './xhr.proxy';
 import { FetchProxy } from './fetch.proxy';
 import { BeaconProxy } from './beacon.proxy';
+import { ResourceProxy } from './resource.proxy';
 
 
 /**
@@ -20,12 +21,14 @@ export class VConsoleNetworkModel extends VConsoleModel {
   public maxNetworkNumber: number = 1000;
   public ignoreUrlRegExp: RegExp = undefined;
   protected itemCounter: number = 0;
+  private resourceProxy: ResourceProxy;
 
   constructor() {
     super();
     this.mockXHR();
     this.mockFetch();
     this.mockSendBeacon();
+    this.mockResource();
   }
 
   public unMock() {
@@ -38,6 +41,9 @@ export class VConsoleNetworkModel extends VConsoleModel {
     }
     if (BeaconProxy.hasSendBeacon()) {
       window.navigator.sendBeacon = BeaconProxy.origSendBeacon;
+    }
+    if (this.resourceProxy) {
+      this.resourceProxy.unMock();
     }
   }
 
@@ -109,6 +115,19 @@ export class VConsoleNetworkModel extends VConsoleModel {
       return;
     }
     window.navigator.sendBeacon = BeaconProxy.create((item: VConsoleNetworkRequestItem) => {
+      this.updateRequest(item.id, item);
+    });
+  }
+
+  /**
+   * observe resource loading via PerformanceObserver (images, scripts, stylesheets, fonts, etc.)
+   * @private
+   */
+  private mockResource() {
+    if (typeof PerformanceObserver === 'undefined') {
+      return;
+    }
+    this.resourceProxy = ResourceProxy.create((item: VConsoleNetworkRequestItem) => {
       this.updateRequest(item.id, item);
     });
   }

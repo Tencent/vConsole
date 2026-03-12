@@ -15,7 +15,7 @@ export class VConsoleNetworkRequestItem {
   readyState?: XMLHttpRequest['readyState'] = 0;
   header: { [key: string]: string } = null; // response header
   responseType: XMLHttpRequest['responseType'] = '';
-  requestType: 'xhr' | 'fetch' | 'ping' | 'custom';
+  requestType: 'xhr' | 'fetch' | 'ping' | 'custom' | 'img' | 'script' | 'stylesheet' | 'font' | 'resource';
   requestHeader: HeadersInit = null;
   response: any;
   responseSize: number      = 0; // bytes
@@ -28,6 +28,7 @@ export class VConsoleNetworkRequestItem {
   postData: { [key: string]: string } | string = null;
   actived: boolean          = false;
   noVConsole?: boolean      = false;
+  transferSize?: number     = undefined; // bytes transferred over the network; 0 means served from cache
 
   constructor() {
     this.id = getUniqueID();

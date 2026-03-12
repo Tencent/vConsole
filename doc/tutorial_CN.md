@@ -168,6 +168,8 @@ console.log('[myplugin]', 'bar'); // 'myplugin' 为自定义面板插件的 id
 
 所有 `XMLHttpRequest | fetch | sendBeacon` 请求都会被显示到 Network 面板中。
 
+浏览器加载的静态资源（图片、脚本、样式表、字体等）也会通过 `PerformanceObserver` 捕获，可在面板中查看其 URL、资源类型、HTTP 状态码、耗时和大小；静态资源的响应体无法获取。若资源命中缓存，详情视图中会显示 `From Cache: true`。
+
 若不希望一个请求显示在面板中，可添加属性 `_noVConsole = true` 到 XHR 对象中：
 
 ```javascript

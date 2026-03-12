@@ -73,6 +73,15 @@
       <a onclick="loadLinkError()" href="javascript:;" class="weui_btn weui_btn_default">Load Link Error</a>
       <a onclick="loadAudioError()" href="javascript:;" class="weui_btn weui_btn_default">Load Audio Error</a>
     </div>
+
+    <div class="section">
+      <div class="hd">PerformanceObserver (Static Resources)</div>
+
+      <a onclick="loadImgSuccess()" href="javascript:;" class="weui_btn weui_btn_default">Load Image (img tag)</a>
+      <a onclick="loadScriptSuccess()" href="javascript:;" class="weui_btn weui_btn_default">Load Script (script tag)</a>
+      <a onclick="loadLinkSuccess()" href="javascript:;" class="weui_btn weui_btn_default">Load Stylesheet (link tag)</a>
+      <a onclick="loadImgSuccess()" href="javascript:;" class="weui_btn weui_btn_default">Load Image Again (From Cache)</a>
+    </div>
   </div>
 </body>
 </html>
@@ -577,6 +586,36 @@ function crossDomain() {
   }).catch((error) => {
     console.error('crossDomain() Error:', error);
   });
+}
+
+function loadImgSuccess() {
+  showPanel();
+  // Use a fixed URL so the second click hits the browser cache (transferSize === 0)
+  const img = document.createElement('img');
+  img.src = './lib/snapshot/panel_log.jpg';
+  img.style.display = 'none';
+  document.body.appendChild(img);
+  img.onload = () => { console.info('loadImgSuccess() done:', img.src); };
+  img.onerror = () => { console.warn('loadImgSuccess() error:', img.src); };
+}
+
+function loadScriptSuccess() {
+  showPanel();
+  const script = document.createElement('script');
+  script.src = './lib/weui.min.css?as=script&r=' + Math.random();
+  document.body.appendChild(script);
+  script.onload = () => { console.info('loadScriptSuccess() done'); };
+  script.onerror = () => { console.warn('loadScriptSuccess() error (expected, wrong MIME)'); };
+}
+
+function loadLinkSuccess() {
+  showPanel();
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = './lib/demo.css?r=' + Math.random();
+  document.head.appendChild(link);
+  link.onload = () => { console.info('loadLinkSuccess() done'); };
+  link.onerror = () => { console.warn('loadLinkSuccess() error'); };
 }
 
 function loadImgError() {

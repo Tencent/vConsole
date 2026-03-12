@@ -202,6 +202,12 @@
               <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">{req.responseSizeText}</div>
             </div>
             {/if}
+            {#if (req.transferSize === 0 && req.responseSize > 0)}
+            <div class="vc-table-row vc-left-border vc-small">
+              <div class="vc-table-col vc-table-col-2">From Cache</div>
+              <div class="vc-table-col vc-table-col-4 vc-table-col-value vc-max-height-line">true</div>
+            </div>
+            {/if}
             <div class="vc-table-row vc-left-border vc-small">
               <pre
                 class="vc-table-col vc-max-height vc-min-height"
