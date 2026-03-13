@@ -15,6 +15,7 @@
 - `Fix(Network)` 修复抓取 `text/event-stream`（SSE）响应时报错的问题，根本原因是代码尝试整体读取响应体，而非将其作为流处理。(issue #686)
 - `Fix(Network)` 修复调用 `destroy()` 后重新创建 VConsole 实例，Network 面板无法抓取请求的问题，根本原因是 network model 单例在移除时未被清除。(issue #695)
 - `Fix(Network)` 修复 Network 面板中 `requestHeader` 为 `undefined` 时抛出 `TypeError` 的问题。(issue #636, PR #693)
+- `Fix(Core)` 修复在 vConsole 初始化完成之前（如 DOM 仍在加载时）调用 `destroy()` 静默失败的问题：此情况下 `VConsole.instance` 未被清除，导致后续无法重新创建实例。现在会立即移除待执行的 `DOMContentLoaded` 监听器并清除单例。(issue #587)
 - `Fix(Core)` 修复 iOS Safari 中无法通过触摸拖动选择文字的问题，根本原因是自定义滚动组件在 `touchstart` 事件中调用了 `e.preventDefault()`。(issue #652)
 - `Fix(Core)` 修复宿主页面的 `* { box-sizing: border-box }` 样式渗入 vConsole 导致布局异常（如命令输入框的文字/光标贴附左上角）的问题，通过在 vConsole 根元素内将 `box-sizing` 重置为 `content-box` 修复。(issue #653)
 - `Fix(Log)` 修复焦点被锁定在命令/过滤器 textarea 输入框内的问题：当 textarea 聚焦时滚动日志区域会导致日志内容消失。(issue #656)

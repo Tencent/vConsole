@@ -47,6 +47,7 @@ export class VConsole {
 
   protected compInstance: SvelteComponent;
   protected pluginList: { [id: string]: VConsolePlugin } = {}; // plugin instance
+  protected _onloadCallback: () => void; // stored to allow removal before init
 
   // Export plugin methods
   public log: VConsoleLogExporter;
@@ -101,7 +102,7 @@ export class VConsole {
     this._addBuiltInPlugins();
 
     // try to init
-    const _onload = () => {
+    this._onloadCallback = () => {
       if (this.isInited) {
         return;
       }
@@ -110,9 +111,9 @@ export class VConsole {
     };
     if (document !== undefined) {
       if (document.readyState === 'loading') {
-        $.bind(<any>window, 'DOMContentLoaded', _onload);
+        $.bind(<any>window, 'DOMContentLoaded', this._onloadCallback);
       } else {
-        _onload();
+        this._onloadCallback();
       }
     } else {
       // if document does not exist, wait for it
@@ -120,7 +121,7 @@ export class VConsole {
       const _pollingDocument = () => {
         if (!!document && document.readyState == 'complete') {
           _timer && clearTimeout(_timer);
-          _onload();
+          this._onloadCallback();
         } else {
           _timer = setTimeout(_pollingDocument, 1);
         }
@@ -547,7 +548,13 @@ export class VConsole {
    * Remove vConsole.
    */
   public destroy() {
+    // cancel pending init if destroy() is called before vConsole is ready
+    if (this._onloadCallback) {
+      window.removeEventListener('DOMContentLoaded', this._onloadCallback);
+      this._onloadCallback = undefined;
+    }
     if (!this.isInited) {
+      VConsole.instance = undefined;
       return;
     }
     // reverse isInited when destroyed
