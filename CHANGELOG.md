@@ -16,6 +16,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix(Network)` Fix network requests not being captured after `destroy()` and re-creating a new VConsole instance, caused by the network model singleton not being cleared on removal. (issue #695)
 - `Fix(Network)` Fix `TypeError` when `requestHeader` is `undefined` in the Network panel. (issue #636, PR #693)
 - `Fix(Log)` Fix `TypeError: Cannot read properties of undefined (reading 'update')` when `destroy()` is called while a `requestAnimationFrame` log flush is pending. (issue #649)
+- `Fix(Network)` Fix `TypeError: Cannot set property fetch of #<Window> which has only a getter` when a third-party library defines `window.fetch` as a getter-only property via `Object.defineProperty`. (issue #662)
 - `Fix(Network)` Fix `fetch.toString()` error (`Function.prototype.toString requires that 'this' be a Function`) in Chrome 61 and other environments that override `Function.prototype.toString`, caused by missing `get` trap in `FetchProxyHandler`. (issue #679)
 - `Fix(Network)` Fix possible "Cannot read property" error by `sendBeacon`. (issue #615, #629)
 - `Chore` Upgrade NPM dependencies: Svelte 3 → 5, svelte-preprocess 4 → 6, TypeScript 4 → 5, webpack-dev-server 4 → 5, webpack-cli 4 → 6, and other minor version updates.

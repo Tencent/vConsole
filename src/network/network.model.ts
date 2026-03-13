@@ -39,7 +39,10 @@ export class VConsoleNetworkModel extends VConsoleModel {
       window.XMLHttpRequest = XHRProxy.origXMLHttpRequest;
     }
     if (window.hasOwnProperty('fetch')) {
-      window.fetch = FetchProxy.origFetch;
+      const descriptor = Object.getOwnPropertyDescriptor(window, 'fetch');
+      if (!descriptor || descriptor.set || descriptor.writable) {
+        window.fetch = FetchProxy.origFetch;
+      }
     }
     if (BeaconProxy.hasSendBeacon()) {
       window.navigator.sendBeacon = BeaconProxy.origSendBeacon;
@@ -104,6 +107,11 @@ export class VConsoleNetworkModel extends VConsoleModel {
    */
   private mockFetch() {
     if (!window.hasOwnProperty('fetch')) {
+      return;
+    }
+    const descriptor = Object.getOwnPropertyDescriptor(window, 'fetch');
+    if (descriptor && !descriptor.set && !descriptor.writable) {
+      // fetch is defined as a getter-only property by a third-party library; skip mocking
       return;
     }
     window.fetch = FetchProxy.create((item: VConsoleNetworkRequestItem) => {

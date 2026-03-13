@@ -16,6 +16,7 @@
 - `Fix(Network)` 修复调用 `destroy()` 后重新创建 VConsole 实例，Network 面板无法抓取请求的问题，根本原因是 network model 单例在移除时未被清除。(issue #695)
 - `Fix(Network)` 修复 Network 面板中 `requestHeader` 为 `undefined` 时抛出 `TypeError` 的问题。(issue #636, PR #693)
 - `Fix(Log)` 修复在 `requestAnimationFrame` 日志刷新待执行期间调用 `destroy()` 时，抛出 `TypeError: Cannot read properties of undefined (reading 'update')` 的问题。(issue #649)
+- `Fix(Network)` 修复第三方库通过 `Object.defineProperty` 将 `window.fetch` 定义为只读 getter 属性时，vConsole 初始化抛出 `TypeError: Cannot set property fetch of #<Window> which has only a getter` 的问题。(issue #662)
 - `Fix(Network)` 修复 Chrome 61 及覆写 `Function.prototype.toString` 的环境中调用 `fetch.toString()` 时报错 `Function.prototype.toString requires that 'this' be a Function` 的问题，根本原因是 `FetchProxyHandler` 缺少 `get` trap。(issue #679)
 - `Fix(Network)` 修复可能由 `sendBeacon` 引发的 "Cannot read property" 错误。(issue #615, #629)
 - `Chore` 升级 NPM 依赖：Svelte 3 → 5、svelte-preprocess 4 → 6、TypeScript 4 → 5、webpack-dev-server 4 → 5、webpack-cli 4 → 6 及其他小版本更新。
