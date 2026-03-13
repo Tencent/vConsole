@@ -117,6 +117,14 @@ export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T
     this.onUpdateCallback = onUpdateCallback;
   }
 
+  public get(target: T, key: string) {
+    const value = Reflect.get(target, key);
+    if (typeof value === 'function') {
+      return value.bind(target);
+    }
+    return value;
+  }
+
   public apply(target: T, thisArg: typeof window, argsList) {
     const input: RequestInfo = argsList[0];
     const init: RequestInit = argsList[1];
