@@ -84,7 +84,6 @@ class TouchTracker {
 
   handleTouchStart = (e: TouchEvent) => {
     if ((<HTMLElement>e.target).dataset?.scrollable === '1') { return; }
-    e.preventDefault();
 
     const touch = e.touches[0];
     this._touchId = touch.identifier;
@@ -113,7 +112,6 @@ class TouchTracker {
 
   handleTouchEnd = (e: TouchEvent) => {
     if ((<HTMLElement>e.target).dataset?.scrollable === '1') { return; }
-    e.preventDefault();
 
     const delta = this._getTouchDelta(e);
     if (delta === null) return;
@@ -142,7 +140,6 @@ class TouchTracker {
 
   handleTouchCancel = (e: TouchEvent) => {
     if ((<HTMLElement>e.target).dataset?.scrollable === '1') { return; }
-    e.preventDefault();
 
     const delta = this._getTouchDelta(e);
     if (delta === null) return;
