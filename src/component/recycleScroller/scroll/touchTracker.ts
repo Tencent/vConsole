@@ -85,6 +85,10 @@ class TouchTracker {
   handleTouchStart = (e: TouchEvent) => {
     if ((<HTMLElement>e.target).dataset?.scrollable === '1') { return; }
 
+    // Allow native interaction for form elements (textarea, input, select)
+    const targetTag = (<HTMLElement>e.target).tagName;
+    if (targetTag === 'TEXTAREA' || targetTag === 'INPUT' || targetTag === 'SELECT') { return; }
+
     const touch = e.touches[0];
     this._touchId = touch.identifier;
     this._startX = touch.pageX;
@@ -98,10 +102,10 @@ class TouchTracker {
 
   handleTouchMove = (e: TouchEvent) => {
     if ((<HTMLElement>e.target).dataset?.scrollable === '1') { return; }
-    e.preventDefault();
 
     const delta = this._getTouchDelta(e);
     if (delta === null) return;
+    e.preventDefault();
 
     this._historyX.push(delta.x);
     this._historyY.push(delta.y);
