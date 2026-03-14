@@ -6,9 +6,13 @@ export class VConsoleDefaultPlugin extends VConsoleLogPlugin {
   protected resourceErrorHandler: any;
   protected rejectionHandler: any;
 
+  constructor(id: string, name: string) {
+    super(id, name);
+    this.bindErrors();
+  }
+
   public onReady() {
     super.onReady();
-    this.bindErrors();
     this.compInstance.showCmd = true;
   }
 
