@@ -387,8 +387,9 @@ export function getBytesText(bytes: number) {
  * @return 'some string...(3.1 MB)'
  */
 export function getStringWithinLength(str: string, maxLen: number) {
-  if (str.length > maxLen) {
-    str = str.substring(0, maxLen) + `...(${getBytesText(getStringBytes(str))})`;
+  const bytes = getStringBytes(str);
+  if (bytes > maxLen) {
+    str = str.substring(0, maxLen) + `...(${getBytesText(bytes)})`;
   }
   return str;
 }
