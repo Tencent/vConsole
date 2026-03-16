@@ -85,7 +85,7 @@ export const genFormattedBody = (body?: BodyInit) => {
         ret = {};
         for (let q of arr) {
           const kv = q.split('=');
-          ret[ kv[0] ] = kv[1] === undefined ? 'undefined' : kv[1];
+          ret[ kv[0] ] = kv[1] === undefined ? '' : kv[1];
         }
       }
     }
