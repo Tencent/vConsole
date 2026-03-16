@@ -382,14 +382,23 @@ export function getBytesText(bytes: number) {
 }
 
 /**
- * Get a string within a limited max length.
+ * Get a string within a limited max byte length.
  * The byte size of the string will be appended to the string when reached the limit.
  * @return 'some string...(3.1 MB)'
  */
 export function getStringWithinLength(str: string, maxLen: number) {
   const bytes = getStringBytes(str);
   if (bytes > maxLen) {
-    str = str.substring(0, maxLen) + `...(${getBytesText(bytes)})`;
+    // Truncate by accumulated byte count to respect the byte limit
+    let byteCount = 0;
+    let i = 0;
+    for (; i < str.length; i++) {
+      byteCount += getStringBytes(str[i]);
+      if (byteCount > maxLen) {
+        break;
+      }
+    }
+    str = str.substring(0, i) + `...(${getBytesText(bytes)})`;
   }
   return str;
 }
