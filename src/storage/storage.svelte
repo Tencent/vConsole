@@ -43,6 +43,10 @@
   const onTapSave = async (key: string) => {
     const savedKey = editingKey;
     const savedVal = editingVal;
+    // Validate that key is not empty before saving
+    if (!savedKey || savedKey.trim() === '') {
+      return;
+    }
     resetEditState();
     await model.setItem(savedKey, savedVal);
     if (savedKey !== key) {
