@@ -18,6 +18,7 @@
 - `Fix(Network)` 修复 Network 面板中 `requestHeader` 为 `undefined` 时抛出 `TypeError` 的问题。(issue #636, PR #693)
 - `Fix(Log)` 修复 `DOMContentLoaded` 之前抛出的 JS 错误无法被捕获的问题，将 `window.error` 和 `unhandledrejection` 监听器的绑定从 `onReady()` 移至构造函数中。(issue #586)
 - `Fix(Core)` 修复在 vConsole 初始化完成之前（如 DOM 仍在加载时）调用 `destroy()` 静默失败的问题：此情况下 `VConsole.instance` 未被清除，导致后续无法重新创建实例。现在会立即移除待执行的 `DOMContentLoaded` 监听器并清除单例。(issue #587)
+- `Fix(Core)` 修复 PC 端浏览器中开关按钮无法拖拽的问题，新增鼠标事件（`mousedown`/`mousemove`/`mouseup`）支持，并添加 `user-select: none` 防止拖拽时触发文字选中。(issue #677)
 - `Fix(Core)` 修复 iOS Safari 中无法通过触摸拖动选择文字的问题，根本原因是自定义滚动组件在 `touchstart` 事件中调用了 `e.preventDefault()`。(issue #652)
 - `Fix(Core)` 修复宿主页面的 `* { box-sizing: border-box }` 样式渗入 vConsole 导致布局异常（如命令输入框的文字/光标贴附左上角）的问题，通过在 vConsole 根元素内将 `box-sizing` 重置为 `content-box` 修复。(issue #653)
 - `Fix(Log)` 修复焦点被锁定在命令/过滤器 textarea 输入框内的问题：当 textarea 聚焦时滚动日志区域会导致日志内容消失。(issue #656)

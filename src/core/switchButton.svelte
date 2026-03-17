@@ -47,6 +47,9 @@
 
   onDestroy(() => {
     Style.unuse();
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+    document.removeEventListener('click', stopDragClick, true);
   });
 
 
@@ -82,31 +85,19 @@
     return [x, y];
   };
 
-  
+
   /*************************************
    * DOM Events
    *************************************/
 
-  const onTouchStart = (e) => {
-    switchPos.startX = e.touches[0].pageX;
-    switchPos.startY = e.touches[0].pageY;
+  const onDragStart = (pageX: number, pageY: number) => {
+    switchPos.startX = pageX;
+    switchPos.startY = pageY;
     switchPos.hasMoved = false;
   };
-  const onTouchEnd = (e) => {
-    if (!switchPos.hasMoved) {
-      return;
-    }
-    switchPos.startX = 0;
-    switchPos.startY = 0;
-    switchPos.hasMoved = false;
-    setSwitchPosition(switchPos.endX, switchPos.endY);
-  };
-  const onTouchMove = (e) => {
-    if (e.touches.length <= 0) {
-      return;
-    }
-    const offsetX = e.touches[0].pageX - switchPos.startX,
-          offsetY = e.touches[0].pageY - switchPos.startY;
+  const onDragMove = (pageX: number, pageY: number) => {
+    const offsetX = pageX - switchPos.startX,
+          offsetY = pageY - switchPos.startY;
     let x = Math.floor(switchPos.x - offsetX),
         y = Math.floor(switchPos.y - offsetY);
     [x, y] = _getSwitchButtonSafeAreaXY(x, y);
@@ -115,7 +106,50 @@
     switchPos.endX = x;
     switchPos.endY = y;
     switchPos.hasMoved = true;
+  };
+  const onDragEnd = () => {
+    if (!switchPos.hasMoved) {
+      return;
+    }
+    switchPos.startX = 0;
+    switchPos.startY = 0;
+    switchPos.hasMoved = false;
+    setSwitchPosition(switchPos.endX, switchPos.endY);
+  };
+
+  const onTouchStart = (e) => {
+    onDragStart(e.touches[0].pageX, e.touches[0].pageY);
+  };
+  const onTouchMove = (e) => {
+    if (e.touches.length <= 0) {
+      return;
+    }
+    onDragMove(e.touches[0].pageX, e.touches[0].pageY);
     e.preventDefault();
+  };
+  const onTouchEnd = () => {
+    onDragEnd();
+  };
+
+  const onMouseDown = (e: MouseEvent) => {
+    onDragStart(e.pageX, e.pageY);
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  };
+  const onMouseMove = (e: MouseEvent) => {
+    onDragMove(e.pageX, e.pageY);
+  };
+  const onMouseUp = () => {
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+    if (switchPos.hasMoved) {
+      document.addEventListener('click', stopDragClick, true);
+    }
+    onDragEnd();
+  };
+  const stopDragClick = (e: MouseEvent) => {
+    e.stopPropagation();
+    document.removeEventListener('click', stopDragClick, true);
   };
 </script>
 
@@ -124,7 +158,8 @@
   style="right: {btnSwitchPos.x}px; bottom: {btnSwitchPos.y}px; display: {show ? 'block' : 'none'};"
   bind:this={btnSwitch}
   on:touchstart|nonpassive={onTouchStart}
-  on:touchend|nonpassive={onTouchEnd}
   on:touchmove|nonpassive={onTouchMove}
+  on:touchend={onTouchEnd}
+  on:mousedown={onMouseDown}
   on:click
 >vConsole</div>
