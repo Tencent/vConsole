@@ -8,6 +8,7 @@
 - `Fix(Core)` 将公共 TypeScript 类型（`VConsoleOptions`、`VConsoleLogOptions`、`VConsoleNetworkOptions`、`VConsoleStorageOptions`、`VConsoleAvailableStorage`）从包根路径导出，支持 `import type { VConsoleOptions } from 'vconsole'` 方式使用。同时将 `'WS'` 加入 `VConsoleRequestMethod` 类型。(issue #668)
 - `Fix(Core)` 修复 `getStringWithinLength` 按字符索引而非字节数截断字符串的问题，导致含多字节字符（如中文、emoji）的字符串超出预期字节限制或被错误截断。(PR #730)
 - `Fix(Core)` 修复 iOS 17.2 Safari 中复制按钮无效的问题，改用 Clipboard API 并保留降级处理。(PR #672)
+- `Fix(Log)` 修复格式符（`%c`、`%s`、`%d`、`%o`）之间没有空格时（如 `%c%s`）无法被识别、导致颜色/替换失效的问题。(issue #732)
 - `Fix(Log)` 修复 Tree 视图及复制 JSON 时字符串值中引号未转义的问题。(PR #678)
 - `Fix(Storage)` 修复因 remove 操作触发响应式状态重置导致 Storage key 修改失败的问题。(issue #690, PR #709)
 - `Fix(Network)` 修复 fetch proxy 包装 wasm 响应导致 `WebAssembly.instantiateStreaming` 类型错误的问题。(issue #590, PR #711)

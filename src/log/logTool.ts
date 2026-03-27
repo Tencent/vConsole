@@ -110,8 +110,8 @@ export const isMatchedFilterText = (log: IVConsoleLog, filterText: string) => {
 };
 
 
-// keywords: `%c | %s | %d | %o`, must starts or ends with a blank
-const logFormattingPattern = /(\%[csdo] )|( \%[csdo])/g;
+// keywords: `%c | %s | %d | %o`
+const logFormattingPattern = /\%[csdo]/g;
 /**
  * Styling log output (`%c`), or string substitutions (`%s`, `%d`, `%o`).
  * Apply to the first log only.

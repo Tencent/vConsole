@@ -197,6 +197,8 @@ function formattingLog() {
   console.log('Force an object, %s, to be output as a string!', new FooClass, '(Use %s format)');
   console.log('Today is the %d day of this week.', (new Date).getDay() + 1, '(Use %d format)');
   console.log('Inline an object, %o, in a string.', new FooClass, '(Use %o format)');
+  console.log('%c%s', 'color:white;background-color:#005CAF', 'Adjacent format specifiers (no space), issue #732');
+  console.log('%c%s%c%s', 'color:red', 'Red', 'color:blue', 'Blue');
 }
 
 function normalObject() {
