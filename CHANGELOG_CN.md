@@ -12,6 +12,7 @@
 - `Fix(Log)` 修复 Tree 视图及复制 JSON 时字符串值中引号未转义的问题。(PR #678)
 - `Fix(Storage)` 修复因 remove 操作触发响应式状态重置导致 Storage key 修改失败的问题。(issue #690, PR #709)
 - `Fix(Network)` 修复 fetch proxy 包装 wasm 响应导致 `WebAssembly.instantiateStreaming` 类型错误的问题。(issue #590, PR #711)
+- `Fix(Network)` 修复 Network 面板格式化 `Uint8Array` 等二进制 iterable 请求体时抛出 `TypeError` 的问题。
 - `Fix(Network)` 修复开启 Network 面板时 wasm 文件被加载两次的问题，根本原因是 `resp.clone()` 在 wasm 检查之前对 body stream 进行了 tee 操作。(issue #674)
 - `Fix(Network)` 修复 stream 读取完成时 `result.value` 可能为 `undefined` 的问题。(PR #715)
 - `Fix(Network)` 修复抓取 `text/event-stream`（SSE）响应时报错的问题，根本原因是代码尝试整体读取响应体，而非将其作为流处理。(issue #686)

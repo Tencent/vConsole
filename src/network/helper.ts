@@ -67,6 +67,14 @@ export const genResonseByResponseType = (responseType: string, response: any) =>
   return ret;
 };
 
+const isKeyValueIterableBody = (body: BodyInit) => {
+  return (
+    (typeof FormData !== 'undefined' && body instanceof FormData)
+    || (typeof URLSearchParams !== 'undefined' && body instanceof URLSearchParams)
+    || tool.isArray(body)
+  );
+};
+
 /**
  * Generate formatted response body by XMLHttpRequestBodyInit.
  */
@@ -89,10 +97,17 @@ export const genFormattedBody = (body?: BodyInit) => {
         }
       }
     }
-  } else if (tool.isIterable(body)) {
-    // FormData or URLSearchParams or Array
+  } else if (isKeyValueIterableBody(body) && tool.isIterable(body)) {
+    // FormData or URLSearchParams or key-value Array
     ret = {};
-    for (const [key, value] of <FormData | URLSearchParams>body) {
+    for (const entry of <Iterable<any>>body) {
+      if (!tool.isArray(entry) || entry.length < 2) {
+        const type = tool.getPrototypeName(body);
+        ret = `[object ${type}]`;
+        break;
+      }
+      const key = entry[0];
+      const value = entry[1];
       ret[key] = typeof value === 'string' ? value : '[object Object]';
     }
   } else if (tool.isPlainObject(body)) {
