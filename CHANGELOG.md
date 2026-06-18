@@ -12,6 +12,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix(Log)` Fix unescaped quotation marks in Tree view and copied JSON output. (PR #678)
 - `Fix(Storage)` Fix storage key modification failure caused by reactive state being cleared during remove operation. (issue #690, PR #709)
 - `Fix(Network)` Fix `WebAssembly.instantiateStreaming` type error caused by fetch proxy wrapping wasm responses. (issue #590, PR #711)
+- `Fix(Network)` Fix `TypeError` when formatting binary iterable request bodies such as `Uint8Array` in the Network panel.
 - `Fix(Network)` Fix wasm files being fetched twice when the Network panel is open, caused by `resp.clone()` teeing the body stream before the wasm check. (issue #674)
 - `Fix(Network)` Fix `result.value` maybe `undefined` when stream reading is done. (PR #715)
 - `Fix(Network)` Fix error when fetching `text/event-stream` (SSE) responses, caused by attempting to read the full response body instead of treating it as a stream. (issue #686)
