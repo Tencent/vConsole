@@ -33,6 +33,8 @@ import { VConsoleSystemPlugin } from '../log/system';
 import { VConsoleNetworkPlugin } from '../network/network';
 import { VConsoleElementPlugin } from '../element/element';
 import { VConsoleStoragePlugin } from '../storage/storage';
+import { VConsoleMCPClient } from '../mcp/mcp';
+import { VConsoleMCPPlugin } from '../mcp/mcp.plugin';
 
 // built-in plugin exporters
 import { VConsoleLogExporter } from '../log/log.exporter';
@@ -53,6 +55,7 @@ export class VConsole {
   public log: VConsoleLogExporter;
   public system: VConsoleLogExporter;
   public network: VConsoleNetworkExporter;
+  public mcp: VConsoleMCPClient;
 
   // Export static classes
   public static VConsolePlugin: typeof VConsolePlugin;
@@ -62,6 +65,7 @@ export class VConsole {
   public static VConsoleNetworkPlugin: typeof VConsoleNetworkPlugin;
   public static VConsoleElementPlugin: typeof VConsoleElementPlugin;
   public static VConsoleStoragePlugin: typeof VConsoleStoragePlugin;
+  public static VConsoleMCPPlugin: typeof VConsoleMCPPlugin;
 
   constructor(opt?: VConsoleOptions) {
     if (!!VConsole.instance && VConsole.instance instanceof VConsole) {
@@ -72,10 +76,11 @@ export class VConsole {
 
     this.isInited = false;
     this.option = {
-      defaultPlugins: ['system', 'network', 'element', 'storage'],
+      defaultPlugins: ['system', 'network', 'element', 'storage', 'mcp'],
       log: {},
       network: {},
       storage: {},
+      mcp: {},
     };
 
     // merge options
@@ -97,6 +102,8 @@ export class VConsole {
       this.option.network.maxNetworkNumber = this.option.maxNetworkNumber;
       console.debug('[vConsole] Deprecated option: `maxNetworkNumber`, use `network.maxNetworkNumber` instead.');
     }
+
+    this.mcp = new VConsoleMCPClient(this.option.mcp);
 
     // add built-in plugins
     this._addBuiltInPlugins();
@@ -165,6 +172,7 @@ export class VConsole {
       plugins['network'] = { proto: VConsoleNetworkPlugin, name: 'Network' };
       plugins['element'] = { proto: VConsoleElementPlugin, name: 'Element' };
       plugins['storage'] = { proto: VConsoleStoragePlugin, name: 'Storage' };
+      plugins['mcp'] = { proto: VConsoleMCPPlugin, name: 'MCP' };
     }
     if (!!list && tool.isArray(list)) {
       for (let i = 0; i < list.length; i++) {
@@ -263,6 +271,9 @@ export class VConsole {
     this._showFirstPluginWhenEmpty();
 
     this.triggerEvent('ready');
+    if (this.option.mcp?.endpoint && this.option.mcp.autoConnect !== false) {
+      this.mcp.connect();
+    }
   }
 
   private _showFirstPluginWhenEmpty() {
@@ -529,6 +540,7 @@ export class VConsole {
       }
       this._triggerPluginsEvent('updateOption');
       this._updateComponentByOptions();
+      this.mcp.setOption(this.option.mcp);
     } else if (tool.isObject(keyOrObj)) {
       for (let k in keyOrObj) {
         if (k === '__proto__' || k === 'constructor' || k === 'prototype') {
@@ -539,6 +551,7 @@ export class VConsole {
       }
       this._triggerPluginsEvent('updateOption');
       this._updateComponentByOptions();
+      this.mcp.setOption(this.option.mcp);
     } else {
       console.debug('[vConsole] The first parameter of `vConsole.setOption()` must be a string or an object.');
     }
@@ -553,6 +566,7 @@ export class VConsole {
       window.removeEventListener('DOMContentLoaded', this._onloadCallback);
       this._onloadCallback = undefined;
     }
+    this.mcp.disconnect();
     if (!this.isInited) {
       VConsole.instance = undefined;
       return;
@@ -584,4 +598,5 @@ if (__TARGET__ === 'web') {
   VConsole.VConsoleNetworkPlugin = VConsoleNetworkPlugin;
   VConsole.VConsoleElementPlugin = VConsoleElementPlugin;
   VConsole.VConsoleStoragePlugin = VConsoleStoragePlugin;
+  VConsole.VConsoleMCPPlugin = VConsoleMCPPlugin;
 }

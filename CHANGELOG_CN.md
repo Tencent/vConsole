@@ -2,6 +2,7 @@
 
 ## 3.16.0 (2026-??-??)
 
+- `Feat(Core)` 新增内置 MCP 面板和 WebSocket 桥接，支持远程读取调试数据，并可在手机端授权后执行 JavaScript。
 - `Feat(Log)` 新增对 `console.timeLog()` 的支持。(issue #681, PR #684)
 - `Feat(Network)` 通过 `PerformanceObserver` 捕获静态资源请求（图片、脚本、样式表、字体等）并在 Network 面板中展示。(issue #708)
 - `Feat(Network)` 新增 WebSocket 支持：在 Network 面板中展示 WebSocket 连接及收发消息。(issue #688)

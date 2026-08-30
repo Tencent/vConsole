@@ -51,11 +51,11 @@ TypeScript 用户可直接导入类型：
 import type { VConsoleOptions } from 'vconsole';
 ```
 
-相关子类型：`VConsoleLogOptions`、`VConsoleNetworkOptions`、`VConsoleStorageOptions`、`VConsoleAvailableStorage`。
+相关子类型：`VConsoleLogOptions`、`VConsoleNetworkOptions`、`VConsoleStorageOptions`、`VConsoleAvailableStorage`、`VConsoleMCPOptions`。
 
 键名                  | 类型      | 可选     | 默认值                                       | 描述
 --------------------- | -------- | -------- | ------------------------------------------- | -------------------
-defaultPlugins        | Array(String) | true     | ['system', 'network', 'element', 'storage'] | 需要自动初始化并加载的内置插件。 
+defaultPlugins        | Array(String) | true     | ['system', 'network', 'element', 'storage', 'mcp'] | 需要自动初始化并加载的内置插件。
 pluginOrder           | Array(String) | true | [] | 插件面板会按此列表进行排序，未列出的插件将排在最后。
 onReady               | Function | true     |                                             | 回调方法，当 vConsole 完成初始化并加载完内置插件后触发。
 disableLogScrolling   | Boolean  | true     |                                             | 若为 `false`，有新日志时面板将不会自动滚动到底部。
@@ -66,6 +66,11 @@ log.showTimestamps    | Boolean  | true     | false                             
 log.maxNetworkNumber  | Number   | true     | 1000                                        | 超出数量上限的请求记录会被自动清除。
 network.ignoreUrlRegExp | RegExp | true     |                                             | 不展示 URL 匹配正则表达式的请求。
 storage.defaultStorages  | Array  | true    | ['cookies', 'localStorage', 'sessionStorage'] | 在 Storage 面板中要加载的 storage 类型。
+mcp.endpoint           | String   | true     |                                             | vConsole MCP 服务的 WebSocket 地址。
+mcp.token              | String   | true     |                                             | MCP 服务配置的可选配对 Token。
+mcp.autoConnect        | Boolean  | true     | true                                        | 配置 endpoint 后，在 vConsole 就绪时自动连接。
+mcp.reconnectInterval  | Number   | true     | 2000                                        | 断线重连的等待时间，单位为毫秒。
+mcp.allowJavaScriptExecution | Boolean | true | false                                       | 是否允许 MCP 客户端在页面中执行 JavaScript。
 
 例子：
 
@@ -122,6 +127,33 @@ vConsole.setOption({maxLogNumber: 5000});
 ```javascript
 vConsole.setSwitchPosition(20, 20);
 ```
+
+---
+
+### vConsole.mcp
+
+内置的 MCP 面板支持用户填写电脑 Host、端口和可选配对 Token，并通过工具栏连接或断开。面板会记住设置，在启用连接后自动重连。
+
+也可以通过代码配置连接：
+
+```javascript
+var vConsole = new VConsole({
+  mcp: {
+    endpoint: 'ws://192.168.1.100:8765',
+    token: 'your-development-token',
+    autoConnect: true,
+    allowJavaScriptExecution: false,
+  },
+});
+
+vConsole.mcp.connect('ws://192.168.1.100:8765');
+vConsole.mcp.disconnect();
+vConsole.mcp.state; // 'closed' | 'connecting' | 'open'
+```
+
+Console 日志和 Network 记录始终以只读请求提供。JavaScript 执行默认拒绝，可在当前页面的 MCP 面板中开启，或配置 `mcp.allowJavaScriptExecution: true`。启用后的脚本具有当前页面同源环境的完整权限，因此请配置配对 Token，并只在可信开发页面中开启。
+
+MCP 连接使用浏览器原始的 WebSocket 实现，因此不会出现在 Network 面板中。
 
 ---
 
