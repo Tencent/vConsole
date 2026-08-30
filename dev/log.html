@@ -28,6 +28,7 @@
       <a onclick="largeObject()" href="javascript:;" class="weui_btn weui_btn_default">Large Object</a>
       <a onclick="circularObject()" href="javascript:;" class="weui_btn weui_btn_default">Circular Object & Array</a>
       <a onclick="proxyObject()" href="javascript:;" class="weui_btn weui_btn_default">Proxy Object</a>
+      <a ontouchstart="domEvent(event)" href="javascript:;" class="weui_btn weui_btn_default">Touch Event</a>
     </div>
 
     <div class="section">
@@ -272,6 +273,10 @@ function proxyObject() {
     },
   }); 
   console.log('A proxy object:', p); 
+}
+
+function domEvent(event) {
+  console.log('A DOM event with inherited enumerable properties:', event);
 }
 
 function allDataTypes(aa, bb, cc) {

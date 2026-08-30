@@ -423,6 +423,20 @@ export function getEnumerableKeys(obj) {
   return Object.keys(obj);
 }
 
+/**
+ * Get own and inherited enumerable keys of an object or array.
+ */
+export function getEnumerableKeysInPrototypeChain(obj) {
+  if (!isObject(obj) && !isArray(obj)) {
+    return [];
+  }
+  const keys: string[] = [];
+  for (const key in obj) {
+    keys.push(key);
+  }
+  return keys;
+}
+
 
 /**
  * Get enumerable and non-enumerable keys of an object or array.

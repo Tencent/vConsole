@@ -1,6 +1,6 @@
 <svelte:options immutable/>
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy, beforeUpdate } from 'svelte';
   import * as tool from '../lib/tool';
   import LogValue from './logValue.svelte';
   import { VConsoleUninvocatableObject } from './logTool';
@@ -22,20 +22,21 @@
   let childEnumKeyOffset = KEY_PAGE_SIZE;
   let childNonEnumKeyOffset = KEY_PAGE_SIZE;
 
-  $: {
+  // Avoid Svelte's reactive deep-read of host objects with native accessors.
+  beforeUpdate(() => {
     isToggle = toggle[keyPath] || false
 
     isTree = !(origData instanceof VConsoleUninvocatableObject) && (tool.isArray(origData) || tool.isObject(origData));
 
     if (isTree && isToggle) {
       // keys only need to be initialized once
-      childEnumKeys = childEnumKeys || tool.sortArray(tool.getEnumerableKeys(origData));
+      childEnumKeys = childEnumKeys || tool.sortArray(tool.getEnumerableKeysInPrototypeChain(origData));
       childNonEnumKeys = childNonEnumKeys || tool.sortArray(tool.getNonEnumerableKeys(origData));
       childSymbolKeys = childSymbolKeys || tool.getSymbolKeys(origData);
       isShowProto = tool.isObject(origData) && childNonEnumKeys.indexOf('__proto__') === -1;
     }
     // (window as any)._vcOrigConsole.log('logTree update');
-  }
+  });
 
   onMount(() => {
     Style.use();
