@@ -17,6 +17,7 @@ Now vConsole is the official debugging tool for WeChat Miniprograms.
 - Network: `XMLHttpRequest`, `Fetch`, `sendBeacon`
 - Element: HTML elements tree
 - Storage: `Cookies`, `LocalStorage`, `SessionStorage`
+- MCP: Let desktop AI debugging tools read page logs and network requests, with optional JavaScript execution after explicit on-device authorization
 - Execute JS command manually
 - Custom plugins
 
@@ -72,6 +73,20 @@ Available CDN:
 
 - https://unpkg.com/vconsole@latest/dist/vconsole.min.js
 - https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js
+
+---
+
+## Remote Debugging with MCP
+
+The built-in MCP panel connects the page to a vConsole MCP server running on your computer. Once connected, MCP clients such as Codex and Claude Code can read Console logs and Network requests from the current mobile page.
+
+![vConsole MCP panel](./doc/screenshot/mcp_panel.png)
+
+To connect, start the MCP server on the computer, open the `MCP` panel, enter the computer's reachable LAN IP in `Host`, then enter its port and optional pairing token. Tap `Connect`; the page is available to the MCP client when `Status` becomes `open`. Do not use `localhost` as the host when connecting from a phone.
+
+`Allow JavaScript Execution` is denied by default. Enable it only when the AI must operate the page. Authorization granted in the panel lasts only for the current page lifetime and resets after a reload, unless it is explicitly enabled in the initialization options. Executed scripts have the full privileges of the current page context, so use a pairing token and enable this option only on trusted development pages and networks.
+
+HTTPS pages require a secure WebSocket (`wss://`) endpoint. See [Public Properties & Methods](./doc/public_properties_methods.md#vconsolemcp) for programmatic configuration.
 
 ---
 
