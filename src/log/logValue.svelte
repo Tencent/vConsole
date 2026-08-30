@@ -1,6 +1,6 @@
 <svelte:options immutable/>
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy, beforeUpdate } from 'svelte';
   import * as tool from '../lib/tool';
   import { getValueTextAndType } from './logTool';
   import Style from './logValue.less';
@@ -14,7 +14,8 @@
   let valueType: string = '';
   let isInTree: boolean = false;
 
-  $: {
+  // Avoid Svelte's reactive deep-read of host objects with native accessors.
+  beforeUpdate(() => {
     // the value is NOT in a tree when key is undefined
     isInTree = dataKey !== undefined;
 
@@ -26,7 +27,7 @@
       // if it's a single string, then keep line breaks.
       dataValue = dataValue.replace(/\\n/g, '\n').replace(/\\t/g, '    ');
     }
-  }
+  });
 
   onMount(() => {
     Style.use();
