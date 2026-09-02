@@ -52,11 +52,11 @@ TypeScript users can import the type directly:
 import type { VConsoleOptions } from 'vconsole';
 ```
 
-Available sub-types: `VConsoleLogOptions`, `VConsoleNetworkOptions`, `VConsoleStorageOptions`, `VConsoleAvailableStorage`.
+Available sub-types: `VConsoleLogOptions`, `VConsoleNetworkOptions`, `VConsoleStorageOptions`, `VConsoleAvailableStorage`, `VConsoleMCPOptions`.
 
 Key                   | Type     | Optional | Default value                               | Description
 --------------------- | -------- | -------- | ------------------------------------------- | -------------------
-defaultPlugins        | Array(String) | true     | ['system', 'network', 'element', 'storage'] | Listed built-in plugins will be inited and loaded into vConsole. 
+defaultPlugins        | Array(String) | true     | ['system', 'network', 'element', 'storage', 'mcp'] | Listed built-in plugins will be inited and loaded into vConsole.
 pluginOrder           | Array(String) | true | [] | Plugin panels will be sorted as this list. Plugin not listed will be put last.
 onReady               | Function | true     |                                             | Trigger after vConsole is inited and default plugins is loaded.
 disableLogScrolling   | Boolean  | true     |                                             | If `false`, panel will not scroll to bottom while printing new logs.
@@ -67,6 +67,11 @@ log.showTimestamps    | Boolean  | true     | false                             
 network.maxNetworkNumber | Number | true    | 1000                                        | Overflow requests will be removed from Netowrk panel.
 network.ignoreUrlRegExp | RegExp | true     |                                              | Skip the requests which url match the RegExp.
 storage.defaultStorages  | Array  | true    | ['cookies', 'localStorage', 'sessionStorage'] | Listed storage(s) will be available in Storage panel.
+mcp.endpoint           | String   | true     |                                             | WebSocket endpoint of a vConsole MCP server.
+mcp.token              | String   | true     |                                             | Optional pairing token configured by the MCP server.
+mcp.autoConnect        | Boolean  | true     | true                                        | Connect automatically after vConsole is ready when an endpoint is set.
+mcp.reconnectInterval  | Number   | true     | 2000                                        | Delay in milliseconds before reconnecting.
+mcp.allowJavaScriptExecution | Boolean | true | false                                       | Allow an MCP client to execute JavaScript in the page.
 
 Example:
 
@@ -122,6 +127,33 @@ Update the position of switch button.
 ```javascript
 vConsole.setSwitchPosition(20, 20);
 ```
+
+---
+
+### vConsole.mcp
+
+The built-in MCP panel lets users enter the computer host, port, and optional pairing token, then connect or disconnect from its toolbar. It remembers the settings and automatically reconnects after a connection is enabled.
+
+The connection can also be configured programmatically:
+
+```javascript
+var vConsole = new VConsole({
+  mcp: {
+    endpoint: 'ws://192.168.1.100:8765',
+    token: 'your-development-token',
+    autoConnect: true,
+    allowJavaScriptExecution: false,
+  },
+});
+
+vConsole.mcp.connect('ws://192.168.1.100:8765');
+vConsole.mcp.disconnect();
+vConsole.mcp.state; // 'closed' | 'connecting' | 'open'
+```
+
+Console logs and Network records are always available as read-only requests. JavaScript execution is denied by default and can be enabled for the current page from the MCP panel or with `mcp.allowJavaScriptExecution: true`. Enabled scripts run with the page's full origin privileges, so use a pairing token and only enable execution on trusted development pages.
+
+The connection uses the browser's original WebSocket implementation and is not included in the Network panel.
 
 ---
 

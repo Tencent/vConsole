@@ -13,9 +13,17 @@ export interface VConsoleStorageOptions {
   defaultStorages?: VConsoleAvailableStorage[];
 }
 
+export interface VConsoleMCPOptions {
+  endpoint?: string;
+  token?: string;
+  autoConnect?: boolean;
+  reconnectInterval?: number;
+  allowJavaScriptExecution?: boolean;
+}
+
 export interface VConsoleOptions {
   target?: string | HTMLElement;
-  defaultPlugins?: ('system' | 'network' | 'element' | 'storage')[];
+  defaultPlugins?: ('system' | 'network' | 'element' | 'storage' | 'mcp')[];
   theme?: '' | 'dark' | 'light';
   disableLogScrolling?: boolean;
   pluginOrder?: string[];
@@ -24,6 +32,7 @@ export interface VConsoleOptions {
   log?: VConsoleLogOptions,
   network?: VConsoleNetworkOptions,
   storage?: VConsoleStorageOptions,
+  mcp?: VConsoleMCPOptions,
 
   /**
    * @deprecated Since v3.12.0, use `log.maxLogNumber`.

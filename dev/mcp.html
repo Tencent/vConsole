@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>vConsole: MCP Bridge</title>
+  <link href="../dev/lib/weui.min.css" rel="stylesheet"/>
+  <link href="../dev/lib/demo.css" rel="stylesheet"/>
+  <script src="../dist/vconsole.min.js"></script>
+</head>
+<body ontouchstart>
+  <div class="page">
+    <h1 class="page_title">MCP Bridge</h1>
+    <div class="weui_cells_title">Configure the connection and JavaScript permission in vConsole's MCP panel.</div>
+    <a id="open" class="weui_btn weui_btn_primary">Open MCP Panel</a>
+    <a id="log" class="weui_btn weui_btn_default">Create Console Log</a>
+    <a id="request" class="weui_btn weui_btn_default">Create Network Request</a>
+  </div>
+</body>
+</html>
+
+<script>
+var vConsole = new window.VConsole();
+document.getElementById('open').onclick = function() {
+  vConsole.show();
+  vConsole.showPlugin('mcp');
+};
+document.getElementById('log').onclick = function() {
+  console.error('vConsole MCP test log', { time: Date.now() });
+};
+document.getElementById('request').onclick = function() {
+  fetch('./log.html?s=500&t=300');
+};
+</script>

@@ -17,6 +17,7 @@ vConsole 是框架无关的，可以在 Vue、React 或其他任何框架中使�
 - 网络(Network)： `XMLHttpRequest`, `Fetch`, `sendBeacon`
 - 节点(Element)： HTML 节点树
 - 存储(Storage)： `Cookies`, `LocalStorage`, `SessionStorage`
+- MCP：允许电脑端 AI 调试工具远程读取页面日志和网络请求，并可在手机端明确授权后执行 JavaScript
 - 手动执行 JS 命令行
 - 自定义插件
 
@@ -74,6 +75,30 @@ vConsole.destroy();
 
 - https://unpkg.com/vconsole@latest/dist/vconsole.min.js
 - https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js
+
+---
+
+## 使用 MCP 远程调试
+
+MCP 面板用于连接运行在电脑上的 vConsole MCP 服务。连接后，Codex、Claude Code 等支持 MCP 的 AI 调试工具可以读取当前手机页面的 Console 日志和 Network 请求记录。
+
+![vConsole MCP 面板](./doc/screenshot/mcp_panel.png)
+
+使用步骤：
+
+1. 在电脑上启动 vConsole MCP 服务，并确认监听的 IP、端口及配对 Token。
+2. 确保手机可以访问该电脑。局域网调试时，手机和电脑通常需要连接到同一网络。
+3. 打开 vConsole，进入 `MCP` 面板。
+4. 在 `Host` 中填写电脑的局域网 IP（不能填写 `localhost`），在 `Port` 中填写服务端口；如果服务端配置了配对 Token，还需填写 `Pairing Token`。
+5. 点击底部的 `Connect`。当 `Status` 显示为 `open` 时，AI 调试工具即可发现并读取该页面；点击 `Disconnect` 可主动断开。
+
+面板会记住连接地址和配对 Token。主动连接后，页面会在连接意外断开时自动重连；主动点击 `Disconnect` 后则不会自动重连。
+
+`Allow JavaScript Execution` 默认处于 `Denied`，此时 MCP 只能读取调试信息。只有在确实需要 AI 操作页面时才应勾选该选项；通过面板授予的权限仅对当前页面生命周期有效，刷新或重新打开页面后会恢复为拒绝（初始化配置显式开启时除外）。执行的脚本拥有当前页面上下文中的完整权限，请配置配对 Token，并仅在可信的开发页面和网络环境中开启。
+
+如果当前页面使用 HTTPS，MCP 服务也应提供安全的 WebSocket（`wss://`），否则浏览器可能因混合内容策略拒绝连接。
+
+也可以通过初始化参数配置连接，完整选项和方法请参阅[公共属性及方法](./doc/public_properties_methods_CN.md#vconsolemcp)。
 
 ---
 

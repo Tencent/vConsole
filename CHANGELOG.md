@@ -2,6 +2,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 ## 3.16.0 (2026-??-??)
 
+- `Feat(Core)` Add a built-in MCP panel and WebSocket bridge for remotely reading debug data and optionally executing JavaScript after on-device authorization.
 - `Feat(Log)` Add support for `console.timeLog()`. (issue #681, PR #684)
 - `Feat(Network)` Capture static resource requests (images, scripts, stylesheets, fonts, etc.) via `PerformanceObserver` and display them in the Network panel. (issue #708)
 - `Feat(Network)` Add WebSocket support: display connections in the Network panel with sent/received messages. (issue #688)

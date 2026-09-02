@@ -21,7 +21,8 @@ import 'core-js/stable/promise';
 import { VConsole } from './core/core';
 
 // export types
-export type { VConsoleOptions, VConsoleLogOptions, VConsoleNetworkOptions, VConsoleStorageOptions, VConsoleAvailableStorage } from './core/options.interface';
+export type { VConsoleOptions, VConsoleLogOptions, VConsoleNetworkOptions, VConsoleStorageOptions, VConsoleAvailableStorage, VConsoleMCPOptions } from './core/options.interface';
+export type { VConsoleMCPState, VConsoleMCPStateListener } from './mcp/mcp';
 
 // export
 export default VConsole;
