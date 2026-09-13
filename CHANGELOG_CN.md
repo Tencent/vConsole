@@ -17,6 +17,7 @@
 - `Fix(Network)` 修复抓取 `text/event-stream`（SSE）响应时报错的问题，根本原因是代码尝试整体读取响应体，而非将其作为流处理。(issue #686)
 - `Fix(Network)` 修复调用 `destroy()` 后重新创建 VConsole 实例，Network 面板无法抓取请求的问题，根本原因是 network model 单例在移除时未被清除。(issue #695)
 - `Fix(Network)` 修复 Network 面板中 `requestHeader` 为 `undefined` 时抛出 `TypeError` 的问题。(issue #636, PR #693)
+- `Fix(Network)` 修复使用保留 ID（`__proto__`、`constructor` 或 `prototype`）更新网络请求时可能造成的原型污染问题。(issue #734)
 - `Fix(Log)` 修复 `DOMContentLoaded` 之前抛出的 JS 错误无法被捕获的问题，将 `window.error` 和 `unhandledrejection` 监听器的绑定从 `onReady()` 移至构造函数中。(issue #586)
 - `Fix(Core)` 修复在 vConsole 初始化完成之前（如 DOM 仍在加载时）调用 `destroy()` 静默失败的问题：此情况下 `VConsole.instance` 未被清除，导致后续无法重新创建实例。现在会立即移除待执行的 `DOMContentLoaded` 监听器并清除单例。(issue #587)
 - `Fix(Core)` 修复 PC 端浏览器中开关按钮无法拖拽的问题，新增鼠标事件（`mousedown`/`mousemove`/`mouseup`）支持，并添加 `user-select: none` 防止拖拽时触发文字选中。(issue #677)

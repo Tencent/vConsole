@@ -69,6 +69,8 @@
       <a onclick="callExportAdd()" href="javascript:;" class="weui_btn weui_btn_default">vConsole.network.add()</a>
       <a onclick="callExportUpdate()" href="javascript:;" class="weui_btn weui_btn_default">vConsole.network.update()</a>
       <a onclick="callExportClear()" href="javascript:;" class="weui_btn weui_btn_default">vConsole.network.clear()</a>
+      <a onclick="testPrototypePollution()" href="javascript:;" class="weui_btn weui_btn_default">Reserved request ID guard</a>
+      <p id="prototype-pollution-result" style="margin:8px 0;font-size:12px;color:#666"></p>
     </div>
 
     <div class="section">
@@ -594,6 +596,31 @@ function callExportUpdate() {
 
 function callExportClear() {
   vConsole.network.clear();
+}
+
+function testPrototypePollution() {
+  const marker = `__vconsole_network_pollution_${Date.now()}__`;
+  delete Object.prototype[marker];
+  delete Object[marker];
+
+  vConsole.network.update('__proto__', { [marker]: 'update' });
+  vConsole.network.update('constructor', { [marker]: 'constructor' });
+  vConsole.network.update('prototype', { [marker]: 'prototype' });
+  vConsole.network.add({ id: '__proto__', [marker]: 'add' });
+  const inheritedId = 'toString';
+  const item = vConsole.network.add({ id: inheritedId });
+  vConsole.network.update(inheritedId, { status: 204 });
+
+  const passed = Object.prototype[marker] === undefined
+    && Object[marker] === undefined
+    && item.id === inheritedId
+    && item.status === 204;
+  document.getElementById('prototype-pollution-result').textContent = passed
+    ? 'PASS: reserved request IDs were ignored without changing global prototypes.'
+    : 'FAIL: a reserved request ID changed a global prototype.';
+
+  delete Object.prototype[marker];
+  delete Object[marker];
 }
 
 function crossDomain() {

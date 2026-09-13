@@ -64,12 +64,16 @@ export class VConsoleNetworkModel extends VConsoleModel {
    * Add or update a request item by request ID.
    */
   public updateRequest(id: string, data: VConsoleNetworkRequestItem) {
+    if (id === '__proto__' || id === 'constructor' || id === 'prototype') {
+      console.debug(`[vConsole] Cannot update network request with reserved id \`${id}\`.`);
+      return;
+    }
     const { url } = data;
     if (url && this.ignoreUrlRegExp?.test(url)) {
       return;
     }
     const reqList = get(requestList);
-    const hasItem = !!reqList[id];
+    const hasItem = Object.prototype.hasOwnProperty.call(reqList, id);
     if (hasItem) {
       // force re-assign to ensure that the value is updated
       const item = reqList[id];
