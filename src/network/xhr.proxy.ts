@@ -138,7 +138,18 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
     };
   }
 
+  /**
+   * Pass `null`/`undefined` through instead of wrapping it.
+   * Assigning `null` to these callbacks is a spec-compliant way to remove
+   * them, and is common cleanup before aborting in-flight requests
+   * (e.g. hls.js `XhrLoader.abortInternal`). Wrapping a nullish value
+   * makes the wrapper crash with `TypeError: Cannot read properties of
+   * null (reading 'apply')` when the event fires. (issue #740)
+   */
   protected setOnReadyStateChange(target: T, key: string, value) {
+    if (!value) {
+      return Reflect.set(target, key, value);
+    }
     return Reflect.set(target, key, (...args) => {
       this.onReadyStateChange();
       value.apply(target, args);
@@ -146,6 +157,9 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
   }
 
   protected setOnAbort(target: T, key: string, value) {
+    if (!value) {
+      return Reflect.set(target, key, value);
+    }
     return Reflect.set(target, key, (...args) => {
       this.onAbort();
       value.apply(target, args);
@@ -153,6 +167,9 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
   }
 
   protected setOnTimeout(target: T, key: string, value) {
+    if (!value) {
+      return Reflect.set(target, key, value);
+    }
     return Reflect.set(target, key, (...args) => {
       this.onTimeout();
       value.apply(target, args);
