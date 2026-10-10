@@ -57,9 +57,9 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
       return;
     }
     const _getReader = this.resp.body.getReader;
-    this.resp.body.getReader = (<any>(() => {
+    this.resp.body.getReader = (<any>((...args) => {
       // console.log('[Fetch.proxy] getReader');
-      const reader = <ReturnType<typeof _getReader>>_getReader.apply(this.resp.body);
+      const reader = <ReturnType<typeof _getReader>>_getReader.apply(this.resp.body, args);
 
       // when readyState is already 4,
       // it's not a chunked stream, or it had already been read.
@@ -72,14 +72,16 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
       const _cancel = reader.cancel;
       this.item.responseType = 'arraybuffer';
 
-      reader.read = () => {
-        return (<ReturnType<typeof _read>>_read.apply(reader)).then((result) => {
+      reader.read = (...args) => {
+        return (<ReturnType<typeof _read>>_read.apply(reader, args)).then((result) => {
           // console.log('[Fetch.proxy] read', result.done);
           // result.value may be undefined when result.done is true
           if (result.value) {
-            const newValue = new Uint8Array(readerReceivedValue.length + result.value.length);
+            // Copy the returned byte range before the caller reuses its BYOB buffer.
+            const chunk = new Uint8Array(result.value.buffer, result.value.byteOffset, result.value.byteLength);
+            const newValue = new Uint8Array(readerReceivedValue.length + chunk.byteLength);
             newValue.set(readerReceivedValue);
-            newValue.set(result.value, readerReceivedValue.length);
+            newValue.set(chunk, readerReceivedValue.length);
             readerReceivedValue = newValue;
           }
           this.item.endTime = Date.now();

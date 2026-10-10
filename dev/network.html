@@ -49,6 +49,9 @@
       <a onclick="optionsFetch()" href="javascript:;" class="weui_btn weui_btn_default">OPTIONS Fetch</a>
       <a onclick="fetchIOSLowBug()" href="javascript:;" class="weui_btn weui_btn_default">Fetch iOS LowBug</a>
       <a onclick="fetchStream()" href="javascript:;" class="weui_btn weui_btn_default">Fetch Steam</a>
+      <a onclick="fetchBYOB(false)" href="javascript:;" class="weui_btn weui_btn_default">Fetch BYOB: Fixed Length</a>
+      <a onclick="fetchBYOB(true)" href="javascript:;" class="weui_btn weui_btn_default">Fetch BYOB: Chunked (cancel after 64 bytes)</a>
+      <p id="byob-result" aria-live="polite" style="margin:8px 0;font-size:12px;color:#666"></p>
     </div>
 
     <div class="section">
@@ -345,6 +348,107 @@ function getFetch500() {
   }).catch((e) => {
     console.error('Fetch Error:', e);
   });
+}
+
+let fetchBYOBRunning = false;
+async function fetchBYOB(chunked) {
+  if (fetchBYOBRunning) { return; }
+  const output = document.getElementById('byob-result');
+  output.style.color = '#666';
+  if (typeof ReadableStreamBYOBReader !== 'function') {
+    output.textContent = 'SKIP: BYOB readers are not available in this browser.';
+    return;
+  }
+  if (typeof AbortController !== 'function') {
+    output.textContent = 'SKIP: AbortController is required for timeout cleanup.';
+    return;
+  }
+
+  fetchBYOBRunning = true;
+  const mode = chunked ? 'chunked' : 'fixed';
+  const expected = Array.from({ length: 64 }, (_, i) => i);
+  let viewName = '';
+  try {
+    showPanel();
+    for (const View of [Uint8Array, Uint16Array, DataView]) {
+      viewName = View.name;
+      output.textContent = `Running ${mode} / ${viewName}...`;
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+      let response, reader;
+      let complete = false;
+      const received = [];
+      try {
+        const url = `./data/byob.bin?view=${viewName}&id=${Math.random()}` + (chunked ? '&chunked=1' : '');
+        response = await window.fetch(url, { signal: controller.signal });
+        if (!response.ok || !response.body) {
+          throw new Error('Expected a successful response with a body.');
+        }
+        const isChunked = (response.headers.get('transfer-encoding') || '').includes('chunked');
+        if (isChunked !== chunked || (!chunked && response.headers.get('content-length') !== '64')) {
+          throw new Error('Unexpected response framing; use the development server.');
+        }
+        reader = response.body.getReader({ mode: 'byob' });
+        if (!(reader instanceof ReadableStreamBYOBReader)) {
+          throw new Error('Expected a BYOB reader.');
+        }
+
+        for (let reads = 0; reads <= expected.length; reads++) {
+          const buffer = new ArrayBuffer(24);
+          new Uint8Array(buffer).fill(238);
+          const view = new View(buffer, 8, View === Uint16Array ? 4 : 8);
+          const result = await reader.read(view);
+          const value = result.value;
+          if (!(value instanceof View) || value.byteOffset !== 8 || value.byteLength > 8) {
+            throw new Error('Returned view type, offset or capacity changed.');
+          }
+          if (buffer.byteLength !== 0) {
+            throw new Error('The input buffer was not transferred.');
+          }
+          // Read the returned byte window, not the element values or the entire buffer.
+          received.push(...new Uint8Array(value.buffer, value.byteOffset, value.byteLength));
+          if (received.length > expected.length || received.some((byte, i) => byte !== expected[i])) {
+            throw new Error('Response bytes did not match the fixture.');
+          }
+          if (chunked && received.length === expected.length) {
+            // The development server leaves ?chunked=1 open after writing the fixture.
+            await reader.cancel('BYOB demo received the expected payload');
+            complete = true;
+            break;
+          }
+          if (result.done) {
+            complete = true;
+            break;
+          }
+        }
+        if (!complete || received.length !== expected.length) {
+          throw new Error('The complete 64-byte fixture was not received.');
+        }
+      } finally {
+        try {
+          if (!complete) {
+            controller.abort();
+            // An aborted body can reject cancellation; still release its reader below.
+            if (reader) {
+              await reader.cancel().catch(() => {});
+            } else if (response && response.body && !response.body.locked) {
+              await response.body.cancel().catch(() => {});
+            }
+          }
+        } finally {
+          clearTimeout(timeout);
+          if (reader) { reader.releaseLock(); }
+        }
+      }
+    }
+    output.textContent = `PASS ${mode}: 3 views, 64 bytes each.` + (chunked ? ' Canceled after the expected payload.' : ' Read to completion.');
+    output.style.color = 'green';
+  } catch (error) {
+    output.textContent = `FAIL ${mode} / ${viewName}: ${error.message}`;
+    output.style.color = 'red';
+  } finally {
+    fetchBYOBRunning = false;
+  }
 }
 
 function fetchStream() {

@@ -11,6 +11,7 @@
 - `Fix(Log)` 修复格式符（`%c`、`%s`、`%d`、`%o`）之间没有空格时（如 `%c%s`）无法被识别、导致颜色/替换失效的问题。(issue #732)
 - `Fix(Log)` 修复 Tree 视图及复制 JSON 时字符串值中引号未转义的问题。(PR #678)
 - `Fix(Storage)` 修复因 remove 操作触发响应式状态重置导致 Storage key 修改失败的问题。(issue #690, PR #709)
+- `Fix(Network)` 保留 fetch BYOB reader 的选项和视图，并按字节统计流式响应数据。
 - `Fix(Network)` 修复 fetch proxy 包装 wasm 响应导致 `WebAssembly.instantiateStreaming` 类型错误的问题。(issue #590, PR #711)
 - `Fix(Network)` 修复开启 Network 面板时 wasm 文件被加载两次的问题，根本原因是 `resp.clone()` 在 wasm 检查之前对 body stream 进行了 tee 操作。(issue #674)
 - `Fix(Network)` 修复 stream 读取完成时 `result.value` 可能为 `undefined` 的问题。(PR #715)

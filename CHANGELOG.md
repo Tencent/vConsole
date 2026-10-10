@@ -11,6 +11,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Fix(Log)` Fix log formatting (`%c`, `%s`, `%d`, `%o`) not being recognized when format specifiers are adjacent without spaces (e.g. `%c%s`). (issue #732)
 - `Fix(Log)` Fix unescaped quotation marks in Tree view and copied JSON output. (PR #678)
 - `Fix(Storage)` Fix storage key modification failure caused by reactive state being cleared during remove operation. (issue #690, PR #709)
+- `Fix(Network)` Preserve fetch BYOB reader options and views, and count streamed response data in bytes.
 - `Fix(Network)` Fix `WebAssembly.instantiateStreaming` type error caused by fetch proxy wrapping wasm responses. (issue #590, PR #711)
 - `Fix(Network)` Fix wasm files being fetched twice when the Network panel is open, caused by `resp.clone()` teeing the body stream before the wasm check. (issue #674)
 - `Fix(Network)` Fix `result.value` maybe `undefined` when stream reading is done. (PR #715)
