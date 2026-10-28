@@ -5,6 +5,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Feat(Log)` Add support for `console.timeLog()`. (issue #681, PR #684)
 - `Feat(Network)` Capture static resource requests (images, scripts, stylesheets, fonts, etc.) via `PerformanceObserver` and display them in the Network panel. (issue #708)
 - `Feat(Network)` Add WebSocket support: display connections in the Network panel with sent/received messages. (issue #688)
+- `Feat(Storage)` Add OPFS (Origin Private File System) support: view, edit and delete files/directories in the Storage panel. Enabled by default when supported by the browser.
 - `Fix(Core)` Export public TypeScript types (`VConsoleOptions`, `VConsoleLogOptions`, `VConsoleNetworkOptions`, `VConsoleStorageOptions`, `VConsoleAvailableStorage`) from the package root, so they can be imported via `import type { VConsoleOptions } from 'vconsole'`. Also add `'WS'` to `VConsoleRequestMethod` type. (issue #668)
 - `Fix(Core)` Fix `getStringWithinLength` truncating by character index instead of byte count, causing multi-byte characters (e.g. Chinese, emojis) to exceed the intended byte limit or be truncated incorrectly. (PR #730)
 - `Fix(Core)` Fix copy button not working on iOS 17.2 Safari by using Clipboard API with fallback. (PR #672)

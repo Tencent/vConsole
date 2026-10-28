@@ -5,6 +5,7 @@
 - `Feat(Log)` 新增对 `console.timeLog()` 的支持。(issue #681, PR #684)
 - `Feat(Network)` 通过 `PerformanceObserver` 捕获静态资源请求（图片、脚本、样式表、字体等）并在 Network 面板中展示。(issue #708)
 - `Feat(Network)` 新增 WebSocket 支持：在 Network 面板中展示 WebSocket 连接及收发消息。(issue #688)
+- `Feat(Storage)` 新增 OPFS（源私有文件系统）支持：可在 Storage 面板中查看、编辑、删除文件及目录。浏览器支持时默认开启。
 - `Fix(Core)` 将公共 TypeScript 类型（`VConsoleOptions`、`VConsoleLogOptions`、`VConsoleNetworkOptions`、`VConsoleStorageOptions`、`VConsoleAvailableStorage`）从包根路径导出，支持 `import type { VConsoleOptions } from 'vconsole'` 方式使用。同时将 `'WS'` 加入 `VConsoleRequestMethod` 类型。(issue #668)
 - `Fix(Core)` 修复 `getStringWithinLength` 按字符索引而非字节数截断字符串的问题，导致含多字节字符（如中文、emoji）的字符串超出预期字节限制或被错误截断。(PR #730)
 - `Fix(Core)` 修复 iOS 17.2 Safari 中复制按钮无效的问题，改用 Clipboard API 并保留降级处理。(PR #672)

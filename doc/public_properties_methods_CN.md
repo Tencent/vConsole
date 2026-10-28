@@ -65,7 +65,7 @@ log.maxLogNumber      | Number   | true     | 1000                              
 log.showTimestamps    | Boolean  | true     | false                                       | 显示日志的输出时间
 log.maxNetworkNumber  | Number   | true     | 1000                                        | 超出数量上限的请求记录会被自动清除。
 network.ignoreUrlRegExp | RegExp | true     |                                             | 不展示 URL 匹配正则表达式的请求。
-storage.defaultStorages  | Array  | true    | ['cookies', 'localStorage', 'sessionStorage'] | 在 Storage 面板中要加载的 storage 类型。
+storage.defaultStorages  | Array  | true    | ['cookies', 'localStorage', 'sessionStorage', 'opfs'] | 在 Storage 面板中要加载的 storage 类型。浏览器支持时 `opfs` 会自动加入。
 
 例子：
 

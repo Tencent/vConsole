@@ -3,6 +3,7 @@ import { isWxEnv } from '../lib/tool';
 import type { VConsoleAvailableStorage } from '../core/options.interface';
 import { CookieStorage } from './storage.cookie';
 import { WxStorage } from './storage.wx';
+import { OpfsStorage, isOpfsSupported } from './storage.opfs';
 import { VConsoleModel } from '../lib/model';
 
 export interface IStorage {
@@ -13,7 +14,16 @@ export interface IStorage {
   removeItem: (key: string) => void | Promise<void>;
   clear: () => void | Promise<void>;
   prepare?: () => Promise<boolean>;
+  isEditable?: (key: string) => boolean;
 }
+
+const getDefaultStorages = (): VConsoleAvailableStorage[] => {
+  const list: VConsoleAvailableStorage[] = ['cookies', 'localStorage', 'sessionStorage'];
+  if (isOpfsSupported()) {
+    list.push('opfs');
+  }
+  return list;
+};
 
 /**
  * Storage Store
@@ -21,7 +31,7 @@ export interface IStorage {
 export const storageStore = {
   updateTime: writable(0),
   activedName: writable<VConsoleAvailableStorage>(null),
-  defaultStorages: writable<VConsoleAvailableStorage[]>(['cookies', 'localStorage', 'sessionStorage']),
+  defaultStorages: writable<VConsoleAvailableStorage[]>(getDefaultStorages()),
 };
 
 export class VConsoleStorageModel extends VConsoleModel {
@@ -71,6 +81,14 @@ export class VConsoleStorageModel extends VConsoleModel {
     const ret = await this.promisify(this.activedStorage.clear());
     this.refresh();
     return ret;
+  }
+
+  public isEditable(key: string) {
+    const storage = this.activedStorage;
+    if (storage && typeof storage.isEditable === 'function') {
+      return storage.isEditable(key);
+    }
+    return true;
   }
 
   public refresh() {
@@ -126,6 +144,13 @@ export class VConsoleStorageModel extends VConsoleModel {
       }
     } else {
       this.deleteStorage('wxStorage');
+    }
+    if (defaultStorages.indexOf('opfs') > -1) {
+      if (isOpfsSupported()) {
+        this.storage.set('opfs', new OpfsStorage());
+      }
+    } else {
+      this.deleteStorage('opfs');
     }
   }
 

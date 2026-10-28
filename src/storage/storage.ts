@@ -75,7 +75,7 @@ export class VConsoleStoragePlugin extends VConsoleSveltePlugin {
     for (let i = 0; i < defaultStorages.length; i++) {
       const name = defaultStorages[i];
       btnList.push({
-        name: name[0].toUpperCase() + name.substring(1),
+        name: name === 'opfs' ? 'OPFS' : name[0].toUpperCase() + name.substring(1),
         data: {
           name: name,
         },

@@ -41,6 +41,9 @@
     await model.removeItem(key);
   };
   const onTapSave = async (key: string) => {
+    if (!model.isEditable(key)) {
+      return;
+    }
     const savedKey = editingKey;
     const savedVal = editingVal;
     // Validate that key is not empty before saving
@@ -90,8 +93,10 @@
               <Icon name="done" on:click={() => onTapSave(k)} />
             {:else}
               <Icon name="delete" on:click={() => onTapDelete(k)} />
-              <IconCopy content={[k, v].join('=')} />
-              <Icon name="edit" on:click={() => onTapEdit(k, v, i)} />
+              <IconCopy content={model.isEditable(k) ? [k, v].join('=') : k} />
+              {#if model.isEditable(k)}
+                <Icon name="edit" on:click={() => onTapEdit(k, v, i)} />
+              {/if}
             {/if}
           </div>
         </div>

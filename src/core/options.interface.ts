@@ -8,7 +8,7 @@ export interface VConsoleNetworkOptions {
   ignoreUrlRegExp?: RegExp;
 }
 
-export type VConsoleAvailableStorage = 'cookies' | 'localStorage' | 'sessionStorage' | 'wxStorage';
+export type VConsoleAvailableStorage = 'cookies' | 'localStorage' | 'sessionStorage' | 'wxStorage' | 'opfs';
 export interface VConsoleStorageOptions {
   defaultStorages?: VConsoleAvailableStorage[];
 }

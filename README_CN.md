@@ -16,7 +16,7 @@ vConsole 是框架无关的，可以在 Vue、React 或其他任何框架中使�
 - 日志(Logs)： `console.log|info|error|...`
 - 网络(Network)： `XMLHttpRequest`, `Fetch`, `sendBeacon`
 - 节点(Element)： HTML 节点树
-- 存储(Storage)： `Cookies`, `LocalStorage`, `SessionStorage`
+- 存储(Storage)： `Cookies`, `LocalStorage`, `SessionStorage`, `OPFS`
 - 手动执行 JS 命令行
 - 自定义插件
 
@@ -151,7 +151,7 @@ console.log('[system]', 'output to System panel.')
 ### Storage 面板
 
 <details>
-  <summary>添加、编辑、删除、复制 Cookies / LocalStorage / SessionStorage</summary>
+  <summary>添加、编辑、删除、复制 Cookies / LocalStorage / SessionStorage / OPFS</summary>
 
 ![](./doc/screenshot/plugin_storage.jpg)
 </details>

@@ -19,6 +19,8 @@
     <a onclick="defaultStoragesClear()" href="javascript:;" class="weui_btn weui_btn_default">defaultStorages: clear</a>
     <a onclick="defaultStoragesAdd()" href="javascript:;" class="weui_btn weui_btn_default">defaultStorages: add</a>
     <a onclick="defaultStoragesUpdate()" href="javascript:;" class="weui_btn weui_btn_default">defaultStorages: update</a>
+    <a onclick="createOpfsData()" href="javascript:;" class="weui_btn weui_btn_default">OPFS: create data</a>
+    <a onclick="clearOpfsData()" href="javascript:;" class="weui_btn weui_btn_default">OPFS: clear data</a>
   </div>
 </body>
 </html>
@@ -144,5 +146,47 @@ function defaultStoragesAdd() {
 
 function defaultStoragesUpdate() {
   vConsole.setOption('storage.defaultStorages', ['localStorage', 'unknownStorage', 'sessionStorage']);
+}
+
+async function createOpfsData() {
+  console.info('createOpfsData() Start');
+  if (!navigator.storage || typeof navigator.storage.getDirectory !== 'function') {
+    console.warn('OPFS is not supported.');
+    return;
+  }
+  const root = await navigator.storage.getDirectory();
+  const demoDir = await root.getDirectoryHandle('demo', { create: true });
+  const helloHandle = await demoDir.getFileHandle('hello.txt', { create: true });
+  const helloWriter = await helloHandle.createWritable();
+  await helloWriter.write('Hello OPFS!\nThis is a text file created by vConsole dev page.');
+  await helloWriter.close();
+
+  const binaryHandle = await demoDir.getFileHandle('binary.bin', { create: true });
+  const binaryWriter = await binaryHandle.createWritable();
+  await binaryWriter.write(new Uint8Array([0, 1, 2, 3, 4, 5, 255]));
+  await binaryWriter.close();
+
+  const rootHandle = await root.getFileHandle('root.txt', { create: true });
+  const rootWriter = await rootHandle.createWritable();
+  await rootWriter.write('A file in the OPFS root directory.');
+  await rootWriter.close();
+  console.info('createOpfsData() End');
+}
+
+async function clearOpfsData() {
+  console.info('clearOpfsData() Start');
+  if (!navigator.storage || typeof navigator.storage.getDirectory !== 'function') {
+    console.warn('OPFS is not supported.');
+    return;
+  }
+  const root = await navigator.storage.getDirectory();
+  const names = [];
+  for await (const [name] of root.entries()) {
+    names.push(name);
+  }
+  for (const name of names) {
+    await root.removeEntry(name, { recursive: true });
+  }
+  console.info('clearOpfsData() End');
 }
 </script>

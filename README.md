@@ -16,7 +16,7 @@ Now vConsole is the official debugging tool for WeChat Miniprograms.
 - Logs: `console.log|info|error|...`
 - Network: `XMLHttpRequest`, `Fetch`, `sendBeacon`
 - Element: HTML elements tree
-- Storage: `Cookies`, `LocalStorage`, `SessionStorage`
+- Storage: `Cookies`, `LocalStorage`, `SessionStorage`, `OPFS`
 - Execute JS command manually
 - Custom plugins
 
@@ -149,7 +149,7 @@ console.log('[system]', 'output to System panel.')
 ### Storage Panel
 
 <details>
-  <summary>Add, edit, delete or copy Cookies / LocalStorage / SessionStorage</summary>
+  <summary>Add, edit, delete or copy Cookies / LocalStorage / SessionStorage / OPFS</summary>
 
 ![](./doc/screenshot/plugin_storage.jpg)
 </details>
