@@ -8,12 +8,16 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
   public resp: Response;
   public item: VConsoleNetworkRequestItem;
   protected onUpdateCallback: IOnUpdateCallback;
+  // reader of vConsole's own copy of a non-streaming response body,
+  // so that a page-side `reader.cancel()` can cancel it too. (issue #648)
+  protected bufferingReader?: ReadableStreamDefaultReader<Uint8Array>;
 
-  constructor(resp: T, item: VConsoleNetworkRequestItem, onUpdateCallback: IOnUpdateCallback) {
+  constructor(resp: T, item: VConsoleNetworkRequestItem, onUpdateCallback: IOnUpdateCallback, bufferingReader?: ReadableStreamDefaultReader<Uint8Array>) {
     // console.log('Proxy: new constructor')
     this.resp = resp;
     this.item = item;
     this.onUpdateCallback = onUpdateCallback;
+    this.bufferingReader = bufferingReader;
     this.mockReader();
   }
 
@@ -65,7 +69,7 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
       // it's not a chunked stream, or it had already been read.
       // so should not update status.
       if (this.item.readyState === 4) {
-        return reader;
+        return this.mockCancel(reader);
       }
 
       const _read = reader.read;
@@ -107,6 +111,25 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
       };
       return reader;
     }));
+  }
+
+  /**
+   * Cancel vConsole's own copy of the response body as well, so that the request is really
+   * aborted instead of downloading the whole body in the background.
+   * A body created by `resp.clone()` is teed, and a teed stream is only cancelled when
+   * both of its branches are cancelled. (issue #648)
+   */
+  protected mockCancel<R extends { cancel: (...args) => Promise<void> }>(reader: R): R {
+    const bufferingReader = this.bufferingReader;
+    if (!bufferingReader) {
+      return reader;
+    }
+    const _cancel = reader.cancel;
+    reader.cancel = (...args) => {
+      bufferingReader.cancel(args[0]).catch(() => {});
+      return _cancel.apply(reader, args);
+    };
+    return reader;
   }
 }
 
@@ -226,6 +249,7 @@ export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T
         return resp;
       }
 
+      let bufferingReader: ReadableStreamDefaultReader<Uint8Array> = null;
       if (isChunked || isEventStream) {
         // when `transfer-encoding` is chunked or the response is an SSE stream,
         // the response is a stream which is under loading,
@@ -237,7 +261,11 @@ export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T
         // so it's completed and can be `clone()` for `text()` calling.
         item.readyState = 4;
 
-        this.handleResponseBody(resp.clone(), item).then((responseValue: string | ArrayBuffer) => {
+        const clonedResp = resp.clone();
+        // keep the reader of the cloned body, so that a page-side `reader.cancel()`
+        // can cancel vConsole's own branch as well. (issue #648)
+        bufferingReader = clonedResp.body ? clonedResp.body.getReader() : null;
+        this.handleResponseBody(clonedResp, bufferingReader, item).then((responseValue: string | ArrayBuffer) => {
           // console.log(item.responseType, responseValue)
           item.responseSize = typeof responseValue === 'string' ? responseValue.length : responseValue.byteLength;
           item.responseSizeText = tool.getBytesText(item.responseSize);
@@ -248,24 +276,54 @@ export class FetchProxyHandler<T extends typeof fetch> implements ProxyHandler<T
 
       this.onUpdateCallback(item);
 
-      return new Proxy(resp, new ResponseProxyHandler(resp, item, this.onUpdateCallback));
+      return new Proxy(resp, new ResponseProxyHandler(resp, item, this.onUpdateCallback, bufferingReader));
     };
     return then;
   }
 
-  protected handleResponseBody(resp: Response, item: VConsoleNetworkRequestItem) {
+  protected handleResponseBody(resp: Response, reader: ReadableStreamDefaultReader<Uint8Array>, item: VConsoleNetworkRequestItem) {
     // parse response body by Content-Type
     const contentType = resp.headers.get('content-type');
     if (contentType && contentType.includes('application/json')) {
       item.responseType = 'json';
-      return resp.text();
     } else if (contentType && (contentType.includes('text/html') || contentType.includes('text/plain'))) {
       item.responseType = 'text';
-      return resp.text();
     } else {
       item.responseType = 'arraybuffer';
-      return resp.arrayBuffer();
     }
+
+    if (!reader) {
+      // some browsers do not return `body` in some cases, like `OPTIONS` method. (issue #531)
+      return item.responseType === 'arraybuffer' ? resp.arrayBuffer() : resp.text();
+    }
+
+    // read the body chunk by chunk, keeping the reader around so that it can be cancelled
+    // when the page cancels its own reader. (issue #648)
+    const chunks: Uint8Array[] = [];
+    let size = 0;
+    const read = (): Promise<string | ArrayBuffer> => {
+      return reader.read().then((result) => {
+        if (result.value) {
+          chunks.push(result.value);
+          size += result.value.length;
+        }
+        if (!result.done) {
+          return read();
+        }
+        const bytes = new Uint8Array(size);
+        let offset = 0;
+        for (let i = 0; i < chunks.length; i++) {
+          bytes.set(chunks[i], offset);
+          offset += chunks[i].length;
+        }
+        if (item.responseType === 'arraybuffer') {
+          return bytes.buffer;
+        }
+        // decode with the charset declared by the response, as `resp.text()` does
+        return new Response(bytes, { headers: resp.headers }).text();
+      });
+    };
+    return read();
   }
 }
 
