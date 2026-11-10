@@ -69,6 +69,8 @@
       <a onclick="callExportAdd()" href="javascript:;" class="weui_btn weui_btn_default">vConsole.network.add()</a>
       <a onclick="callExportUpdate()" href="javascript:;" class="weui_btn weui_btn_default">vConsole.network.update()</a>
       <a onclick="callExportClear()" href="javascript:;" class="weui_btn weui_btn_default">vConsole.network.clear()</a>
+      <a onclick="callExportProtoPollution()" href="javascript:;" class="weui_btn weui_btn_default">vConsole.network id: '__proto__'</a>
+      <p id="proto-result" style="margin:8px 0;font-size:14px;font-weight:bold;color:#666">prototype pollution test: not run</p>
     </div>
 
     <div class="section">
@@ -594,6 +596,25 @@ function callExportUpdate() {
 
 function callExportClear() {
   vConsole.network.clear();
+}
+
+function callExportProtoPollution() {
+  // Regression case for issue #734: an untrusted id must not be able to reach
+  // `Object.prototype` through `updateRequest()`.
+  vConsole.network.update('__proto__', { polluted: 'yes' });
+  vConsole.network.add({
+    id: '__proto__',
+    url: 'http://example.com/pwn.json',
+    method: 'GET',
+    status: 200,
+  });
+  const leaked = ['polluted', 'url', 'method', 'status'].filter((key) => ({})[key] !== undefined);
+  const result = document.getElementById('proto-result');
+  result.textContent = leaked.length === 0
+    ? 'prototype pollution test: PASS, Object.prototype is clean'
+    : 'prototype pollution test: FAIL, leaked onto {}: ' + leaked.join(', ');
+  result.style.color = leaked.length === 0 ? 'green' : 'red';
+  console.log(result.textContent);
 }
 
 function crossDomain() {

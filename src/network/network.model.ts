@@ -68,12 +68,21 @@ export class VConsoleNetworkModel extends VConsoleModel {
     if (url && this.ignoreUrlRegExp?.test(url)) {
       return;
     }
+    // an untrusted id such as `__proto__` resolves to `Object.prototype` instead of a request item,
+    // so writing to it would pollute the global prototype. (issue #734)
+    if (id === '__proto__' || id === 'constructor' || id === 'prototype') {
+      console.debug(`[vConsole] Cannot use \`${id}\` as a request id in \`vConsole.network\`.`);
+      return;
+    }
     const reqList = get(requestList);
-    const hasItem = !!reqList[id];
+    const hasItem = Object.prototype.hasOwnProperty.call(reqList, id) && !!reqList[id];
     if (hasItem) {
       // force re-assign to ensure that the value is updated
       const item = reqList[id];
       for (let key in data) {
+        if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+          continue;
+        }
         item[key] = data[key];
       }
       data = item;

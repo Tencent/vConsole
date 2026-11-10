@@ -8,6 +8,11 @@ export class VConsoleNetworkExporter extends VConsolePluginExporter {
   public add(item: VConsoleNetworkRequestItem) {
     const itemProxy = new VConsoleNetworkRequestItemProxy(new VConsoleNetworkRequestItem());
     for (let key in item) {
+      // skip keys that would modify the prototype chain of the item, or of `Object.prototype`
+      // through `id`. (issue #734)
+      if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+        continue;
+      }
       itemProxy[key] = item[key];
     }
     itemProxy.startTime = itemProxy.startTime || Date.now();
