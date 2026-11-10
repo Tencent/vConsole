@@ -49,6 +49,8 @@
       <a onclick="optionsFetch()" href="javascript:;" class="weui_btn weui_btn_default">OPTIONS Fetch</a>
       <a onclick="fetchIOSLowBug()" href="javascript:;" class="weui_btn weui_btn_default">Fetch iOS LowBug</a>
       <a onclick="fetchStream()" href="javascript:;" class="weui_btn weui_btn_default">Fetch Steam</a>
+      <a onclick="fetchStreamCancel()" href="javascript:;" class="weui_btn weui_btn_default">Fetch Cancel (slow non-chunked body)</a>
+      <p id="cancel-result" style="margin:8px 0;font-size:14px;font-weight:bold;color:#666">reader.cancel test: not run</p>
     </div>
 
     <div class="section">
@@ -375,6 +377,46 @@ function fetchStream() {
 
         return reader.read().then(process);
       });
+  });
+}
+
+function fetchStreamCancel() {
+  // Regression case for issue #648: after `reader.cancel()` the request must be really
+  // aborted, instead of vConsole's own copy of the body keeping the download running.
+  const result = document.getElementById('cancel-result');
+  const report = (text, ok) => {
+    result.textContent = text;
+    result.style.color = ok ? 'green' : 'red';
+    console.log(text);
+  };
+  report('reader.cancel test: running...', true);
+  const requestId = Math.random();
+  // 100 slices, one every 100ms, with a known `Content-Length` => ~10s download
+  const url = `./data/massive.json?stream=100&delay=100&id=${requestId}`;
+  window.fetch(url).then((response) => {
+    const reader = response.body.getReader();
+    return reader.read().then(() => {
+      return reader.cancel();
+    }).then(() => {
+      const cancelledAt = Date.now();
+      // an aborted request gets its resource timing entry right away, with only the bytes
+      // received so far; a download that keeps running only gets it once the whole body
+      // has arrived (~10s).
+      const poll = () => {
+        const entry = performance.getEntriesByType('resource').filter((e) => e.name.includes(String(requestId))).pop();
+        if (entry) {
+          const elapsed = Date.now() - cancelledAt;
+          report(`reader.cancel test: ${elapsed < 1000 ? 'PASS' : 'FAIL'}, request finished ${elapsed}ms after cancel, ${entry.encodedBodySize} bytes received`, elapsed < 1000);
+        } else if (Date.now() - cancelledAt > 5000) {
+          report('reader.cancel test: FAIL, the request is still downloading 5s after cancel', false);
+        } else {
+          setTimeout(poll, 50);
+        }
+      };
+      poll();
+    });
+  }).catch((error) => {
+    report('reader.cancel test: error ' + error, false);
   });
 }
 

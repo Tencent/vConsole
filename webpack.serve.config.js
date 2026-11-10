@@ -61,7 +61,34 @@ module.exports = (env, argv) => {
                 fs.accessSync(filePath, fs.constants.F_OK);
                 res.type(fileType);
                 res.status(req.query.s || 200);
-                if (req.query.chunked) {
+                if (req.query.stream) {
+                  // slow response with a known `Content-Length` (not chunked),
+                  // used to check whether `reader.cancel()` really stops the download. (issue #648)
+                  const buf = fs.readFileSync(filePath);
+                  const parts = Number(req.query.stream) || 10;
+                  const interval = Number(req.query.delay) || 100;
+                  const step = Math.ceil(buf.length / parts);
+                  res.set({
+                    'Content-Length': String(buf.length),
+                    'Cache-Control': 'no-store',
+                  });
+                  let offset = 0;
+                  const writeSlice = () => {
+                    setTimeout(() => {
+                      if (res.writableEnded || res.destroyed) {
+                        return;
+                      }
+                      res.write(buf.slice(offset, offset + step));
+                      offset += step;
+                      if (offset < buf.length) {
+                        writeSlice();
+                      } else {
+                        res.end();
+                      }
+                    }, interval);
+                  };
+                  writeSlice();
+                } else if (req.query.chunked) {
                   res.set({
                     'Transfer-Encoding': 'chunked',
                     'Connection': 'keep-alive',
