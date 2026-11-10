@@ -138,21 +138,38 @@ export class XHRProxyHandler<T extends XMLHttpRequest> implements ProxyHandler<T
     };
   }
 
+  /**
+   * `xhr.onreadystatechange = null` removes a handler, and WebIDL stores `null` for any
+   * non-callable assignment. Wrapping such a value would leave a truthy handler that later calls
+   * `value.apply` on `null` — an uncaught TypeError the next time the event fires, which is what
+   * breaks hls.js' `abortInternal` (`onreadystatechange = null; abort();`). Issue #740.
+   */
   protected setOnReadyStateChange(target: T, key: string, value) {
+    if (typeof value !== 'function') {
+      return Reflect.set(target, key, null);
+    }
     return Reflect.set(target, key, (...args) => {
       this.onReadyStateChange();
       value.apply(target, args);
     });
   }
 
+  /** See {@link setOnReadyStateChange}: `onabort = null` must clear, not wrap. Issue #740. */
   protected setOnAbort(target: T, key: string, value) {
+    if (typeof value !== 'function') {
+      return Reflect.set(target, key, null);
+    }
     return Reflect.set(target, key, (...args) => {
       this.onAbort();
       value.apply(target, args);
     });
   }
 
+  /** See {@link setOnReadyStateChange}: `ontimeout = null` must clear, not wrap. Issue #740. */
   protected setOnTimeout(target: T, key: string, value) {
+    if (typeof value !== 'function') {
+      return Reflect.set(target, key, null);
+    }
     return Reflect.set(target, key, (...args) => {
       this.onTimeout();
       value.apply(target, args);

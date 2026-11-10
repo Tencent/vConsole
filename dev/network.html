@@ -25,6 +25,7 @@
       <a onclick="optionsXHR()" href="javascript:;" class="weui_btn weui_btn_default">OPTIONS XHR</a>
       <a onclick="xhrStream('flv')" href="javascript:;" class="weui_btn weui_btn_default">XHR Chunked: flv</a>
       <a onclick="xhrStream('json')" href="javascript:;" class="weui_btn weui_btn_default">XHR Chunked: json</a>
+      <a onclick="xhrAbortWithNullHandlers()" href="javascript:;" class="weui_btn weui_btn_default">XHR Abort: null handlers (issue #740)</a>
     </div>
 
     <div class="section">
@@ -376,6 +377,28 @@ function fetchStream() {
         return reader.read().then(process);
       });
   });
+}
+
+// issue #740: hls.js' XhrLoader.abortInternal clears the callbacks, then aborts:
+//   xhr.onreadystatechange = null; xhr.onprogress = null; xhr.abort();
+// Assigning null must remove the handler. If the proxy wraps it instead, the abort's
+// readystatechange runs the wrapper and throws "Cannot read properties of null (reading 'apply')".
+function xhrAbortWithNullHandlers() {
+  vConsole.show();
+  const url = './data/success.json?method=xhrAbortNull&t=400&id=' + Math.random();
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', url);
+  xhr.onreadystatechange = () => {};
+  xhr.onprogress = () => {};
+  xhr.send();
+  // The dev server delays the response, so the request is still in flight here (as in hls.js).
+  setTimeout(() => {
+    xhr.onreadystatechange = null;
+    xhr.onprogress = null;
+    xhr.abort();
+    console.log('xhrAbortWithNullHandlers: onreadystatechange after = null is',
+      xhr.onreadystatechange, '(expect null, no uncaught error)');
+  }, 60);
 }
 
 function xhrStream(format = 'flv') {
