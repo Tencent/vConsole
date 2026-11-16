@@ -75,13 +75,23 @@ export class ResponseProxyHandler<T extends Response> implements ProxyHandler<T>
       reader.read = () => {
         return (<ReturnType<typeof _read>>_read.apply(reader)).then((result) => {
           // console.log('[Fetch.proxy] read', result.done);
-          if (!readerReceivedValue) {
-            readerReceivedValue = new Uint8Array(result.value);
-          } else {
-            const newValue = new Uint8Array(readerReceivedValue.length + result.value.length);
-            newValue.set(readerReceivedValue);
-            newValue.set(result.value, readerReceivedValue.length);
-            readerReceivedValue = newValue;
+          // The final read() of a stream resolves to a result whose `value` is
+          // undefined per the Streams spec, so `result.value` must not be
+          // dereferenced when `done` is true, otherwise a TypeError is thrown
+          // at the end of a chunked response (issue #745).
+          const chunk: Uint8Array | undefined = result.done ? undefined : result.value;
+          if (chunk) {
+            if (!readerReceivedValue) {
+              readerReceivedValue = new Uint8Array(chunk);
+            } else {
+              const newValue = new Uint8Array(readerReceivedValue.length + chunk.length);
+              newValue.set(readerReceivedValue);
+              newValue.set(chunk, readerReceivedValue.length);
+              readerReceivedValue = newValue;
+            }
+          } else if (!readerReceivedValue) {
+            // empty stream: fall back to an empty buffer instead of undefined
+            readerReceivedValue = new Uint8Array(0);
           }
           this.item.endTime = Date.now();
           this.item.costTime = this.item.endTime - (this.item.startTime || this.item.endTime);
